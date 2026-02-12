@@ -22,7 +22,7 @@ spec:
       description: A set of tools to parse, build and transform ES|QL queries programatically.
     spec:
       repository: elastic/esql-js
-      pipeline_file: ".buildkite/pipeline.yml"
+      pipeline_file: '.buildkite/pipeline.yml'
       provider_settings:
         build_pull_request_forks: true
       teams:
