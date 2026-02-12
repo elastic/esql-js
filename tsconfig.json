@@ -1,26 +1,44 @@
 {
   "compilerOptions": {
+    // Generate .d.ts type definition files alongside JS output
     "declaration": true,
+    // Generate source maps for .d.ts files (enables "go to source" for consumers)
     "declarationMap": true,
+    // Implicit any can't be used
     "noImplicitAny": true,
+    // Generate .js.map source maps for debugging
     "sourceMap": true,
+    // Keep const enum declarations in output (safer with isolatedModules)
     "preserveConstEnums": true,
+    // Enable all strict type-checking options
     "strict": true,
+    // Enable ergonomic default imports from CommonJS modules
     "esModuleInterop": true,
+    // Index signatures return T | undefined, forcing explicit handling
     "noUncheckedIndexedAccess": true,
+    // Use Node.js native ESM module system
     "module": "NodeNext",
+    // Compile to ES2022 (supports top-level await, Array.at(), etc.)
     "target": "ES2022",
+    // Include ES2022 standard library types
     "lib": ["ES2022"],
+    // Resolve modules using Node.js ESM resolution rules
     "moduleResolution": "NodeNext",
+    // Preserve comments in compiled output
     "removeComments": false,
+    // Only allow TypeScript files
     "allowJs": false,
+    // Skip type-checking of all .d.ts files for faster compilation
     "skipLibCheck": true,
-    "downlevelIteration": true,
-    "allowSyntheticDefaultImports": true,
+    // Skip type-checking of default library .d.ts files
     "skipDefaultLibCheck": true,
+    // Colorized, readable compiler error output
     "pretty": true,
+    // Prevent issues on case-insensitive file systems (macOS/Windows)
     "forceConsistentCasingInFileNames": true,
+    // Ensure each file can be independently transpiled (required by ts-jest and bundlers)
     "isolatedModules": true,
+    // Output compiled files to the lib/ directory
     "outDir": "./lib"
   },
   "include": ["src"],
