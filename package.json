@@ -1,0 +1,28 @@
+{
+  "name": "@elastic/esql",
+  "version": "0.0.1",
+  "author": "Kibana ES|QL team",
+  "description": "A set of tools to parse, build and transform ES|QL queries programatically.",
+  "type": "module",
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "default": "./lib/index.js"
+    }
+  },
+  "files": [
+    "lib"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.json",
+    "prepack": "yarn build"
+  },
+  "repository": "https://github.com/elastic/esql-js.git",
+  "private": true,
+  "dependencies": {
+    "typescript": "5.9.3"
+  },
+  "license": "To be defined"
+}
