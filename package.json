@@ -26,6 +26,7 @@
   "repository": "https://github.com/elastic/esql-js.git",
   "private": true,
   "license": "To be defined",
+  "sideEffects": false,
   "devDependencies": {
     "@eslint/js": "10.0.1",
     "@types/jest": "30.0.0",
