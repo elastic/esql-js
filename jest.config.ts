@@ -1,8 +1,9 @@
 import type { Config } from 'jest';
 
 const config: Config = {
-  preset: 'ts-jest/presets/default-esm',
   testEnvironment: 'node',
+  // Tells Jest to treat .ts files as ESM (required for native ESM support)
+  extensionsToTreatAsEsm: ['.ts'],
   roots: ['<rootDir>/src'],
   moduleNameMapper: {
     '^(\\.{1,2}/.*)\\.js$': '$1',
