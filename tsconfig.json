@@ -4,8 +4,6 @@
     "declaration": true,
     // Generate source maps for .d.ts files (enables "go to source" for consumers)
     "declarationMap": true,
-    // Implicit any can't be used
-    "noImplicitAny": true,
     // Generate .js.map source maps for debugging
     "sourceMap": true,
     // Keep const enum declarations in output (safer with isolatedModules)
@@ -38,6 +36,8 @@
     "forceConsistentCasingInFileNames": true,
     // Ensure each file can be independently transpiled (required by ts-jest and bundlers)
     "isolatedModules": true,
+    // Rewrite .ts import extensions to .js in compiled output (TS 5.7+)
+    "rewriteRelativeImportExtensions": true,
     // Output compiled files to the lib/ directory
     "outDir": "./lib"
   },
