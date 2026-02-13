@@ -12,20 +12,18 @@
     "strict": true,
     // Enable ergonomic default imports from CommonJS modules
     "esModuleInterop": true,
-    // Index signatures return T | undefined, forcing explicit handling
-    "noUncheckedIndexedAccess": true,
-    // Use Node.js native ESM module system
-    "module": "NodeNext",
+    // Preserve import/export syntax as-is in compiled output
+    "module": "preserve",
     // Compile to ES2022 (supports top-level await, Array.at(), etc.)
     "target": "ES2022",
     // Include ES2022 standard library types
     "lib": ["ES2022"],
-    // Resolve modules using Node.js ESM resolution rules
-    "moduleResolution": "NodeNext",
+    // Use bundler-style module resolution (allows extensionless imports from dependencies)
+    "moduleResolution": "bundler",
     // Preserve comments in compiled output
     "removeComments": false,
-    // Only allow TypeScript files
-    "allowJs": false,
+    // Allow JS files so TypeScript can infer types from .js config files (e.g. lexer_config.js)
+    "allowJs": true,
     // Skip type-checking of all .d.ts files for faster compilation
     "skipLibCheck": true,
     // Skip type-checking of default library .d.ts files

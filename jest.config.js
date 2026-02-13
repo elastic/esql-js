@@ -17,8 +17,6 @@ const config = {
         tsconfig: {
           // Override to CommonJS for tests so --experimental-vm-modules is not needed
           module: 'commonjs',
-          // Allow transforming .js files (needed for ANTLR-generated ESM files)
-          allowJs: true,
         },
       },
     ],
