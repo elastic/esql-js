@@ -1,6 +1,5 @@
-import type { Config } from 'jest';
-
-const config: Config = {
+/** @type {import('jest').Config} */
+const config = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
   // Only treat *.test.ts files as test suites (excludes fixtures, helpers, etc. in __tests__/)
