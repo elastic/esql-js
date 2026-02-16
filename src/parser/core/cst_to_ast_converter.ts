@@ -519,7 +519,7 @@ export class CstToAstConverter {
 
   private createCommand<
     Name extends string,
-    Cmd extends ast.ESQLCommand<Name> = ast.ESQLCommand<Name>
+    Cmd extends ast.ESQLCommand<Name> = ast.ESQLCommand<Name>,
   >(name: Name, ctx: antlr.ParserRuleContext, partial?: Partial<Cmd>): Cmd {
     const parserFields = this.getParserFields(ctx);
     const command = Builder.command({ name, args: [] }, parserFields) as Cmd;
@@ -3169,7 +3169,7 @@ export class CstToAstConverter {
   }
 
   private toBinaryExpression<
-    Operator extends ast.BinaryExpressionOperator = ast.BinaryExpressionOperator
+    Operator extends ast.BinaryExpressionOperator = ast.BinaryExpressionOperator,
   >(
     operator: Operator,
     ctx: antlr.ParserRuleContext,

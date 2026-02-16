@@ -85,5 +85,5 @@ export type EsqlParsingTarget = [
   /**
    * The conversion to use for converting the root ANTLR CST node to a Kibana AST node.
    */
-  conversion: CstToAstConversion
+  conversion: CstToAstConversion,
 ];

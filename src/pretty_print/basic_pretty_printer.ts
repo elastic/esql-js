@@ -105,10 +105,10 @@ export class BasicPrettyPrinter {
     return node.type === 'query' && 'commands' in node
       ? BasicPrettyPrinter.query(node, opts)
       : node.type === 'command'
-      ? BasicPrettyPrinter.command(node, opts)
-      : node.type === 'header-command'
-      ? BasicPrettyPrinter.command(node as any, opts)
-      : BasicPrettyPrinter.expression(node, opts);
+        ? BasicPrettyPrinter.command(node, opts)
+        : node.type === 'header-command'
+          ? BasicPrettyPrinter.command(node as any, opts)
+          : BasicPrettyPrinter.expression(node, opts);
   };
 
   /**
@@ -177,7 +177,7 @@ export class BasicPrettyPrinter {
   }
 
   protected keyword(word: string) {
-    return this.opts.lowercaseKeywords ?? this.opts.lowercase
+    return (this.opts.lowercaseKeywords ?? this.opts.lowercase)
       ? word.toLowerCase()
       : word.toUpperCase();
   }
@@ -348,8 +348,8 @@ export class BasicPrettyPrinter {
         subtype === 'tuple'
           ? '(' + elements + ')'
           : subtype === 'bare'
-          ? elements
-          : '[' + elements + ']';
+            ? elements
+            : '[' + elements + ']';
 
       return this.decorateWithComments(ctx.node, formatted);
     })

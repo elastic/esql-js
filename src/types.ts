@@ -214,8 +214,10 @@ export type ESQLAstPromqlQuery = PromQLAstQueryExpression;
  * SET setting1 = "value1", setting2 = "value2";
  * ```
  */
-export interface ESQLAstHeaderCommand<Name extends string = string, Arg = ESQLAstExpression>
-  extends ESQLAstBaseItem {
+export interface ESQLAstHeaderCommand<
+  Name extends string = string,
+  Arg = ESQLAstExpression,
+> extends ESQLAstBaseItem {
   type: 'header-command';
 
   /** Name of the command */
@@ -270,7 +272,7 @@ export type FunctionSubtype =
 
 export interface ESQLFunction<
   Subtype extends FunctionSubtype = FunctionSubtype,
-  Name extends string = string
+  Name extends string = string,
 > extends ESQLAstBaseItem<Name> {
   type: 'function';
 
@@ -303,14 +305,18 @@ export interface ESQLFunctionCallExpression extends ESQLFunction<'variadic-call'
   args: ESQLAstItem[];
 }
 
-export interface ESQLUnaryExpression<Name extends string = string>
-  extends ESQLFunction<'unary-expression', Name> {
+export interface ESQLUnaryExpression<Name extends string = string> extends ESQLFunction<
+  'unary-expression',
+  Name
+> {
   subtype: 'unary-expression';
   args: [ESQLAstItem];
 }
 
-export interface ESQLPostfixUnaryExpression<Name extends string = string>
-  extends ESQLFunction<'postfix-unary-expression', Name> {
+export interface ESQLPostfixUnaryExpression<Name extends string = string> extends ESQLFunction<
+  'postfix-unary-expression',
+  Name
+> {
   subtype: 'postfix-unary-expression';
   args: [ESQLAstItem];
 }
@@ -330,7 +336,7 @@ export interface ESQLOrderExpression extends ESQLAstBaseItem {
 }
 
 export interface ESQLBinaryExpression<
-  Name extends BinaryExpressionOperator = BinaryExpressionOperator
+  Name extends BinaryExpressionOperator = BinaryExpressionOperator,
 > extends ESQLFunction<'binary-expression', Name> {
   subtype: 'binary-expression';
   args: [ESQLAstItem, ESQLAstItem];
@@ -614,8 +620,9 @@ export interface ESQLStringLiteral extends ESQLAstBaseItem {
   unquoted?: boolean;
 }
 
-export interface ESQLBaseTimeSpanLiteral<T extends 'time_duration' | 'date_period'>
-  extends ESQLAstBaseItem {
+export interface ESQLBaseTimeSpanLiteral<
+  T extends 'time_duration' | 'date_period',
+> extends ESQLAstBaseItem {
   type: 'literal';
   literalType: T;
   value: string;
@@ -629,7 +636,7 @@ export type ESQLTimeSpanLiteral = ESQLDatePeriodLiteral | ESQLTimeDurationLitera
 // @internal
 export interface ESQLParamLiteral<
   ParamType extends string = string,
-  ParamKind extends ESQLParamKinds = ESQLParamKinds
+  ParamKind extends ESQLParamKinds = ESQLParamKinds,
 > extends ESQLAstBaseItem {
   type: 'literal';
   literalType: 'param';
@@ -653,8 +660,9 @@ export type ESQLUnnamedParamLiteral<ParamKind extends ESQLParamKinds = ESQLParam
  *
  * @internal
  */
-export interface ESQLNamedParamLiteral<ParamKind extends ESQLParamKinds = ESQLParamKinds>
-  extends ESQLParamLiteral<'named', ParamKind> {
+export interface ESQLNamedParamLiteral<
+  ParamKind extends ESQLParamKinds = ESQLParamKinds,
+> extends ESQLParamLiteral<'named', ParamKind> {
   value: string;
 }
 
@@ -663,8 +671,9 @@ export interface ESQLNamedParamLiteral<ParamKind extends ESQLParamKinds = ESQLPa
  *
  * @internal
  */
-export interface ESQLPositionalParamLiteral<ParamKind extends ESQLParamKinds = ESQLParamKinds>
-  extends ESQLParamLiteral<'positional', ParamKind> {
+export interface ESQLPositionalParamLiteral<
+  ParamKind extends ESQLParamKinds = ESQLParamKinds,
+> extends ESQLParamLiteral<'positional', ParamKind> {
   value: number;
 }
 

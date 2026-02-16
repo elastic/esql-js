@@ -73,7 +73,10 @@ export class PromQLParser {
   public readonly parser: PromQLParserGenerated;
   public readonly errors = new PromQLErrorListener();
 
-  constructor(public readonly src: string, public readonly options: PromQLParseOptions = {}) {
+  constructor(
+    public readonly src: string,
+    public readonly options: PromQLParseOptions = {}
+  ) {
     const streams = (this.streams = CharStreams.fromString(src));
     const lexer = (this.lexer = new PromQLLexer(streams));
     const tokens = (this.tokens = new CommonTokenStream(lexer));

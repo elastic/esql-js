@@ -7,30 +7,28 @@ allows to traverse the AST in a more flexible way.
 The `Visitor` API allows to traverse the AST starting from the root node or a
 command statement, or an expression. Unlike in the `Walker` API, the `Visitor`
 does not automatically traverse the entire AST. Instead, the developer has to
-manually call the necessary *visit* methods to traverse the AST. This allows
+manually call the necessary _visit_ methods to traverse the AST. This allows
 to traverse the AST in a more flexible way: only traverse the parts of the AST
 that are needed, or maybe traverse the AST in a different order, or multiple
 times.
 
 The `Visitor` API is also more powerful than the `Walker` API, as for each
-visitor callback it provides a *context* object, which contains the information
+visitor callback it provides a _context_ object, which contains the information
 about the current node as well as the parent node, and the whole parent chain
 up to the root node.
 
-In addition, each visitor callback can return a value (*output*), which is then
+In addition, each visitor callback can return a value (_output_), which is then
 passed to the parent node, in the place where the visitor was called. Also, when
-a child is visited, the parent node can pass in *input* to the child visitor.
-
+a child is visited, the parent node can pass in _input_ to the child visitor.
 
 ## About ES|QL AST structure
 
 Broadly, there are two AST node types: (1) commands (say `FROM ...`, like
-*statements* in other languages), and (2) expressions (say `a + b`, or `fn()`).
-
+_statements_ in other languages), and (2) expressions (say `a + b`, or `fn()`).
 
 ### Commands
 
-Commands in ES|QL are like *statements* in other languages. They are the top
+Commands in ES|QL are like _statements_ in other languages. They are the top
 level nodes in the AST.
 
 The root node of the AST is considered to bye the "query" node. It contains a
@@ -46,7 +44,7 @@ Each command receives a list of positional arguments. For example:
 COMMAND arg1, arg2, arg3
 ```
 
-A command may also receive additional lists of *named* arguments, we refer to
+A command may also receive additional lists of _named_ arguments, we refer to
 them as `option`s. For example:
 
 ```
@@ -68,7 +66,6 @@ arguments can be represented as:
 Each command has a command specific `visitCommandX` callback, where `X` is the
 name of the command. If a command-specific callback is not found, the generic
 `visitCommand` callback is called.
-
 
 ### Expressions
 
@@ -92,7 +89,6 @@ As of this writing, the following expressions are defined:
 Each expression has a `visitExpressionX` callback, where `X` is the type of the
 expression. If a expression-specific callback is not found, the generic
 `visitExpression` callback is called.
-
 
 ## `Visitor` API Usage
 
@@ -126,7 +122,6 @@ following methods:
 - `.visitCommand()` &mdash; Start traversal from a command node.
 - `.visitExpression()` &mdash; Start traversal from an expression node.
 
-
 ### Specifying Callbacks
 
 The simplest way to traverse the AST is to specify the below three callbacks:
@@ -134,7 +129,6 @@ The simplest way to traverse the AST is to specify the below three callbacks:
 - `visitQuery` &mdash; Called for every query node. (Normally once.)
 - `visitCommand` &mdash; Called for every command node.
 - `visitExpression` &mdash; Called for every expression node.
-
 
 However, you can be more specific and specify callbacks for commands and
 expression types. This way the context `ctx` provided to the callback will have
@@ -187,17 +181,15 @@ of the generic `visitExpression`:
 - `visitOrderExpression` &mdash; Called for every order expression node, say
   `@timestamp ASC`.
 
-
 ### Using the Node Context
 
 Each visitor callback receives a `ctx` object, which contains the reference to
 the parent node's context:
 
 ```typescript
-new Visitor()
-  .on('visitExpression', (ctx) => {
-    ctx.parent
-  });
+new Visitor().on('visitExpression', (ctx) => {
+  ctx.parent;
+});
 ```
 
 Each visitor callback also contains various methods to visit the children nodes,
@@ -228,10 +220,9 @@ new Visitor()
   .visitQuery(root);
 ```
 
-
 ### Using the Visitor Output
 
-Each visitor callback can return a *output*, which is then passed to the parent
+Each visitor callback can return a _output_, which is then passed to the parent
 callback. This allows to pass information from the child node to the parent
 node.
 
@@ -246,10 +237,9 @@ const columns = new Visitor()
   .visitQuery(root);
 ```
 
-
 ### Using the Visitor Input
 
-Analogous to the output, each visitor callback can receive an *input* value.
+Analogous to the output, each visitor callback can receive an _input_ value.
 This allows to pass information from the parent node to the child node.
 
 For example, the below code snippet prints all column names prefixed with the
@@ -259,7 +249,7 @@ text `"prefix"`:
 new Visitor()
   .on('visitExpression', (ctx) => null)
   .on('visitColumnExpression', (ctx, INPUT) => console.log(INPUT + ctx.node.name))
-  .on('visitCommand', (ctx) => [...ctx.visitArguments("prefix")])
+  .on('visitCommand', (ctx) => [...ctx.visitArguments('prefix')])
   .on('visitQuery', (ctx) => [...ctx.visitCommands()])
   .visitQuery(root);
-``` 
+```

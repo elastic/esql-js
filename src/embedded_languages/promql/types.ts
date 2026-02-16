@@ -270,8 +270,9 @@ export type PromQLAtModifier = 'start()' | 'end()';
  * a * on(job) b
  * ```
  */
-export interface PromQLBinaryExpression<Name extends PromQLBinaryOperator = PromQLBinaryOperator>
-  extends PromQLAstNodeBase<Name> {
+export interface PromQLBinaryExpression<
+  Name extends PromQLBinaryOperator = PromQLBinaryOperator,
+> extends PromQLAstNodeBase<Name> {
   type: 'binary-expression';
   left: PromQLAstExpression;
   right: PromQLAstExpression;

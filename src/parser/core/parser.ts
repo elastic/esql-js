@@ -325,7 +325,10 @@ export class Parser {
   public readonly parser: ESQLParser;
   public readonly errors = new ESQLErrorListener();
 
-  constructor(public readonly src: string, public readonly options: ParseOptions = {}) {
+  constructor(
+    public readonly src: string,
+    public readonly options: ParseOptions = {}
+  ) {
     const streams = (this.streams = CharStreams.fromString(src));
     const lexer = (this.lexer = new ESQLLexer(streams));
     const tokens = (this.tokens = new CommonTokenStream(lexer));

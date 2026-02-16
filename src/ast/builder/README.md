@@ -12,7 +12,6 @@ position in the source code, and other metadata. When constructing the AST nodes
 manually, this information is not available, but the `Builder` API can still be
 used as it permits to skip the metadata.
 
-
 ## Usage
 
 Construct a `literal` expression node:

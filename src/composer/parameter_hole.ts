@@ -8,9 +8,15 @@
  */
 
 export class ParameterHole {
-  constructor(public value: unknown, public name?: string) {}
+  constructor(
+    public value: unknown,
+    public name?: string
+  ) {}
 }
 
 export class DoubleParameterHole {
-  constructor(public value: unknown, public name?: string) {}
+  constructor(
+    public value: unknown,
+    public name?: string
+  ) {}
 }

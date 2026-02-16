@@ -215,7 +215,7 @@ export type ComposerColumnShorthand =
  */
 export type ComposerRenameShorthand = [
   newName: ComposerColumnShorthand,
-  oldName: ComposerColumnShorthand
+  oldName: ComposerColumnShorthand,
 ];
 
 /**
@@ -238,7 +238,7 @@ export type ComposerSortShorthand =
        */
       column: ComposerColumnShorthand,
       order?: ESQLOrderExpression['order'],
-      nulls?: ESQLOrderExpression['nulls']
+      nulls?: ESQLOrderExpression['nulls'],
     ];
 
 /**
