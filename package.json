@@ -4,6 +4,7 @@
   "author": "Kibana ES|QL team",
   "description": "A set of tools to parse, build and transform ES|QL queries programatically.",
   "type": "module",
+  "packageManager": "yarn@1.22.22",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {

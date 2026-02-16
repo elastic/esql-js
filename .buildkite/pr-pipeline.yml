@@ -1,11 +1,21 @@
 ---
 # $yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+definitions:
+  agents: &agents
+    provider: 'gcp'
+    image: 'family/kibana-ubuntu-2404'
+    imageProject: 'elastic-images-prod'
+    machineType: 'n2-standard-2'
+
 steps:
   - label: 'Quick checks'
     command: 'yarn lint && yarn format:check'
+    agents: *agents
 
   - label: 'Build'
     command: 'yarn build'
+    agents: *agents
 
   - label: 'Test'
     command: 'yarn test'
+    agents: *agents
