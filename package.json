@@ -21,7 +21,8 @@
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
-    "format:check": "prettier --check ."
+    "format:check": "prettier --check .",
+    "semantic-release": "semantic-release --dry-run --debug"
   },
   "repository": "https://github.com/elastic/esql-js.git",
   "private": true,
