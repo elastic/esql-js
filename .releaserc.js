@@ -42,7 +42,12 @@ export default {
               failComment: false,
             },
           ],
-          '@semantic-release/npm',
+          [
+            '@semantic-release/npm',
+            {
+              provenance: true,
+            },
+          ],
         ]),
   ],
 };
