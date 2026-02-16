@@ -1,14 +1,11 @@
 ---
 # $yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
 steps:
+  - label: 'Quick checks'
+    command: 'yarn lint && yarn format:check'
+
   - label: 'Build'
-    command: 'true'
+    command: 'yarn build'
 
   - label: 'Test'
-    command: 'true'
-
-  - label: 'Deploy'
-    command: 'true'
-
-  - label: 'Publish'
-    command: 'true'
+    command: 'yarn test'
