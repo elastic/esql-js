@@ -26,3 +26,12 @@ steps:
       exclude:
         - 'catalog-info.yaml'
         - 'renovate.json'
+
+# Temp for testing
+  - label: ':pipeline: Upload grammar sync Pipeline' 
+    command: 'buildkite-agent pipeline upload .buildkite/grammar-sync-pipeline.yml'
+    if_changed:
+      include:
+        - '.buildkite/scripts/esql_grammar_sync.sh'
+        - '.buildkite/grammar-sync-pipeline.yml'
+        - 'src/parser/antlr/**/*'
