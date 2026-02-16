@@ -8,14 +8,18 @@ definitions:
     machineType: 'n2-standard-2'
 
 steps:
-  - label: 'Quick checks'
-    command: 'yarn lint && yarn format:check'
+  - label: 'Lint, Format & Build'
+    key: 'check-and-build'
     agents: *agents
-
-  - label: 'Build'
-    command: 'yarn build'
-    agents: *agents
+    command: |
+      yarn install --frozen-lockfile
+      yarn lint
+      yarn format:check
+      yarn build
 
   - label: 'Test'
-    command: 'yarn test'
     agents: *agents
+    depends_on: 'check-and-build'
+    command: |
+      yarn install --frozen-lockfile
+      yarn test
