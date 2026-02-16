@@ -1,0 +1,11 @@
+---
+# $yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+steps:
+  - label: 'Grammar Sync'
+    command: '.buildkite/scripts/esql_grammar_sync.sh'
+    timeout_in_minutes: 10
+    agents:
+      provider: 'gcp'
+      image: 'family/kibana-ubuntu-2404'
+      imageProject: 'elastic-images-prod'
+      machineType: 'n2-standard-2'
