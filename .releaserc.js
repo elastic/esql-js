@@ -18,7 +18,6 @@ export default {
           { type: 'feat', release: 'minor' },
           { type: 'feature', release: 'minor' },
           { type: 'fix', release: 'patch' },
-          { type: 'style', release: 'patch' },
           { type: 'refactor', release: 'patch' },
           { type: 'perf', release: 'patch' },
           { type: 'build', release: 'patch' },
