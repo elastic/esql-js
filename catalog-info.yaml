@@ -30,3 +30,34 @@ spec:
           access_level: MANAGE_BUILD_AND_READ
         everyone:
           access_level: READ_ONLY
+---
+apiVersion: backstage.io/v1alpha1
+kind: Resource
+metadata:
+  name: buildkite-pipeline-esql-js-release
+  description: Release pipeline for esql-js
+  links:
+    - title: Pipeline
+      url: https://buildkite.com/elastic/esql-js-release
+
+spec:
+  type: buildkite-pipeline
+  owner: group:kibana-esql
+  system: buildkite
+  implementation:
+    apiVersion: buildkite.elastic.dev/v1
+    kind: Pipeline
+    metadata:
+      name: esql-js-release
+      description: Release pipeline for esql-js
+    spec:
+      repository: elastic/esql-js
+      pipeline_file: '.buildkite/release-pipeline.yml'
+      branch_configuration: '*'
+      provider_settings:
+        trigger_mode: none
+      teams:
+        kibana-esql:
+          access_level: MANAGE_BUILD_AND_READ
+        everyone:
+          access_level: READ_ONLY
