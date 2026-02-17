@@ -8,6 +8,34 @@ definitions:
     machineType: 'n2-standard-2'
 
 steps:
+  - label: 'PR Title: Conventional Commit'
+    key: 'pr-title-check'
+    agents: *agents
+    command: |
+      echo "Checking PR title follows Conventional Commits..."
+      PR_TITLE="$BUILDKITE_PULL_REQUEST_TITLE"
+      if [ -z "$PR_TITLE" ]; then
+        echo "⚠️ No PR title found (not a pull request build). Skipping check."
+        exit 0
+      fi
+      PATTERN="^(feat|fix|refactor|perf|build|chore|revert)(\(.+\))?(!)?: .+"
+      if echo "$PR_TITLE" | grep -Eq "$PATTERN"; then
+        echo "✅ PR title is valid: $PR_TITLE"
+      else
+        echo "❌ PR title does not follow Conventional Commits format."
+        echo ""
+        echo "Expected: <type>(<optional scope>): <description>"
+        echo "Types: feat, fix, refactor, perf, build, chore, revert"
+        echo ""
+        echo "Examples:"
+        echo "  feat: add new command"
+        echo "  fix(parser): handle STATS location correctly"
+        echo "  chore!: drop support for Node 16"
+        echo ""
+        echo "Got: $PR_TITLE"
+        exit 1
+      fi
+
   - label: 'Lint, Format & Build'
     key: 'check-and-build'
     agents: *agents
