@@ -455,7 +455,7 @@ ComposerQuery
     expect(
       () => esql`FROM index | WHERE foo > ${e.par(input, '123')} | LIMIT 10`
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Invalid parameter name \\"123\\". Parameter names cannot start with a digit or space."`
+      `"Invalid parameter name "123". Parameter names cannot start with a digit or space."`
     );
   });
 
@@ -512,7 +512,7 @@ ComposerQuery
       // @ts-expect-error - Parameter shorthand must be an object with a single key
       esql`FROM index | LIMIT ${{ limit, noMoreFields: true }}`;
     }).toThrowErrorMatchingInlineSnapshot(
-      `"Unexpected synth hole: {\\"limit\\":123,\\"noMoreFields\\":true}"`
+      `"Unexpected synth hole: {"limit":123,"noMoreFields":true}"`
     );
   });
 });
