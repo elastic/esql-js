@@ -16,7 +16,6 @@ export default {
         releaseRules: [
           { breaking: true, release: 'major' },
           { type: 'feat', release: 'minor' },
-          { type: 'feature', release: 'minor' },
           { type: 'fix', release: 'patch' },
           { type: 'refactor', release: 'patch' },
           { type: 'perf', release: 'patch' },
