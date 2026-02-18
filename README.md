@@ -16,7 +16,7 @@ building, traversal, pretty-printing and manipulation features on top of a custo
 ## Contents of the package
 
 ### Creating an ES|QL AST
-This pacakge offers 3 tools that allows creating an AST for a query.
+This package offers 3 tools that allow creating an AST for a query.
 
 The [`parser`](./src/parser/README.md) allows to convert a query in text form into an AST.
 ```js
@@ -72,7 +72,7 @@ walker.walk(ast);
 ```
 
 The [`visitor`](./src/ast/visitor/README.md) API provides a feature-rich way to traverse the ES|QL AST. It is more powerful than the Walker API, as it allows to traverse the AST in a more flexible way.
-Said that, it's also more complicated to use as it does not automatically traverse the entire tree, read it dedicated documentation to get insights on it.
+Said that, it's also more complicated to use as it does not automatically traverse the entire tree, read its dedicated documentation to get insights on it.
 
 ```ts
 import { Visitor } from '@elastic/esql';
@@ -88,9 +88,9 @@ new Visitor()
 The [`mutate`](./src/ast/mutate/README.md) API provides methods to navigate and modify the AST.
 
 ```ts
-import { parse, mutate, BasicPrettyPrinter } from '@elastic/esql';
+import { Parser, mutate, BasicPrettyPrinter } from '@elastic/esql';
 
-const { root } = parse('FROM index METADATA _lang');
+const { root } = Parser.parse('FROM index METADATA _lang');
 
 // [ '_lang' ]
 console.log([...mutate.commands.from.metadata.list(root)]); 
@@ -107,7 +107,7 @@ console.log(src);
 ```
 
 ### Pretty printing
-The [`pretty_print`]((./src/pretty_print/README.md)) API lets you format the AST to text.
+The [`pretty_print`](./src/pretty_print/README.md) API lets you format the AST to text.
 
 ```ts
 import { parse, WrappingPrettyPrinter } from '@elastic/esql';
