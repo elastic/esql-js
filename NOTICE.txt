@@ -1,0 +1,2 @@
+esql-js (A set of ts tools to parse, build and transform ES|QL queries programatically).
+Copyright 2026 Elasticsearch B.V.
