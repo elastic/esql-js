@@ -162,3 +162,5 @@ const text = WrappingPrettyPrinter.print(root, { multiline: true });
 console.log(text);
 ```
 
+## Licence
+TBD
