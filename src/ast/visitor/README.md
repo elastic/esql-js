@@ -31,7 +31,7 @@ _statements_ in other languages), and (2) expressions (say `a + b`, or `fn()`).
 Commands in ES|QL are like _statements_ in other languages. They are the top
 level nodes in the AST.
 
-The root node of the AST is considered to bye the "query" node. It contains a
+The root node of the AST is considered to be the "query" node. It contains a
 list of commands.
 
 ```
