@@ -165,4 +165,4 @@ console.log(text);
 ```
 
 ## Licence
-TBD
+Licensed under [Elastic v2](./LICENCE.txt).
