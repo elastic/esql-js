@@ -23,7 +23,7 @@ indentation before the pipe character.
 Usage:
 
 ```typescript
-import { parse, BasicPrettyPrinter } from '@kbn/esql-language';
+import { parse, BasicPrettyPrinter } from '@elastic/esql';
 
 const src = 'FROM index | LIMIT 10';
 const { root } = parse(src);
@@ -70,7 +70,7 @@ to be wrapped).
 Usage:
 
 ```typescript
-import { parse, WrappingPrettyPrinter } from '@kbn/esql-language';
+import { parse, WrappingPrettyPrinter } from '@elastic/esql';
 
 const src = `
   FROM index /* this is a comment */

@@ -13,7 +13,7 @@ To start a new _walk_ you create a `Walker` instance and call the `walk()` metho
 with the AST node to start the walk from.
 
 ```ts
-import { Walker } from '@kbn/esql-language';
+import { Walker } from '@elastic/esql';
 
 const walker = new Walker({
   /**
@@ -64,7 +64,7 @@ It is also possible to provide a single `visitAny` callback that is called for
 any node type that does not have a specific visitor.
 
 ```ts
-import { Walker } from '@kbn/esql-language';
+import { Walker } from '@elastic/esql';
 
 const walker = new Walker({
   visitAny: (node: ESQLProperNode) => {
