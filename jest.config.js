@@ -2,6 +2,8 @@
 const config = {
   testEnvironment: 'node',
   roots: ['<rootDir>/src'],
+  // Disable Prettier for inline snapshots (Jest 29 does not support Prettier 3.x)
+  prettierPath: null,
   // Only treat *.test.ts files as test suites (excludes fixtures, helpers, etc. in __tests__/)
   testMatch: ['**/*.test.ts'],
   moduleNameMapper: {
