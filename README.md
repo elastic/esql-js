@@ -165,4 +165,4 @@ console.log(text);
 ```
 
 ## Licence
-Licensed under [Elastic v2](./LICENCE.txt).
+Licensed under [Elastic License 2.0](./LICENCE.txt).
