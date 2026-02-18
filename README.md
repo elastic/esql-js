@@ -78,6 +78,8 @@ const query = esql`
 
 query.pipe`LIMIT 10`;
 ```
+Check also the [`synth`](src/composer/synth/README.md) API for building independent nodes.
+
 
 The [`builder`](./src/ast/builder/README.md) is a low level API that allows to create AST nodes.
 ```ts
