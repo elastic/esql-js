@@ -13,6 +13,44 @@
 The purpose of this package is to provide comprehensive ES|QL functionality including low-level parsing,
 building, traversal, pretty-printing and manipulation features on top of a custom compact AST representation.
 
+## Installation
+
+<table>
+<tr>
+<th>npm</th>
+<th>yarn</th>
+<th>pnpm</th>
+</tr>
+<tr>
+<td>
+
+```bash
+npm install @elastic/esql
+```
+
+</td>
+<td>
+
+```bash
+yarn add @elastic/esql
+```
+
+</td>
+<td>
+
+```bash
+pnpm add @elastic/esql
+```
+
+</td>
+</tr>
+</table>
+
+## Requirements
+
+- **Node.js** >= 18.0.0
+- This package is distributed as an ES module.
+
 ## Contents of the package
 
 ### Creating an ES|QL AST
