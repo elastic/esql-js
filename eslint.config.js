@@ -2,7 +2,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import { requireLicenseHeader } from "./lint-licence-rule.js";
+import { requireLicenseHeader } from './lint-licence-rule.js';
 
 export default defineConfig([
   globalIgnores(['lib/', 'node_modules/', 'src/parser/antlr/', '*.js', '*.mjs']),
@@ -10,9 +10,9 @@ export default defineConfig([
   ...tseslint.configs.recommended,
   {
     plugins: {
-      "local-rules": {
+      'local-rules': {
         rules: {
-          "require-license-header": requireLicenseHeader,
+          'require-license-header': requireLicenseHeader,
         },
       },
     },

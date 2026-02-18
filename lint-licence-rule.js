@@ -95,7 +95,6 @@ export const requireLicenseHeader = {
   },
 };
 
-
 function isHashbang(text) {
   return text.trim().startsWith('#!') && !text.trim().includes('\n');
 }
@@ -108,11 +107,11 @@ function assert(truth, message) {
   const error = new Error(message);
   error.failedAssertion = true;
   throw error;
-};
+}
 
 function normalizeWhitespace(string) {
   return string.replace(/\s+/g, ' ');
-};
+}
 
 function init(context, program, initStep) {
   try {
@@ -127,4 +126,4 @@ function init(context, program, initStep) {
       throw error;
     }
   }
-};
+}
