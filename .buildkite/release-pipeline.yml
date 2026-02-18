@@ -1,0 +1,27 @@
+---
+# $yaml-language-server: $schema=https://raw.githubusercontent.com/buildkite/pipeline-schema/main/schema.json
+definitions:
+  agents: &agents
+    provider: 'gcp'
+    image: 'family/kibana-ubuntu-2404'
+    imageProject: 'elastic-images-prod'
+    machineType: 'n2-standard-2'
+
+steps:
+  - label: 'Build & Test'
+    key: 'build-and-test'
+    agents: *agents
+    command: |
+      yarn install --frozen-lockfile
+      yarn lint
+      yarn format:check
+      yarn build
+      yarn test
+
+  - label: 'Release'
+    depends_on: 'build-and-test'
+    agents: *agents
+    command: |
+      yarn install --frozen-lockfile
+      yarn build
+      yarn semantic-release

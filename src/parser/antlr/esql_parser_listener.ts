@@ -24,7 +24,6 @@ import { FieldsContext } from "./esql_parser.js";
 import { FieldContext } from "./esql_parser.js";
 import { FromCommandContext } from "./esql_parser.js";
 import { TimeSeriesCommandContext } from "./esql_parser.js";
-import { ExternalCommandContext } from "./esql_parser.js";
 import { IndexPatternAndMetadataFieldsContext } from "./esql_parser.js";
 import { IndexPatternOrSubqueryContext } from "./esql_parser.js";
 import { SubqueryContext } from "./esql_parser.js";
@@ -292,16 +291,6 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitTimeSeriesCommand?: (ctx: TimeSeriesCommandContext) => void;
-	/**
-	 * Enter a parse tree produced by `esql_parser.externalCommand`.
-	 * @param ctx the parse tree
-	 */
-	enterExternalCommand?: (ctx: ExternalCommandContext) => void;
-	/**
-	 * Exit a parse tree produced by `esql_parser.externalCommand`.
-	 * @param ctx the parse tree
-	 */
-	exitExternalCommand?: (ctx: ExternalCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.indexPatternAndMetadataFields`.
 	 * @param ctx the parse tree
