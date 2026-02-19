@@ -180,7 +180,7 @@ main () {
   pip3 install --break-system-packages antlr4-tools 2>/dev/null || pip3 install --user antlr4-tools
   export PATH="$HOME/.local/bin:$PATH"
   # Make pip-installed antlr4 compatible with scripts that expect "antlr" (as with Homebrew).
-  ln -sf "$(which antlr4)" "$(which antlr4 | sed 's/\/antlr4$/\/antlr/')"
+  #ln -sf "$(which antlr4)" "$(which antlr4 | sed 's/\/antlr4$/\/antlr/')"
 
   yarn build:antlr4:esql
   yarn build:antlr4:promql
