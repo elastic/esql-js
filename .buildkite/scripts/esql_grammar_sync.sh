@@ -175,11 +175,13 @@ main () {
 
   yarn install --frozen-lockfile
 
-  # Install ANTLR
-  yarn run prebuild:antlr4
+  # Install ANTLR.
+  report_main_step "Installing antlr4-tools (pip)"
+  pip3 install --break-system-packages antlr4-tools 2>/dev/null || pip3 install --user antlr4-tools
+  export PATH="$HOME/.local/bin:$PATH"
+  # Make pip-installed antlr4 compatible with scripts that expect "antlr" (as with Homebrew).
+  ln -sf "$(which antlr4)" "$(which antlr4 | sed 's/\/antlr4$/\/antlr/')"
 
-  # Pin version so the runner does not fetch from Sonatype (can 400) or use .m2 cache (often empty).
-  export ANTLR4_TOOLS_ANTLR_VERSION=4.13.2
   yarn build:antlr4:esql
   yarn build:antlr4:promql
 
