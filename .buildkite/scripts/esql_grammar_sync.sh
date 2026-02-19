@@ -179,8 +179,10 @@ main () {
   report_main_step "Installing antlr4-tools (pip)"
   pip3 install --break-system-packages antlr4-tools 2>/dev/null || pip3 install --user antlr4-tools
   export PATH="$HOME/.local/bin:$PATH"
-  # Make pip-installed antlr4 compatible with scripts that expect "antlr" (as with Homebrew).
-  #ln -sf "$(which antlr4)" "$(which antlr4 | sed 's/\/antlr4$/\/antlr/')"
+  # Make antlr4 available as "antlr" (scripts expect "antlr"). Use a writable dir to avoid sudo.
+  ANTLR_WRAPPER_DIR="$(mktemp -d)"
+  ln -sf "$(which antlr4)" "$ANTLR_WRAPPER_DIR/antlr"
+  export PATH="$ANTLR_WRAPPER_DIR:$PATH"
 
   yarn build:antlr4:esql
   yarn build:antlr4:promql
