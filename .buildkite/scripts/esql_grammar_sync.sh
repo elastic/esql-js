@@ -154,9 +154,9 @@ main () {
 
   report_main_step "Differences found. Checking for an existing pull request."
 
-  MACHINE_USERNAME="elasticmachine"
+  MACHINE_USERNAME="Grammar Sync Bot"
   git config --global user.name "$MACHINE_USERNAME"
-  git config --global user.email '15837671+elasticmachine@users.noreply.github.com'
+  git config --global user.email 'elasticmachine@users.noreply.github.com'
 
   PR_TITLE='[ES|QL] Update grammars'
   PR_BODY='This PR updates the ES|QL grammars (lexer and parser) and PromQL grammars to match the latest version in Elasticsearch.'
@@ -175,8 +175,11 @@ main () {
 
   yarn install --frozen-lockfile
 
-  # Run build commands directly, skipping prebuild:antlr4 which uses brew (macOS only).
-  # CI agents have antlr pre-installed.
+  # Install ANTLR
+  yarn run prebuild:antlr4
+
+  # Pin version so the runner does not fetch from Sonatype (can 400) or use .m2 cache (often empty).
+  export ANTLR4_TOOLS_ANTLR_VERSION=4.13.2
   yarn build:antlr4:esql
   yarn build:antlr4:promql
 
