@@ -183,8 +183,6 @@ main () {
   ANTLR_WRAPPER_DIR="$(mktemp -d)"
   ln -sf "$(which antlr4)" "$ANTLR_WRAPPER_DIR/antlr"
   export PATH="$ANTLR_WRAPPER_DIR:$PATH"
-
-  # Pin ANTLR version so the runner does not fetch from Sonatype (HTTP 400) or use empty .m2 cache.
   export ANTLR4_TOOLS_ANTLR_VERSION=4.13.2
 
   yarn build:antlr4:esql
