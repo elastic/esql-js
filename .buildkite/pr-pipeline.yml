@@ -8,6 +8,12 @@ definitions:
     machineType: 'n2-standard-2'
 
 steps:
+  # TODO: remove after verifying grammar sync works (run on this PR then merge)
+  - label: 'Grammar Sync'
+    command: '.buildkite/scripts/esql_grammar_sync.sh'
+    timeout_in_minutes: 10
+    agents: *agents
+
   - label: 'Lint, Format & Build'
     key: 'check-and-build'
     agents: *agents

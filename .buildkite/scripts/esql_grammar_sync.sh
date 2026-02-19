@@ -154,6 +154,9 @@ main () {
 
   report_main_step "Differences found. Checking for an existing pull request."
 
+  # temp
+  GH_TOKEN="$VAULT_GITHUB_TOKEN" gh api user --jq '"Name: " + (.name // "—") + "\nEmail: " + (.email // .login + "@users.noreply.github.com")'
+
   MACHINE_USERNAME="elasticmachine"
   git config --global user.name "$MACHINE_USERNAME"
   git config --global user.email '15837671+elasticmachine@users.noreply.github.com'
