@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { parse } from '../index.ts';
-import { EsqlQuery } from '../../composer/query/index.ts';
-import type { ESQLColumn, ESQLCommand, ESQLFunction, ESQLInlineCast } from '../../types.ts';
-import { Walker } from '../../ast/walker/index.ts';
+import { parse } from '..';
+import { EsqlQuery } from '../../composer/query';
+import type { ESQLColumn, ESQLCommand, ESQLFunction, ESQLInlineCast } from '../../types';
+import { Walker } from '../../ast/walker';
 
 describe('WHERE', () => {
   describe('correctly formatted', () => {

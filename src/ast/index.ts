@@ -6,12 +6,12 @@
  */
 
 // Core AST utilities
-export * from './is.ts';
-export * from './location.ts';
-export * from './grouping.ts';
+export * from './is';
+export * from './location';
+export * from './grouping';
 
 // AST manipulation tools
-export { Builder, type AstNodeParserFields, type AstNodeTemplate } from './builder/index.ts';
-export { singleItems, resolveItem, lastItem, firstItem } from './visitor/utils.ts';
-export { Walker, type WalkerOptions, walk, type WalkerAstNode } from './walker/index.ts';
-export * as mutate from './mutate/index.ts';
+export { Builder, type AstNodeParserFields, type AstNodeTemplate } from './builder';
+export { singleItems, resolveItem, lastItem, firstItem } from './visitor/utils';
+export { Walker, type WalkerOptions, walk, type WalkerAstNode } from './walker';
+export * as mutate from './mutate';

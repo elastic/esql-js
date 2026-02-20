@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query/index.ts';
-import type { ESQLAstCompletionCommand, ESQLAstItem, ESQLFunction } from '../../types.ts';
+import { EsqlQuery } from '../../composer/query';
+import type { ESQLAstCompletionCommand, ESQLAstItem, ESQLFunction } from '../../types';
 
 describe('COMPLETION command', () => {
   describe('correctly formatted', () => {

@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type { ESQLProperNode } from '../../../../types.ts';
-import type * as promql from '../../types.ts';
-import type { PromqlWalker } from './walker.ts';
+import type { ESQLProperNode } from '../../../../types';
+import type * as promql from '../../types';
+import type { PromqlWalker } from './walker';
 
 export type PromqlWalkerVisitorApi = Pick<PromqlWalker, 'abort'>;
 export type PromqlWalkerAstNode = promql.PromQLAstNode;

@@ -5,13 +5,13 @@
  * 2.0.
  */
 
-import type { ParseOptions } from '../../parser/index.ts';
-import { Parser } from '../../parser/index.ts';
-import { createTag } from './tag.ts';
-import { SynthNode } from './synth_node.ts';
-import { HEADER_COMMANDS, SOURCE_COMMANDS } from '../../parser/index.ts';
-import type { SynthGenerator } from './types.ts';
-import type { ESQLAstQueryExpression } from '../../types.ts';
+import type { ParseOptions } from '../../parser';
+import { Parser } from '../../parser';
+import { createTag } from './tag';
+import { SynthNode } from './synth_node';
+import { HEADER_COMMANDS, SOURCE_COMMANDS } from '../../parser';
+import type { SynthGenerator } from './types';
+import type { ESQLAstQueryExpression } from '../../types';
 
 const doesNotStartWithProcessingCommand = (src: string): boolean => {
   const tokens = Parser.tokens(src, 1);

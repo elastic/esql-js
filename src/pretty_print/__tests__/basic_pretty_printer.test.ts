@@ -5,14 +5,14 @@
  * 2.0.
  */
 
-import { Parser } from '../../parser/index.ts';
-import { Walker } from '../../ast/walker/index.ts';
-import type { ESQLFunction, ESQLMap } from '../../types.ts';
+import { Parser } from '../../parser';
+import { Walker } from '../../ast/walker';
+import type { ESQLFunction, ESQLMap } from '../../types';
 import type {
   BasicPrettyPrinterMultilineOptions,
   BasicPrettyPrinterOptions,
-} from '../basic_pretty_printer.ts';
-import { BasicPrettyPrinter } from '../basic_pretty_printer.ts';
+} from '../basic_pretty_printer';
+import { BasicPrettyPrinter } from '../basic_pretty_printer';
 
 const reprint = (src: string, opts?: BasicPrettyPrinterOptions) => {
   const { root } = Parser.parse(src);

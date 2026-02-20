@@ -6,12 +6,12 @@
  */
 
 import type * as antlr from 'antlr4';
-import * as cst from '../../../parser/antlr/promql_parser.ts';
-import { getPosition } from '../../../parser/core/tokens.ts';
-import { PromQLBuilder } from '../ast/builder/index.ts';
-import type { AstNodeParserFields } from '../../../ast/builder/types.ts';
-import type * as ast from '../types.ts';
-import type { PromQLParser } from './parser.ts';
+import * as cst from '../../../parser/antlr/promql_parser';
+import { getPosition } from '../../../parser/core/tokens';
+import { PromQLBuilder } from '../ast/builder';
+import type { AstNodeParserFields } from '../../../ast/builder/types';
+import type * as ast from '../types';
+import type { PromQLParser } from './parser';
 
 // TODO: Handle `SubqueryResolutionContext`, `NonReservedContext`
 

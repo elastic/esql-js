@@ -1,7 +1,7 @@
 import { CharStream, CommonTokenStream } from 'antlr4';
-import { default as ESQLLexer } from './esql_lexer.ts';
-import { default as ESQLParser } from './esql_parser.ts';
-import { ESQLErrorListener } from '../index.ts';
+import { default as ESQLLexer } from './esql_lexer';
+import { default as ESQLParser } from './esql_parser';
+import { ESQLErrorListener } from '..';
 
 describe('ES|QL Lexer/Parser', () => {
   it('should lex a simple query', () => {

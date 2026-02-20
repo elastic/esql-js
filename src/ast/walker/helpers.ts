@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { PromQLAstNode } from '../../embedded_languages/promql/types.ts';
+import type { PromQLAstNode } from '../../embedded_languages/promql/types';
 import type {
   ESQLAstCommand,
   ESQLAstQueryExpression,
@@ -20,7 +20,7 @@ import type {
   ESQLProperNode,
   ESQLSource,
   ESQLUnknownItem,
-} from '../../types.ts';
+} from '../../types';
 
 export type NodeMatchKeys =
   | keyof ESQLAstCommand

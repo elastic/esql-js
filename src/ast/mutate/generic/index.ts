@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export * as commands from './commands/index.ts';
+export * as commands from './commands';

@@ -6,8 +6,8 @@
  */
 
 import type { Token } from 'antlr4';
-import { DEFAULT_CHANNEL } from './constants.ts';
-import type { ESQLLocation } from '../../types.ts';
+import { DEFAULT_CHANNEL } from './constants';
+import type { ESQLLocation } from '../../types';
 
 /**
  * Finds all tokens in the given range using binary search. Allows to further

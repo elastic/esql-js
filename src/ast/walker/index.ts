@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export { Walker, type WalkerOptions, walk, type WalkerAstNode } from './walker.ts';
+export { Walker, type WalkerOptions, walk, type WalkerAstNode } from './walker';

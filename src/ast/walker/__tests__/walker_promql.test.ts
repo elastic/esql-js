@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../../composer/query/index.ts';
-import { Walker } from '../walker.ts';
+import { EsqlQuery } from '../../../composer/query';
+import { Walker } from '../walker';
 import type {
   PromQLAstNode,
   PromQLAstQueryExpression,
@@ -26,8 +26,8 @@ import type {
   PromQLAt,
   PromQLModifier,
   PromQLGroupModifier,
-} from '../../../embedded_languages/promql/types.ts';
-import type { ESQLCommand } from '../../../types.ts';
+} from '../../../embedded_languages/promql/types';
+import type { ESQLCommand } from '../../../types';
 
 describe('Walker PromQL support', () => {
   describe('basic PromQL traversal', () => {

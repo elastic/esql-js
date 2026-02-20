@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { BasicPrettyPrinter } from '../../../pretty_print/index.ts';
-import type { ESQLProperNode } from '../../../types.ts';
-import { Walker } from '../../../ast/walker/walker.ts';
-import { exp } from '../expression.ts';
+import { BasicPrettyPrinter } from '../../../pretty_print';
+import type { ESQLProperNode } from '../../../types';
+import { Walker } from '../../../ast/walker/walker';
+import { exp } from '../expression';
 
 test('can generate integer literal', () => {
   const node = exp('42');

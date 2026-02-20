@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query/index.ts';
-import { printAst } from '../../debug/index.ts';
-import type { ESQLAstPromqlCommand } from '../../types.ts';
+import { EsqlQuery } from '../../composer/query';
+import { printAst } from '../../debug';
+import type { ESQLAstPromqlCommand } from '../../types';
 
 /**
  * ```

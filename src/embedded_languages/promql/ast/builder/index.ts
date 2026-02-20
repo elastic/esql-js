@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export type * from './types.ts';
-export { PromQLBuilder } from './builder.ts';
+export type * from './types';
+export { PromQLBuilder } from './builder';

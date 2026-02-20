@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query/index.ts';
-import type { ESQLCommandOption } from '../../types.ts';
-import { Walker } from '../../ast/walker/index.ts';
+import { EsqlQuery } from '../../composer/query';
+import type { ESQLCommandOption } from '../../types';
+import { Walker } from '../../ast/walker';
 
 describe('CHANGE_POINT command', () => {
   describe('correctly formatted', () => {

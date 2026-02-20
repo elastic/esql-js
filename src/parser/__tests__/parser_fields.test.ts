@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query/index.ts';
-import * as fixtures from '../../__tests__/fixtures.ts';
-import type { ESQLProperNode } from '../../types.ts';
-import { Walker } from '../../ast/walker/index.ts';
+import { EsqlQuery } from '../../composer/query';
+import * as fixtures from '../../__tests__/fixtures';
+import type { ESQLProperNode } from '../../types';
+import { Walker } from '../../ast/walker';
 
 /**
  * Asserts that a node has all {@link AstNodeParserFields} defined.

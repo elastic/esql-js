@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export { printAst, type PrintAstOptions } from './print_ast.ts';
+export { printAst, type PrintAstOptions } from './print_ast';

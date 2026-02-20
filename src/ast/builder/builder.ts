@@ -7,9 +7,9 @@
 
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { isStringLiteral } from '../is.ts';
-import { TIME_DURATION_UNITS } from '../../parser/index.ts';
-import { LeafPrinter } from '../../pretty_print/index.ts';
+import { isStringLiteral } from '../is';
+import { TIME_DURATION_UNITS } from '../../parser';
+import { LeafPrinter } from '../../pretty_print';
 import type {
   ESQLAstComment,
   ESQLAstCommentMultiLine,
@@ -47,8 +47,8 @@ import type {
   ESQLDatePeriodLiteral,
   ESQLAstHeaderCommand,
   ESQLAstSetHeaderCommand,
-} from '../../types.ts';
-import type { AstNodeParserFields, AstNodeTemplate, PartialFields } from './types.ts';
+} from '../../types';
+import type { AstNodeParserFields, AstNodeTemplate, PartialFields } from './types';
 
 export namespace Builder {
   /**

@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { isPromqlNode } from './is.ts';
-import type { PromQLAstNode } from '../types.ts';
+import { isPromqlNode } from './is';
+import type { PromQLAstNode } from '../types';
 
 export function* childrenOfPromqlNode(node: PromQLAstNode): Iterable<PromQLAstNode> {
   if (!isPromqlNode(node)) {

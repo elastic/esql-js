@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-import { Walker } from '../../ast/walker/index.ts';
-import { Builder } from '../../ast/builder/index.ts';
-import { BasicPrettyPrinter } from '../../pretty_print/index.ts';
-import { printAst, type PrintAstOptions } from '../../debug/index.ts';
-import type { ESQLProperNode } from '../../types.ts';
+import { Walker } from '../../ast/walker';
+import { Builder } from '../../ast/builder';
+import { BasicPrettyPrinter } from '../../pretty_print';
+import { printAst, type PrintAstOptions } from '../../debug';
+import type { ESQLProperNode } from '../../types';
 
 /**
  * This is used as a prototype of AST nodes created by the synth methods.

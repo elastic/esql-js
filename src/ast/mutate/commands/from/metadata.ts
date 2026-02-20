@@ -5,18 +5,18 @@
  * 2.0.
  */
 
-import { Walker } from '../../../walker/index.ts';
+import { Walker } from '../../../walker';
 import type {
   ESQLAstQueryExpression,
   ESQLColumn,
   ESQLCommand,
   ESQLCommandOption,
-} from '../../../../types.ts';
-import { Visitor } from '../../../visitor/index.ts';
-import { cmpArr, findByPredicate } from '../../util.ts';
-import * as generic from '../../generic/index.ts';
-import { Builder } from '../../../builder/index.ts';
-import type { Predicate } from '../../types.ts';
+} from '../../../../types';
+import { Visitor } from '../../../visitor';
+import { cmpArr, findByPredicate } from '../../util';
+import * as generic from '../../generic';
+import { Builder } from '../../../builder';
+import type { Predicate } from '../../types';
 
 /**
  * Returns all METADATA field AST nodes and their corresponding parent command

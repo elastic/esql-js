@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export type * from './types.ts';
-export { Builder } from './builder.ts';
+export type * from './types';
+export { Builder } from './builder';

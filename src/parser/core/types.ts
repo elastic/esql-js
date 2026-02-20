@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type * as esql_parser from '../antlr/esql_parser.ts';
-import type { CstToAstConverter } from './cst_to_ast_converter.ts';
-import type { ESQLAstComment } from '../../types.ts';
+import type * as esql_parser from '../antlr/esql_parser';
+import type { CstToAstConverter } from './cst_to_ast_converter';
+import type { ESQLAstComment } from '../../types';
 
 /**
  * Lines of decorations per *whitespace line*. A *whitespace line* is a line

@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { ESQLLocation, EditorError, ESQLAstBaseItem } from '../../types.ts';
+import type { ESQLLocation, EditorError, ESQLAstBaseItem } from '../../types';
 
 /**
  * All PromQL AST nodes have a `dialect: 'promql'` property to distinguish them

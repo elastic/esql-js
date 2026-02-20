@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import type * as synth from './synth/index.ts';
-import type { ESQLAstCommand, ESQLCommand, ESQLOrderExpression, ESQLSource } from '../types.ts';
-import type { ComposerQuery } from './composer_query.ts';
-import type { ParameterHole, DoubleParameterHole } from './parameter_hole.ts';
+import type * as synth from './synth';
+import type { ESQLAstCommand, ESQLCommand, ESQLOrderExpression, ESQLSource } from '../types';
+import type { ComposerQuery } from './composer_query';
+import type { ParameterHole, DoubleParameterHole } from './parameter_hole';
 
 /**
  * Holes are expressions that can be used in the `esql` tagged template function.

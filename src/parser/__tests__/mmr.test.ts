@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query/index.ts';
-import type { ESQLAstMmrCommand, ESQLCommandOption, ESQLMap } from '../../types.ts';
+import { EsqlQuery } from '../../composer/query';
+import type { ESQLAstMmrCommand, ESQLCommandOption, ESQLMap } from '../../types';
 
 describe('MMR command', () => {
   describe('basic parsing', () => {

@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { PromQLAstNode } from '../../types.ts';
+import type { PromQLAstNode } from '../../types';
 
 /**
  * The node *template* transforms PromQL AST nodes into a permissive shape, with

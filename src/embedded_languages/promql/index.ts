@@ -6,13 +6,13 @@
  */
 
 // Types
-export type * from './types.ts';
+export type * from './types';
 
 // Builder
-export { PromQLBuilder } from './ast/builder/index.ts';
-export type { PromQLAstNodeTemplate } from './ast/builder/types.ts';
+export { PromQLBuilder } from './ast/builder';
+export type { PromQLAstNodeTemplate } from './ast/builder/types';
 
 // Parser
-export { PromQLParser, type PromQLParseOptions } from './parser/index.ts';
-export { PromQLErrorListener } from './parser/promql_error_listener.ts';
-export { PromQLCstToAstConverter } from './parser/cst_to_ast_converter.ts';
+export { PromQLParser, type PromQLParseOptions } from './parser';
+export { PromQLErrorListener } from './parser/promql_error_listener';
+export { PromQLCstToAstConverter } from './parser/cst_to_ast_converter';

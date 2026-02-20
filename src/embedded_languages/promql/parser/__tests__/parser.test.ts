@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { PromQLParser } from '../parser.ts';
+import { PromQLParser } from '../parser';
 
 describe('PromQL Parser', () => {
   describe('basic parsing', () => {

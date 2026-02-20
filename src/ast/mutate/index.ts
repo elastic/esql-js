@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-export type * from './types.ts';
+export type * from './types';
 
-import * as generic from './generic/index.ts';
-import * as commands from './commands/index.ts';
+import * as generic from './generic';
+import * as commands from './commands';
 
 export { generic, commands };

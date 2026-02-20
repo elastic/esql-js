@@ -5,14 +5,14 @@
  * 2.0.
  */
 
-import { isOptionNode, isSubQuery } from '../../../../is.ts';
+import { isOptionNode, isSubQuery } from '../../../../is';
 import type {
   ESQLAstQueryExpression,
   ESQLCommand,
   ESQLProperNode,
   ESQLSingleAstItem,
-} from '../../../../../types.ts';
-import { Visitor } from '../../../../visitor/index.ts';
+} from '../../../../../types';
+import { Visitor } from '../../../../visitor';
 
 export const insert = (
   command: ESQLCommand,

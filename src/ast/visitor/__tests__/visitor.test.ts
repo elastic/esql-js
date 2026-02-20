@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { parse } from '../../../parser/index.ts';
-import type { ESQLAstForkCommand } from '../../../types.ts';
-import { CommandVisitorContext, WhereCommandVisitorContext } from '../contexts.ts';
-import { Visitor } from '../visitor.ts';
+import { parse } from '../../../parser';
+import type { ESQLAstForkCommand } from '../../../types';
+import { CommandVisitorContext, WhereCommandVisitorContext } from '../contexts';
+import { Visitor } from '../visitor';
 
 test('can collect all command names in type safe way', () => {
   const visitor = new Visitor()

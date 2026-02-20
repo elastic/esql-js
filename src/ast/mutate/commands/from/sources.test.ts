@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { parse } from '../../../../parser/index.ts';
-import { BasicPrettyPrinter } from '../../../../pretty_print/index.ts';
-import * as commands from '../index.ts';
+import { parse } from '../../../../parser';
+import { BasicPrettyPrinter } from '../../../../pretty_print';
+import * as commands from '..';
 
 describe('commands.from.sources', () => {
   describe('.list()', () => {

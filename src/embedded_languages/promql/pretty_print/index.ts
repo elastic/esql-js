@@ -8,4 +8,4 @@
 export {
   PromQLBasicPrettyPrinter,
   type PromQLBasicPrettyPrinterOptions,
-} from './basic_pretty_printer.ts';
+} from './basic_pretty_printer';

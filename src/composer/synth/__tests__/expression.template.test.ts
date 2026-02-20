@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { BasicPrettyPrinter } from '../../../pretty_print/index.ts';
-import { exp } from '../expression.ts';
+import { BasicPrettyPrinter } from '../../../pretty_print';
+import { exp } from '../expression';
 
 test('can be used as templated string tag', () => {
   const node = exp`42`;

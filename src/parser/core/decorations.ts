@@ -13,8 +13,8 @@
 
 import type { Token } from 'antlr4';
 import { type CommonTokenStream } from 'antlr4';
-import { Builder } from '../../ast/builder/index.ts';
-import { Visitor } from '../../ast/visitor/index.ts';
+import { Builder } from '../../ast/builder';
+import { Visitor } from '../../ast/visitor';
 import type {
   ESQLAstComment,
   ESQLAstCommentMultiLine,
@@ -22,14 +22,14 @@ import type {
   ESQLAstNodeFormatting,
   ESQLAstQueryExpression,
   ESQLProperNode,
-} from '../../types.ts';
+} from '../../types';
 import type {
   ParsedFormattingCommentDecoration,
   ParsedFormattingDecoration,
   ParsedFormattingDecorationLines,
-} from './types.ts';
-import { HIDDEN_CHANNEL } from './constants.ts';
-import { findVisibleToken, isLikelyPunctuation } from './tokens.ts';
+} from './types';
+import { HIDDEN_CHANNEL } from './constants';
+import { findVisibleToken, isLikelyPunctuation } from './tokens';
 
 const commentSubtype = (text: string): ESQLAstComment['subtype'] | undefined => {
   if (text[0] === '/') {

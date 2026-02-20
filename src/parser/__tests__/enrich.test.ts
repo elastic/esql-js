@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { parse } from '../index.ts';
-import type { ESQLCommand, ESQLSource } from '../../types.ts';
-import { Walker } from '../../ast/walker/index.ts';
+import { parse } from '..';
+import type { ESQLCommand, ESQLSource } from '../../types';
+import { Walker } from '../../ast/walker';
 
 describe('ENRICH', () => {
   describe('correctly formatted', () => {

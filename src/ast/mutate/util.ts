@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { Predicate } from './types.ts';
+import type { Predicate } from './types';
 
 /**
  * Find the first item in an iterable (such as array) that matches a predicate.

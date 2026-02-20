@@ -28,12 +28,12 @@ import type {
   PromQLEvaluation,
   PromQLOffset,
   PromQLAt,
-} from '../types.ts';
+} from '../types';
 import {
   PromQLPrecedenceGroup,
   promqlBinaryPrecedenceGroup,
   isPromQLRightAssociative,
-} from './helpers.ts';
+} from './helpers';
 
 export interface PromQLBasicPrettyPrinterOptions {
   /**

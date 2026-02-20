@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-export type * from './types.ts';
-export { exp, expression } from './expression.ts';
-export { cmd, command } from './command.ts';
-export { qry, query } from './query.ts';
-export { hdr, header } from './header.ts';
-export * from './nodes.ts';
+export type * from './types';
+export { exp, expression } from './expression';
+export { cmd, command } from './command';
+export { qry, query } from './query';
+export { hdr, header } from './header';
+export * from './nodes';

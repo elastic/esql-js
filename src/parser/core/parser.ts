@@ -7,12 +7,12 @@
 
 import { CharStreams, type Token } from 'antlr4';
 import { CommonTokenStream, type CharStream } from 'antlr4';
-import { ESQLErrorListener } from './esql_error_listener.ts';
-import { attachDecorations, collectDecorations } from './decorations.ts';
-import { Builder } from '../../ast/builder/index.ts';
-import { CstToAstConverter } from './cst_to_ast_converter.ts';
-import { default as ESQLLexer } from '../antlr/esql_lexer.ts';
-import { default as ESQLParser } from '../antlr/esql_parser.ts';
+import { ESQLErrorListener } from './esql_error_listener';
+import { attachDecorations, collectDecorations } from './decorations';
+import { Builder } from '../../ast/builder';
+import { CstToAstConverter } from './cst_to_ast_converter';
+import { default as ESQLLexer } from '../antlr/esql_lexer';
+import { default as ESQLParser } from '../antlr/esql_parser';
 import type {
   ESQLAst,
   ESQLAstExpression,
@@ -22,11 +22,11 @@ import type {
   ESQLMap,
   ESQLProperNode,
   EditorError,
-} from '../../types.ts';
-import { isFunctionExpression, isProperNode, isQuery, isMap, isCommand } from '../../ast/is.ts';
-import { singleItems } from '../../ast/visitor/utils.ts';
-import { DEFAULT_CHANNEL, SOURCE_COMMANDS } from './constants.ts';
-import type { EsqlParsingTarget } from './types.ts';
+} from '../../types';
+import { isFunctionExpression, isProperNode, isQuery, isMap, isCommand } from '../../ast/is';
+import { singleItems } from '../../ast/visitor/utils';
+import { DEFAULT_CHANNEL, SOURCE_COMMANDS } from './constants';
+import type { EsqlParsingTarget } from './types';
 
 export interface ParseOptions {
   /**

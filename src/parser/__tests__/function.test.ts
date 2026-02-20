@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { Parser, parse } from '../index.ts';
-import { EsqlQuery } from '../../composer/query/index.ts';
-import { Walker } from '../../ast/walker/index.ts';
+import { Parser, parse } from '..';
+import { EsqlQuery } from '../../composer/query';
+import { Walker } from '../../ast/walker';
 
 describe('function AST nodes', () => {
   describe('"variadic-call"', () => {

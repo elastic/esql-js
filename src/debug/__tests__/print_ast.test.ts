@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { Parser } from '../../parser/index.ts';
-import { printAst } from '../print_ast.ts';
+import { Parser } from '../../parser';
+import { printAst } from '../print_ast';
 
 test('can print a basic "FROM index" query AST', () => {
   const { root } = Parser.parse('FROM index');

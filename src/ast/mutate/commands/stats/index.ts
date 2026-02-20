@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import type { ESQLAstQueryExpression, ESQLCommand } from '../../../../types.ts';
-import * as generic from '../../generic/index.ts';
+import type { ESQLAstQueryExpression, ESQLCommand } from '../../../../types';
+import * as generic from '../../generic';
 
 /**
  * Lists all "STATS" commands in the query AST.

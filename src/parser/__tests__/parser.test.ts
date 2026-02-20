@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Parser } from '../index.ts';
+import { Parser } from '..';
 
 describe('Parser.parseExpression()', () => {
   it('can parse an integer literal', () => {

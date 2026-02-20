@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type { SharedData } from './global_visitor_context.ts';
-import type * as ast from '../../types.ts';
-import type * as contexts from './contexts.ts';
+import type { SharedData } from './global_visitor_context';
+import type * as ast from '../../types';
+import type * as contexts from './contexts';
 
 /**
  * @deprecated Use `ESQLAstQueryExpression` directly.

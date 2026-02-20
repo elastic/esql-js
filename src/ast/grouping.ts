@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { isBinaryExpression, isUnaryExpression } from './is.ts';
-import type { ESQLAstNode } from '../types.ts';
+import { isBinaryExpression, isUnaryExpression } from './is';
+import type { ESQLAstNode } from '../types';
 
 /**
  * The group name of a binary expression. Groups are ordered by precedence.

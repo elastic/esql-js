@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import type { ParseOptions } from '../../parser/index.ts';
-import type { ESQLAstExpression, ESQLProperNode } from '../../types.ts';
-import type { SynthLiteralFragment } from './synth_literal_fragment.ts';
-import type { SynthNode } from './synth_node.ts';
+import type { ParseOptions } from '../../parser';
+import type { ESQLAstExpression, ESQLProperNode } from '../../types';
+import type { SynthLiteralFragment } from './synth_literal_fragment';
+import type { SynthNode } from './synth_node';
 
 export type SynthGenerator<N extends ESQLProperNode> = (src: string, opts?: ParseOptions) => N;
 

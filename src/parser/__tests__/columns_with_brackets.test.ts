@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { Parser } from '../index.ts';
-import { printAst } from '../../debug/index.ts';
+import { Parser } from '..';
+import { printAst } from '../../debug';
 
 describe('Column Bracketed Syntax: [qualifier].[name]', () => {
   describe('STATS', () => {

@@ -6,13 +6,13 @@
  */
 
 import { CharStreams, CommonTokenStream, type CharStream } from 'antlr4';
-import { default as PromQLLexer } from '../../../parser/antlr/promql_lexer.ts';
-import { default as PromQLParserGenerated } from '../../../parser/antlr/promql_parser.ts';
-import { PromQLErrorListener } from './promql_error_listener.ts';
-import { PromQLCstToAstConverter } from './cst_to_ast_converter.ts';
-import { PromQLBuilder } from '../ast/builder/index.ts';
-import type { PromQLAstQueryExpression, PromQLParseResult } from '../types.ts';
-import type { EditorError } from '../../../types.ts';
+import { default as PromQLLexer } from '../../../parser/antlr/promql_lexer';
+import { default as PromQLParserGenerated } from '../../../parser/antlr/promql_parser';
+import { PromQLErrorListener } from './promql_error_listener';
+import { PromQLCstToAstConverter } from './cst_to_ast_converter';
+import { PromQLBuilder } from '../ast/builder';
+import type { PromQLAstQueryExpression, PromQLParseResult } from '../types';
+import type { EditorError } from '../../../types';
 
 export interface PromQLParseOptions {
   /**

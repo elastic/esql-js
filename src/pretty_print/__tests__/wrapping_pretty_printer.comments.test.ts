@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { parse } from '../../parser/index.ts';
-import type { WrappingPrettyPrinterOptions } from '../wrapping_pretty_printer.ts';
-import { WrappingPrettyPrinter } from '../wrapping_pretty_printer.ts';
+import { parse } from '../../parser';
+import type { WrappingPrettyPrinterOptions } from '../wrapping_pretty_printer';
+import { WrappingPrettyPrinter } from '../wrapping_pretty_printer';
 
 const reprint = (src: string, opts?: WrappingPrettyPrinterOptions) => {
   const { root } = parse(src, { withFormatting: true });

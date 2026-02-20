@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { par, dpar, list } from '../nodes.ts';
+import { par, dpar, list } from '../nodes';
 
 test('can construct a param', () => {
   const node1 = par('my_param');

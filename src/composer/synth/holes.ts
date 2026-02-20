@@ -5,16 +5,16 @@
  * 2.0.
  */
 
-import { Builder } from '../../ast/builder/index.ts';
-import { BasicPrettyPrinter, LeafPrinter } from '../../pretty_print/index.ts';
-import { isProperNode } from '../../ast/is.ts';
-import { SynthNode } from './synth_node.ts';
-import { SynthLiteralFragment } from './synth_literal_fragment.ts';
+import { Builder } from '../../ast/builder';
+import { BasicPrettyPrinter, LeafPrinter } from '../../pretty_print';
+import { isProperNode } from '../../ast/is';
+import { SynthNode } from './synth_node';
+import { SynthLiteralFragment } from './synth_literal_fragment';
 import type {
   SynthColumnShorthand,
   SynthQualifiedColumnShorthand,
   SynthTemplateHole,
-} from './types.ts';
+} from './types';
 
 class UnexpectedSynthHoleError extends Error {
   constructor(hole: unknown) {

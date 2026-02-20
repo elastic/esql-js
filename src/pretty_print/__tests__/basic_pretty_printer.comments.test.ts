@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { parse } from '../../parser/index.ts';
-import { BasicPrettyPrinter } from '../basic_pretty_printer.ts';
+import { parse } from '../../parser';
+import { BasicPrettyPrinter } from '../basic_pretty_printer';
 
 const reprint = (src: string) => {
   const { root } = parse(src, { withFormatting: true });

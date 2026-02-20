@@ -5,6 +5,6 @@
  * 2.0.
  */
 
-export { PromQLParser, type PromQLParseOptions } from './parser.ts';
-export { PromQLErrorListener } from './promql_error_listener.ts';
-export { PromQLCstToAstConverter } from './cst_to_ast_converter.ts';
+export { PromQLParser, type PromQLParseOptions } from './parser';
+export { PromQLErrorListener } from './promql_error_listener';
+export { PromQLCstToAstConverter } from './cst_to_ast_converter';

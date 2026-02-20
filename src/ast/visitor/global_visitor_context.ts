@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import * as contexts from './contexts.ts';
+import * as contexts from './contexts';
 import type {
   ESQLAstChangePointCommand,
   ESQLAstCommand,
@@ -25,8 +25,8 @@ import type {
   ESQLOrderExpression,
   ESQLParens,
   ESQLSource,
-} from '../../types.ts';
-import type * as types from './types.ts';
+} from '../../types';
+import type * as types from './types';
 
 export type SharedData = Record<string, unknown>;
 

@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { Walker } from '../../../walker/index.ts';
-import { LeafPrinter } from '../../../../pretty_print/index.ts';
-import { Builder } from '../../../builder/index.ts';
+import { Walker } from '../../../walker';
+import { LeafPrinter } from '../../../../pretty_print';
+import { Builder } from '../../../builder';
 import type {
   ESQLAstQueryExpression,
   ESQLColumn,
@@ -15,8 +15,8 @@ import type {
   ESQLIdentifier,
   ESQLParamLiteral,
   ESQLProperNode,
-} from '../../../../types.ts';
-import * as generic from '../../generic/index.ts';
+} from '../../../../types';
+import * as generic from '../../generic';
 
 /**
  * Lists all "WHERE" commands in the query AST.

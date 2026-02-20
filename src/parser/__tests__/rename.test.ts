@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query/index.ts';
-import { Walker } from '../../ast/walker/index.ts';
+import { EsqlQuery } from '../../composer/query';
+import { Walker } from '../../ast/walker';
 
 describe('RENAME', () => {
   describe('correctly formatted', () => {

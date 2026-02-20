@@ -4,9 +4,9 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-import type { SynthQualifiedColumnShorthand } from '../synth/index.ts';
-import { ComposerQuery } from '../composer_query.ts';
-import { esql } from '../esql.ts';
+import type { SynthQualifiedColumnShorthand } from '../synth';
+import { ComposerQuery } from '../composer_query';
+import { esql } from '../esql';
 
 describe('various dynamic query construction scenarios', () => {
   test('can inline a primitive runtime value', () => {

@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import type * as promql from '../../types.ts';
-import type { PromqlWalkerAstNode, PromqlWalkerAstParent, PromqlWalkerOptions } from './types.ts';
+import type * as promql from '../../types';
+import type { PromqlWalkerAstNode, PromqlWalkerAstParent, PromqlWalkerOptions } from './types';
 
 /**
  * Iterates over all PromQL AST nodes and calls the appropriate visitor

@@ -5,13 +5,13 @@
  * 2.0.
  */
 
-import { Builder } from '../../../builder/index.ts';
-import type { ESQLAstQueryExpression, ESQLCommand, ESQLSource } from '../../../../types.ts';
-import { Visitor } from '../../../visitor/index.ts';
-import * as generic from '../../generic/index.ts';
-import * as util from '../../util.ts';
-import type { Predicate } from '../../types.ts';
-import { isSubQuery } from '../../../is.ts';
+import { Builder } from '../../../builder';
+import type { ESQLAstQueryExpression, ESQLCommand, ESQLSource } from '../../../../types';
+import { Visitor } from '../../../visitor';
+import * as generic from '../../generic';
+import * as util from '../../util';
+import type { Predicate } from '../../types';
+import { isSubQuery } from '../../../is';
 
 export const list = (
   ast: ESQLAstQueryExpression | ESQLCommand<'from'>

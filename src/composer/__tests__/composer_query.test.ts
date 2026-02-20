@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { esql } from '../esql.ts';
+import { esql } from '../esql';
 
 test('prints the query object when casting to string', () => {
   const query = esql`FROM kibana_ecommerce_index | WHERE foo > 42 AND bar < 24 | EVAL a = 123 | LIMIT 10`;

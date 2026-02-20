@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-import { PromQLParser } from '../../parser/index.ts';
+import { PromQLParser } from '../../parser';
 import {
   PromQLBasicPrettyPrinter,
   type PromQLBasicPrettyPrinterOptions,
-} from '../basic_pretty_printer.ts';
+} from '../basic_pretty_printer';
 
 const reprint = (src: string, opts?: PromQLBasicPrettyPrinterOptions) => {
   const result = PromQLParser.parse(src);

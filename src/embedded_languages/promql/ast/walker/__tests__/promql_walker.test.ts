@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { PromQLParser } from '../../../parser/parser.ts';
-import { PromqlWalker } from '../walker.ts';
+import { PromQLParser } from '../../../parser/parser';
+import { PromqlWalker } from '../walker';
 import type {
   PromQLAstNode,
   PromQLFunction,
@@ -25,7 +25,7 @@ import type {
   PromQLAt,
   PromQLModifier,
   PromQLGroupModifier,
-} from '../../../types.ts';
+} from '../../../types';
 
 describe('Walker PromQL support', () => {
   describe('basic PromQL traversal', () => {

@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query/index.ts';
+import { EsqlQuery } from '../../composer/query';
 import type {
   ESQLCommand,
   ESQLMap,
@@ -13,8 +13,8 @@ import type {
   ESQLParens,
   ESQLBinaryExpression,
   ESQLAstPromqlCommand,
-} from '../../types.ts';
-import { printAst } from '../../debug/index.ts';
+} from '../../types';
+import { printAst } from '../../debug';
 
 /**
  * ```

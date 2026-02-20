@@ -5,12 +5,12 @@
  * 2.0.
  */
 
-import * as from from './from/index.ts';
-import * as limit from './limit/index.ts';
-import * as sort from './sort/index.ts';
-import * as stats from './stats/index.ts';
-import * as where from './where/index.ts';
-import * as join from './join/index.ts';
-import * as rerank from './rerank/index.ts';
+import * as from from './from';
+import * as limit from './limit';
+import * as sort from './sort';
+import * as stats from './stats';
+import * as where from './where';
+import * as join from './join';
+import * as rerank from './rerank';
 
 export { from, limit, sort, stats, where, join, rerank };

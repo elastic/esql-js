@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { parse } from '../../../../parser/index.ts';
-import { BasicPrettyPrinter } from '../../../../pretty_print/index.ts';
-import * as generic from '../index.ts';
+import { parse } from '../../../../parser';
+import { BasicPrettyPrinter } from '../../../../pretty_print';
+import * as generic from '..';
 
 describe('generic.commands', () => {
   describe('.list()', () => {

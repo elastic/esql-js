@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { Builder } from '../../ast/builder/index.ts';
-import type { ESQLLiteral } from '../../types.ts';
-import { ComposerQuery } from '../composer_query.ts';
-import { esql, e } from '../esql.ts';
+import { Builder } from '../../ast/builder';
+import type { ESQLLiteral } from '../../types';
+import { ComposerQuery } from '../composer_query';
+import { esql, e } from '../esql';
 
 describe('"esql" tag query construction', () => {
   test('can construct a static query', () => {

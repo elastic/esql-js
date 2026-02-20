@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import type { ESQLAstJoinCommand, ESQLAstQueryExpression, ESQLCommand } from '../../../../types.ts';
-import * as generic from '../../generic/index.ts';
+import type { ESQLAstJoinCommand, ESQLAstQueryExpression, ESQLCommand } from '../../../../types';
+import * as generic from '../../generic';
 
 /**
  * Lists all "JOIN" commands in the query AST.

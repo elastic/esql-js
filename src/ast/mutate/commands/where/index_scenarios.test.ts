@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-import { BasicPrettyPrinter } from '../../../../pretty_print/index.ts';
-import * as mutate from '../../index.ts';
-import { EsqlQuery } from '../../../../composer/query/index.ts';
-import { Builder } from '../../../builder/index.ts';
-import type { ESQLFunction } from '../../../../types.ts';
+import { BasicPrettyPrinter } from '../../../../pretty_print';
+import * as mutate from '../..';
+import { EsqlQuery } from '../../../../composer/query';
+import { Builder } from '../../../builder';
+import type { ESQLFunction } from '../../../../types';
 
 describe('scenarios', () => {
   it('can remove the found WHERE command', () => {

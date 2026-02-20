@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { Parser } from '../index.ts';
-import type { ESQLAstExpression, ESQLFunction } from '../../types.ts';
+import { Parser } from '..';
+import type { ESQLAstExpression, ESQLFunction } from '../../types';
 
 describe('Column Identifier Expressions', () => {
   it('a literal/constant', () => {

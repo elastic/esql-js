@@ -6,17 +6,17 @@
  */
 
 import { printTree } from 'tree-dump';
-import * as synth from './synth/index.ts';
-import { BasicPrettyPrinter, WrappingPrettyPrinter } from '../pretty_print/index.ts';
-import { composerQuerySymbol, processTemplateHoles, validateParamName } from './util.ts';
-import { Builder } from '../ast/builder/index.ts';
+import * as synth from './synth';
+import { BasicPrettyPrinter, WrappingPrettyPrinter } from '../pretty_print';
+import { composerQuerySymbol, processTemplateHoles, validateParamName } from './util';
+import { Builder } from '../ast/builder';
 import type {
   ESQLAstExpression,
   ESQLAstHeaderCommand,
   ESQLAstQueryExpression,
   ESQLCommand,
   ESQLNamedParamLiteral,
-} from '../types.ts';
+} from '../types';
 import type {
   ComposerColumnShorthand,
   ComposerQueryTagHole,
@@ -26,8 +26,8 @@ import type {
   EsqlRequest,
   QueryCommandTag,
   QueryCommandTagParametrized,
-} from './types.ts';
-import { Walker } from '../ast/walker/index.ts';
+} from './types';
+import { Walker } from '../ast/walker';
 import {
   isBinaryExpression,
   isBooleanLiteral,
@@ -39,10 +39,10 @@ import {
   isIntegerLiteral,
   isProperNode,
   isStringLiteral,
-} from '../ast/is.ts';
-import { replaceProperties } from '../ast/walker/helpers.ts';
-import { resolveItem } from '../ast/visitor/utils.ts';
-import { printAst } from '../debug/index.ts';
+} from '../ast/is';
+import { replaceProperties } from '../ast/walker/helpers';
+import { resolveItem } from '../ast/visitor/utils';
+import { printAst } from '../debug';
 
 export class ComposerQuery {
   public readonly [composerQuerySymbol] = true;

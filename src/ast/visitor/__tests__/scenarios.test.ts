@@ -12,9 +12,9 @@
  * visitor to traverse the AST and make changes to it, or how to extract useful
  */
 
-import { parse } from '../../../parser/index.ts';
-import type { ESQLAstItem, ESQLAstQueryExpression } from '../../../types.ts';
-import { Visitor } from '../visitor.ts';
+import { parse } from '../../../parser';
+import type { ESQLAstItem, ESQLAstQueryExpression } from '../../../types';
+import { Visitor } from '../visitor';
 
 test('change LIMIT from 24 to 42', () => {
   const { root } = parse(`

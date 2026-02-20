@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { PromQLAstExpression, PromQLBinaryOperator } from '../types.ts';
+import type { PromQLAstExpression, PromQLBinaryOperator } from '../types';
 
 /**
  * Precedence groups for PromQL binary operators. Higher numeric value means

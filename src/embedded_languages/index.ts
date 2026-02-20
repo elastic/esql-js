@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export * from './promql/index.ts';
+export * from './promql';

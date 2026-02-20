@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { quotableKeywords } from './utils.ts';
+import { quotableKeywords } from './utils';
 import type {
   ESQLAstComment,
   ESQLAstCommentMultiLine,
@@ -19,7 +19,7 @@ import type {
   ESQLSource,
   ESQLStringLiteral,
   ESQLTimeDurationLiteral,
-} from '../types.ts';
+} from '../types';
 
 const regexUnquotedIdPattern = /^([a-z\*_\@]{1})[a-z0-9_\*]*$/i;
 

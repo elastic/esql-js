@@ -5,28 +5,28 @@
  * 2.0.
  */
 
-import { BinaryExpressionGroup } from '../ast/grouping.ts';
-import { binaryExpressionGroup, unaryExpressionGroup } from '../ast/grouping.ts';
-import { isBinaryExpression, isIdentifier, isParamLiteral } from '../ast/is.ts';
-import type { ESQLAstBaseItem, ESQLAstQueryExpression, ESQLMap } from '../types.ts';
+import { BinaryExpressionGroup } from '../ast/grouping';
+import { binaryExpressionGroup, unaryExpressionGroup } from '../ast/grouping';
+import { isBinaryExpression, isIdentifier, isParamLiteral } from '../ast/is';
+import type { ESQLAstBaseItem, ESQLAstQueryExpression, ESQLMap } from '../types';
 import type {
   CommandOptionVisitorContext,
   ExpressionVisitorContext,
   FunctionCallExpressionVisitorContext,
   ListLiteralExpressionVisitorContext,
   MapExpressionVisitorContext,
-} from '../ast/visitor/index.ts';
-import { CommandVisitorContext, Visitor } from '../ast/visitor/index.ts';
-import { children, singleItems } from '../ast/visitor/utils.ts';
-import type { BasicPrettyPrinterOptions } from './basic_pretty_printer.ts';
-import { BasicPrettyPrinter } from './basic_pretty_printer.ts';
+} from '../ast/visitor';
+import { CommandVisitorContext, Visitor } from '../ast/visitor';
+import { children, singleItems } from '../ast/visitor/utils';
+import type { BasicPrettyPrinterOptions } from './basic_pretty_printer';
+import { BasicPrettyPrinter } from './basic_pretty_printer';
 import {
   commandOptionsWithEqualsSeparator,
   commandsWithNoCommaArgSeparator,
   commandsWithSpecialCommaRules,
-} from './constants.ts';
-import { getPrettyPrintStats } from './helpers.ts';
-import { LeafPrinter } from './leaf_printer.ts';
+} from './constants';
+import { getPrettyPrintStats } from './helpers';
+import { LeafPrinter } from './leaf_printer';
 
 interface Input {
   indent: string;

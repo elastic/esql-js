@@ -6,19 +6,19 @@
  */
 
 import type * as antlr from 'antlr4';
-import * as cst from '../antlr/esql_parser.ts';
-import type * as ast from '../../types.ts';
-import { isCommand, isStringLiteral } from '../../ast/is.ts';
-import { LeafPrinter } from '../../pretty_print/index.ts';
-import { getPosition } from './tokens.ts';
-import { nonNullable, unescapeColumn } from './helpers.ts';
-import { firstItem, lastItem, resolveItem, singleItems } from '../../ast/visitor/utils.ts';
-import { type AstNodeParserFields, Builder } from '../../ast/builder/index.ts';
-import { type ArithmeticUnaryContext } from '../antlr/esql_parser.ts';
-import { PromQLParser } from '../../embedded_languages/promql/parser/parser.ts';
-import type { AstNodeTemplate } from '../../ast/builder/index.ts';
-import type { Parser } from './parser.ts';
-import type { PromQLAstQueryExpression } from '../../embedded_languages/promql/types.ts';
+import * as cst from '../antlr/esql_parser';
+import type * as ast from '../../types';
+import { isCommand, isStringLiteral } from '../../ast/is';
+import { LeafPrinter } from '../../pretty_print';
+import { getPosition } from './tokens';
+import { nonNullable, unescapeColumn } from './helpers';
+import { firstItem, lastItem, resolveItem, singleItems } from '../../ast/visitor/utils';
+import { type AstNodeParserFields, Builder } from '../../ast/builder';
+import { type ArithmeticUnaryContext } from '../antlr/esql_parser';
+import { PromQLParser } from '../../embedded_languages/promql/parser/parser';
+import type { AstNodeTemplate } from '../../ast/builder';
+import type { Parser } from './parser';
+import type { PromQLAstQueryExpression } from '../../embedded_languages/promql/types';
 
 const textExistsAndIsValid = (text: string | undefined): text is string =>
   !!(text && !/<missing /.test(text));
