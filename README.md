@@ -49,7 +49,6 @@ pnpm add @elastic/esql
 ## Requirements
 
 - **Node.js** >= 18.0.0
-- This package is distributed as an ES module.
 
 ## Contents of the package
 
