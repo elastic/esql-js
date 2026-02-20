@@ -1,27 +1,41 @@
 {
   "compilerOptions": {
-    "target": "ES2022",
-    "lib": ["ES2022"],
+    // Only emist .d.ts declaration files, tsup will handle the rest.
+    "declaration": true,
+    "emitDeclarationOnly": true,
+    // Generate source maps for .d.ts files (enables "go to source" for consumers)
+    "declarationMap": true,
+    // Generate .js.map source maps for debugging
+    "sourceMap": true,
+    // Keep const enum declarations in output (safer with isolatedModules)
+    "preserveConstEnums": true,
+    // Enable all strict type-checking options
+    "strict": true,
+    // Enable ergonomic default imports from CommonJS modules
+    "esModuleInterop": true,
+    // This is only for type checking, tsup will handle the emitted code.
     "module": "commonjs",
     "moduleResolution": "node",
-    "outDir": "./lib",
-    "rootDir": "./src",
-    "declaration": true,
-    "declarationMap": true,
-    "sourceMap": true,
-    "preserveConstEnums": true,
-    "strict": true,
-    "esModuleInterop": true,
+    // Compile to ES2022 (supports top-level await, Array.at(), etc.)
+    "target": "ES2022",
+    // Include ES2022 standard library types
+    "lib": ["ES2022"],
+    // Preserve comments in compiled output
     "removeComments": false,
+    // Allow JS files so TypeScript can infer types from .js config files (e.g. lexer_config.js)
     "allowJs": true,
+    // Skip type-checking of all .d.ts files for faster compilation
     "skipLibCheck": true,
+    // Skip type-checking of default library .d.ts files
     "skipDefaultLibCheck": true,
+    // Colorized, readable compiler error output
     "pretty": true,
+    // Prevent issues on case-insensitive file systems (macOS/Windows)
     "forceConsistentCasingInFileNames": true,
+    // Ensure each file can be independently transpiled (required by ts-jest and bundlers)
     "isolatedModules": true,
-    "allowImportingTsExtensions": true,
-    "emitDeclarationOnly": true,
-    "noEmit": false
+    // Output compiled files to the lib/ directory
+    "outDir": "./lib"
   },
   "include": ["src"],
   "exclude": ["node_modules", "lib", "README.md", "**/*.test.ts"]
