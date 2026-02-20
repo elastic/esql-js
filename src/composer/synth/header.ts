@@ -5,12 +5,12 @@
  * 2.0.
  */
 
-import type { ParseOptions } from '../../parser';
-import { Parser } from '../../parser';
-import { createTag } from './tag';
-import { SynthNode } from './synth_node';
-import type { SynthGenerator } from './types';
-import type { ESQLAstHeaderCommand } from '../../types';
+import type { ParseOptions } from '../../parser/index.ts';
+import { Parser } from '../../parser/index.ts';
+import { createTag } from './tag.ts';
+import { SynthNode } from './synth_node.ts';
+import type { SynthGenerator } from './types.ts';
+import type { ESQLAstHeaderCommand } from '../../types.ts';
 
 const generator: SynthGenerator<ESQLAstHeaderCommand> = (
   src: string,

@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { parse } from '../../../../parser';
-import * as commands from '..';
-import { BasicPrettyPrinter } from '../../../../pretty_print';
-import { Builder } from '../../../builder';
+import { parse } from '../../../../parser/index.ts';
+import * as commands from '../index.ts';
+import { BasicPrettyPrinter } from '../../../../pretty_print/index.ts';
+import { Builder } from '../../../builder/index.ts';
 
 describe('commands.sort', () => {
   describe('.listCommands()', () => {

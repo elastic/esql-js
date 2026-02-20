@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-export type * from './types';
-export { Visitor, type VisitorOptions } from './visitor';
-export { GlobalVisitorContext, type SharedData } from './global_visitor_context';
-export * from './contexts';
+export type * from './types.ts';
+export { Visitor, type VisitorOptions } from './visitor.ts';
+export { GlobalVisitorContext, type SharedData } from './global_visitor_context.ts';
+export * from './contexts.ts';

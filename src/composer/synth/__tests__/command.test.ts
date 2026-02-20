@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { BasicPrettyPrinter } from '../../../pretty_print';
-import { cmd } from '../command';
-import { exp } from '../expression';
+import { BasicPrettyPrinter } from '../../../pretty_print/index.ts';
+import { cmd } from '../command.ts';
+import { exp } from '../expression.ts';
 
 test('can create a WHERE command', () => {
   const node = cmd`WHERE coordinates.lat >= 12.123123`;

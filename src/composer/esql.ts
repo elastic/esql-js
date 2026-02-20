@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import * as synth from './synth';
-import { ComposerQuery } from './composer_query';
-import { DoubleParameterHole, ParameterHole } from './parameter_hole';
-import { processTemplateHoles, removeNopCommands, validateParamName } from './util';
+import * as synth from './synth/index.ts';
+import { ComposerQuery } from './composer_query.ts';
+import { DoubleParameterHole, ParameterHole } from './parameter_hole.ts';
+import { processTemplateHoles, removeNopCommands, validateParamName } from './util.ts';
 import type {
   ComposerColumnShorthand,
   ComposerQueryGenerator,
@@ -19,9 +19,9 @@ import type {
   FromSourcesAndMetadataQueryStarter,
   FromSourcesQueryStarter,
   ParametrizedComposerQueryTag,
-} from './types';
-import type { ESQLSource } from '../types';
-import { isSource } from '../ast/is';
+} from './types.ts';
+import type { ESQLSource } from '../types.ts';
+import { isSource } from '../ast/is.ts';
 
 const esqlTag = ((templateOrQueryOrParamValues: any, ...maybeHoles: ComposerQueryTagHole[]) => {
   const tagOrGeneratorWithParams = (initialParamValues?: Record<string, unknown>) =>

@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query';
+import { EsqlQuery } from '../../composer/query/index.ts';
 
 describe('EXPLAIN', () => {
   describe('correctly formatted', () => {

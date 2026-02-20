@@ -6,7 +6,7 @@
  */
 
 // Main parser API
-export { parse, Parser, type ParseOptions, type ParseResult } from './core/parser';
+export { parse, Parser, type ParseOptions, type ParseResult } from './core/parser.ts';
 
 export {
   TIME_SPAN_UNITS,
@@ -14,6 +14,6 @@ export {
   HEADER_COMMANDS,
   SOURCE_COMMANDS,
   DATE_PERIOD_UNITS,
-} from './core/constants';
+} from './core/constants.ts';
 
-export { ESQLErrorListener } from './core/esql_error_listener';
+export { ESQLErrorListener } from './core/esql_error_listener.ts';

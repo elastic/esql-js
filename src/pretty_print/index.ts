@@ -5,15 +5,15 @@
  * 2.0.
  */
 
-export { LeafPrinter } from './leaf_printer';
+export { LeafPrinter } from './leaf_printer.ts';
 
 export {
   BasicPrettyPrinter,
   type BasicPrettyPrinterOptions,
   type BasicPrettyPrinterMultilineOptions,
-} from './basic_pretty_printer';
+} from './basic_pretty_printer.ts';
 
 export {
   WrappingPrettyPrinter,
   type WrappingPrettyPrinterOptions,
-} from './wrapping_pretty_printer';
+} from './wrapping_pretty_printer.ts';

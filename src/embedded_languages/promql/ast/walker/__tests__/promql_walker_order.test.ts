@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { PromQLParser } from '../../../parser/parser';
-import { PromqlWalker } from '../walker';
-import type { PromQLIdentifier } from '../../../types';
+import { PromQLParser } from '../../../parser/parser.ts';
+import { PromqlWalker } from '../walker.ts';
+import type { PromQLIdentifier } from '../../../types.ts';
 
 describe('PromQL walker traversal order', () => {
   describe('selector args', () => {

@@ -5,9 +5,14 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../../composer/query';
-import type { ESQLCommand, ESQLIdentifier, ESQLLiteral, ESQLStringLiteral } from '../../../types';
-import { walk, Walker } from '../walker';
+import { EsqlQuery } from '../../../composer/query/index.ts';
+import type {
+  ESQLCommand,
+  ESQLIdentifier,
+  ESQLLiteral,
+  ESQLStringLiteral,
+} from '../../../types.ts';
+import { walk, Walker } from '../walker.ts';
 
 describe('traversal order', () => {
   describe('command arguments', () => {

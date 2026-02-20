@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { isStringLiteral } from '../../../is';
-import { Builder } from '../../../builder';
+import { isStringLiteral } from '../../../is.ts';
+import { Builder } from '../../../builder/index.ts';
 import type {
   ESQLAstQueryExpression,
   ESQLAstRerankCommand,
@@ -17,8 +17,8 @@ import type {
   ESQLAstItem,
   ESQLMapEntry,
   ESQLLiteral,
-} from '../../../../types';
-import * as generic from '../../generic';
+} from '../../../../types.ts';
+import * as generic from '../../generic/index.ts';
 
 /**
  * Lists all "RERANK" commands in the query AST.

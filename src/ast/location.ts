@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { ESQLAstComment, ESQLLocation, ESQLSingleAstItem } from '../types';
+import type { ESQLAstComment, ESQLLocation, ESQLSingleAstItem } from '../types.ts';
 
 export const within = (
   inner: number | { location: ESQLLocation },

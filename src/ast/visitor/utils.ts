@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { isPromqlNode } from '../../embedded_languages/promql/ast/is';
-import { childrenOfPromqlNode } from '../../embedded_languages/promql/ast/traversal';
-import type { PromQLAstNode } from '../../embedded_languages/promql/types';
+import { isPromqlNode } from '../../embedded_languages/promql/ast/is.ts';
+import { childrenOfPromqlNode } from '../../embedded_languages/promql/ast/traversal.ts';
+import type { PromQLAstNode } from '../../embedded_languages/promql/types.ts';
 import type {
   ESQLAstExpression,
   ESQLAstHeaderCommand,
@@ -15,7 +15,7 @@ import type {
   ESQLCommand,
   ESQLProperNode,
   ESQLSingleAstItem,
-} from '../../types';
+} from '../../types.ts';
 
 /**
  * Normalizes AST "item" list to only contain *single* items.

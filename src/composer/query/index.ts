@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export { EsqlQuery } from './query';
+export { EsqlQuery } from './query.ts';

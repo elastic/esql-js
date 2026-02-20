@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { parse } from '..';
-import type { ESQLFunction, ESQLInlineCast, ESQLSingleAstItem } from '../../types';
+import { parse } from '../index.ts';
+import type { ESQLFunction, ESQLInlineCast, ESQLSingleAstItem } from '../../types.ts';
 
 describe('Inline cast (::)', () => {
   describe('correctly formatted', () => {

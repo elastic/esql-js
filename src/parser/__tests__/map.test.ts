@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Parser } from '..';
+import { Parser } from '../index.ts';
 
 describe('map expression', () => {
   it('a map can be empty', () => {

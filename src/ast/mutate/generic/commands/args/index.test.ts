@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { Builder } from '../../../../builder';
-import { parse } from '../../../../../parser';
-import { BasicPrettyPrinter } from '../../../../../pretty_print';
-import * as generic from '../..';
+import { Builder } from '../../../../builder/index.ts';
+import { parse } from '../../../../../parser/index.ts';
+import { BasicPrettyPrinter } from '../../../../../pretty_print/index.ts';
+import * as generic from '../../index.ts';
 
 describe('generic.commands.args', () => {
   describe('.insert()', () => {

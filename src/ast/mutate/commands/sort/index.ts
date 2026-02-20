@@ -5,17 +5,17 @@
  * 2.0.
  */
 
-import { Builder } from '../../../builder';
+import { Builder } from '../../../builder/index.ts';
 import type {
   ESQLAstQueryExpression,
   ESQLColumn,
   ESQLCommand,
   ESQLOrderExpression,
-} from '../../../../types';
-import { Visitor } from '../../../visitor';
-import type { Predicate } from '../../types';
-import * as util from '../../util';
-import * as generic from '../../generic';
+} from '../../../../types.ts';
+import { Visitor } from '../../../visitor/index.ts';
+import type { Predicate } from '../../types.ts';
+import * as util from '../../util.ts';
+import * as generic from '../../generic/index.ts';
 
 export type SortExpression = ESQLOrderExpression | ESQLColumn;
 

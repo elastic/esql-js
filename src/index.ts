@@ -30,9 +30,9 @@ export type {
   ESQLAstForkCommand,
   ESQLForkParens,
   ESQLAstPromqlCommand,
-} from './types';
+} from './types.ts';
 
-export * from './parser';
-export * from './ast';
-export * from './composer';
-export * from './pretty_print';
+export * from './parser/index.ts';
+export * from './ast/index.ts';
+export * from './composer/index.ts';
+export * from './pretty_print/index.ts';

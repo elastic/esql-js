@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { parse } from '../../../parser';
-import { Visitor } from '../visitor';
+import { parse } from '../../../parser/index.ts';
+import { Visitor } from '../visitor.ts';
 
 test('"visitExpression" captures all non-captured expressions', () => {
   const { ast } = parse(`

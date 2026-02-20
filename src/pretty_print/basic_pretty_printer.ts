@@ -14,21 +14,21 @@ import {
   isLiteral,
   isParamLiteral,
   isProperNode,
-} from '../ast/is';
+} from '../ast/is.ts';
 import {
   BinaryExpressionGroup,
   binaryExpressionGroup,
   unaryExpressionGroup,
-} from '../ast/grouping';
-import type { ESQLAstExpressionNode } from '../ast/visitor';
-import { Visitor } from '../ast/visitor';
-import { resolveItem } from '../ast/visitor/utils';
+} from '../ast/grouping.ts';
+import type { ESQLAstExpressionNode } from '../ast/visitor/index.ts';
+import { Visitor } from '../ast/visitor/index.ts';
+import { resolveItem } from '../ast/visitor/utils.ts';
 import {
   commandOptionsWithEqualsSeparator,
   commandsWithNoCommaArgSeparator,
   commandsWithSpecialCommaRules,
-} from './constants';
-import { LeafPrinter } from './leaf_printer';
+} from './constants.ts';
+import { LeafPrinter } from './leaf_printer.ts';
 import type {
   ESQLAstBaseItem,
   ESQLAstCommand,
@@ -36,7 +36,7 @@ import type {
   ESQLAstQueryExpression,
   ESQLMap,
   ESQLProperNode,
-} from '../types';
+} from '../types.ts';
 
 export interface BasicPrettyPrinterOptions {
   /**

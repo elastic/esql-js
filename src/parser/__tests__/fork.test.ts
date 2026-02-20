@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { parse } from '..';
-import { EsqlQuery } from '../../composer/query';
-import type { ESQLForkParens } from '../../types';
-import { Walker } from '../../ast/walker';
+import { parse } from '../index.ts';
+import { EsqlQuery } from '../../composer/query/index.ts';
+import type { ESQLForkParens } from '../../types.ts';
+import { Walker } from '../../ast/walker/index.ts';
 
 describe('FORK', () => {
   describe('correctly formatted', () => {

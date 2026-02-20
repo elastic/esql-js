@@ -5,23 +5,23 @@
  * 2.0.
  */
 
-import type { SharedData } from './global_visitor_context';
-import { GlobalVisitorContext } from './global_visitor_context';
-import { QueryVisitorContext } from './contexts';
+import type { SharedData } from './global_visitor_context.ts';
+import { GlobalVisitorContext } from './global_visitor_context.ts';
+import { QueryVisitorContext } from './contexts.ts';
 import type {
   CommandVisitorContext,
   HeaderCommandVisitorContext,
   VisitorContext,
-} from './contexts';
+} from './contexts.ts';
 import type {
   AstNodeToVisitorName,
   EnsureFunction,
   ESQLAstExpressionNode,
   UndefinedToVoid,
   VisitorMethods,
-} from './types';
-import type { ESQLAstQueryExpression, ESQLCommand, ESQLProperNode } from '../../types';
-import { Builder } from '../builder';
+} from './types.ts';
+import type { ESQLAstQueryExpression, ESQLCommand, ESQLProperNode } from '../../types.ts';
+import { Builder } from '../builder/index.ts';
 
 export interface VisitorOptions<
   Methods extends VisitorMethods = VisitorMethods,

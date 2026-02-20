@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { parse } from '../../../parser';
-import { Parser } from '../../../parser';
-import { EsqlQuery } from '../../../composer/query';
+import { parse } from '../../../parser/index.ts';
+import { Parser } from '../../../parser/index.ts';
+import { EsqlQuery } from '../../../composer/query/index.ts';
 import type {
   ESQLColumn,
   ESQLCommand,
@@ -23,8 +23,8 @@ import type {
   ESQLMapEntry,
   ESQLOrderExpression,
   ESQLAstHeaderCommand,
-} from '../../../types';
-import { walk, Walker } from '../walker';
+} from '../../../types.ts';
+import { walk, Walker } from '../walker.ts';
 
 describe('structurally can walk all nodes', () => {
   test('can walk all functions', () => {

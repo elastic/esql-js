@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { parse } from '..';
-import type { ESQLLiteral } from '../../types';
+import { parse } from '../index.ts';
+import type { ESQLLiteral } from '../../types.ts';
 
 describe('literal expression', () => {
   it('NULL', () => {

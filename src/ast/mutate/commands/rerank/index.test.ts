@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-import { BasicPrettyPrinter } from '../../../../pretty_print';
-import * as commands from '..';
-import { EsqlQuery } from '../../../../composer/query';
-import type { ESQLAstItem, ESQLCommandOption, ESQLMap } from '../../../../types';
-import { isStringLiteral } from '../../../is';
+import { BasicPrettyPrinter } from '../../../../pretty_print/index.ts';
+import * as commands from '../index.ts';
+import { EsqlQuery } from '../../../../composer/query/index.ts';
+import type { ESQLAstItem, ESQLCommandOption, ESQLMap } from '../../../../types.ts';
+import { isStringLiteral } from '../../../is.ts';
 
 describe('commands.rerank', () => {
   describe('.list()', () => {

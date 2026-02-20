@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { BasicPrettyPrinter, Builder, synth } from '../../..';
-import { SynthNode } from '../synth_node';
+import { BasicPrettyPrinter, Builder, synth } from '../../../index.ts';
+import { SynthNode } from '../synth_node.ts';
 
 test('synthesized nodes have SynthNodePrototype prototype', () => {
   const expression = synth.exp`?my_param`;

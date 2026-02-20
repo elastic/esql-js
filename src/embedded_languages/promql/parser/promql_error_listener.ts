@@ -6,8 +6,8 @@
  */
 
 import * as antlr4 from 'antlr4';
-import { getPosition } from '../../../parser/core/tokens';
-import type { EditorError } from '../../../types';
+import { getPosition } from '../../../parser/core/tokens.ts';
+import type { EditorError } from '../../../types.ts';
 
 /**
  * Error listener for PromQL parsing that collects syntax errors.

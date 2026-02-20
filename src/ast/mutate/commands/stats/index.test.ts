@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import * as commands from '..';
-import { EsqlQuery } from '../../../../composer/query';
+import * as commands from '../index.ts';
+import { EsqlQuery } from '../../../../composer/query/index.ts';
 
 describe('commands.stats', () => {
   describe('.list()', () => {

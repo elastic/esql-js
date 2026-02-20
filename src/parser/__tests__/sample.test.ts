@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Parser } from '../core/parser';
+import { Parser } from '../core/parser.ts';
 
 describe('SAMPLE', () => {
   test('correctly formatted', () => {

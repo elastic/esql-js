@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Parser } from '../..';
+import { Parser } from '../../index.ts';
 
 describe('regular expressions', () => {
   it('LIKE operator', () => {

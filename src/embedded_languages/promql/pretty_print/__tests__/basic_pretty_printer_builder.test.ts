@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { PromQLBuilder } from '../../ast/builder';
-import { PromQLBasicPrettyPrinter } from '../basic_pretty_printer';
+import { PromQLBuilder } from '../../ast/builder/index.ts';
+import { PromQLBasicPrettyPrinter } from '../basic_pretty_printer.ts';
 
 describe('synthetic AST (Builder-constructed)', () => {
   describe('literals', () => {

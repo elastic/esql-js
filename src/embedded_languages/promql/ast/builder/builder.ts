@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { AstNodeParserFields } from '../../../../ast/builder/types';
+import type { AstNodeParserFields } from '../../../../ast/builder/types.ts';
 import type {
   PromQLAstQueryExpression,
   PromQLFunction,
@@ -32,8 +32,8 @@ import type {
   PromQLLabelName,
   PromQLAstExpression,
   PromQLAtModifier,
-} from '../../types';
-import type { PromQLAstNodeTemplate } from './types';
+} from '../../types.ts';
+import type { PromQLAstNodeTemplate } from './types.ts';
 
 /* eslint-disable @typescript-eslint/no-namespace */
 

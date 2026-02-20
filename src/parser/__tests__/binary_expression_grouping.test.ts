@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query';
-import type { ESQLAstQueryExpression } from '../../types';
-import { singleItems } from '../../ast/visitor/utils';
-import { Walker } from '../../ast/walker';
+import { EsqlQuery } from '../../composer/query/index.ts';
+import type { ESQLAstQueryExpression } from '../../types.ts';
+import { singleItems } from '../../ast/visitor/utils.ts';
+import { Walker } from '../../ast/walker/index.ts';
 
 const removeParserFields = (tree: ESQLAstQueryExpression): void => {
   Walker.walk(tree, {

@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export type * from './types';
-export { PromqlWalker } from './walker';
+export type * from './types.ts';
+export { PromqlWalker } from './walker.ts';

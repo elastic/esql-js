@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import * as sources from './sources';
-import * as metadata from './metadata';
+import * as sources from './sources.ts';
+import * as metadata from './metadata.ts';
 
 export { sources, metadata };

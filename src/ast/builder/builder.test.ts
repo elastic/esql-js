@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { Builder } from '.';
-import { BasicPrettyPrinter } from '../../pretty_print';
+import { Builder } from './index.ts';
+import { BasicPrettyPrinter } from '../../pretty_print/index.ts';
 
 describe('command', () => {
   test('can create a LIMIT command', () => {

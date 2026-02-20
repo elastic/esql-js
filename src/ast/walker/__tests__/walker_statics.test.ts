@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { Builder } from '../../builder';
-import { parse } from '../../../parser';
-import { BasicPrettyPrinter } from '../../../pretty_print';
-import { EsqlQuery } from '../../../composer/query';
+import { Builder } from '../../builder/index.ts';
+import { parse } from '../../../parser/index.ts';
+import { BasicPrettyPrinter } from '../../../pretty_print/index.ts';
+import { EsqlQuery } from '../../../composer/query/index.ts';
 import type {
   ESQLAstItem,
   ESQLAstRerankCommand,
@@ -16,8 +16,8 @@ import type {
   ESQLIntegerLiteral,
   ESQLMap,
   ESQLStringLiteral,
-} from '../../../types';
-import { Walker } from '../walker';
+} from '../../../types.ts';
+import { Walker } from '../walker.ts';
 
 describe('Walker static methods', () => {
   describe('Walker.commands()', () => {

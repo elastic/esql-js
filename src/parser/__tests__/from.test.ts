@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { parse } from '..';
-import type { ESQLAstQueryExpression, ESQLParens } from '../../types';
-import { isParens, isSubQuery } from '../../ast/is';
+import { parse } from '../index.ts';
+import type { ESQLAstQueryExpression, ESQLParens } from '../../types.ts';
+import { isParens, isSubQuery } from '../../ast/is.ts';
 
 describe('FROM', () => {
   describe('correctly formatted', () => {

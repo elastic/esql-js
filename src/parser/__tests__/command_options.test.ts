@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { parse } from '..';
-import { Walker } from '../../ast/walker';
+import { parse } from '../index.ts';
+import { Walker } from '../../ast/walker/index.ts';
 
 describe('command options', () => {
   describe('parses correctly location', () => {

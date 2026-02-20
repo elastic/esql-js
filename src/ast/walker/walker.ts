@@ -5,12 +5,15 @@
  * 2.0.
  */
 
-import { resolveItem } from '../visitor/utils';
-import { isPromqlNode, replaceProperties, templateToPredicate } from './helpers';
-import { PromqlWalker, type PromqlWalkerOptions } from '../../embedded_languages/promql/ast/walker';
-import type * as types from '../../types';
-import type * as promql from '../../embedded_languages/promql/types';
-import type { NodeMatchTemplate } from './helpers';
+import { resolveItem } from '../visitor/utils.ts';
+import { isPromqlNode, replaceProperties, templateToPredicate } from './helpers.ts';
+import {
+  PromqlWalker,
+  type PromqlWalkerOptions,
+} from '../../embedded_languages/promql/ast/walker/index.ts';
+import type * as types from '../../types.ts';
+import type * as promql from '../../embedded_languages/promql/types.ts';
+import type { NodeMatchTemplate } from './helpers.ts';
 
 type Node = types.ESQLAstNode | types.ESQLAstNode[];
 

@@ -8,9 +8,9 @@
 // Splitting classes across files runs into issues with circular dependencies
 // and makes it harder to understand the code structure.
 
-import type { SharedData } from './global_visitor_context';
-import { type GlobalVisitorContext } from './global_visitor_context';
-import { children, firstItem, singleItems } from './utils';
+import type { SharedData } from './global_visitor_context.ts';
+import { type GlobalVisitorContext } from './global_visitor_context.ts';
+import { children, firstItem, singleItems } from './utils.ts';
 import type {
   ESQLAstChangePointCommand,
   ESQLAstCommand,
@@ -34,7 +34,7 @@ import type {
   ESQLOrderExpression,
   ESQLParens,
   ESQLSource,
-} from '../../types';
+} from '../../types.ts';
 import type {
   CommandVisitorInput,
   ESQLAstExpressionNode,
@@ -45,9 +45,9 @@ import type {
   VisitorInput,
   VisitorMethods,
   VisitorOutput,
-} from './types';
-import { Builder } from '../builder';
-import { isProperNode } from '../is';
+} from './types.ts';
+import { Builder } from '../builder/index.ts';
+import { isProperNode } from '../is.ts';
 
 export class VisitorContext<
   Methods extends VisitorMethods = VisitorMethods,

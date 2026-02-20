@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../../composer/query';
-import { Visitor } from '../visitor';
+import { EsqlQuery } from '../../../composer/query/index.ts';
+import { Visitor } from '../visitor.ts';
 
 test('"visitCommand" captures all non-captured commands', () => {
   const { ast } = EsqlQuery.fromSrc(`

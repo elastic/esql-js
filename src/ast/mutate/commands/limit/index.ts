@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { Builder } from '../../../builder';
-import type { ESQLAstQueryExpression, ESQLCommand } from '../../../../types';
-import * as generic from '../../generic';
-import type { Predicate } from '../../types';
+import { Builder } from '../../../builder/index.ts';
+import type { ESQLAstQueryExpression, ESQLCommand } from '../../../../types.ts';
+import * as generic from '../../generic/index.ts';
+import type { Predicate } from '../../types.ts';
 
 /**
  * Lists all "LIMIT" commands in the query AST.

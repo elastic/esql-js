@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { PromQLBuilder } from '../../ast/builder';
-import { PromQLParser } from '../../parser';
-import { PromQLBasicPrettyPrinter } from '../basic_pretty_printer';
-import type { PromQLAstExpression } from '../../types';
+import { PromQLBuilder } from '../../ast/builder/index.ts';
+import { PromQLParser } from '../../parser/index.ts';
+import { PromQLBasicPrettyPrinter } from '../basic_pretty_printer.ts';
+import type { PromQLAstExpression } from '../../types.ts';
 
 /**
  * Helper: build a synthetic binary expression AST node (no PromQLParens wrapper).

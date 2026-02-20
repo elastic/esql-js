@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../../composer/query';
-import * as fixtures from '../../../__tests__/fixtures';
-import { Walker } from '../walker';
-import type { ESQLAstExpression, ESQLProperNode } from '../../../types';
-import { isProperNode } from '../../is';
+import { EsqlQuery } from '../../../composer/query/index.ts';
+import * as fixtures from '../../../__tests__/fixtures.ts';
+import { Walker } from '../walker.ts';
+import type { ESQLAstExpression, ESQLProperNode } from '../../../types.ts';
+import { isProperNode } from '../../is.ts';
 
 interface JsonWalkerOptions {
   visitObject?: (node: Record<string, unknown>) => void;

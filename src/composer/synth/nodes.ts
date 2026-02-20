@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Builder } from '../../ast/builder';
+import { Builder } from '../../ast/builder/index.ts';
 import type {
   ESQLColumn,
   ESQLDecimalLiteral,
@@ -15,11 +15,11 @@ import type {
   ESQLParamLiteral,
   ESQLSource,
   ESQLStringLiteral,
-} from '../../types';
-import { isQualifiedColumnShorthand } from './holes';
-import { SynthLiteralFragment } from './synth_literal_fragment';
-import { SynthNode } from './synth_node';
-import type { SynthColumnShorthand, SynthQualifiedColumnShorthand } from './types';
+} from '../../types.ts';
+import { isQualifiedColumnShorthand } from './holes.ts';
+import { SynthLiteralFragment } from './synth_literal_fragment.ts';
+import { SynthNode } from './synth_node.ts';
+import type { SynthColumnShorthand, SynthQualifiedColumnShorthand } from './types.ts';
 
 /**
  * Creates an ES|QL source node.

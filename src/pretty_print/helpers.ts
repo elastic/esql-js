@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import type { ESQLAstBaseItem } from '../types';
-import { Walker, type WalkerAstNode } from '../ast/walker';
+import type { ESQLAstBaseItem } from '../types.ts';
+import { Walker, type WalkerAstNode } from '../ast/walker/index.ts';
 
 export interface QueryPrettyPrintStats {
   /**

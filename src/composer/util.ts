@@ -5,14 +5,14 @@
  * 2.0.
  */
 
-import { isBooleanLiteral, isCommand } from '../ast/is';
-import { Builder } from '../ast/builder';
-import { ParameterHole, DoubleParameterHole } from './parameter_hole';
-import { Walker } from '../ast/walker';
-import { SynthLiteralFragment } from './synth/synth_literal_fragment';
-import type { ESQLCommand, ESQLNamedParamLiteral } from '../types';
-import type { ComposerQuery } from './composer_query';
-import type { ComposerQueryTagHole, ParameterShorthandHole } from './types';
+import { isBooleanLiteral, isCommand } from '../ast/is.ts';
+import { Builder } from '../ast/builder/index.ts';
+import { ParameterHole, DoubleParameterHole } from './parameter_hole.ts';
+import { Walker } from '../ast/walker/index.ts';
+import { SynthLiteralFragment } from './synth/synth_literal_fragment.ts';
+import type { ESQLCommand, ESQLNamedParamLiteral } from '../types.ts';
+import type { ComposerQuery } from './composer_query.ts';
+import type { ComposerQueryTagHole, ParameterShorthandHole } from './types.ts';
 
 /**
  * Query composer allows only named ES|QL parameters, because you cannot

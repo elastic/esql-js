@@ -5,16 +5,16 @@
  * 2.0.
  */
 
-import { Builder } from '../../../../builder';
+import { Builder } from '../../../../builder/index.ts';
 import type {
   ESQLAstItem,
   ESQLAstQueryExpression,
   ESQLCommand,
   ESQLCommandOption,
-} from '../../../../../types';
-import { Visitor } from '../../../../visitor';
-import type { Predicate } from '../../../types';
-import * as commands from '..';
+} from '../../../../../types.ts';
+import { Visitor } from '../../../../visitor/index.ts';
+import type { Predicate } from '../../../types.ts';
+import * as commands from '../index.ts';
 
 /**
  * Returns the first command option AST node that satisfies the predicate.

@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../../composer/query';
-import type { ESQLIntegerLiteral } from '../../../types';
-import { Walker } from '../walker';
+import { EsqlQuery } from '../../../composer/query/index.ts';
+import type { ESQLIntegerLiteral } from '../../../types.ts';
+import { Walker } from '../walker.ts';
 
 describe('aborting traversal', () => {
   test('can abort traversal after second comand argument', () => {

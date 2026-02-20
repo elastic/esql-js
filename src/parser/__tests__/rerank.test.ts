@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query';
-import type { ESQLAstRerankCommand, ESQLCommandOption } from '../../types';
+import { EsqlQuery } from '../../composer/query/index.ts';
+import type { ESQLAstRerankCommand, ESQLCommandOption } from '../../types.ts';
 
 describe('RERANK', () => {
   describe('basic parsing', () => {

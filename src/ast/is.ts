@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type * as types from '../types';
-import type { ESQLInlineCast, ESQLProperNode } from '../types';
-import { Walker } from './walker';
+import type * as types from '../types.ts';
+import type { ESQLInlineCast, ESQLProperNode } from '../types.ts';
+import { Walker } from './walker/index.ts';
 
 export const isProperNode = (node: unknown): node is types.ESQLProperNode =>
   !!node &&

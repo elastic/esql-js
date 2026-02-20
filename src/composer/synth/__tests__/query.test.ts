@@ -5,10 +5,10 @@
  * 2.0.
  */
 
-import { synth } from '../../..';
-import { Builder } from '../../../ast/builder';
-import { BasicPrettyPrinter } from '../../../pretty_print';
-import { query } from '../query';
+import { synth } from '../../../index.ts';
+import { Builder } from '../../../ast/builder/index.ts';
+import { BasicPrettyPrinter } from '../../../pretty_print/index.ts';
+import { query } from '../query.ts';
 
 test('can create a WHERE command', () => {
   const node = query`FROM index | WHERE coordinates.lat >= 12.123123`;

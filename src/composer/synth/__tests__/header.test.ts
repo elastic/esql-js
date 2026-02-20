@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import { BasicPrettyPrinter } from '../../../pretty_print';
-import { header, hdr } from '../header';
+import { BasicPrettyPrinter } from '../../../pretty_print/index.ts';
+import { header, hdr } from '../header.ts';
 
 test('can create a SET command with string value', () => {
   const node = header`SET a = "foo"`;

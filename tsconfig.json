@@ -34,7 +34,8 @@
     "forceConsistentCasingInFileNames": true,
     // Ensure each file can be independently transpiled (required by ts-jest and bundlers)
     "isolatedModules": true,
-    // Rewrite .ts import extensions to .js in compiled output (TS 5.7+)
+    // Allow .ts in relative import paths; compiler rewrites to .js in output.
+    "allowImportingTsExtensions": true,
     "rewriteRelativeImportExtensions": true,
     // Output compiled files to the lib/ directory
     "outDir": "./lib"

@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { PromQLParser } from '../parser';
-import { printAst } from '../../../../debug';
-import type { PromQLSelector } from '../../types';
+import { PromQLParser } from '../parser.ts';
+import { printAst } from '../../../../debug/index.ts';
+import type { PromQLSelector } from '../../types.ts';
 
 describe('PromQL "selector" node parsing', () => {
   const parseSelector = (query: string): PromQLSelector => {

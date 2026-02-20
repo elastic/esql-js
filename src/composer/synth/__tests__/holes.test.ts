@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { query } from '../query';
+import { query } from '../query.ts';
 
 describe('number shorthand', () => {
   test('can insert an integer shorthand', () => {

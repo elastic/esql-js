@@ -5,12 +5,12 @@
  * 2.0.
  */
 
-export type * from './types';
-export { esql, e } from './esql';
-export { ComposerQuery } from './composer_query';
-export { ParameterHole } from './parameter_hole';
+export type * from './types.ts';
+export { esql, e } from './esql.ts';
+export { ComposerQuery } from './composer_query.ts';
+export { ParameterHole } from './parameter_hole.ts';
 
-export * as synth from './synth';
-export { qry, cmd, exp } from './synth';
+export * as synth from './synth/index.ts';
+export { qry, cmd, exp } from './synth/index.ts';
 
-export { EsqlQuery } from './query';
+export { EsqlQuery } from './query/index.ts';

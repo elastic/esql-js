@@ -5,15 +5,15 @@
  * 2.0.
  */
 
-import { holeToFragment } from './holes';
-import type { ESQLProperNode } from '../../types';
+import { holeToFragment } from './holes.ts';
+import type { ESQLProperNode } from '../../types.ts';
 import type {
   SynthGenerator,
   SynthMethod,
   SynthTaggedTemplateWithOpts,
   SynthTemplateHole,
-} from './types';
-import type { ParseOptions } from '../../parser';
+} from './types.ts';
+import type { ParseOptions } from '../../parser/index.ts';
 
 export const createTag = <N extends ESQLProperNode>(
   generator: SynthGenerator<N>

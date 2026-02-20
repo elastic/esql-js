@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import * as commands from '..';
-import { EsqlQuery } from '../../../../composer/query';
-import { Builder } from '../../../builder';
+import * as commands from '../index.ts';
+import { EsqlQuery } from '../../../../composer/query/index.ts';
+import { Builder } from '../../../builder/index.ts';
 
 describe('commands.where', () => {
   describe('.list()', () => {

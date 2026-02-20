@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { parse } from '../core/parser';
+import { parse } from '../core/parser.ts';
 
 describe('source nodes', () => {
   it('cluster vs quoted source', () => {

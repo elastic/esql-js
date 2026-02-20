@@ -5,12 +5,12 @@
  * 2.0.
  */
 
-import type { ESQLAstQueryExpression, ESQLCommand } from '../../../../types';
-import { Visitor } from '../../../visitor';
-import type { Predicate } from '../../types';
+import type { ESQLAstQueryExpression, ESQLCommand } from '../../../../types.ts';
+import { Visitor } from '../../../visitor/index.ts';
+import type { Predicate } from '../../types.ts';
 
-export * as args from './args';
-export * as options from './options';
+export * as args from './args/index.ts';
+export * as options from './options/index.ts';
 
 /**
  * Returns an iterator for all command AST nodes in the query. If a predicate is

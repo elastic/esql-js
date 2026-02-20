@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { parse } from '..';
+import { parse } from '../index.ts';
 
 describe('SORT', () => {
   describe('correctly formatted', () => {
