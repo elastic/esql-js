@@ -1,6 +1,7 @@
 import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
+import importPlugin from 'eslint-plugin-import';
 import eslintConfigPrettier from 'eslint-config-prettier';
 import { requireLicenseHeader } from './lint-licence-rule.js';
 
@@ -15,9 +16,13 @@ export default defineConfig([
           'require-license-header': requireLicenseHeader,
         },
       },
+      import: importPlugin,
     },
     rules: {
       'local-rules/require-license-header': 'error',
+
+      // Require file extensions on relative imports (e.g. ./foo.ts) for ESM compatibility
+      'import/extensions': ['error', 'always', { ignorePackages: true }],
 
       // TypeScript handles this natively; ESLint's no-undef doesn't understand TS types
       'no-undef': 'off',
