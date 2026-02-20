@@ -9,7 +9,7 @@ want to deal with the complexity of the `Builder` class.
 You can synthesize a whole query AST node using the `qry` template tag:
 
 ```ts
-import { synth } from '@kbn/esql-language';
+import { synth } from '@elastic/esql';
 
 const node = synth.qry`FROM index | WHERE my.field == 10`;
 // { type: 'query', commands: [ ... ]}
@@ -21,7 +21,7 @@ individual expression or command AST nodes.
 You can create an assignment expression AST node as simple as:
 
 ```ts
-import { synth } from '@kbn/esql-language';
+import { synth } from '@elastic/esql';
 
 const node = synth.exp`my.field = max(10, ?my_param)`;
 // { type: 'function', name: '=', args: [ ... ]}
@@ -31,7 +31,7 @@ To construct an equivalent AST node using the `Builder` class, you would need to
 write the following code:
 
 ```ts
-import { Builder } from '@kbn/esql-language';
+import { Builder } from '@elastic/esql';
 
 const node = Builder.expression.func.binary('=', [
   Builder.expression.column({

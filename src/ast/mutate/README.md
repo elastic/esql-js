@@ -2,6 +2,7 @@
 
 The ES|QL mutation API provides methods to navigate and modify the AST.
 
+
 ## Usage
 
 For example, insert a `FROM` command `METADATA` field:
@@ -21,6 +22,7 @@ const src = BasicPrettyPrinter.print(root);
 
 console.log(src); // FROM index METADATA _lang, _id
 ```
+
 
 ## API
 
@@ -64,3 +66,5 @@ console.log(src); // FROM index METADATA _lang, _id
   - `.join`
     - `.list()` &mdash; List all `JOIN` commands.
     - `.byIndex()` &mdash; Find a `JOIN` command by index.
+
+
