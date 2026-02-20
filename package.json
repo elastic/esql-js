@@ -45,7 +45,7 @@
   "sideEffects": false,
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",
-    "@babel/runtime": "7.28.4",
+    "@babel/runtime": "7.28.6",
     "@eslint/js": "10.0.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "13.0.1",
