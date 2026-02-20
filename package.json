@@ -14,6 +14,8 @@
     }
   },
   "files": [
+    "NOTICE.txt",
+    "LICENSE.txt",
     "lib"
   ],
   "scripts": {
@@ -23,14 +25,25 @@
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "prebuild:antlr4": "brew bundle --file=./.buildkite/scripts/antlr4_tools/brewfile",
+    "build:antlr4": "npm run build:antlr4:esql && npm run build:antlr4:promql",
+    "build:antlr4:esql": "npm run build:antlr4:esql:lexer && npm run build:antlr4:esql:parser",
+    "postbuild:antlr4:esql": "./.buildkite/scripts/postbuild.sh esql",
+    "build:antlr4:esql:parser": "antlr -Dlanguage=TypeScript -lib src/parser/antlr/parser src/parser/antlr/esql_parser.g4",
+    "build:antlr4:esql:lexer": "antlr -Dlanguage=TypeScript -lib src/parser/antlr/lexer src/parser/antlr/esql_lexer.g4",
+    "build:antlr4:promql": "npm run build:antlr4:promql:lexer && npm run build:antlr4:promql:parser",
+    "postbuild:antlr4:promql": "./.buildkite/scripts/postbuild.sh promql",
+    "build:antlr4:promql:parser": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_parser.g4",
+    "build:antlr4:promql:lexer": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_lexer.g4",
     "semantic-release": "semantic-release --dry-run --debug",
     "prepare": "husky"
   },
   "repository": "https://github.com/elastic/esql-js.git",
   "private": true,
-  "license": "To be defined",
+  "license": "SEE LICENSE IN LICENSE.txt",
   "sideEffects": false,
   "devDependencies": {
+    "@babel/eslint-parser": "7.28.6",
     "@eslint/js": "10.0.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "13.0.1",

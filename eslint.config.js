@@ -1,15 +1,24 @@
-// ESLint flat config for TypeScript.
 import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
+import { requireLicenseHeader } from './lint-licence-rule.js';
 
 export default defineConfig([
-  globalIgnores(['lib/', 'node_modules/', 'src/parser/antlr/']),
+  globalIgnores(['lib/', 'node_modules/', 'src/parser/antlr/', '*.js', '*.mjs']),
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
+    plugins: {
+      'local-rules': {
+        rules: {
+          'require-license-header': requireLicenseHeader,
+        },
+      },
+    },
     rules: {
+      'local-rules/require-license-header': 'error',
+
       // TypeScript handles this natively; ESLint's no-undef doesn't understand TS types
       'no-undef': 'off',
 

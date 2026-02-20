@@ -23,7 +23,7 @@ the parameter can be inserted in to the query using the `${{ param }}` syntax,
 it will be correctly treated when the query AST is constructed:
 
 ```ts
-import { esql } from '@kbn/esql-language';
+import { esql } from '@elastic/esql';
 
 const param = 123; // Dynamic parameter, e.g. received from the UI.
 
@@ -503,7 +503,7 @@ The `esql` object provides additional helper methods for building expressions an
 
 ```ts
 // Import esql from the AST package
-import { esql } from '@kbn/esql-language';
+import { esql } from '@elastic/esql';
 
 // Column expressions
 esql.col('field_name'); // Simple column
