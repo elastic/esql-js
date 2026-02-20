@@ -1,16 +1,17 @@
 {
   "name": "@elastic/esql",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": "Kibana ES|QL team",
   "description": "A set of ts tools to parse, build and transform ES|QL queries programatically.",
   "packageManager": "yarn@1.22.22",
-  "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
-  "module": "./lib/index.js",
+  "main": "./lib/cjs/index.js",
+  "types": "./lib/esm/index.d.ts",
   "exports": {
     ".": {
-      "types": "./lib/index.d.ts",
-      "default": "./lib/index.js"
+      "types": "./lib/esm/index.d.ts",
+      "import": "./lib/esm/index.js",
+      "require": "./lib/cjs/index.js",
+      "default": "./lib/cjs/index.js"
     }
   },
   "files": [
@@ -19,12 +20,15 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
     "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "build": "yarn build:clean && yarn build:cjs && yarn build:esm",
+    "build:clean": "rm -rf lib/cjs lib/esm",
+    "build:cjs": "tsc -p tsconfig.cjs.json",
+    "build:esm": "tsc -p tsconfig.esm.json && cp scripts/esm-package.json lib/esm/package.json",
     "prebuild:antlr4": "brew bundle --file=./.buildkite/scripts/antlr4_tools/brewfile",
     "build:antlr4": "npm run build:antlr4:esql && npm run build:antlr4:promql",
     "build:antlr4:esql": "npm run build:antlr4:esql:lexer && npm run build:antlr4:esql:parser",
@@ -63,7 +67,6 @@
     "typescript-eslint": "8.55.0"
   },
   "dependencies": {
-    "@babel/runtime": "7.28.6",
     "antlr4": "4.13.2",
     "tree-dump": "1.1.0",
     "tslib": "2.8.1"
