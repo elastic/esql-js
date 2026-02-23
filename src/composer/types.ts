@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import type * as synth from './synth';
 import type { ESQLAstCommand, ESQLCommand, ESQLOrderExpression, ESQLSource } from '../types';
 import type { ComposerQuery } from './composer_query';
@@ -61,7 +70,7 @@ export type ParameterShorthandHole = Record<string, unknown>;
  */
 export type SingleKey<T> = IsUnion<keyof T> extends true ? never : {} extends T ? never : T;
 export type IsUnion<T> = [T] extends [UnionToIntersection<T>] ? false : true;
-export type UnionToIntersection<U> = (U extends any ? (k: U) => void : never) extends (
+export type UnionToIntersection<U> = (U extends unknown ? (k: U) => void : never) extends (
   k: infer I
 ) => void
   ? I

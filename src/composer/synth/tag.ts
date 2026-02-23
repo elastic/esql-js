@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { holeToFragment } from './holes';
 import type { ESQLProperNode } from '../../types';
 import type {
@@ -59,7 +68,7 @@ export const createTag = <N extends ESQLProperNode>(
     if (Array.isArray(first)) {
       return templateStringTag()(
         first as unknown as TemplateStringsArray,
-        ...(args as any).slice(1)
+        ...(args as SynthTemplateHole[]).slice(1)
       );
     }
 

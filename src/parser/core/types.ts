@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import type * as esql_parser from '../antlr/esql_parser';
 import type { CstToAstConverter } from './cst_to_ast_converter';
 import type { ESQLAstComment } from '../../types';
@@ -63,7 +72,7 @@ export interface ParsedFormattingLineBreakDecoration {
 }
 
 type Functions<T> = {
-  [K in keyof T]: T[K] extends (...args: any[]) => any ? K : never;
+  [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never;
 };
 type GrammarRule = keyof Functions<InstanceType<typeof esql_parser.default>>;
 type CstToAstConversion = keyof Functions<CstToAstConverter>;

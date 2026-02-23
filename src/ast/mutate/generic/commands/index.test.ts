@@ -5,9 +5,19 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { parse } from '../../../../parser';
 import { BasicPrettyPrinter } from '../../../../pretty_print';
 import * as generic from '..';
+import type { ESQLNumericLiteral } from '../../../../types';
 
 describe('generic.commands', () => {
   describe('.list()', () => {
@@ -58,7 +68,8 @@ describe('generic.commands', () => {
       const { root } = parse(src);
       const command = generic.commands.find(
         root,
-        (cmd) => cmd.name === 'limit' && (cmd.args?.[0] as any).value === 2
+        (cmd) =>
+          cmd.name === 'limit' && (cmd.args?.[0] as ESQLNumericLiteral<'integer'>).value === 2
       );
 
       expect(command).toMatchObject({

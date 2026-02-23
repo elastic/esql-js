@@ -5,8 +5,23 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { EsqlQuery } from '../../composer/query';
-import type { ESQLAstRerankCommand, ESQLCommandOption } from '../../types';
+import type {
+  ESQLAstRerankCommand,
+  ESQLCommandOption,
+  ESQLLiteral,
+  ESQLMap,
+  ESQLMapEntry,
+} from '../../types';
 
 describe('RERANK', () => {
   describe('basic parsing', () => {
@@ -280,17 +295,19 @@ describe('RERANK', () => {
       expect(withOption).toBeDefined();
 
       if (withOption) {
-        const mapArg = withOption.args[0] as any;
+        const mapArg = withOption.args[0] as ESQLMap;
         expect(mapArg.type).toBe('map');
         expect(mapArg.entries).toHaveLength(2);
 
         // Check that all three keys are present
-        const keys = mapArg.entries.map((entry: any) => entry.key.value);
+        const keys = mapArg.entries.map((entry: ESQLMapEntry) => (entry.key as ESQLLiteral).value);
         expect(keys).toContain('"inferenceId"');
         expect(keys).toContain('"scoreColumn"');
 
         // Check that all three values are correct
-        const values = mapArg.entries.map((entry: any) => entry.value.value);
+        const values = mapArg.entries.map(
+          (entry: ESQLMapEntry) => (entry.value as ESQLLiteral).value
+        );
         expect(values).toContain('"rerankerInferenceId"');
         expect(values).toContain('"rerank_score"');
       }

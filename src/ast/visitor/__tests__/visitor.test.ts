@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { parse } from '../../../parser';
 import type { ESQLAstForkCommand } from '../../../types';
 import { CommandVisitorContext, WhereCommandVisitorContext } from '../contexts';
@@ -280,7 +289,7 @@ describe('header commands', () => {
 
   test('header commands with various value types', () => {
     const { root } = parse('SET a = 1; SET b = "value"; SET c = true; FROM index');
-    const literals: any[] = [];
+    const literals: (string | number | boolean)[] = [];
 
     new Visitor()
       .on('visitExpression', (ctx) => {

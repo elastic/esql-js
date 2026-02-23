@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import type * as antlr from 'antlr4';
 import * as cst from '../../../parser/antlr/promql_parser';
 import { getPosition } from '../../../parser/core/tokens';
@@ -430,9 +439,11 @@ export class PromQLCstToAstConverter {
     const left = leftCtx ? this.fromExpression(leftCtx) : undefined;
     const right = rightCtx ? this.fromExpression(rightCtx) : undefined;
 
-    if (!left || !right) {
+    if (!left) {
       return this.fromParserRuleToUnknown(ctx);
     }
+
+    const syntheticRight = right ?? PromQLBuilder.unknown(this.getParserFields(ctx));
 
     const operatorText = opToken?.text ?? '';
     const operator = this.toBinaryOperator(operatorText);
@@ -448,16 +459,20 @@ export class PromQLCstToAstConverter {
     const node = PromQLBuilder.expression.binary(
       operator,
       left,
-      right,
+      syntheticRight,
       { bool, modifier },
       this.getParserFields(ctx)
     );
+
+    if (!right) {
+      node.incomplete = true;
+    }
 
     if (left.incomplete) {
       node.incomplete = true;
     }
 
-    if (right.incomplete) {
+    if (syntheticRight.incomplete) {
       node.incomplete = true;
     }
 

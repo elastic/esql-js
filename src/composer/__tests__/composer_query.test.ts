@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { esql } from '../esql';
 
 test('prints the query object when casting to string', () => {
@@ -92,7 +101,7 @@ describe('.pipe``', () => {
     const query = esql`FROM kibana_ecommerce_index`;
 
     expect(() => query.pipe`WHERE foo > 123 | LIMIT 10`).toThrowErrorMatchingInlineSnapshot(
-      `"Could not parse a single command completely: "WHERE foo > 123 | LIMIT 10". "`
+      `"Could not parse a single command completely: \\"WHERE foo > 123 | LIMIT 10\\". "`
     );
   });
 
@@ -124,7 +133,7 @@ describe('.pipe``', () => {
       const query = esql.from('index');
 
       expect(() => query.pipe('WHERE foo > ?1', { '1': 42 })).toThrowErrorMatchingInlineSnapshot(
-        `"Invalid parameter name "1". Parameter names cannot start with a digit or space."`
+        `"Invalid parameter name \\"1\\". Parameter names cannot start with a digit or space."`
       );
     });
 

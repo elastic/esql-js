@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import * as synth from './synth';
 import { ComposerQuery } from './composer_query';
 import { DoubleParameterHole, ParameterHole } from './parameter_hole';
@@ -23,9 +32,13 @@ import type {
 import type { ESQLSource } from '../types';
 import { isSource } from '../ast/is';
 
-const esqlTag = ((templateOrQueryOrParamValues: any, ...maybeHoles: ComposerQueryTagHole[]) => {
-  const tagOrGeneratorWithParams = (initialParamValues?: Record<string, unknown>) =>
-    ((templateOrQuery: any, ...holes: ComposerQueryTagHole[]) => {
+const esqlTag = ((
+  templateOrQueryOrParamValues: TemplateStringsArray | Record<string, unknown> | string,
+  ...maybeHoles: ComposerQueryTagHole[]
+) => {
+  const tagOrGeneratorWithParams =
+    (initialParamValues?: Record<string, unknown>) =>
+    (templateOrQuery: TemplateStringsArray | string, ...holes: ComposerQueryTagHole[]) => {
       const params = new Map<string, unknown>(
         initialParamValues ? Object.entries(initialParamValues) : []
       );
@@ -64,17 +77,14 @@ const esqlTag = ((templateOrQueryOrParamValues: any, ...maybeHoles: ComposerQuer
        * ```
        */
       const processedHoles = processTemplateHoles(holes, params);
-      const ast = synth.qry(
-        templateOrQuery as TemplateStringsArray,
-        ...(holes as synth.SynthTemplateHole[])
-      );
+      const ast = synth.qry(templateOrQuery, ...(holes as synth.SynthTemplateHole[]));
 
       ast.commands = removeNopCommands(ast.commands);
 
       const query = new ComposerQuery(ast, processedHoles.params);
 
       return query;
-    }) as ComposerQueryTag & ComposerQueryGenerator;
+    };
 
   if (
     !!templateOrQueryOrParamValues &&
@@ -90,7 +100,9 @@ const esqlTag = ((templateOrQueryOrParamValues: any, ...maybeHoles: ComposerQuer
      *   FROM index | WHERE foo > ?input | LIMIT ?limit`;
      * ```
      */
-    return tagOrGeneratorWithParams(templateOrQueryOrParamValues) as ComposerQueryTag;
+    return tagOrGeneratorWithParams(
+      templateOrQueryOrParamValues as Record<string, unknown>
+    ) as ComposerQueryTag;
   }
 
   /**
@@ -107,7 +119,10 @@ const esqlTag = ((templateOrQueryOrParamValues: any, ...maybeHoles: ComposerQuer
    * const query = esql('FROM index | WHERE foo > 42 | LIMIT 10');
    * ```
    */
-  return tagOrGeneratorWithParams()(templateOrQueryOrParamValues, ...maybeHoles);
+  return tagOrGeneratorWithParams()(
+    templateOrQueryOrParamValues as TemplateStringsArray | string,
+    ...maybeHoles
+  );
 }) as ComposerQueryTag & ParametrizedComposerQueryTag & ComposerQueryGenerator;
 
 /**

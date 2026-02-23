@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { printTree } from 'tree-dump';
 import * as synth from './synth';
 import { BasicPrettyPrinter, WrappingPrettyPrinter } from '../pretty_print';
@@ -71,7 +80,7 @@ export class ComposerQuery {
     ((templateOrQueryOrParamValues, ...rest: unknown[]) => {
       const tagOrGeneratorWithParams =
         (initialParamValues: Record<string, unknown>): QueryCommandTagParametrized =>
-        (templateOrQuery: any, ...holes: unknown[]) => {
+        (templateOrQuery: string | TemplateStringsArray, ...holes: unknown[]) => {
           const params: Record<string, unknown> = { ...initialParamValues };
           let command: ESQLCommand | ESQLAstHeaderCommand;
 

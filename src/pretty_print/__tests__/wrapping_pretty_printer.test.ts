@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { parse } from '../../parser';
 import type { ESQLMap } from '../../types';
 import { Walker } from '../../ast/walker';
@@ -276,6 +285,22 @@ FROM index
         ON field1, field2, field3, field4, field5, field6, field7, field8, field9,
           field10, field11, field12
         WITH {"inference_id": "model"}`);
+    });
+  });
+
+  describe('MMR', () => {
+    test('with query vector', () => {
+      const { text } = reprint(
+        'FROM a | MMR [0.5,0.4,0.3,0.2]::dense_vector ON genre LIMIT 10 WITH {"lambda": 0.5}'
+      );
+
+      expect(text).toBe(
+        `FROM a
+  | MMR ([0.5, 0.4, 0.3, 0.2])::DENSE_VECTOR
+        ON genre
+        LIMIT 10
+        WITH {"lambda": 0.5}`
+      );
     });
   });
 

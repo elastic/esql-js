@@ -5,9 +5,19 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { Parser, parse } from '..';
 import { EsqlQuery } from '../../composer/query';
 import { Walker } from '../../ast/walker';
+import type { ESQLSingleAstItem } from '../../types';
 
 describe('function AST nodes', () => {
   describe('"variadic-call"', () => {
@@ -377,7 +387,7 @@ describe('function AST nodes', () => {
 
         expect(errors.length > 0).toBe(true);
         expect(expression?.incomplete).toBe(true);
-        expect((expression?.args[1] as any)?.incomplete).toBe(true);
+        expect((expression?.args[1] as ESQLSingleAstItem)?.incomplete).toBe(true);
 
         expect(expression?.args.length).toBe(2);
         expect(expression).toMatchObject({

@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import type * as antlr from 'antlr4';
 import * as cst from '../antlr/esql_parser';
 import type * as ast from '../../types';
@@ -3022,7 +3031,7 @@ export class CstToAstConverter {
         const field = this.fromField(fieldCtx);
 
         if (field) {
-          fields.push(field as any);
+          fields.push(field);
         }
       }
     } catch (e) {

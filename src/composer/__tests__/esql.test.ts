@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { Builder } from '../../ast/builder';
 import type { ESQLLiteral } from '../../types';
 import { ComposerQuery } from '../composer_query';
@@ -453,7 +462,7 @@ ComposerQuery
     expect(
       () => esql`FROM index | WHERE foo > ${e.par(input, '123')} | LIMIT 10`
     ).toThrowErrorMatchingInlineSnapshot(
-      `"Invalid parameter name "123". Parameter names cannot start with a digit or space."`
+      `"Invalid parameter name \\"123\\". Parameter names cannot start with a digit or space."`
     );
   });
 
@@ -510,7 +519,7 @@ ComposerQuery
       // @ts-expect-error - Parameter shorthand must be an object with a single key
       esql`FROM index | LIMIT ${{ limit, noMoreFields: true }}`;
     }).toThrowErrorMatchingInlineSnapshot(
-      `"Unexpected synth hole: {"limit":123,"noMoreFields":true}"`
+      `"Unexpected synth hole: {\\"limit\\":123,\\"noMoreFields\\":true}"`
     );
   });
 });

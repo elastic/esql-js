@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { EsqlQuery } from '../../../composer/query';
 import { Visitor } from '../visitor';
 
@@ -227,6 +236,58 @@ test('can visit COMPLETION command', () => {
   const list = visitor.visitQuery(ast).flat().filter(Boolean);
 
   expect(list).toEqual(['COMPLETION']);
+});
+
+test('can visit MMR command', () => {
+  const { ast } = EsqlQuery.fromSrc(`
+    FROM movies
+      | MMR [0.5, 0.4, 0.3, 0.2]::dense_vector ON genre LIMIT 10 WITH { "lambda": 0.5 }
+  `);
+  const visitor = new Visitor()
+    .on('visitLiteralExpression', (ctx) => {
+      return ctx.node.value;
+    })
+    .on('visitMapExpression', (ctx) => {
+      return [...ctx.visitEntries(null)].flat();
+    })
+    .on('visitMapEntryExpression', (ctx) => {
+      return [ctx.visitKey(null), ctx.visitValue(null)];
+    })
+    .on('visitListLiteralExpression', (ctx) => {
+      return [...ctx.visitElements(null)].flat();
+    })
+    .on('visitInlineCastExpression', (ctx) => {
+      return [ctx.node.castType, ctx.visitValue(null)];
+    })
+    .on('visitColumnExpression', (ctx) => {
+      return ctx.node.name;
+    })
+    .on('visitCommandOption', (ctx) => {
+      return [...ctx.visitArguments(null)].flat();
+    })
+    .on('visitMmrCommand', (ctx) => {
+      return [...ctx.visitArgs(null), ...ctx.visitOptions()].flat();
+    })
+    .on('visitExpression', () => {
+      return null;
+    })
+    .on('visitCommand', () => {
+      return null;
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].flat();
+    });
+  const list = visitor.visitQuery(ast).flat().filter(Boolean);
+
+  expect(list).toContain('dense_vector');
+  expect(list).toContain(0.5);
+  expect(list).toContain(0.4);
+  expect(list).toContain(0.3);
+  expect(list).toContain(0.2);
+  expect(list).toContain('genre');
+  expect(list).toContain(10);
+  expect(list).toContain('"lambda"');
+  expect(list).toContain(0.5);
 });
 
 test('can visit FROM command with complex subqueries', () => {

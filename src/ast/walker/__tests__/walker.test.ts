@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { parse } from '../../../parser';
 import { Parser } from '../../../parser';
 import { EsqlQuery } from '../../../composer/query';
@@ -23,8 +32,11 @@ import type {
   ESQLMapEntry,
   ESQLOrderExpression,
   ESQLAstHeaderCommand,
+  ESQLSingleAstItem,
+  ESQLStringLiteral,
 } from '../../../types';
 import { walk, Walker } from '../walker';
+import { isAssignment } from '../..';
 
 describe('structurally can walk all nodes', () => {
   test('can walk all functions', () => {
@@ -54,7 +66,7 @@ describe('structurally can walk all nodes', () => {
     expect(functions.length).toBe(1);
     expect(functions[0].name).toBe('=');
     expect(functions[0].args.length).toBe(2);
-    expect((functions[0].args[0] as any).name).toBe('var0');
+    expect((functions[0].args[0] as ESQLIdentifier).name).toBe('var0');
   });
 
   describe('commands', () => {
@@ -1072,7 +1084,7 @@ describe('header commands', () => {
           }
         },
         visitLiteral: (node) => {
-          if ((node as any).valueUnquoted === '30s') {
+          if ((node as ESQLStringLiteral).valueUnquoted === '30s') {
             literals.push(node);
           }
         },
@@ -1214,9 +1226,9 @@ describe('header commands', () => {
 
       walk(root, {
         visitHeaderCommand: (cmd) => {
-          const identifier = cmd.args[0] as any;
-          if (identifier && identifier.args && identifier.args[0]) {
-            headerOrder.push(identifier.args[0].name);
+          const identifier = cmd.args[0];
+          if (isAssignment(identifier)) {
+            headerOrder.push((identifier.args[0] as ESQLSingleAstItem).name);
           }
         },
         order: 'backward',

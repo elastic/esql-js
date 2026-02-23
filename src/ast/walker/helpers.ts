@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import type { PromQLAstNode } from '../../embedded_languages/promql/types';
 import type {
   ESQLAstCommand,
@@ -64,7 +73,7 @@ export const templateToPredicate = (
     for (const key of keys) {
       const matcher = template[key];
       if (matcher instanceof Array) {
-        if (!(matcher as any[]).includes(node[key])) {
+        if (!(matcher as unknown[]).includes(node[key])) {
           return false;
         }
       } else if (matcher instanceof RegExp) {
@@ -85,7 +94,7 @@ export const templateToPredicate = (
 export const replaceProperties = (obj: object, replacement: object) => {
   for (const key in obj) {
     if (typeof key === 'string' && Object.prototype.hasOwnProperty.call(obj, key))
-      delete (obj as any)[key];
+      delete (obj as Record<string, unknown>)[key];
   }
   Object.assign(obj, replacement);
 };

@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { parse } from '../../parser';
 import { BasicPrettyPrinter } from '../basic_pretty_printer';
 
@@ -315,6 +324,14 @@ describe('commands', () => {
     test('comments around all elements, two fields', () => {
       assertPrint(
         'FROM a | /*0*/ RERANK /*1*/ "query" /*2*/ ON /*3*/ field1 /*4*/, /*5*/ field2 /*6*/ WITH /*7*/ {"id1": "value1"} /*8*/'
+      );
+    });
+  });
+
+  describe('MMR', () => {
+    test('comments around all elements', () => {
+      assertPrint(
+        'FROM a | /*0*/ MMR /*1*/ ([0.5, 0.4, 0.3, 0.2])::DENSE_VECTOR /*2*/ ON /*3*/ genre /*4*/ LIMIT /*5*/ 10 /*6*/ WITH /*7*/ {"lambda": 0.5} /*8*/'
       );
     });
   });

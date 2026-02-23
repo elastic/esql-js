@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { Builder } from '../../builder';
 import { parse } from '../../../parser';
 import { BasicPrettyPrinter } from '../../../pretty_print';
@@ -15,6 +24,7 @@ import type {
   ESQLCommandOption,
   ESQLIntegerLiteral,
   ESQLMap,
+  ESQLNumericLiteral,
   ESQLStringLiteral,
 } from '../../../types';
 import { Walker } from '../walker';
@@ -622,7 +632,7 @@ describe('Walker static methods', () => {
     test('can find node by predicate function', () => {
       const { ast } = EsqlQuery.fromSrc('FROM index | EVAL a = "x" | WHERE a == 123 | LIMIT 10');
       const newNode = Builder.expression.literal.integer(456);
-      Walker.replace(ast, (n) => (n as any).value === 123, newNode);
+      Walker.replace(ast, (n) => (n as ESQLNumericLiteral<'integer'>).value === 123, newNode);
 
       expect(BasicPrettyPrinter.print(ast)).toBe(
         'FROM index | EVAL a = "x" | WHERE a == 456 | LIMIT 10'

@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { BinaryExpressionGroup } from '../ast/grouping';
 import { binaryExpressionGroup, unaryExpressionGroup } from '../ast/grouping';
 import { isBinaryExpression, isIdentifier, isParamLiteral } from '../ast/is';
@@ -535,7 +544,7 @@ export class WrappingPrettyPrinter {
     return { txt, indented };
   }
 
-  protected readonly visitor: Visitor<any> = new Visitor()
+  protected readonly visitor: Visitor = new Visitor()
     .on('visitExpression', (ctx, inp: Input): Output => {
       let text = ctx.node.text ?? '<EXPRESSION>';
 
@@ -1047,7 +1056,7 @@ export class WrappingPrettyPrinter {
       }
 
       return { txt: text };
-    });
+    }) as unknown as Visitor;
 
   public print(query: ESQLAstQueryExpression) {
     return this.visitor.visitQuery(query, undefined).txt;

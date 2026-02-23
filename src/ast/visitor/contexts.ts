@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 // Splitting classes across files runs into issues with circular dependencies
 // and makes it harder to understand the code structure.
 
@@ -124,7 +133,7 @@ export class VisitorContext<
     let i = 0;
     for (const arg of this.arguments()) {
       if (i === index) {
-        return this.visitExpression(arg, input as any);
+        return this.visitExpression(arg, input);
       }
       i++;
     }
@@ -171,7 +180,7 @@ export class QueryVisitorContext<
 
     if (this.node.header) {
       for (const headerCmd of this.node.header) {
-        yield this.visitHeaderCommand(headerCmd, input as any);
+        yield this.visitHeaderCommand(headerCmd, input);
       }
     }
   }
@@ -189,7 +198,7 @@ export class QueryVisitorContext<
     this.ctx.assertMethodExists('visitCommand');
 
     for (const cmd of this.node.commands) {
-      yield this.visitCommand(cmd, input as any);
+      yield this.visitCommand(cmd, input);
     }
   }
 }
@@ -291,7 +300,7 @@ export class CommandVisitorContext<
 
   public visitSubQuery(queryNode: ESQLAstQueryExpression) {
     this.ctx.assertMethodExists('visitQuery');
-    return this.ctx.visitQuery(this, queryNode, undefined as any);
+    return this.ctx.visitQuery(this, queryNode, undefined as VisitorInput<Methods, 'visitQuery'>);
   }
 
   public *visitSubQueries() {
@@ -573,6 +582,12 @@ export class FuseCommandVisitorContext<
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
 
+// MMR
+export class MmrCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
+
 // Expressions -----------------------------------------------------------------
 
 export class ExpressionVisitorContext<
@@ -633,7 +648,10 @@ export class ListLiteralExpressionVisitorContext<
     this.ctx.assertMethodExists('visitExpression');
 
     for (const value of this.node.values) {
-      yield this.visitExpression(value, typeof input === 'function' ? (input as any)() : input);
+      yield this.visitExpression(
+        value,
+        typeof input === 'function' ? (input as Function)() : input
+      );
     }
   }
 }
@@ -655,7 +673,7 @@ export class InlineCastExpressionVisitorContext<
   ): VisitorOutput<Methods, 'visitExpression'> {
     this.ctx.assertMethodExists('visitExpression');
 
-    return this.visitExpression(this.value(), input as any);
+    return this.visitExpression(this.value(), input);
   }
 }
 
@@ -681,7 +699,10 @@ export class MapExpressionVisitorContext<
     this.ctx.assertMethodExists(['visitExpression', 'visitMapEntryExpression']);
 
     for (const value of this.node.entries) {
-      yield this.visitExpression(value, typeof input === 'function' ? (input as any)() : input);
+      yield this.visitExpression(
+        value,
+        typeof input === 'function' ? (input as Function)() : input
+      );
     }
   }
 
@@ -711,7 +732,7 @@ export class MapEntryExpressionVisitorContext<
   ): VisitorOutput<Methods, 'visitExpression'> {
     this.ctx.assertMethodExists('visitExpression');
 
-    return this.visitExpression(this.key(), input as any);
+    return this.visitExpression(this.key(), input);
   }
 
   public visitValue(
@@ -719,7 +740,7 @@ export class MapEntryExpressionVisitorContext<
   ): VisitorOutput<Methods, 'visitExpression'> {
     this.ctx.assertMethodExists('visitExpression');
 
-    return this.visitExpression(this.value(), input as any);
+    return this.visitExpression(this.value(), input);
   }
 }
 
@@ -736,6 +757,6 @@ export class ParensExpressionVisitorContext<
   ): VisitorOutput<Methods, 'visitExpression'> {
     this.ctx.assertMethodExists('visitExpression');
 
-    return this.visitExpression(this.child(), input as any);
+    return this.visitExpression(this.child(), input);
   }
 }

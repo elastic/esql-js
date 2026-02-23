@@ -5,7 +5,17 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import { Parser } from '../..';
+import type { ESQLFunction, ESQLList, ESQLSingleAstItem, ESQLStringLiteral } from '../../../types';
 
 describe('regular expressions', () => {
   it('LIKE operator', () => {
@@ -80,7 +90,7 @@ describe('regular expressions', () => {
     it('LIKE operator - location spans entire expression', () => {
       const text = 'ROW name LIKE "test*"';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
+      const expression = root.commands[0].args[0] as ESQLFunction;
 
       expect(expression.location).toBeDefined();
 
@@ -88,17 +98,13 @@ describe('regular expressions', () => {
 
       expect(expressionText).toBe('name LIKE "test*"');
 
-      const leftText = text.slice(
-        expression.args[0].location.min,
-        expression.args[0].location.max + 1
-      );
-      const rightText = text.slice(
-        expression.args[1].location.min,
-        expression.args[1].location.max + 1
-      );
+      const leftArg = expression.args[0] as ESQLSingleAstItem;
+      const rightArg = expression.args[1] as ESQLSingleAstItem;
+      const leftText = text.slice(leftArg.location.min, leftArg.location.max + 1);
+      const rightText = text.slice(rightArg.location.min, rightArg.location.max + 1);
       const operatorText = text.slice(
-        expression.operator.location.min,
-        expression.operator.location.max + 1
+        expression.operator!.location.min,
+        expression.operator!.location.max + 1
       );
 
       expect(leftText).toBe('name');
@@ -109,26 +115,22 @@ describe('regular expressions', () => {
     it('NOT LIKE operator - location spans entire expression', () => {
       const text = 'ROW name NOT LIKE "test*"';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
+      const expression = root.commands[0].args[0] as ESQLFunction;
 
       expect(expression.location).toBeDefined();
 
       const expressionText = text.slice(expression.location.min, expression.location.max + 1);
 
       expect(expressionText).toBe('name NOT LIKE "test*"');
-      expect(expression.operator.name).toBe('NOT LIKE');
+      expect(expression.operator!.name).toBe('NOT LIKE');
 
-      const leftText = text.slice(
-        expression.args[0].location.min,
-        expression.args[0].location.max + 1
-      );
-      const rightText = text.slice(
-        expression.args[1].location.min,
-        expression.args[1].location.max + 1
-      );
+      const leftArg = expression.args[0] as ESQLSingleAstItem;
+      const rightArg = expression.args[1] as ESQLSingleAstItem;
+      const leftText = text.slice(leftArg.location.min, leftArg.location.max + 1);
+      const rightText = text.slice(rightArg.location.min, rightArg.location.max + 1);
       const operatorText = text.slice(
-        expression.operator.location.min,
-        expression.operator.location.max + 1
+        expression.operator!.location.min,
+        expression.operator!.location.max + 1
       );
 
       expect(leftText).toBe('name');
@@ -139,7 +141,7 @@ describe('regular expressions', () => {
     it('RLIKE operator - location spans entire expression', () => {
       const text = 'ROW name RLIKE "test.*"';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
+      const expression = root.commands[0].args[0] as ESQLFunction;
 
       expect(expression.location).toBeDefined();
       const sliced = text.slice(expression.location.min, expression.location.max + 1);
@@ -149,7 +151,7 @@ describe('regular expressions', () => {
     it('NOT RLIKE operator - location spans entire expression', () => {
       const text = 'ROW name NOT RLIKE "test.*"';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
+      const expression = root.commands[0].args[0] as ESQLFunction;
 
       expect(expression.location).toBeDefined();
       const sliced = text.slice(expression.location.min, expression.location.max + 1);
@@ -159,8 +161,8 @@ describe('regular expressions', () => {
     it('LIKE operator - left arg location', () => {
       const text = 'ROW field LIKE "pattern"';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
-      const leftArg = expression.args[0];
+      const expression = root.commands[0].args[0] as ESQLFunction;
+      const leftArg = expression.args[0] as ESQLSingleAstItem;
 
       expect(leftArg.location).toBeDefined();
       const sliced = text.slice(leftArg.location.min, leftArg.location.max + 1);
@@ -170,8 +172,8 @@ describe('regular expressions', () => {
     it('LIKE operator - right arg location', () => {
       const text = 'ROW field LIKE "pattern"';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
-      const rightArg = expression.args[1];
+      const expression = root.commands[0].args[0] as ESQLFunction;
+      const rightArg = expression.args[1] as ESQLSingleAstItem;
 
       expect(rightArg.location).toBeDefined();
       const sliced = text.slice(rightArg.location.min, rightArg.location.max + 1);
@@ -181,13 +183,13 @@ describe('regular expressions', () => {
     it('RLIKE operator - with complex pattern location', () => {
       const text = 'ROW message RLIKE "^[A-Z].*error$"';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
+      const expression = root.commands[0].args[0] as ESQLFunction;
 
       expect(expression.location).toBeDefined();
       const sliced = text.slice(expression.location.min, expression.location.max + 1);
       expect(sliced).toBe('message RLIKE "^[A-Z].*error$"');
 
-      const rightArg = expression.args[1];
+      const rightArg = expression.args[1] as ESQLSingleAstItem;
       const rightSliced = text.slice(rightArg.location.min, rightArg.location.max + 1);
       expect(rightSliced).toBe('"^[A-Z].*error$"');
     });
@@ -195,7 +197,7 @@ describe('regular expressions', () => {
     it('LIKE list - entire expression location', () => {
       const text = 'ROW name LIKE ( "test*", "test2*" )';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
+      const expression = root.commands[0].args[0] as ESQLFunction;
 
       expect(expression.location).toBeDefined();
 
@@ -207,8 +209,8 @@ describe('regular expressions', () => {
     it('LIKE list - list arg location includes parentheses', () => {
       const text = 'ROW name NOT LIKE ( "test*", "test2*" )';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
-      const listArg = expression.args[1];
+      const expression = root.commands[0].args[0] as ESQLFunction;
+      const listArg = expression.args[1] as ESQLSingleAstItem;
 
       expect(listArg.location).toBeDefined();
 
@@ -217,8 +219,8 @@ describe('regular expressions', () => {
       expect(sliced).toBe('( "test*", "test2*" )');
 
       const operatorText = text.slice(
-        expression.operator.location.min,
-        expression.operator.location.max + 1
+        expression.operator!.location.min,
+        expression.operator!.location.max + 1
       );
       expect(operatorText).toBe('NOT LIKE');
     });
@@ -226,7 +228,7 @@ describe('regular expressions', () => {
     it('NOT RLIKE list - location spans entire expression', () => {
       const text = 'ROW col NOT RLIKE ("a", "b", "c")';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
+      const expression = root.commands[0].args[0] as ESQLFunction;
 
       expect(expression.location).toBeDefined();
 
@@ -238,29 +240,24 @@ describe('regular expressions', () => {
     it('RLIKE list - individual list item locations', () => {
       const text = 'ROW name RLIKE ( "first", "second", "third" )';
       const { root } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
-      const listArg = expression.args[1];
-      const values = listArg.values;
+      const expression = root.commands[0].args[0] as ESQLFunction;
+      const listArg = expression.args[1] as ESQLList;
+      const { values } = listArg;
 
       const expressionText = text.slice(expression.location.min, expression.location.max + 1);
 
       expect(expressionText).toBe('name RLIKE ( "first", "second", "third" )');
 
-      const leftText = text.slice(
-        expression.args[0].location.min,
-        expression.args[0].location.max + 1
-      );
+      const leftArg = expression.args[0] as ESQLSingleAstItem;
+      const leftText = text.slice(leftArg.location.min, leftArg.location.max + 1);
       expect(leftText).toBe('name');
 
-      const rightText = text.slice(
-        expression.args[1].location.min,
-        expression.args[1].location.max + 1
-      );
+      const rightText = text.slice(listArg.location.min, listArg.location.max + 1);
       expect(rightText).toBe('( "first", "second", "third" )');
 
       const operatorText = text.slice(
-        expression.operator.location.min,
-        expression.operator.location.max + 1
+        expression.operator!.location.min,
+        expression.operator!.location.max + 1
       );
       expect(operatorText).toBe('RLIKE');
 
@@ -448,8 +445,9 @@ describe('regular expressions', () => {
       const expression = root.commands[0].args[0];
 
       expect(errors.length).toBe(0);
-      expect((expression as any).args[1].values).toHaveLength(5);
-      expect((expression as any).args[1].values.map((v: any) => v.valueUnquoted)).toEqual([
+      const listArg = (expression as ESQLFunction).args[1] as ESQLList;
+      expect(listArg.values).toHaveLength(5);
+      expect(listArg.values.map((v) => (v as ESQLStringLiteral).valueUnquoted)).toEqual([
         'a',
         'b',
         'c',
@@ -466,7 +464,7 @@ describe('regular expressions', () => {
       const expression = root.commands[0].args[0];
 
       expect(errors.length).toBe(0);
-      expect((expression as any).args[0]).toMatchObject({
+      expect((expression as ESQLFunction).args[0]).toMatchObject({
         type: 'column',
         name: 'my field',
         quoted: true,
@@ -479,7 +477,7 @@ describe('regular expressions', () => {
       const expression = root.commands[0].args[0];
 
       expect(errors.length).toBe(0);
-      expect((expression as any).args[1]).toMatchObject({
+      expect((expression as ESQLFunction).args[1]).toMatchObject({
         type: 'literal',
         literalType: 'keyword',
         valueUnquoted: 'pattern',
@@ -492,7 +490,7 @@ describe('regular expressions', () => {
       const expression = root.commands[0].args[0];
 
       expect(errors.length).toBe(0);
-      expect((expression as any).args[1].values).toHaveLength(3);
+      expect(((expression as ESQLFunction).args[1] as ESQLList).values).toHaveLength(3);
     });
 
     it('LIKE with escaped characters in pattern', () => {
@@ -501,7 +499,7 @@ describe('regular expressions', () => {
       const expression = root.commands[0].args[0];
 
       expect(errors.length).toBe(0);
-      expect((expression as any).args[1]).toMatchObject({
+      expect((expression as ESQLFunction).args[1]).toMatchObject({
         type: 'literal',
         literalType: 'keyword',
         valueUnquoted: 'test"quote',
@@ -561,20 +559,21 @@ describe('regular expressions', () => {
     it('LIKE list with mixed strings and parameters', () => {
       const text = 'ROW name LIKE ("test*", ?pattern, ?1)';
       const { root, errors } = Parser.parse(text);
-      const expression = root.commands[0].args[0] as any;
+      const expression = root.commands[0].args[0] as ESQLFunction;
+      const listArg = expression.args[1] as ESQLList;
 
       expect(errors.length).toBe(0);
-      expect(expression.args[1].values).toHaveLength(3);
-      expect(expression.args[1].values[0]).toMatchObject({
+      expect(listArg.values).toHaveLength(3);
+      expect(listArg.values[0]).toMatchObject({
         type: 'literal',
         literalType: 'keyword',
       });
-      expect(expression.args[1].values[1]).toMatchObject({
+      expect(listArg.values[1]).toMatchObject({
         type: 'literal',
         literalType: 'param',
         paramType: 'named',
       });
-      expect(expression.args[1].values[2]).toMatchObject({
+      expect(listArg.values[2]).toMatchObject({
         type: 'literal',
         literalType: 'param',
         paramType: 'positional',

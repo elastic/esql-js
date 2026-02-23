@@ -5,6 +5,15 @@
  * 2.0.
  */
 
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the "Elastic License
+ * 2.0", the "GNU Affero General Public License v3.0 only", and the "Server Side
+ * Public License v 1"; you may not use this file except in compliance with, at
+ * your election, the "Elastic License 2.0", the "GNU Affero General Public
+ * License v3.0 only", or the "Server Side Public License, v 1".
+ */
+
 import {
   isBinaryExpression,
   isColumn,
@@ -105,7 +114,7 @@ export class BasicPrettyPrinter {
       : node.type === 'command'
         ? BasicPrettyPrinter.command(node, opts)
         : node.type === 'header-command'
-          ? BasicPrettyPrinter.command(node as any, opts)
+          ? BasicPrettyPrinter.command(node as unknown as ESQLAstCommand, opts)
           : BasicPrettyPrinter.expression(node, opts);
   };
 
@@ -262,7 +271,7 @@ export class BasicPrettyPrinter {
     return sign ? `${sign}${expression}` : expression;
   }
 
-  protected readonly visitor: Visitor<any> = new Visitor()
+  protected readonly visitor: Visitor = new Visitor()
     .on('visitExpression', (ctx) => {
       if (ctx.node.type === 'unknown') {
         return this.decorateWithComments(ctx.node, ctx.node.text || '<UNKNOWN>');
@@ -626,7 +635,7 @@ export class BasicPrettyPrinter {
       }
 
       return text;
-    });
+    }) as unknown as Visitor;
 
   public print(query: ESQLAstQueryExpression) {
     return this.visitor.visitQuery(query, undefined);
