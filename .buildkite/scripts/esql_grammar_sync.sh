@@ -175,15 +175,11 @@ main () {
 
   yarn install --frozen-lockfile
 
-  # Install ANTLR.
-  report_main_step "Installing antlr4-tools (pip)"
-  pip3 install --break-system-packages antlr4-tools 2>/dev/null || pip3 install --user antlr4-tools
-  export PATH="$HOME/.local/bin:$PATH"
-  # Make antlr4 available as "antlr" (scripts expect "antlr"). Use a writable dir to avoid sudo.
-  ANTLR_WRAPPER_DIR="$(mktemp -d)"
-  ln -sf "$(which antlr4)" "$ANTLR_WRAPPER_DIR/antlr"
-  export PATH="$ANTLR_WRAPPER_DIR:$PATH"
-  export ANTLR4_TOOLS_ANTLR_VERSION=4.13.2
+  # Note: We run build commands directly instead of `yarn build:antlr4` to skip
+  # the prebuild:antlr4 hook which uses `brew` (macOS only). CI has antlr installed.
+  # Pin the ANTLR version to avoid the broken Sonatype Central version-lookup API
+  # in antlr4-tools (https://github.com/antlr/antlr4-tools/issues/18).
+  export ANTLR4_TOOLS_ANTLR_VERSION="4.13.2"
 
   yarn build:antlr4:esql
   yarn build:antlr4:promql
