@@ -41,7 +41,7 @@
   },
   "repository": "https://github.com/elastic/esql-js.git",
   "private": true,
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "Elastic-2.0",
   "sideEffects": false,
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",
