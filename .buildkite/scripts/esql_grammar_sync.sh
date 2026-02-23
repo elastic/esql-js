@@ -4,11 +4,11 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 WORK_DIR="$(dirname "$REPO_DIR")"
 
-if [[ -z "${VAULT_GITHUB_TOKEN:-}" ]]; then
-  echo "VAULT_GITHUB_TOKEN is not set."
-  exit 1
-fi
-export GH_TOKEN="$VAULT_GITHUB_TOKEN"
+# if [[ -z "${VAULT_GITHUB_TOKEN:-}" ]]; then
+#   echo "VAULT_GITHUB_TOKEN is not set."
+#   exit 1
+# fi
+# export GH_TOKEN="$VAULT_GITHUB_TOKEN"
 
 synchronize_lexer_grammar () {
   source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/EsqlBaseLexer.g4"
