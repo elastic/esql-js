@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-export type * from './types';
+export type { VisitorMethods } from './types';
 export { Visitor, type VisitorOptions } from './visitor';
 export { GlobalVisitorContext, type SharedData } from './global_visitor_context';
 export * from './contexts';

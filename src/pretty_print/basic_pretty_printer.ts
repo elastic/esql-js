@@ -20,7 +20,7 @@ import {
   binaryExpressionGroup,
   unaryExpressionGroup,
 } from '../ast/grouping';
-import type { ESQLAstExpressionNode } from '../ast/visitor';
+import type { ESQLAstExpressionNode } from '../ast/visitor/types';
 import { Visitor } from '../ast/visitor';
 import { resolveItem } from '../ast/visitor/utils';
 import {

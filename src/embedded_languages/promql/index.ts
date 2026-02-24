@@ -13,7 +13,7 @@ export { PromQLBuilder } from './ast/builder';
 export type { PromQLAstNodeTemplate } from './ast/builder/types';
 
 // Walker
-export * from './ast/walker';
+export { PromqlWalker, type PromqlWalkerOptions } from './ast/walker';
 
 // Parser
 export { PromQLParser, type PromQLParseOptions } from './parser';
