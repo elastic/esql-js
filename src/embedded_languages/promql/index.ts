@@ -12,6 +12,9 @@ export type * from './types';
 export { PromQLBuilder } from './ast/builder';
 export type { PromQLAstNodeTemplate } from './ast/builder/types';
 
+// Walker
+export * from './ast/walker';
+
 // Parser
 export { PromQLParser, type PromQLParseOptions } from './parser';
 export { PromQLErrorListener } from './parser/promql_error_listener';

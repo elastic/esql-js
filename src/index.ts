@@ -4,9 +4,11 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-export type * from './types';
+export * from './types';
 
 export * from './parser';
 export * from './ast';
 export * from './composer';
 export * from './pretty_print';
+export * from './embedded_languages';
+export * from './debug';
