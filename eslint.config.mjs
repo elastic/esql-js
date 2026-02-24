@@ -2,7 +2,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import { requireLicenseHeader } from './lint-licence-rule.js';
+import { requireLicenseHeader } from './lint-licence-rule.mjs';
 
 export default defineConfig([
   globalIgnores(['lib/', 'node_modules/', 'src/parser/antlr/', '*.js', '*.mjs']),
@@ -18,13 +18,12 @@ export default defineConfig([
     },
     rules: {
       'local-rules/require-license-header': 'error',
-
+      '@typescript-eslint/no-explicit-any': 'error',
       // TypeScript handles this natively; ESLint's no-undef doesn't understand TS types
       'no-undef': 'off',
 
       // Rules that are actually active in Kibana and affects the code to be migrated,
       // We can modify them once the migration is finished to avoid conflicts.
-      '@typescript-eslint/no-explicit-any': 'off',
       '@typescript-eslint/no-unsafe-function-type': 'off',
       '@typescript-eslint/no-non-null-asserted-optional-chain': 'off',
       '@typescript-eslint/ban-ts-comment': 'off',

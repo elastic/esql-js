@@ -4,7 +4,6 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-
 lexer grammar MMR;
 
 DEV_MMR : {this.isDevVersion()}? 'mmr' -> pushMode(MMR_MODE);
@@ -21,6 +20,7 @@ MMR_COMMA: COMMA -> type(COMMA);
 MMR_PLUS: PLUS -> type(PLUS);
 MMR_MINUS: MINUS -> type(MINUS);
 MMR_DECIMAL_LITERAL: DECIMAL_LITERAL -> type(DECIMAL_LITERAL);
+MMR_INTEGER_LITERAL : INTEGER_LITERAL -> type(INTEGER_LITERAL);
 MMR_PARAM: PARAM -> type(PARAM);
 MMR_NAMED_OR_POSITIONAL_PARAM: NAMED_OR_POSITIONAL_PARAM -> type(NAMED_OR_POSITIONAL_PARAM);
 MMR_LP: LP -> type(LP);

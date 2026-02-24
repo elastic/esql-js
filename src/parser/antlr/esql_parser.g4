@@ -6,6 +6,7 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+
 parser grammar esql_parser;
 
 @header {
@@ -15,6 +16,7 @@ parser grammar esql_parser;
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+
 }
 
 options {
@@ -47,6 +49,7 @@ sourceCommand
     | promqlCommand
     // in development
     | {this.isDevVersion()}? explainCommand
+    | {this.isDevVersion()}? externalCommand
     ;
 
 processingCommand
@@ -70,6 +73,8 @@ processingCommand
     | rerankCommand
     | inlineStatsCommand
     | fuseCommand
+    | uriPartsCommand
+    | metricsInfoCommand
     // in development
     | {this.isDevVersion()}? lookupCommand
     | {this.isDevVersion()}? insistCommand
@@ -102,6 +107,10 @@ fromCommand
 
 timeSeriesCommand
     : TS indexPatternAndMetadataFields
+    ;
+
+externalCommand
+    : EXTERNAL stringOrParameter commandNamedParameters
     ;
 
 indexPatternAndMetadataFields
@@ -350,6 +359,10 @@ fuseKeyByFields
    : qualifiedName (COMMA qualifiedName)*
    ;
 
+metricsInfoCommand
+    : METRICS_INFO
+    ;
+
 //
 // In development
 //
@@ -359,6 +372,10 @@ lookupCommand
 
 insistCommand
     : DEV_INSIST qualifiedNamePatterns
+    ;
+
+uriPartsCommand
+    : URI_PARTS qualifiedName ASSIGN primaryExpression
     ;
 
 setCommand

@@ -4,6 +4,7 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+
 lexer grammar Expression;
 
 //
@@ -20,6 +21,8 @@ SAMPLE : 'sample'             -> pushMode(EXPRESSION_MODE);
 SORT : 'sort'                 -> pushMode(EXPRESSION_MODE);
 STATS : 'stats'               -> pushMode(EXPRESSION_MODE);
 WHERE : 'where'               -> pushMode(EXPRESSION_MODE);
+URI_PARTS: 'uri_parts'        -> pushMode(EXPRESSION_MODE);
+METRICS_INFO : 'metrics_info' -> pushMode(EXPRESSION_MODE);
 
 mode EXPRESSION_MODE;
 

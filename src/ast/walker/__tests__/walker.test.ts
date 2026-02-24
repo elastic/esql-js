@@ -23,8 +23,11 @@ import type {
   ESQLMapEntry,
   ESQLOrderExpression,
   ESQLAstHeaderCommand,
+  ESQLSingleAstItem,
+  ESQLStringLiteral,
 } from '../../../types';
 import { walk, Walker } from '../walker';
+import { isAssignment } from '../..';
 
 describe('structurally can walk all nodes', () => {
   test('can walk all functions', () => {
@@ -54,7 +57,7 @@ describe('structurally can walk all nodes', () => {
     expect(functions.length).toBe(1);
     expect(functions[0].name).toBe('=');
     expect(functions[0].args.length).toBe(2);
-    expect((functions[0].args[0] as any).name).toBe('var0');
+    expect((functions[0].args[0] as ESQLIdentifier).name).toBe('var0');
   });
 
   describe('commands', () => {
@@ -928,7 +931,7 @@ describe('structurally can walk all nodes', () => {
         visitSource: (src) => (source = src),
       });
 
-      (source! as any).type = 'unknown';
+      (source! as unknown as ESQLUnknownItem).type = 'unknown';
 
       const unknowns: ESQLUnknownItem[] = [];
 
@@ -1072,7 +1075,7 @@ describe('header commands', () => {
           }
         },
         visitLiteral: (node) => {
-          if ((node as any).valueUnquoted === '30s') {
+          if ((node as ESQLStringLiteral).valueUnquoted === '30s') {
             literals.push(node);
           }
         },
@@ -1214,9 +1217,9 @@ describe('header commands', () => {
 
       walk(root, {
         visitHeaderCommand: (cmd) => {
-          const identifier = cmd.args[0] as any;
-          if (identifier && identifier.args && identifier.args[0]) {
-            headerOrder.push(identifier.args[0].name);
+          const identifier = cmd.args[0];
+          if (isAssignment(identifier)) {
+            headerOrder.push((identifier.args[0] as ESQLSingleAstItem).name);
           }
         },
         order: 'backward',
