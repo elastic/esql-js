@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { synth } from '../../../..';
+import * as synth from '..';
 import { Builder } from '../../../ast/builder';
 import { BasicPrettyPrinter } from '../../../pretty_print';
 import { query } from '../query';

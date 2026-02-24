@@ -5,7 +5,9 @@
  * 2.0.
  */
 
-import { BasicPrettyPrinter, Builder, synth } from '../../../..';
+import { Builder } from '../../../ast/builder';
+import { BasicPrettyPrinter } from '../../../pretty_print';
+import * as synth from '..';
 import { SynthNode } from '../synth_node';
 
 test('synthesized nodes have SynthNodePrototype prototype', () => {
