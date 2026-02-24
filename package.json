@@ -40,7 +40,7 @@
     "prepare": "husky"
   },
   "repository": "https://github.com/elastic/esql-js.git",
-  "license": "Elastic-2.0",
+  "license": "Elastic License 2.0",
   "sideEffects": false,
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",
