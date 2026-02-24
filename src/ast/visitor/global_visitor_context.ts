@@ -5,10 +5,6 @@
  * 2.0.
  */
 
-// TODO: Review anys usage in this file.
-// any inside visitWithSpecificContext could be cleaned by getting rid of that method.
-// anys inside visitCommand are more tricky, cleaning it implies taking out the AnyToVoid wrapper.
-
 import * as contexts from './contexts';
 import type {
   ESQLAstChangePointCommand,
@@ -76,6 +72,8 @@ export class GlobalVisitorContext<
     input: types.VisitorInput<Methods, Method>
   ): types.VisitorOutput<Methods, Method> {
     this.assertMethodExists(method);
+    // This any could be cleaned by deleting this method, keeping it is atrade off between having it and a bit more of verbosity.
+    /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     return this.methods[method]!(context as any, input);
   }
 
@@ -99,6 +97,9 @@ export class GlobalVisitorContext<
     commandNode: ESQLAstCommand,
     input: types.CommandVisitorInput<Methods>
   ): types.CommandVisitorOutput<Methods> {
+    // These anys could be cleaned by not using the AnyToVoid wrapper,
+    // but would like to understand better the tradeoffs before doing this change.
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     switch (commandNode.name) {
       case 'from': {
         if (!this.methods.visitFromCommand) break;
@@ -223,6 +224,7 @@ export class GlobalVisitorContext<
     }
     return this.visitCommandGeneric(parent, commandNode, input as any);
   }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   public visitHeaderCommand(
     parent: contexts.VisitorContext | null,
@@ -514,6 +516,8 @@ export class GlobalVisitorContext<
     if (Array.isArray(expressionNode)) {
       throw new Error('should not happen');
     }
+
+    /* eslint-disable @typescript-eslint/no-explicit-any */
     switch (expressionNode.type) {
       case 'column': {
         if (!this.methods.visitColumnExpression) break;
@@ -575,6 +579,7 @@ export class GlobalVisitorContext<
     }
     return this.visitExpressionGeneric(parent, expressionNode, input as any);
   }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   public visitQuery(
     parent: contexts.VisitorContext | null,

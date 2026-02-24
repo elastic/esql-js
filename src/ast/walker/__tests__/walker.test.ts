@@ -931,7 +931,7 @@ describe('structurally can walk all nodes', () => {
         visitSource: (src) => (source = src),
       });
 
-      (source! as any).type = 'unknown';
+      (source! as unknown as ESQLUnknownItem).type = 'unknown';
 
       const unknowns: ESQLUnknownItem[] = [];
 

@@ -259,6 +259,7 @@ export class Visitor<
     );
   }
 
+  /* eslint-disable @typescript-eslint/no-explicit-any */
   public visitors<NewMethods extends VisitorMethods<Methods, Data>>(
     visitors: NewMethods
   ): Visitor<Methods & NewMethods, Data> {
@@ -312,6 +313,7 @@ export class Visitor<
     }
     throw new Error(`Unsupported node type: ${typeof node}`);
   }
+  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   /**
    * Traverse the root node of ES|QL query with default context.
