@@ -10,7 +10,6 @@ import {ParseTreeListener} from "antlr4";
  * 2.0.
  */
 
-
 import { SingleStatementContext } from "./promql_parser.js";
 import { ValueExpressionContext } from "./promql_parser.js";
 import { SubqueryContext } from "./promql_parser.js";

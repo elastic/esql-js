@@ -6,6 +6,7 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+
 lexer grammar promql_lexer;
 
 @header {
@@ -15,6 +16,7 @@ lexer grammar promql_lexer;
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+
 }
 
 options {

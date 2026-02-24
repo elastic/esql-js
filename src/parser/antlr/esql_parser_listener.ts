@@ -10,7 +10,6 @@ import {ParseTreeListener} from "antlr4";
  * 2.0.
  */
 
-
 import { StatementsContext } from "./esql_parser.js";
 import { SingleStatementContext } from "./esql_parser.js";
 import { CompositeQueryContext } from "./esql_parser.js";

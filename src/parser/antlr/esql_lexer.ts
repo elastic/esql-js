@@ -19,7 +19,6 @@ import {
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-
 import lexer_config from './lexer_config.js';
 
 export default class esql_lexer extends lexer_config {
