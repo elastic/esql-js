@@ -12,6 +12,19 @@
       "import": "./lib/index.mjs",
       "require": "./lib/index.js",
       "default": "./lib/index.js"
+    },
+    "./types": {
+      "types": "./lib/types.d.ts",
+      "import": "./lib/types.mjs",
+      "require": "./lib/types.js",
+      "default": "./lib/types.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "types": [
+        "./lib/types.d.ts"
+      ]
     }
   },
   "files": [

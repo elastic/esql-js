@@ -123,3 +123,21 @@ export function isAssignment(node: unknown): node is types.ESQLFunction {
 }
 
 export const isParametrized = (node: ESQLProperNode): boolean => Walker.params(node).length > 0;
+
+const isESQLAstBaseItem = (node: unknown): node is types.ESQLAstBaseItem =>
+  typeof node === 'object' &&
+  node !== null &&
+  Object.hasOwn(node, 'name') &&
+  Object.hasOwn(node, 'text');
+
+export const isESQLFunction = (node: unknown): node is types.ESQLFunction =>
+  isESQLAstBaseItem(node) &&
+  Object.hasOwn(node, 'type') &&
+  (node as types.ESQLFunction).type === 'function';
+
+export const isESQLNamedParamLiteral = (
+  node: types.ESQLAstItem
+): node is types.ESQLNamedParamLiteral =>
+  isESQLAstBaseItem(node) &&
+  (node as types.ESQLNamedParamLiteral).literalType === 'param' &&
+  (node as types.ESQLNamedParamLiteral).paramType === 'named';
