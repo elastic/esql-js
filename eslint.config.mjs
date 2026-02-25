@@ -2,7 +2,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import { requireLicenseHeader } from './lint-licence-rule.mjs';
+import { requireLicenseHeader } from './lint-license-rule.mjs';
 
 export default defineConfig([
   globalIgnores(['lib/', 'node_modules/', 'src/parser/antlr/', '*.js', '*.mjs']),
