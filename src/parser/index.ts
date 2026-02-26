@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-// Main parser API
+// Main parser API (fix)
 export { parse, Parser, type ParseOptions, type ParseResult } from './core/parser';
 
 export {
