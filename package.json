@@ -39,6 +39,7 @@
     "format": "prettier --write .",
     "format:check": "prettier --check .",
     "build": "tsup && tsc",
+    "build:watch": "tsup --watch --onSuccess \"tsc\"",
     "prebuild:antlr4": "brew bundle --file=./.buildkite/scripts/antlr4_tools/brewfile",
     "build:antlr4": "npm run build:antlr4:esql && npm run build:antlr4:promql",
     "build:antlr4:esql": "npm run build:antlr4:esql:lexer && npm run build:antlr4:esql:parser",
@@ -49,11 +50,11 @@
     "postbuild:antlr4:promql": "./.buildkite/scripts/postbuild.sh promql",
     "build:antlr4:promql:parser": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_parser.g4",
     "build:antlr4:promql:lexer": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_lexer.g4",
-    "semantic-release": "semantic-release --dry-run --debug",
+    "semantic-release:dry-run": "semantic-release --dry-run --debug",
     "prepare": "husky"
   },
   "repository": "https://github.com/elastic/esql-js.git",
-  "license": "Elastic License 2.0",
+  "license": "Elastic-2.0",
   "sideEffects": false,
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",

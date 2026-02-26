@@ -20,6 +20,7 @@ export default {
           { type: 'refactor', release: 'patch' },
           { type: 'perf', release: 'patch' },
           { type: 'build', release: 'patch' },
+          { type: 'docs', release: 'patch' },
           { type: 'chore', release: 'patch' },
           { type: 'revert', release: 'patch' },
         ],
