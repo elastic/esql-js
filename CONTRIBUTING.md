@@ -148,6 +148,35 @@ When merging a pull request, prefer **squash and merge**. This collapses all com
 Before completing the merge, verify that the squash commit message follows the [conventional commit format](#commit-message-convention) — this is critical because `semantic-release` reads the commit messages on `main` to determine version bumps and generate changelogs. A malformed merge commit will not trigger a release or may produce an incorrect one.
 
 
+## Releasing
+
+Releases are fully automated via [semantic-release](https://github.com/semantic-release/semantic-release). There is no need to manually bump versions, tag commits, or publish to npm — the tooling handles all of it based on the commit history.
+
+### How it works
+
+1. `semantic-release` analyzes all commits on the target branch since the last release.
+2. It determines the next version based on the [commit message types](#commit-message-convention).
+3. It generates a changelog, creates a GitHub release, and publishes to npm with provenance.
+
+### Triggering a release
+
+The release is triggered manually via the **Release** GitHub Actions workflow (`workflow_dispatch`):
+
+1. Go to **Actions** > **Release** in the GitHub repository.
+2. Click **Run workflow**.
+3. Select the branch to release from (defaults to `main`).
+4. The workflow will lint, format-check, build, and test the code before releasing.
+
+### Dry run
+
+To preview what the next release would look like without actually publishing:
+
+```bash
+yarn semantic-release:dry-run
+```
+
+This runs `semantic-release --dry-run` locally and logs the version that would be released and the changelog that would be generated.
+
 ## Code Owners
 
 This repository is maintained by the **@elastic/kibana-esql** team. All pull requests require review from the team.

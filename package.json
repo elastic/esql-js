@@ -50,7 +50,7 @@
     "postbuild:antlr4:promql": "./.buildkite/scripts/postbuild.sh promql",
     "build:antlr4:promql:parser": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_parser.g4",
     "build:antlr4:promql:lexer": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_lexer.g4",
-    "semantic-release": "semantic-release --dry-run --debug",
+    "semantic-release:dry-run": "semantic-release --dry-run --debug",
     "prepare": "husky"
   },
   "repository": "https://github.com/elastic/esql-js.git",
