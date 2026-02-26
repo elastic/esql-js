@@ -177,6 +177,70 @@ yarn semantic-release:dry-run
 
 This runs `semantic-release --dry-run` locally and logs the version that would be released and the changelog that would be generated.
 
+## Backporting
+
+In rare cases you may need to patch an older release line where upgrading to the latest `main` version is not feasible. This project supports backporting via the [backport](https://github.com/sorenlouv/backport) tool and automated GitHub Actions.
+
+### Creating a maintenance branch
+
+To backport to an older release line, first create a maintenance branch from the latest tag in that line. For example, if `main` is on `2.x.x` and you need to patch `1.x`:
+
+```bash
+# Find the latest 1.x tag
+git tag --list 'v1.*' --sort=-v:refname | head -1
+
+# Create the maintenance branch from that tag
+git checkout -b 1.x v1.4.2
+git push upstream 1.x
+```
+
+The branch name **must** follow the `semantic-release` [maintenance branch convention](https://semantic-release.gitbook.io/semantic-release/usage/workflow-configuration#maintenance-branches) (e.g., `1.x`, `1.2.x`, or `1.x.x`). This is already configured in `.releaserc.js`.
+
+### Automated backporting (recommended)
+
+The easiest way to backport is via PR labels:
+
+1. Add a label `backport:<branch>` to your PR **before or after merging** (e.g., `backport:1.x`). **Remember to create the branch first**.
+2. When the PR is merged, the **Backport** GitHub Action automatically creates a backport PR targeting the specified branch.
+3. If there are merge conflicts, the action will comment on the original PR with instructions for resolving them manually.
+
+You can target multiple branches by adding multiple labels (e.g., `backport:1.x` and `backport:2.x`).
+
+### Manual backporting
+
+If you prefer to backport manually or need to resolve conflicts:
+#### Setting up the backport CLI (one-time)
+
+Install the backport CLI globally:
+
+```bash
+npm install -g backport
+```
+
+Create a global config at `~/.backport/config.json` with a [GitHub personal access token](https://github.com/settings/tokens) (needs `repo` scope):
+
+```json
+{
+  "accessToken": "<your-github-token>"
+}
+```
+
+
+
+```bash
+# Select a PR to backport interactively
+npx backport --branch 1.x
+
+# Or specify the PR number directly
+npx backport --branch 1.x --pr 42
+```
+
+The first time you run this, it will create a local fork at `~/.backport/repositories/elastic/esql-js`. Resolve any merge conflicts in this fork, **not** your main working copy.
+
+### Releasing from a maintenance branch
+
+Once the backport PR is merged into the maintenance branch, trigger a release by running the **Release** workflow from the GitHub Actions tab, selecting the maintenance branch (e.g., `1.x`) instead of `main`.
+
 ## Code Owners
 
 This repository is maintained by the **@elastic/kibana-esql** team. All pull requests require review from the team.
