@@ -148,7 +148,7 @@ When merging a pull request, prefer **squash and merge**. This collapses all com
 Before completing the merge, verify that the squash commit message follows the [conventional commit format](#commit-message-convention) — this is critical because `semantic-release` reads the commit messages on `main` to determine version bumps and generate changelogs. A malformed merge commit will not trigger a release or may produce an incorrect one.
 
 
-## Releasing
+## Releasing (Maintainers only)
 
 Releases are fully automated via [semantic-release](https://github.com/semantic-release/semantic-release). There is no need to manually bump versions, tag commits, or publish to npm — the tooling handles all of it based on the commit history.
 
