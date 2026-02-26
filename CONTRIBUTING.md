@@ -88,7 +88,7 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 [optional footer(s)]
 ```
 
-### Types
+### Commit Types
 
 | Type       | Description                          | Version Bump |
 |------------|--------------------------------------|--------------|
