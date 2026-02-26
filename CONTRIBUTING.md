@@ -143,7 +143,7 @@ refactor(composer): simplify template tag internals
 
 ## Merging Pull Requests
 
-When merging a pull request, prefer **squash and merge**. This collapses all commits into a single commit on `main`, keeping the history clean.
+When merging a pull request, select **squash and merge**. This collapses all commits into a single commit on `main`, keeping the history clean.
 
 Before completing the merge, verify that the squash commit message follows the [conventional commit format](#commit-message-convention) — this is critical because `semantic-release` reads the commit messages on `main` to determine version bumps and generate changelogs. A malformed merge commit will not trigger a release or may produce an incorrect one.
 
