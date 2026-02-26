@@ -4,8 +4,8 @@
   Elastic ES|QL JS
 </h1>
 <p align="center">
-  <a href="https://buildkite.com/elastic/esql-js-release">
-    <img alt="Build Status - main branch" src="https://badge.buildkite.com/79986f76697e661970a3d81057a88b828871b670acfd8d3dec.svg?branch=main">
+  <a href="https://buildkite.com/elastic/esql-js-grammar-sync">
+    <img alt="Grammar Sync" src="https://badge.buildkite.com/455a3e37b4061fc25a448cba264e622b6c71be8101cd7b74f3.svg?branch=main">
   </a>
   <a href="https://www.npmjs.com/@elastic/esql"><img alt="NPM version" src="https://img.shields.io/npm/v/@elastic/esql.svg"></a>
 </p>
