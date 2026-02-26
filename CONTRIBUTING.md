@@ -141,18 +141,12 @@ refactor(composer): simplify template tag internals
 
 5. Push your branch and open a pull request against `main`.
 
-## Project Structure
+## Merging Pull Requests
 
-| Path | Description |
-|------|-------------|
-| `src/parser/` | [ANTLR-based ES\|QL parser](./src/parser/README.md) |
-| `src/composer/` | [High-level query builder (template tag)](./src/composer/README.md) |
-| `src/composer/synth/` | [Node synthesis API](./src/composer/synth/README.md) |
-| `src/ast/builder/` | [Low-level AST node builder](./src/ast/builder/README.md) |
-| `src/ast/walker/` | [AST walker (callback-based traversal)](./src/ast/walker/README.md) |
-| `src/ast/visitor/` | [AST visitor (advanced traversal)](./src/ast/visitor/README.md) |
-| `src/ast/mutate/` | [AST mutation utilities](./src/ast/mutate/README.md) |
-| `src/pretty_print/` | [AST-to-text formatting](./src/pretty_print/README.md) |
+When merging a pull request, prefer **squash and merge**. This collapses all commits into a single commit on `main`, keeping the history clean.
+
+Before completing the merge, verify that the squash commit message follows the [conventional commit format](#commit-message-convention) — this is critical because `semantic-release` reads the commit messages on `main` to determine version bumps and generate changelogs. A malformed merge commit will not trigger a release or may produce an incorrect one.
+
 
 ## Code Owners
 
