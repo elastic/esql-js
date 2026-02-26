@@ -24,5 +24,6 @@ Technical details, breaking changes or considerations you have made while workin
   | `refactor` | `patch` |
   | `perf` | `patch` |
   | `build` | `patch` |
+  | `docs`  | `patch` |
   | `chore` | `patch` |
   | `revert` | `patch` |
