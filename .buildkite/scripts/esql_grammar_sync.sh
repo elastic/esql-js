@@ -4,6 +4,12 @@ set -euo pipefail
 REPO_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 WORK_DIR="$(dirname "$REPO_DIR")"
 
+if [[ -z "${VAULT_GITHUB_TOKEN:-}" ]]; then
+  echo "VAULT_GITHUB_TOKEN is not set."
+  exit 1
+fi
+export GH_TOKEN="$VAULT_GITHUB_TOKEN"
+
 synchronize_lexer_grammar () {
   source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/EsqlBaseLexer.g4"
   source_lib_dir="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/lexer"
@@ -148,9 +154,9 @@ main () {
 
   report_main_step "Differences found. Checking for an existing pull request."
 
-  MACHINE_USERNAME="elasticmachine"
+  MACHINE_USERNAME="Grammar Sync Bot"
   git config --global user.name "$MACHINE_USERNAME"
-  git config --global user.email '15837671+elasticmachine@users.noreply.github.com'
+  git config --global user.email 'elasticmachine@users.noreply.github.com'
 
   PR_TITLE='[ES|QL] Update grammars'
   PR_BODY='This PR updates the ES|QL grammars (lexer and parser) and PromQL grammars to match the latest version in Elasticsearch.'
@@ -169,8 +175,12 @@ main () {
 
   yarn install --frozen-lockfile
 
-  # Run build commands directly, skipping prebuild:antlr4 which uses brew (macOS only).
-  # CI agents have antlr pre-installed.
+  # Note: We run build commands directly instead of `yarn build:antlr4` to skip
+  # the prebuild:antlr4 hook which uses `brew` (macOS only). CI has antlr installed.
+  # Pin the ANTLR version to avoid the broken Sonatype Central version-lookup API
+  # in antlr4-tools (https://github.com/antlr/antlr4-tools/issues/18).
+  export ANTLR4_TOOLS_ANTLR_VERSION="4.13.2"
+
   yarn build:antlr4:esql
   yarn build:antlr4:promql
 
