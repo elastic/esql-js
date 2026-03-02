@@ -6,7 +6,6 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-
 parser grammar esql_parser;
 
 @header {
@@ -16,7 +15,6 @@ parser grammar esql_parser;
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-
 }
 
 options {
@@ -75,6 +73,7 @@ processingCommand
     | fuseCommand
     | uriPartsCommand
     | metricsInfoCommand
+    | registeredDomainCommand
     // in development
     | {this.isDevVersion()}? lookupCommand
     | {this.isDevVersion()}? insistCommand
@@ -110,7 +109,7 @@ timeSeriesCommand
     ;
 
 externalCommand
-    : EXTERNAL stringOrParameter commandNamedParameters
+    : DEV_EXTERNAL stringOrParameter commandNamedParameters
     ;
 
 indexPatternAndMetadataFields
@@ -376,6 +375,10 @@ insistCommand
 
 uriPartsCommand
     : URI_PARTS qualifiedName ASSIGN primaryExpression
+    ;
+
+registeredDomainCommand
+    : REGISTERED_DOMAIN qualifiedName ASSIGN primaryExpression
     ;
 
 setCommand
