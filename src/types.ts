@@ -287,17 +287,6 @@ export interface ESQLFunction<
   args: ESQLAstItem[];
 }
 
-const isESQLAstBaseItem = (node: unknown): node is ESQLAstBaseItem =>
-  typeof node === 'object' &&
-  node !== null &&
-  Object.hasOwn(node, 'name') &&
-  Object.hasOwn(node, 'text');
-
-export const isESQLFunction = (node: unknown): node is ESQLFunction =>
-  isESQLAstBaseItem(node) &&
-  Object.hasOwn(node, 'type') &&
-  (node as ESQLFunction).type === 'function';
-
 export interface ESQLFunctionCallExpression extends ESQLFunction<'variadic-call'> {
   subtype: 'variadic-call';
   args: ESQLAstItem[];
@@ -683,11 +672,6 @@ export type ESQLParam =
 export interface ESQLIdentifier extends ESQLAstBaseItem {
   type: 'identifier';
 }
-
-export const isESQLNamedParamLiteral = (node: ESQLAstItem): node is ESQLNamedParamLiteral =>
-  isESQLAstBaseItem(node) &&
-  (node as ESQLNamedParamLiteral).literalType === 'param' &&
-  (node as ESQLNamedParamLiteral).paramType === 'named';
 
 export interface ESQLMessage {
   type: 'error' | 'warning';

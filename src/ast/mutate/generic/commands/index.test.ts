@@ -8,6 +8,7 @@
 import { parse } from '../../../../parser';
 import { BasicPrettyPrinter } from '../../../../pretty_print';
 import * as generic from '..';
+import type { ESQLNumericLiteral } from '../../../../types';
 
 describe('generic.commands', () => {
   describe('.list()', () => {
@@ -58,7 +59,8 @@ describe('generic.commands', () => {
       const { root } = parse(src);
       const command = generic.commands.find(
         root,
-        (cmd) => cmd.name === 'limit' && (cmd.args?.[0] as any).value === 2
+        (cmd) =>
+          cmd.name === 'limit' && (cmd.args?.[0] as ESQLNumericLiteral<'integer'>).value === 2
       );
 
       expect(command).toMatchObject({

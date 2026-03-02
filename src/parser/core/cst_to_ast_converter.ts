@@ -3022,7 +3022,7 @@ export class CstToAstConverter {
         const field = this.fromField(fieldCtx);
 
         if (field) {
-          fields.push(field as any);
+          fields.push(field);
         }
       }
     } catch (e) {

@@ -8,6 +8,7 @@
 import { Parser, parse } from '..';
 import { EsqlQuery } from '../../composer/query';
 import { Walker } from '../../ast/walker';
+import type { ESQLSingleAstItem } from '../../types';
 
 describe('function AST nodes', () => {
   describe('"variadic-call"', () => {
@@ -377,7 +378,7 @@ describe('function AST nodes', () => {
 
         expect(errors.length > 0).toBe(true);
         expect(expression?.incomplete).toBe(true);
-        expect((expression?.args[1] as any)?.incomplete).toBe(true);
+        expect((expression?.args[1] as ESQLSingleAstItem)?.incomplete).toBe(true);
 
         expect(expression?.args.length).toBe(2);
         expect(expression).toMatchObject({

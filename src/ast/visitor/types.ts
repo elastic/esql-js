@@ -143,6 +143,7 @@ export type CommandVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitChangePointCommand'>
   | VisitorOutput<Methods, 'visitCompletionCommand'>;
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export interface VisitorMethods<
   Visitors extends VisitorMethods = any,
   Data extends SharedData = SharedData,
@@ -194,6 +195,7 @@ export interface VisitorMethods<
   visitSampleCommand?: Visitor<contexts.SampleCommandVisitorContext<Visitors, Data>, any, any>;
   visitCommandOption?: Visitor<contexts.CommandOptionVisitorContext<Visitors, Data>, any, any>;
   visitFuseCommand?: Visitor<contexts.FuseCommandVisitorContext<Visitors, Data>, any, any>;
+  visitMmrCommand?: Visitor<contexts.FuseCommandVisitorContext<Visitors, Data>, any, any>;
   visitExpression?: Visitor<contexts.ExpressionVisitorContext<Visitors, Data>, any, any>;
   visitSourceExpression?: Visitor<
     contexts.SourceExpressionVisitorContext<Visitors, Data>,
@@ -243,6 +245,7 @@ export interface VisitorMethods<
     any
   >;
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */
 
 /**
  * Maps any AST node to the corresponding visitor context.
@@ -280,6 +283,7 @@ export type AstNodeToVisitorName<Node extends VisitorAstNode> = Node extends ESQ
 /**
  * Asserts that a type is a function.
  */
+/* eslint-disable-next-line @typescript-eslint/no-explicit-any */
 export type EnsureFunction<T> = T extends (...args: any[]) => any ? T : never;
 
 /**

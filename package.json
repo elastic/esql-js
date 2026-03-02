@@ -3,14 +3,28 @@
   "version": "0.0.1",
   "author": "Kibana ES|QL team",
   "description": "A set of ts tools to parse, build and transform ES|QL queries programatically.",
-  "type": "module",
   "packageManager": "yarn@1.22.22",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
     ".": {
       "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
       "default": "./lib/index.js"
+    },
+    "./types": {
+      "types": "./lib/types.d.ts",
+      "import": "./lib/types.mjs",
+      "require": "./lib/types.js",
+      "default": "./lib/types.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "types": [
+        "./lib/types.d.ts"
+      ]
     }
   },
   "files": [
@@ -19,12 +33,13 @@
     "lib"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.json",
     "test": "jest",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
     "format:check": "prettier --check .",
+    "build": "tsup && tsc",
+    "build:watch": "tsup --watch --onSuccess \"tsc\"",
     "prebuild:antlr4": "brew bundle --file=./.buildkite/scripts/antlr4_tools/brewfile",
     "build:antlr4": "npm run build:antlr4:esql && npm run build:antlr4:promql",
     "build:antlr4:esql": "npm run build:antlr4:esql:lexer && npm run build:antlr4:esql:parser",
@@ -35,15 +50,15 @@
     "postbuild:antlr4:promql": "./.buildkite/scripts/postbuild.sh promql",
     "build:antlr4:promql:parser": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_parser.g4",
     "build:antlr4:promql:lexer": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_lexer.g4",
-    "semantic-release": "semantic-release --dry-run --debug",
+    "semantic-release:dry-run": "semantic-release --dry-run --debug",
     "prepare": "husky"
   },
   "repository": "https://github.com/elastic/esql-js.git",
-  "private": true,
-  "license": "SEE LICENSE IN LICENSE.txt",
+  "license": "Elastic-2.0",
   "sideEffects": false,
   "devDependencies": {
     "@babel/eslint-parser": "7.28.6",
+    "@babel/runtime": "7.28.6",
     "@eslint/js": "10.0.1",
     "@semantic-release/changelog": "6.0.3",
     "@semantic-release/commit-analyzer": "13.0.1",
@@ -59,6 +74,7 @@
     "prettier": "3.8.1",
     "semantic-release": "25.0.3",
     "ts-jest": "29.4.6",
+    "tsup": "8.5.1",
     "typescript": "5.9.3",
     "typescript-eslint": "8.55.0"
   },
@@ -68,12 +84,16 @@
     "tslib": "2.8.1"
   },
   "lint-staged": {
-    "*.{ts}": [
+    "*.ts": [
       "eslint --fix",
       "prettier --write"
     ],
     "*.{json,yml,yaml}": [
       "prettier --write"
     ]
+  },
+  "private": false,
+  "publishConfig": {
+    "access": "public"
   }
 }

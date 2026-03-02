@@ -535,7 +535,7 @@ export class WrappingPrettyPrinter {
     return { txt, indented };
   }
 
-  protected readonly visitor: Visitor<any> = new Visitor()
+  protected readonly visitor: Visitor = new Visitor()
     .on('visitExpression', (ctx, inp: Input): Output => {
       let text = ctx.node.text ?? '<EXPRESSION>';
 
@@ -1047,7 +1047,7 @@ export class WrappingPrettyPrinter {
       }
 
       return { txt: text };
-    });
+    }) as unknown as Visitor;
 
   public print(query: ESQLAstQueryExpression) {
     return this.visitor.visitQuery(query, undefined).txt;

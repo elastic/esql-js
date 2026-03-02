@@ -5,34 +5,9 @@
  * 2.0.
  */
 
-export type {
-  ESQLAst,
-  ESQLAstItem,
-  ESQLAstCommand,
-  ESQLAstJoinCommand,
-  ESQLCommand,
-  ESQLCommandOption,
-  ESQLFunction,
-  ESQLTimeSpanLiteral,
-  ESQLLocation,
-  ESQLMessage,
-  ESQLSingleAstItem,
-  ESQLAstQueryExpression,
-  ESQLSource,
-  ESQLColumn,
-  ESQLLiteral,
-  ESQLParamLiteral,
-  EditorError,
-  ESQLAstNode,
-  ESQLInlineCast,
-  ESQLAstBaseItem,
-  ESQLAstChangePointCommand,
-  ESQLAstForkCommand,
-  ESQLForkParens,
-  ESQLAstPromqlCommand,
-} from './types';
-
 export * from './parser';
 export * from './ast';
 export * from './composer';
 export * from './pretty_print';
+export * from './embedded_languages';
+export * from './debug';

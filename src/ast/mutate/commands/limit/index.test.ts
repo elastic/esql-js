@@ -8,6 +8,7 @@
 import { parse } from '../../../../parser';
 import { BasicPrettyPrinter } from '../../../../pretty_print';
 import * as commands from '..';
+import type { ESQLNumericLiteral } from '../../../../types';
 
 describe('commands.limit', () => {
   describe('.list()', () => {
@@ -77,7 +78,10 @@ describe('commands.limit', () => {
       const src = 'FROM index | LIMIT 1 | STATS agg() | LIMIT 2 | WHERE a == b | LIMIT 3';
       const { root } = parse(src);
 
-      const node = commands.limit.find(root, (cmd) => (cmd.args?.[0] as any).value === 3);
+      const node = commands.limit.find(
+        root,
+        (cmd) => (cmd.args?.[0] as ESQLNumericLiteral<'integer'>).value === 3
+      );
 
       expect(node).toMatchObject({
         type: 'command',

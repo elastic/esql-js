@@ -1,0 +1,7 @@
+{
+  "upstream": "elastic/esql-js",
+  "branches": [],
+  "all": true,
+  "prTitle": "{commitMessages} [{targetBranch}]",
+  "labels": ["backport"]
+}

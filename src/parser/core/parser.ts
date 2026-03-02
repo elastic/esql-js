@@ -136,7 +136,9 @@ export class Parser {
 
         return {
           ...result,
-          root: setCommand as any,
+          root: setCommand,
+          // @deprecated Use `root` instead.
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           ast: [setCommand as any],
         };
       }
@@ -245,6 +247,7 @@ export class Parser {
       ...result,
 
       // @deprecated Use `root` instead.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ast: undefined as any,
     };
   };
@@ -277,6 +280,7 @@ export class Parser {
       ...result,
 
       // @deprecated Use `root` instead.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ast: undefined as any,
     };
   };
@@ -364,6 +368,7 @@ export class Parser {
       tokens: this.tokens.tokens,
 
       // @deprecated Use `root` instead.
+      // eslint-disable-next-line @typescript-eslint/no-explicit-any
       ast: (root as any).commands,
     };
 
