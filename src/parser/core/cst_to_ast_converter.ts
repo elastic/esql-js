@@ -20,8 +20,6 @@ import type { AstNodeTemplate } from '../../ast/builder';
 import type { Parser } from './parser';
 import type { PromQLAstQueryExpression } from '../../embedded_languages/promql/types';
 
-const mmrDenseVectorFunctionsWithRequiredArgs = new Set(['text_embedding', 'to_dense_vector']);
-
 const textExistsAndIsValid = (text: string | undefined): text is string =>
   !!(text && !/<missing /.test(text));
 
