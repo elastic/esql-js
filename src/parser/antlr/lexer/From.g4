@@ -4,7 +4,6 @@
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-
 lexer grammar From;
 
 //
@@ -16,7 +15,7 @@ FROM : 'from'                 -> pushMode(FROM_MODE);
 TS : 'ts' -> pushMode(FROM_MODE);
 
 // EXTERNAL command (development only)
-EXTERNAL : {this.isDevVersion()}? 'external' -> pushMode(FROM_MODE);
+DEV_EXTERNAL : {this.isDevVersion()}? 'external' -> pushMode(FROM_MODE);
 
 mode FROM_MODE;
 FROM_PIPE : PIPE -> type(PIPE), popMode;
