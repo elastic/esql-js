@@ -2122,14 +2122,14 @@ export class CstToAstConverter {
     if (queryVector) args.push(queryVector);
 
     const onOption = this.fromMmrOnOption(ctx);
-    args.push(onOption);
-    const diversifyField = onOption.args[0]
+    if (onOption) args.push(onOption);
+    const diversifyField = onOption?.args[0]
       ? (onOption.args[0] as ast.ESQLColumn).args[0]
       : undefined;
 
     const limitOption = this.fromMmrLimitOption(ctx);
-    args.push(limitOption);
-    const limit = limitOption.args[0] as ast.ESQLLiteral;
+    if (limitOption) args.push(limitOption);
+    const limit = limitOption ? (limitOption.args[0] as ast.ESQLLiteral) : undefined;
 
     const withOption = this.fromMmrWithOption(ctx.commandNamedParameters());
     if (withOption) args.push(withOption);
@@ -2142,7 +2142,9 @@ export class CstToAstConverter {
       limit,
       namedParameters,
     });
-    command.incomplete ||= limitOption.incomplete;
+    command.incomplete ||= queryVector?.incomplete ?? false;
+    command.incomplete ||= diversifyField?.incomplete ?? false;
+    command.incomplete ||= limitOption?.incomplete ?? false;
     command.incomplete ||= withOption?.incomplete ?? false;
 
     return command;
@@ -2167,10 +2169,12 @@ export class CstToAstConverter {
     return queryVector;
   }
 
-  private fromMmrOnOption(ctx: cst.MmrCommandContext): ast.ESQLCommandOption {
+  private fromMmrOnOption(ctx: cst.MmrCommandContext): ast.ESQLCommandOption | undefined {
     const onToken = ctx.ON();
-    const diversifyFieldCtx = ctx.qualifiedName();
 
+    if (!onToken) return;
+
+    const diversifyFieldCtx = ctx.qualifiedName();
     const diversifyField = this.toColumn(diversifyFieldCtx);
     const onOption = this.toOption(onToken.getText().toLowerCase(), diversifyFieldCtx);
 
@@ -2181,9 +2185,19 @@ export class CstToAstConverter {
     return onOption;
   }
 
-  private fromMmrLimitOption(ctx: cst.MmrCommandContext): ast.ESQLCommandOption {
+  private fromMmrLimitOption(ctx: cst.MmrCommandContext): ast.ESQLCommandOption | undefined {
     const limitToken = ctx.MMR_LIMIT();
+
+    if (!limitToken) return;
+
     const limitValueCtx = ctx.integerValue();
+    if (!limitValueCtx) {
+      const limitOption = this.toOption(limitToken.getText().toLowerCase(), ctx, [], true);
+      limitOption.location.min = limitToken.symbol.start;
+      limitOption.location.max = limitToken.symbol.stop;
+
+      return limitOption;
+    }
 
     const limitOption = this.toOption(limitToken.getText().toLowerCase(), limitValueCtx);
 
@@ -2197,6 +2211,8 @@ export class CstToAstConverter {
   private fromMmrWithOption(
     namedParametersCtx: cst.CommandNamedParametersContext
   ): ast.ESQLCommandOption | undefined {
+    if (!namedParametersCtx) return;
+
     const withOption = this.fromCommandNamedParameters(namedParametersCtx);
 
     const mapArg = withOption.args[0] as ast.ESQLMap | undefined;
