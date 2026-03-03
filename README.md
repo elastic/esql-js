@@ -1,5 +1,3 @@
-<h1 align="center"> 🚧 Under construction 🚧 </h1>
-
 <h1 align="center">
   Elastic ES|QL JS
 </h1>
