@@ -139,6 +139,29 @@ test('can visit CHANGE_POINT command', () => {
   expect(list).toEqual(['CHANGE_POINT']);
 });
 
+test('can visit REGISTERED_DOMAIN command', () => {
+  const { ast } = EsqlQuery.fromSrc(`
+    FROM index
+      | REGISTERED_DOMAIN parts = host
+  `);
+  const visitor = new Visitor()
+    .on('visitExpression', () => {
+      return null;
+    })
+    .on('visitRegisteredDomainCommand', () => {
+      return 'REGISTERED_DOMAIN';
+    })
+    .on('visitCommand', () => {
+      return null;
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].flat();
+    });
+  const list = visitor.visitQuery(ast).flat().filter(Boolean);
+
+  expect(list).toEqual(['REGISTERED_DOMAIN']);
+});
+
 test('can visit RERANK command', () => {
   const { ast } = EsqlQuery.fromSrc(`
     FROM movies

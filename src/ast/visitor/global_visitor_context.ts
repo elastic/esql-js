@@ -13,6 +13,7 @@ import type {
   ESQLAstHeaderCommand,
   ESQLAstJoinCommand,
   ESQLAstQueryExpression,
+  ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
   ESQLAstUriPartsCommand,
   ESQLColumn,
@@ -207,6 +208,14 @@ export class GlobalVisitorContext<
         return this.visitCompletionCommand(
           parent,
           commandNode as ESQLAstCompletionCommand,
+          input as any
+        );
+      }
+      case 'registered_domain': {
+        if (!this.methods.visitRegisteredDomainCommand) break;
+        return this.visitRegisteredDomainCommand(
+          parent,
+          commandNode as ESQLAstRegisteredDomainCommand,
           input as any
         );
       }
@@ -471,6 +480,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitCompletionCommand'> {
     const context = new contexts.CompletionCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitCompletionCommand', context, input);
+  }
+
+  public visitRegisteredDomainCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstRegisteredDomainCommand,
+    input: types.VisitorInput<Methods, 'visitRegisteredDomainCommand'>
+  ): types.VisitorOutput<Methods, 'visitRegisteredDomainCommand'> {
+    const context = new contexts.RegisteredDomainCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitRegisteredDomainCommand', context, input);
   }
 
   public visitSampleCommand(

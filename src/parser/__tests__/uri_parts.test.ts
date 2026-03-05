@@ -7,10 +7,10 @@
 
 import { EsqlQuery } from '../../composer/query';
 import { Walker } from '../../ast/walker';
-import type { ESQLAstUriPartsCommand, ESQLFunction } from '../../types';
+import type { ESQLAstQueryExpression, ESQLAstUriPartsCommand, ESQLFunction } from '../../types';
 
 describe('URI_PARTS', () => {
-  const getUriParts = (ast: ReturnType<typeof EsqlQuery.fromSrc>['ast']): ESQLAstUriPartsCommand =>
+  const getUriParts = (ast: ESQLAstQueryExpression): ESQLAstUriPartsCommand =>
     Walker.match(ast, {
       type: 'command',
       name: 'uri_parts',

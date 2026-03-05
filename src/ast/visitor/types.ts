@@ -111,7 +111,8 @@ export type CommandVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitJoinCommand'> &
     VisitorInput<Methods, 'visitRerankCommand'> &
     VisitorInput<Methods, 'visitChangePointCommand'> &
-    VisitorInput<Methods, 'visitUriPartsCommand'>
+    VisitorInput<Methods, 'visitUriPartsCommand'> &
+    VisitorInput<Methods, 'visitRegisteredDomainCommand'>
 >;
 
 /**
@@ -143,7 +144,8 @@ export type CommandVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitRerankCommand'>
   | VisitorOutput<Methods, 'visitChangePointCommand'>
   | VisitorOutput<Methods, 'visitCompletionCommand'>
-  | VisitorOutput<Methods, 'visitUriPartsCommand'>;
+  | VisitorOutput<Methods, 'visitUriPartsCommand'>
+  | VisitorOutput<Methods, 'visitRegisteredDomainCommand'>;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface VisitorMethods<
@@ -191,6 +193,11 @@ export interface VisitorMethods<
   visitForkCommand?: Visitor<contexts.ForkCommandVisitorContext<Visitors, Data>, any, any>;
   visitCompletionCommand?: Visitor<
     contexts.CompletionCommandVisitorContext<Visitors, Data>,
+    any,
+    any
+  >;
+  visitRegisteredDomainCommand?: Visitor<
+    contexts.RegisteredDomainCommandVisitorContext<Visitors, Data>,
     any,
     any
   >;

@@ -19,6 +19,7 @@ import type {
   ESQLAstItem,
   ESQLAstJoinCommand,
   ESQLAstQueryExpression,
+  ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
   ESQLAstUriPartsCommand,
   ESQLColumn,
@@ -561,6 +562,12 @@ export class CompletionCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
+
+// REGISTERED_DOMAIN <qualifiedName> = <primaryExpression>
+export class RegisteredDomainCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstRegisteredDomainCommand> {}
 
 // SAMPLE <probability> [SEED <seed>]
 export class SampleCommandVisitorContext<

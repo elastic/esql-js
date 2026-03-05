@@ -477,6 +477,12 @@ export class CstToAstConverter {
       return this.fromCompletionCommand(completionCommandCtx);
     }
 
+    const registeredDomainCommandCtx = ctx.registeredDomainCommand();
+
+    if (registeredDomainCommandCtx) {
+      return this.fromRegisteredDomainCommand(registeredDomainCommandCtx);
+    }
+
     const sampleCommandCtx = ctx.sampleCommand();
 
     if (sampleCommandCtx) {
@@ -1432,6 +1438,14 @@ export class CstToAstConverter {
     return command;
   }
 
+  // -------------------------------------------------------- REGISTERED_DOMAIN
+
+  private fromRegisteredDomainCommand(
+    ctx: cst.RegisteredDomainCommandContext
+  ): ast.ESQLAstRegisteredDomainCommand {
+    return this.fromQualifiedNameAssignmentCommand('registered_domain', ctx);
+  }
+
   // ------------------------------------------------------------------- SAMPLE
 
   private fromSampleCommand(ctx: cst.SampleCommandContext): ast.ESQLCommand<'sample'> {
@@ -2236,8 +2250,17 @@ export class CstToAstConverter {
   // --------------------------------------------------------------- URI_PARTS
 
   private fromUriPartsCommand(ctx: cst.UriPartsCommandContext): ast.ESQLAstUriPartsCommand {
-    const command = this.createCommand<'uri_parts', ast.ESQLAstUriPartsCommand>('uri_parts', ctx);
+    return this.fromQualifiedNameAssignmentCommand('uri_parts', ctx);
+  }
 
+  private fromQualifiedNameAssignmentCommand<
+    TName extends 'registered_domain' | 'uri_parts',
+    TCommand extends ast.ESQLCommand<TName> & {
+      targetField: ast.ESQLColumn;
+      expression?: ast.ESQLSingleAstItem;
+    },
+  >(name: TName, ctx: cst.RegisteredDomainCommandContext | cst.UriPartsCommandContext): TCommand {
+    const command = this.createCommand<TName, TCommand>(name, ctx);
     const qualifiedNameCtx = ctx.qualifiedName();
 
     if (qualifiedNameCtx && ctx.ASSIGN()) {
