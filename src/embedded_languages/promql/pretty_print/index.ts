@@ -9,3 +9,8 @@ export {
   PromQLBasicPrettyPrinter,
   type PromQLBasicPrettyPrinterOptions,
 } from './basic_pretty_printer';
+
+export {
+  PromQLWrappingPrettyPrinter,
+  type PromQLWrappingPrettyPrinterOptions,
+} from './wrapping_pretty_printer';
