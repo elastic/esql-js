@@ -512,6 +512,11 @@ export class CstToAstConverter {
       return this.fromMmrCommand(mmrCommand);
     }
 
+    const uriPartsCommandCtx = ctx.uriPartsCommand();
+
+    if (uriPartsCommandCtx) {
+      return this.fromUriPartsCommand(uriPartsCommandCtx);
+    }
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
 
@@ -2228,6 +2233,43 @@ export class CstToAstConverter {
     }
   }
 
+  // --------------------------------------------------------------- URI_PARTS
+
+  private fromUriPartsCommand(ctx: cst.UriPartsCommandContext): ast.ESQLAstUriPartsCommand {
+    const command = this.createCommand<'uri_parts', ast.ESQLAstUriPartsCommand>('uri_parts', ctx);
+
+    const qualifiedNameCtx = ctx.qualifiedName();
+
+    if (qualifiedNameCtx && ctx.ASSIGN()) {
+      const targetField = this.toColumn(qualifiedNameCtx);
+      command.targetField = targetField;
+
+      const expression = this.fromPrimaryExpressionStrict(ctx.primaryExpression());
+      command.expression = expression;
+
+      if (expression.incomplete || expression.type === 'unknown') {
+        command.incomplete = true;
+      }
+
+      const assignment = this.toFunction(
+        ctx.ASSIGN().getText(),
+        ctx,
+        undefined,
+        'binary-expression'
+      );
+      assignment.args.push(targetField, expression);
+      assignment.location = this.extendLocationToArgs(assignment);
+      command.args.push(assignment);
+    } else if (qualifiedNameCtx) {
+      const targetField = this.toColumn(qualifiedNameCtx);
+
+      command.targetField = targetField;
+      command.incomplete = true;
+      command.args.push(targetField);
+    }
+
+    return command;
+  }
   // -------------------------------------------------------------- expressions
 
   private toColumnsFromCommand(

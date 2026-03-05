@@ -20,6 +20,7 @@ import type {
   ESQLAstJoinCommand,
   ESQLAstQueryExpression,
   ESQLAstRerankCommand,
+  ESQLAstUriPartsCommand,
   ESQLColumn,
   ESQLCommandOption,
   ESQLDecimalLiteral,
@@ -578,6 +579,12 @@ export class MmrCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
+
+// URI_PARTS <qualifiedName> = <primaryExpression>
+export class UriPartsCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstUriPartsCommand> {}
 
 // Expressions -----------------------------------------------------------------
 

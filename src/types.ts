@@ -18,7 +18,8 @@ export type ESQLAstCommand =
   | ESQLAstRerankCommand
   | ESQLAstCompletionCommand
   | ESQLAstFuseCommand
-  | ESQLAstForkCommand;
+  | ESQLAstForkCommand
+  | ESQLAstUriPartsCommand;
 
 export type ESQLAstAllCommands = ESQLAstCommand | ESQLAstHeaderCommand;
 
@@ -154,6 +155,11 @@ export interface ESQLAstMmrCommand extends ESQLCommand<'mmr'> {
   diversifyField: ESQLSingleAstItem;
   limit: ESQLSingleAstItem;
   namedParameters?: ESQLSingleAstItem;
+}
+
+export interface ESQLAstUriPartsCommand extends ESQLCommand<'uri_parts'> {
+  targetField: ESQLColumn;
+  expression?: ESQLAstExpression;
 }
 
 /**

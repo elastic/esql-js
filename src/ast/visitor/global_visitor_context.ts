@@ -14,6 +14,7 @@ import type {
   ESQLAstJoinCommand,
   ESQLAstQueryExpression,
   ESQLAstRerankCommand,
+  ESQLAstUriPartsCommand,
   ESQLColumn,
   ESQLFunction,
   ESQLIdentifier,
@@ -220,6 +221,14 @@ export class GlobalVisitorContext<
       case 'mmr': {
         if (!this.methods.visitMmrCommand) break;
         return this.visitMmrCommand(parent, commandNode, input as any);
+      }
+      case 'uri_parts': {
+        if (!this.methods.visitUriPartsCommand) break;
+        return this.visitUriPartsCommand(
+          parent,
+          commandNode as ESQLAstUriPartsCommand,
+          input as any
+        );
       }
     }
     return this.visitCommandGeneric(parent, commandNode, input as any);
@@ -489,6 +498,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitMmrCommand'> {
     const context = new contexts.MmrCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitMmrCommand', context, input);
+  }
+
+  public visitUriPartsCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstUriPartsCommand,
+    input: types.VisitorInput<Methods, 'visitUriPartsCommand'>
+  ): types.VisitorOutput<Methods, 'visitUriPartsCommand'> {
+    const context = new contexts.UriPartsCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitUriPartsCommand', context, input);
   }
 
   // #endregion

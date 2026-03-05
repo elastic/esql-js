@@ -203,6 +203,14 @@ describe('single line query', () => {
       });
     });
 
+    describe('URI_PARTS', () => {
+      test('prints assignment command', () => {
+        const { text } = reprint('FROM index | URI_PARTS parts = url');
+
+        expect(text).toBe('FROM index | URI_PARTS parts = url');
+      });
+    });
+
     describe('JOIN', () => {
       test('example from docs', () => {
         const { text } = reprint(`

@@ -229,6 +229,29 @@ test('can visit COMPLETION command', () => {
   expect(list).toEqual(['COMPLETION']);
 });
 
+test('can visit URI_PARTS command', () => {
+  const { ast } = EsqlQuery.fromSrc(`
+FROM index
+| URI_PARTS parts = url
+`);
+  const visitor = new Visitor()
+    .on('visitExpression', (ctx) => {
+      return null;
+    })
+    .on('visitUriPartsCommand', (ctx) => {
+      return 'URI_PARTS';
+    })
+    .on('visitCommand', (ctx) => {
+      return null;
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].flat();
+    });
+  const list = visitor.visitQuery(ast).flat().filter(Boolean);
+
+  expect(list).toEqual(['URI_PARTS']);
+});
+
 test('can visit MMR command', () => {
   const { ast } = EsqlQuery.fromSrc(`
     FROM movies
