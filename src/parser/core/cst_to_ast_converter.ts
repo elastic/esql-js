@@ -523,6 +523,12 @@ export class CstToAstConverter {
     if (uriPartsCommandCtx) {
       return this.fromUriPartsCommand(uriPartsCommandCtx);
     }
+
+    const metricsInfoCommandCtx = ctx.metricsInfoCommand();
+
+    if (metricsInfoCommandCtx) {
+      return this.fromMetricsInfoCommand(metricsInfoCommandCtx);
+    }
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
 
@@ -2293,6 +2299,15 @@ export class CstToAstConverter {
 
     return command;
   }
+
+  // --------------------------------------------------------------- METRICS_INFO
+
+  private fromMetricsInfoCommand(
+    ctx: cst.MetricsInfoCommandContext
+  ): ast.ESQLAstMetricsInfoCommand {
+    return this.createCommand<'metrics_info', ast.ESQLAstMetricsInfoCommand>('metrics_info', ctx);
+  }
+
   // -------------------------------------------------------------- expressions
 
   private toColumnsFromCommand(
