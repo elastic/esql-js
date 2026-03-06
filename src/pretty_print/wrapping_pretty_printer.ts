@@ -8,6 +8,8 @@
 import { BinaryExpressionGroup } from '../ast/grouping';
 import { binaryExpressionGroup, unaryExpressionGroup } from '../ast/grouping';
 import { isBinaryExpression, isIdentifier, isParamLiteral } from '../ast/is';
+import { isPromqlNode } from '../embedded_languages/promql/ast/is';
+import { PromQLBasicPrettyPrinter } from '../embedded_languages/promql/pretty_print';
 import type { ESQLAstBaseItem, ESQLAstQueryExpression, ESQLMap } from '../types';
 import type {
   CommandOptionVisitorContext,
@@ -537,10 +539,13 @@ export class WrappingPrettyPrinter {
 
   protected readonly visitor: Visitor = new Visitor()
     .on('visitExpression', (ctx, inp: Input): Output => {
+      if (isPromqlNode(ctx.node)) {
+        return { txt: PromQLBasicPrettyPrinter.print(ctx.node) };
+      }
+
       let text = ctx.node.text ?? '<EXPRESSION>';
 
       if (text) {
-        // TODO: this will be replaced by proper PromQL pretty-printing in subsequent PR
         text = text.replace(/<EOF>/g, '').trim();
       }
 

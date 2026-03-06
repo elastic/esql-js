@@ -13,7 +13,9 @@ import type {
   ESQLAstHeaderCommand,
   ESQLAstJoinCommand,
   ESQLAstQueryExpression,
+  ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
+  ESQLAstUriPartsCommand,
   ESQLColumn,
   ESQLFunction,
   ESQLIdentifier,
@@ -209,6 +211,14 @@ export class GlobalVisitorContext<
           input as any
         );
       }
+      case 'registered_domain': {
+        if (!this.methods.visitRegisteredDomainCommand) break;
+        return this.visitRegisteredDomainCommand(
+          parent,
+          commandNode as ESQLAstRegisteredDomainCommand,
+          input as any
+        );
+      }
       case 'sample': {
         if (!this.methods.visitSampleCommand) break;
         return this.visitSampleCommand(parent, commandNode, input as any);
@@ -220,6 +230,14 @@ export class GlobalVisitorContext<
       case 'mmr': {
         if (!this.methods.visitMmrCommand) break;
         return this.visitMmrCommand(parent, commandNode, input as any);
+      }
+      case 'uri_parts': {
+        if (!this.methods.visitUriPartsCommand) break;
+        return this.visitUriPartsCommand(
+          parent,
+          commandNode as ESQLAstUriPartsCommand,
+          input as any
+        );
       }
     }
     return this.visitCommandGeneric(parent, commandNode, input as any);
@@ -464,6 +482,15 @@ export class GlobalVisitorContext<
     return this.visitWithSpecificContext('visitCompletionCommand', context, input);
   }
 
+  public visitRegisteredDomainCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstRegisteredDomainCommand,
+    input: types.VisitorInput<Methods, 'visitRegisteredDomainCommand'>
+  ): types.VisitorOutput<Methods, 'visitRegisteredDomainCommand'> {
+    const context = new contexts.RegisteredDomainCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitRegisteredDomainCommand', context, input);
+  }
+
   public visitSampleCommand(
     parent: contexts.VisitorContext | null,
     node: ESQLAstCommand,
@@ -489,6 +516,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitMmrCommand'> {
     const context = new contexts.MmrCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitMmrCommand', context, input);
+  }
+
+  public visitUriPartsCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstUriPartsCommand,
+    input: types.VisitorInput<Methods, 'visitUriPartsCommand'>
+  ): types.VisitorOutput<Methods, 'visitUriPartsCommand'> {
+    const context = new contexts.UriPartsCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitUriPartsCommand', context, input);
   }
 
   // #endregion
