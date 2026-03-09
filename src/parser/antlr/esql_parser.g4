@@ -74,6 +74,7 @@ processingCommand
     | uriPartsCommand
     | metricsInfoCommand
     | registeredDomainCommand
+    | tsInfoCommand
     // in development
     | {this.isDevVersion()}? lookupCommand
     | {this.isDevVersion()}? insistCommand
@@ -360,6 +361,10 @@ fuseKeyByFields
 
 metricsInfoCommand
     : METRICS_INFO
+    ;
+
+tsInfoCommand
+    : TS_INFO
     ;
 
 //
