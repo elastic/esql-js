@@ -34,9 +34,11 @@
     "forceConsistentCasingInFileNames": true,
     // Ensure each file can be independently transpiled (required by ts-jest and bundlers)
     "isolatedModules": true,
+    // Enable JSX support for React (used by Storybook stories)
+    "jsx": "react-jsx",
     // Output compiled files to the lib/ directory
     "outDir": "./lib"
   },
   "include": ["src"],
-  "exclude": ["node_modules", "lib", "README.md", "**/*.test.ts"]
+  "exclude": ["node_modules", "lib", "README.md", "**/*.test.ts", "src/stories"]
 }

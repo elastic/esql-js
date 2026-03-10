@@ -5,12 +5,11 @@
  * 2.0.
  */
 
-export {
-  PromQLBasicPrettyPrinter,
-  type PromQLBasicPrettyPrinterOptions,
-} from './basic_pretty_printer';
+import type { StorybookConfig } from '@storybook/react-vite';
 
-export {
-  PromQLWrappingPrettyPrinter,
-  type PromQLWrappingPrettyPrinterOptions,
-} from './wrapping_pretty_printer';
+const config: StorybookConfig = {
+  stories: ['../src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
+  addons: [],
+  framework: '@storybook/react-vite',
+};
+export default config;

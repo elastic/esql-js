@@ -5,12 +5,17 @@
  * 2.0.
  */
 
-export {
-  PromQLBasicPrettyPrinter,
-  type PromQLBasicPrettyPrinterOptions,
-} from './basic_pretty_printer';
+import type { Preview } from '@storybook/react-vite';
 
-export {
-  PromQLWrappingPrettyPrinter,
-  type PromQLWrappingPrettyPrinterOptions,
-} from './wrapping_pretty_printer';
+const preview: Preview = {
+  parameters: {
+    controls: {
+      matchers: {
+        color: /(background|color)$/i,
+        date: /Date$/i,
+      },
+    },
+  },
+};
+
+export default preview;

@@ -27,6 +27,7 @@ import type {
   ESQLSource,
 } from '../../types';
 import type * as types from './types';
+import { PromQLAstQueryExpression } from '../../embedded_languages';
 
 export type SharedData = Record<string, unknown>;
 
@@ -560,6 +561,10 @@ export class GlobalVisitorContext<
         return this.visitMapEntryExpression(parent, expressionNode, input as any);
       }
       case 'query': {
+        if ('dialect' in expressionNode && expressionNode.dialect === 'promql') {
+          if (!this.methods.visitPromqlExpression) break;
+          return this.visitPromqlExpression(parent, expressionNode, input as any);
+        }
         if (
           !this.methods.visitQuery ||
           expressionNode.type !== 'query' ||
@@ -687,6 +692,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitParensExpression'> {
     const context = new contexts.ParensExpressionVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitParensExpression', context, input);
+  }
+
+  public visitPromqlExpression(
+    parent: contexts.VisitorContext | null,
+    node: PromQLAstQueryExpression,
+    input: types.VisitorInput<Methods, 'visitPromqlExpression'>
+  ): types.VisitorOutput<Methods, 'visitPromqlExpression'> {
+    const context = new contexts.PromqlExpressionVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitPromqlExpression', context, input);
   }
 }
 
