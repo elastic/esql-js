@@ -1051,6 +1051,38 @@ FROM a
     });
   });
 
+  describe('comment-only queries (no commands)', () => {
+    it('attaches a single-line comment to the root query node', () => {
+      const { root } = parse('// hello', { withFormatting: true });
+
+      expect(root.commands).toHaveLength(0);
+      expect(root.formatting).toMatchObject({
+        top: [
+          {
+            type: 'comment',
+            subtype: 'single-line',
+            text: ' hello',
+          },
+        ],
+      });
+    });
+
+    it('attaches a multi-line comment to the root query node', () => {
+      const { root } = parse('/* hello */', { withFormatting: true });
+
+      expect(root.commands).toHaveLength(0);
+      expect(root.formatting).toMatchObject({
+        top: [
+          {
+            type: 'comment',
+            subtype: 'multi-line',
+            text: ' hello ',
+          },
+        ],
+      });
+    });
+  });
+
   describe('many comments', () => {
     test('can attach all possible inline comments in basic RERANK command', () => {
       const src = `
