@@ -18,6 +18,7 @@ import type {
   ESQLAstHeaderCommand,
   ESQLAstItem,
   ESQLAstJoinCommand,
+  ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
   ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
@@ -592,6 +593,12 @@ export class UriPartsCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstUriPartsCommand> {}
+
+// METRICS_INFO
+export class MetricsInfoCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstMetricsInfoCommand> {}
 
 // Expressions -----------------------------------------------------------------
 

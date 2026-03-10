@@ -12,6 +12,7 @@ import type {
   ESQLAstCompletionCommand,
   ESQLAstHeaderCommand,
   ESQLAstJoinCommand,
+  ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
   ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
@@ -236,6 +237,14 @@ export class GlobalVisitorContext<
         return this.visitUriPartsCommand(
           parent,
           commandNode as ESQLAstUriPartsCommand,
+          input as any
+        );
+      }
+      case 'metrics_info': {
+        if (!this.methods.visitMetricsInfoCommand) break;
+        return this.visitMetricsInfoCommand(
+          parent,
+          commandNode as ESQLAstMetricsInfoCommand,
           input as any
         );
       }
@@ -525,6 +534,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitUriPartsCommand'> {
     const context = new contexts.UriPartsCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitUriPartsCommand', context, input);
+  }
+
+  public visitMetricsInfoCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstMetricsInfoCommand,
+    input: types.VisitorInput<Methods, 'visitMetricsInfoCommand'>
+  ): types.VisitorOutput<Methods, 'visitMetricsInfoCommand'> {
+    const context = new contexts.MetricsInfoCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitMetricsInfoCommand', context, input);
   }
 
   // #endregion
