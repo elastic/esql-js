@@ -12,8 +12,12 @@ import type {
   ESQLAstCompletionCommand,
   ESQLAstHeaderCommand,
   ESQLAstJoinCommand,
+  ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
+  ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
+  ESQLAstTsInfoCommand,
+  ESQLAstUriPartsCommand,
   ESQLColumn,
   ESQLFunction,
   ESQLIdentifier,
@@ -210,6 +214,14 @@ export class GlobalVisitorContext<
           input as any
         );
       }
+      case 'registered_domain': {
+        if (!this.methods.visitRegisteredDomainCommand) break;
+        return this.visitRegisteredDomainCommand(
+          parent,
+          commandNode as ESQLAstRegisteredDomainCommand,
+          input as any
+        );
+      }
       case 'sample': {
         if (!this.methods.visitSampleCommand) break;
         return this.visitSampleCommand(parent, commandNode, input as any);
@@ -221,6 +233,26 @@ export class GlobalVisitorContext<
       case 'mmr': {
         if (!this.methods.visitMmrCommand) break;
         return this.visitMmrCommand(parent, commandNode, input as any);
+      }
+      case 'uri_parts': {
+        if (!this.methods.visitUriPartsCommand) break;
+        return this.visitUriPartsCommand(
+          parent,
+          commandNode as ESQLAstUriPartsCommand,
+          input as any
+        );
+      }
+      case 'ts_info': {
+        if (!this.methods.visitTsInfoCommand) break;
+        return this.visitTsInfoCommand(parent, commandNode as ESQLAstTsInfoCommand, input as any);
+      }
+      case 'metrics_info': {
+        if (!this.methods.visitMetricsInfoCommand) break;
+        return this.visitMetricsInfoCommand(
+          parent,
+          commandNode as ESQLAstMetricsInfoCommand,
+          input as any
+        );
       }
     }
     return this.visitCommandGeneric(parent, commandNode, input as any);
@@ -465,6 +497,15 @@ export class GlobalVisitorContext<
     return this.visitWithSpecificContext('visitCompletionCommand', context, input);
   }
 
+  public visitRegisteredDomainCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstRegisteredDomainCommand,
+    input: types.VisitorInput<Methods, 'visitRegisteredDomainCommand'>
+  ): types.VisitorOutput<Methods, 'visitRegisteredDomainCommand'> {
+    const context = new contexts.RegisteredDomainCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitRegisteredDomainCommand', context, input);
+  }
+
   public visitSampleCommand(
     parent: contexts.VisitorContext | null,
     node: ESQLAstCommand,
@@ -490,6 +531,33 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitMmrCommand'> {
     const context = new contexts.MmrCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitMmrCommand', context, input);
+  }
+
+  public visitUriPartsCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstUriPartsCommand,
+    input: types.VisitorInput<Methods, 'visitUriPartsCommand'>
+  ): types.VisitorOutput<Methods, 'visitUriPartsCommand'> {
+    const context = new contexts.UriPartsCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitUriPartsCommand', context, input);
+  }
+
+  public visitTsInfoCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstTsInfoCommand,
+    input: types.VisitorInput<Methods, 'visitTsInfoCommand'>
+  ): types.VisitorOutput<Methods, 'visitTsInfoCommand'> {
+    const context = new contexts.TsInfoCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitTsInfoCommand', context, input);
+  }
+
+  public visitMetricsInfoCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstMetricsInfoCommand,
+    input: types.VisitorInput<Methods, 'visitMetricsInfoCommand'>
+  ): types.VisitorOutput<Methods, 'visitMetricsInfoCommand'> {
+    const context = new contexts.MetricsInfoCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitMetricsInfoCommand', context, input);
   }
 
   // #endregion

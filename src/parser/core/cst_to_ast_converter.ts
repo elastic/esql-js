@@ -477,6 +477,12 @@ export class CstToAstConverter {
       return this.fromCompletionCommand(completionCommandCtx);
     }
 
+    const registeredDomainCommandCtx = ctx.registeredDomainCommand();
+
+    if (registeredDomainCommandCtx) {
+      return this.fromRegisteredDomainCommand(registeredDomainCommandCtx);
+    }
+
     const sampleCommandCtx = ctx.sampleCommand();
 
     if (sampleCommandCtx) {
@@ -512,6 +518,23 @@ export class CstToAstConverter {
       return this.fromMmrCommand(mmrCommand);
     }
 
+    const uriPartsCommandCtx = ctx.uriPartsCommand();
+
+    if (uriPartsCommandCtx) {
+      return this.fromUriPartsCommand(uriPartsCommandCtx);
+    }
+
+    const tsInfoCommandCtx = ctx.tsInfoCommand();
+
+    if (tsInfoCommandCtx) {
+      return this.fromTsInfoCommand(tsInfoCommandCtx);
+    }
+
+    const metricsInfoCommandCtx = ctx.metricsInfoCommand();
+
+    if (metricsInfoCommandCtx) {
+      return this.fromMetricsInfoCommand(metricsInfoCommandCtx);
+    }
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
 
@@ -1427,6 +1450,14 @@ export class CstToAstConverter {
     return command;
   }
 
+  // -------------------------------------------------------- REGISTERED_DOMAIN
+
+  private fromRegisteredDomainCommand(
+    ctx: cst.RegisteredDomainCommandContext
+  ): ast.ESQLAstRegisteredDomainCommand {
+    return this.fromQualifiedNameAssignmentCommand('registered_domain', ctx);
+  }
+
   // ------------------------------------------------------------------- SAMPLE
 
   private fromSampleCommand(ctx: cst.SampleCommandContext): ast.ESQLCommand<'sample'> {
@@ -2226,6 +2257,67 @@ export class CstToAstConverter {
 
       return withOption;
     }
+  }
+
+  // --------------------------------------------------------------- URI_PARTS
+
+  private fromUriPartsCommand(ctx: cst.UriPartsCommandContext): ast.ESQLAstUriPartsCommand {
+    return this.fromQualifiedNameAssignmentCommand('uri_parts', ctx);
+  }
+
+  private fromQualifiedNameAssignmentCommand<
+    TName extends 'registered_domain' | 'uri_parts',
+    TCommand extends ast.ESQLCommand<TName> & {
+      targetField: ast.ESQLColumn;
+      expression?: ast.ESQLSingleAstItem;
+    },
+  >(name: TName, ctx: cst.RegisteredDomainCommandContext | cst.UriPartsCommandContext): TCommand {
+    const command = this.createCommand<TName, TCommand>(name, ctx);
+    const qualifiedNameCtx = ctx.qualifiedName();
+
+    if (qualifiedNameCtx && ctx.ASSIGN()) {
+      const targetField = this.toColumn(qualifiedNameCtx);
+      command.targetField = targetField;
+
+      const expression = this.fromPrimaryExpressionStrict(ctx.primaryExpression());
+      command.expression = expression;
+
+      if (expression.incomplete || expression.type === 'unknown') {
+        command.incomplete = true;
+      }
+
+      const assignment = this.toFunction(
+        ctx.ASSIGN().getText(),
+        ctx,
+        undefined,
+        'binary-expression'
+      );
+      assignment.args.push(targetField, expression);
+      assignment.location = this.extendLocationToArgs(assignment);
+      command.args.push(assignment);
+    } else if (qualifiedNameCtx) {
+      const targetField = this.toColumn(qualifiedNameCtx);
+
+      command.targetField = targetField;
+      command.incomplete = true;
+      command.args.push(targetField);
+    }
+
+    return command;
+  }
+
+  // --------------------------------------------------------------- TS_INFO
+
+  private fromTsInfoCommand(ctx: cst.TsInfoCommandContext): ast.ESQLAstTsInfoCommand {
+    return this.createCommand<'ts_info', ast.ESQLAstTsInfoCommand>('ts_info', ctx);
+  }
+
+  // --------------------------------------------------------------- METRICS_INFO
+
+  private fromMetricsInfoCommand(
+    ctx: cst.MetricsInfoCommandContext
+  ): ast.ESQLAstMetricsInfoCommand {
+    return this.createCommand<'metrics_info', ast.ESQLAstMetricsInfoCommand>('metrics_info', ctx);
   }
 
   // -------------------------------------------------------------- expressions

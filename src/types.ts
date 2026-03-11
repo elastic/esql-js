@@ -19,7 +19,11 @@ export type ESQLAstCommand =
   | ESQLAstRerankCommand
   | ESQLAstCompletionCommand
   | ESQLAstFuseCommand
-  | ESQLAstForkCommand;
+  | ESQLAstForkCommand
+  | ESQLAstUriPartsCommand
+  | ESQLAstTsInfoCommand
+  | ESQLAstMetricsInfoCommand
+  | ESQLAstRegisteredDomainCommand;
 
 export type ESQLAstAllCommands = ESQLAstCommand | ESQLAstHeaderCommand;
 
@@ -155,6 +159,20 @@ export interface ESQLAstMmrCommand extends ESQLCommand<'mmr'> {
   diversifyField: ESQLSingleAstItem;
   limit: ESQLSingleAstItem;
   namedParameters?: ESQLSingleAstItem;
+}
+
+export interface ESQLAstUriPartsCommand extends ESQLCommand<'uri_parts'> {
+  targetField: ESQLColumn;
+  expression?: ESQLAstExpression;
+}
+
+export interface ESQLAstTsInfoCommand extends ESQLCommand<'ts_info'> {}
+
+export interface ESQLAstMetricsInfoCommand extends ESQLCommand<'metrics_info'> {}
+
+export interface ESQLAstRegisteredDomainCommand extends ESQLCommand<'registered_domain'> {
+  targetField: ESQLColumn;
+  expression?: ESQLAstExpression;
 }
 
 /**

@@ -18,8 +18,12 @@ import type {
   ESQLAstHeaderCommand,
   ESQLAstItem,
   ESQLAstJoinCommand,
+  ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
+  ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
+  ESQLAstTsInfoCommand,
+  ESQLAstUriPartsCommand,
   ESQLColumn,
   ESQLCommandOption,
   ESQLDecimalLiteral,
@@ -562,6 +566,12 @@ export class CompletionCommandVisitorContext<
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
 
+// REGISTERED_DOMAIN <qualifiedName> = <primaryExpression>
+export class RegisteredDomainCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstRegisteredDomainCommand> {}
+
 // SAMPLE <probability> [SEED <seed>]
 export class SampleCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
@@ -579,6 +589,24 @@ export class MmrCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
+
+// URI_PARTS <qualifiedName> = <primaryExpression>
+export class UriPartsCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstUriPartsCommand> {}
+
+// TS_INFO
+export class TsInfoCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstTsInfoCommand> {}
+
+// METRICS_INFO
+export class MetricsInfoCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstMetricsInfoCommand> {}
 
 // Expressions -----------------------------------------------------------------
 

@@ -197,6 +197,8 @@ const attachCommentDecoration = (
       const lastCommand = commands[commands.length - 1];
       if (lastCommand) {
         attachBottomComment(lastCommand, comment.node);
+      } else {
+        attachTopComment(ast, comment.node);
       }
       return;
     }

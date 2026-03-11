@@ -12,6 +12,7 @@ import type {
   PromQLParens,
   PromQLSelector,
   PromQLStringLiteral,
+  PromQLSubquery,
   PromQLUnaryExpression,
 } from '../../types';
 import { PromQLParser } from '../parser';
@@ -194,6 +195,42 @@ describe('PromQL Parser', () => {
       const binary = result.root.expression as PromQLBinaryExpression;
       expect(binary.modifier?.groupModifier).toBeDefined();
       expect(binary.modifier?.groupModifier?.name).toBe('group_left');
+    });
+  });
+
+  describe('subquery', () => {
+    it('parses a basic subquery with range and resolution', () => {
+      const result = PromQLParser.parse('rate(http_requests_total[5m])[30m:1m]');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.root.expression?.type).toBe('subquery');
+
+      const subquery = result.root.expression as PromQLSubquery;
+      const expr = subquery.expr as PromQLFunction;
+      const range = subquery.range as PromQLLiteral;
+      const resolution = subquery.resolution as PromQLLiteral;
+
+      expect(expr.type).toBe('function');
+      expect(expr.name).toBe('rate');
+      expect(range.value).toBe('30m');
+      expect(resolution.value).toBe('1m');
+    });
+
+    it('parses a subquery with arithmetic resolution', () => {
+      const result = PromQLParser.parse('http_requests_total[5m][30m:5m*2]');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.root.expression?.type).toBe('subquery');
+
+      const subquery = result.root.expression as PromQLSubquery;
+      const resolution = subquery.resolution as PromQLBinaryExpression;
+      const left = resolution.left as PromQLLiteral;
+      const right = resolution.right as PromQLLiteral;
+
+      expect(resolution.type).toBe('binary-expression');
+      expect(resolution.name).toBe('*');
+      expect(left.value).toBe('5m');
+      expect(right.value).toBe(2);
     });
   });
 

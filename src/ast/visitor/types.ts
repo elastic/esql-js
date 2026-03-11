@@ -112,7 +112,11 @@ export type CommandVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitMvExpandCommand'> &
     VisitorInput<Methods, 'visitJoinCommand'> &
     VisitorInput<Methods, 'visitRerankCommand'> &
-    VisitorInput<Methods, 'visitChangePointCommand'>
+    VisitorInput<Methods, 'visitChangePointCommand'> &
+    VisitorInput<Methods, 'visitUriPartsCommand'> &
+    VisitorInput<Methods, 'visitTsInfoCommand'> &
+    VisitorInput<Methods, 'visitMetricsInfoCommand'> &
+    VisitorInput<Methods, 'visitRegisteredDomainCommand'>
 >;
 
 /**
@@ -143,7 +147,11 @@ export type CommandVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitJoinCommand'>
   | VisitorOutput<Methods, 'visitRerankCommand'>
   | VisitorOutput<Methods, 'visitChangePointCommand'>
-  | VisitorOutput<Methods, 'visitCompletionCommand'>;
+  | VisitorOutput<Methods, 'visitCompletionCommand'>
+  | VisitorOutput<Methods, 'visitUriPartsCommand'>
+  | VisitorOutput<Methods, 'visitTsInfoCommand'>
+  | VisitorOutput<Methods, 'visitMetricsInfoCommand'>
+  | VisitorOutput<Methods, 'visitRegisteredDomainCommand'>;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface VisitorMethods<
@@ -194,10 +202,22 @@ export interface VisitorMethods<
     any,
     any
   >;
+  visitRegisteredDomainCommand?: Visitor<
+    contexts.RegisteredDomainCommandVisitorContext<Visitors, Data>,
+    any,
+    any
+  >;
   visitSampleCommand?: Visitor<contexts.SampleCommandVisitorContext<Visitors, Data>, any, any>;
   visitCommandOption?: Visitor<contexts.CommandOptionVisitorContext<Visitors, Data>, any, any>;
   visitFuseCommand?: Visitor<contexts.FuseCommandVisitorContext<Visitors, Data>, any, any>;
-  visitMmrCommand?: Visitor<contexts.FuseCommandVisitorContext<Visitors, Data>, any, any>;
+  visitMmrCommand?: Visitor<contexts.MmrCommandVisitorContext<Visitors, Data>, any, any>;
+  visitUriPartsCommand?: Visitor<contexts.UriPartsCommandVisitorContext<Visitors, Data>, any, any>;
+  visitTsInfoCommand?: Visitor<contexts.TsInfoCommandVisitorContext<Visitors, Data>, any, any>;
+  visitMetricsInfoCommand?: Visitor<
+    contexts.MetricsInfoCommandVisitorContext<Visitors, Data>,
+    any,
+    any
+  >;
   visitExpression?: Visitor<contexts.ExpressionVisitorContext<Visitors, Data>, any, any>;
   visitSourceExpression?: Visitor<
     contexts.SourceExpressionVisitorContext<Visitors, Data>,

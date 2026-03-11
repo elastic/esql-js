@@ -85,6 +85,7 @@ import { FuseCommandContext } from "./esql_parser.js";
 import { FuseConfigurationContext } from "./esql_parser.js";
 import { FuseKeyByFieldsContext } from "./esql_parser.js";
 import { MetricsInfoCommandContext } from "./esql_parser.js";
+import { TsInfoCommandContext } from "./esql_parser.js";
 import { LookupCommandContext } from "./esql_parser.js";
 import { InsistCommandContext } from "./esql_parser.js";
 import { UriPartsCommandContext } from "./esql_parser.js";
@@ -919,6 +920,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitMetricsInfoCommand?: (ctx: MetricsInfoCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.tsInfoCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterTsInfoCommand?: (ctx: TsInfoCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.tsInfoCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitTsInfoCommand?: (ctx: TsInfoCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.lookupCommand`.
 	 * @param ctx the parse tree
