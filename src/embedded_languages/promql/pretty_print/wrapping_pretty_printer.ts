@@ -217,7 +217,12 @@ export class PromQLWrappingPrettyPrinter {
   protected docLabel(node: promql.PromQLLabel): printer.Doc {
     const labelName = this.docLabelName(node.labelName);
     const value = node.value ? this.docLiteral(node.value) : '';
-    return [labelName, printer.text(node.operator), value];
+    return printer.fill([
+      labelName,
+      printer.text(' '),
+      printer.text(node.operator),
+      printer.indent([printer.line, value]),
+    ]);
   }
 
   protected docLabelName(node: promql.PromQLLabelName): printer.Doc {
