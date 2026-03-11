@@ -23,7 +23,7 @@ const format = (src: string, opts?: PromQLWrappingPrettyPrinterOptions): string 
  * Assert that the source formats to {@link expected} (defaults to the source
  * itself when omitted — i.e. idempotent formatting).
  */
-const assertFormat = (
+const assertPrint = (
   src: string,
   expected: string = src,
   opts?: PromQLWrappingPrettyPrinterOptions
@@ -36,92 +36,92 @@ const assertFormat = (
  * Assert formatting at a narrow width. The default width is 80 columns so we
  * use a smaller width to trigger wrapping in test cases.
  */
-const assertNarrow = (src: string, expected: string, width: number = 30) => {
-  assertFormat(src, expected, { printWidth: width });
+const assertNarrowPrint = (src: string, expected: string, width: number = 30) => {
+  assertPrint(src, expected, { printWidth: width });
 };
 
 describe('PromQL WrappingPrettyPrinter', () => {
   describe('identifiers and literals', () => {
     test('simple metric name', () => {
-      assertFormat('http_requests_total');
+      assertPrint('http_requests_total');
     });
 
     test('integer literal', () => {
-      assertFormat('42');
+      assertPrint('42');
     });
 
     test('decimal literal', () => {
-      assertFormat('3.14');
+      assertPrint('3.14');
     });
 
     test('string literal (double-quoted)', () => {
-      assertFormat('"hello world"');
+      assertPrint('"hello world"');
     });
 
     test('string literal (single-quoted)', () => {
-      assertFormat("'hello world'");
+      assertPrint("'hello world'");
     });
 
     test('time literal', () => {
-      assertFormat('5m', '5m');
+      assertPrint('5m', '5m');
     });
 
     test('NaN', () => {
-      assertFormat('NaN');
+      assertPrint('NaN');
     });
 
     test('Inf', () => {
-      assertFormat('Inf');
+      assertPrint('Inf');
     });
   });
 
   describe('selectors', () => {
     test('simple metric', () => {
-      assertFormat('http_requests_total');
+      assertPrint('http_requests_total');
     });
 
     test('metric with single label', () => {
-      assertFormat('http_requests_total{job="api"}');
+      assertPrint('http_requests_total{job="api"}');
     });
 
     test('metric with multiple labels', () => {
-      assertFormat('http_requests_total{job="api", status="200"}');
+      assertPrint('http_requests_total{job="api", status="200"}');
     });
 
     test('label-only selector', () => {
-      assertFormat('{job="api"}');
+      assertPrint('{job="api"}');
     });
 
     test('range vector', () => {
-      assertFormat('http_requests_total[5m]');
+      assertPrint('http_requests_total[5m]');
     });
 
     test('range vector with labels', () => {
-      assertFormat('http_requests_total{job="api"}[5m]');
+      assertPrint('http_requests_total{job="api"}[5m]');
     });
 
     test('offset modifier', () => {
-      assertFormat('http_requests_total offset 5m');
+      assertPrint('http_requests_total offset 5m');
     });
 
     test('negative offset', () => {
-      assertFormat('http_requests_total offset - 5m');
+      assertPrint('http_requests_total offset - 5m');
     });
 
     test('@ modifier', () => {
-      assertFormat('http_requests_total @ 1609459200');
+      assertPrint('http_requests_total @ 1609459200');
     });
 
     test('@ with start()', () => {
-      assertFormat('http_requests_total @ start()');
+      assertPrint('http_requests_total @ start()');
     });
 
     test('combined offset and @', () => {
-      assertFormat('http_requests_total offset 5m @ 1609459200');
+      assertPrint('http_requests_total offset 5m @ 1609459200');
     });
 
     test('label map wraps when too wide', () => {
-      assertNarrow(
+      assertNarrowPrint(
         'http_requests_total{job="api-server", status="200", method="GET"}',
         [
           'http_requests_total{',
@@ -137,31 +137,31 @@ describe('PromQL WrappingPrettyPrinter', () => {
 
   describe('functions', () => {
     test('simple function', () => {
-      assertFormat('rate(http_requests_total[5m])');
+      assertPrint('rate(http_requests_total[5m])');
     });
 
     test('multi-argument function', () => {
-      assertFormat('clamp(metric_value, 0, 100)');
+      assertPrint('clamp(metric_value, 0, 100)');
     });
 
     test('no-argument function', () => {
-      assertFormat('time()');
+      assertPrint('time()');
     });
 
     test('aggregation with grouping after', () => {
-      assertFormat('sum(rate(http_requests_total[5m])) by (job)');
+      assertPrint('sum(rate(http_requests_total[5m])) by (job)');
     });
 
     test('aggregation with grouping before', () => {
-      assertFormat('sum by (job) (rate(http_requests_total[5m]))');
+      assertPrint('sum by (job) (rate(http_requests_total[5m]))');
     });
 
     test('aggregation with without', () => {
-      assertFormat('avg(cpu_usage) without (instance)');
+      assertPrint('avg(cpu_usage) without (instance)');
     });
 
     test('function args wrap when too wide', () => {
-      assertNarrow(
+      assertNarrowPrint(
         'clamp(metric_value, 0, 100)',
         ['clamp(', '  metric_value,', '  0,', '  100', ')'].join('\n'),
         20
@@ -169,7 +169,7 @@ describe('PromQL WrappingPrettyPrinter', () => {
     });
 
     test('nested function wraps', () => {
-      assertNarrow(
+      assertNarrowPrint(
         'sum(rate(http_requests_total[5m]))',
         ['sum(', '  rate(', '    http_requests_total[5m]', '  )', ')'].join('\n'),
         25
@@ -177,7 +177,7 @@ describe('PromQL WrappingPrettyPrinter', () => {
     });
 
     test('aggregation with grouping before wraps', () => {
-      assertNarrow(
+      assertNarrowPrint(
         'sum by (job) (rate(http_requests_total[5m]))',
         ['sum by (job) (', '  rate(', '    http_requests_total[5m]', '  )', ')'].join('\n'),
         25
@@ -187,27 +187,27 @@ describe('PromQL WrappingPrettyPrinter', () => {
 
   describe('binary expressions', () => {
     test('simple addition', () => {
-      assertFormat('a + b');
+      assertPrint('a + b');
     });
 
     test('simple comparison', () => {
-      assertFormat('a == b');
+      assertPrint('a == b');
     });
 
     test('bool modifier', () => {
-      assertFormat('a == bool b');
+      assertPrint('a == bool b');
     });
 
     test('set operator', () => {
-      assertFormat('a and b');
+      assertPrint('a and b');
     });
 
     test('binary with vector matching', () => {
-      assertFormat('a + on(job) b');
+      assertPrint('a + on(job) b');
     });
 
     test('binary expression wraps when wide', () => {
-      assertNarrow(
+      assertNarrowPrint(
         'very_long_metric_name_left + very_long_metric_name_right',
         ['very_long_metric_name_left', '  + very_long_metric_name_right'].join('\n'),
         40
@@ -215,31 +215,31 @@ describe('PromQL WrappingPrettyPrinter', () => {
     });
 
     test('chained addition', () => {
-      assertFormat('a + b + c');
+      assertPrint('a + b + c');
     });
 
     test('binary with ignoring and group_left', () => {
-      assertFormat('a + ignoring(instance) group_left(exported_job) b');
+      assertPrint('a + ignoring(instance) group_left(exported_job) b');
     });
   });
 
   describe('unary expressions', () => {
     test('negation', () => {
-      assertFormat('-metric');
+      assertPrint('-metric');
     });
 
     test('positive', () => {
-      assertFormat('+metric');
+      assertPrint('+metric');
     });
   });
 
   describe('parenthesized expressions', () => {
     test('simple parens', () => {
-      assertFormat('(a + b)');
+      assertPrint('(a + b)');
     });
 
     test('parens wrap when wide', () => {
-      assertNarrow(
+      assertNarrowPrint(
         '(very_long_metric_a + very_long_metric_b)',
         ['(', '  very_long_metric_a', '    + very_long_metric_b', ')'].join('\n'),
         35
@@ -249,15 +249,15 @@ describe('PromQL WrappingPrettyPrinter', () => {
 
   describe('subqueries', () => {
     test('simple subquery', () => {
-      assertFormat('rate(http_requests_total[5m])[30m:1m]');
+      assertPrint('rate(http_requests_total[5m])[30m:1m]');
     });
 
     test('subquery without resolution', () => {
-      assertFormat('rate(http_requests_total[5m])[30m:]');
+      assertPrint('rate(http_requests_total[5m])[30m:]');
     });
 
     test('subquery with offset', () => {
-      assertFormat('rate(http_requests_total[5m])[30m:1m] offset 5m');
+      assertPrint('rate(http_requests_total[5m])[30m:1m] offset 5m');
     });
   });
 
@@ -275,7 +275,7 @@ describe('PromQL WrappingPrettyPrinter', () => {
     });
 
     test('error rate query stays on one line when width allows', () => {
-      assertFormat(
+      assertPrint(
         'sum(rate(http_errors_total{job="api"}[5m])) / sum(rate(http_requests_total{job="api"}[5m]))',
         undefined,
         { printWidth: 100 }
@@ -296,7 +296,7 @@ describe('PromQL WrappingPrettyPrinter', () => {
     });
 
     test('histogram_quantile wraps nicely', () => {
-      assertNarrow(
+      assertNarrowPrint(
         'histogram_quantile(0.99, sum by (le) (rate(http_request_duration_seconds_bucket{job="api"}[5m])))',
         [
           'histogram_quantile(',
@@ -317,15 +317,15 @@ describe('PromQL WrappingPrettyPrinter', () => {
 
   describe('options', () => {
     test('lowercaseFunctions', () => {
-      assertFormat('SUM(a)', 'sum(a)', { lowercaseFunctions: true });
+      assertPrint('SUM(a)', 'sum(a)', { lowercaseFunctions: true });
     });
 
     test('lowercaseKeywords', () => {
-      assertFormat('sum BY (job) (a)', 'sum by (job) (a)', { lowercaseKeywords: true });
+      assertPrint('sum BY (job) (a)', 'sum by (job) (a)', { lowercaseKeywords: true });
     });
 
     test('lowercaseOperators', () => {
-      assertFormat('a AND b', 'a and b', { lowercaseOperators: true });
+      assertPrint('a AND b', 'a and b', { lowercaseOperators: true });
     });
 
     test('custom printWidth', () => {
