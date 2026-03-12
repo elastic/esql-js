@@ -81,15 +81,15 @@ describe('PromQL WrappingPrettyPrinter', () => {
     });
 
     test('metric with single label', () => {
-      assertPrint('http_requests_total{job="api"}');
+      assertPrint('http_requests_total{job = "api"}');
     });
 
     test('metric with multiple labels', () => {
-      assertPrint('http_requests_total{job="api", status="200"}');
+      assertPrint('http_requests_total{job = "api", status = "200"}');
     });
 
     test('label-only selector', () => {
-      assertPrint('{job="api"}');
+      assertPrint('{job = "api"}');
     });
 
     test('range vector', () => {
@@ -97,7 +97,7 @@ describe('PromQL WrappingPrettyPrinter', () => {
     });
 
     test('range vector with labels', () => {
-      assertPrint('http_requests_total{job="api"}[5m]');
+      assertPrint('http_requests_total{job = "api"}[5m]');
     });
 
     test('offset modifier', () => {
@@ -125,9 +125,9 @@ describe('PromQL WrappingPrettyPrinter', () => {
         'http_requests_total{job="api-server", status="200", method="GET"}',
         [
           'http_requests_total{',
-          '  job="api-server",',
-          '  status="200",',
-          '  method="GET"',
+          '  job = "api-server",',
+          '  status = "200",',
+          '  method = "GET"',
           '}',
         ].join('\n'),
         40
@@ -276,7 +276,7 @@ describe('PromQL WrappingPrettyPrinter', () => {
 
     test('error rate query stays on one line when width allows', () => {
       assertPrint(
-        'sum(rate(http_errors_total{job="api"}[5m])) / sum(rate(http_requests_total{job="api"}[5m]))',
+        'sum(rate(http_errors_total{job = "api"}[5m])) / sum(rate(http_requests_total{job = "api"}[5m]))',
         undefined,
         { printWidth: 100 }
       );
@@ -284,7 +284,7 @@ describe('PromQL WrappingPrettyPrinter', () => {
 
     test('error rate query wraps at narrow width', () => {
       const result = format(
-        'sum(rate(http_errors_total{job="api"}[5m])) / sum(rate(http_requests_total{job="api"}[5m]))',
+        'sum(rate(http_errors_total{job = "api"}[5m])) / sum(rate(http_requests_total{job = "api"}[5m]))',
         { printWidth: 50 }
       );
 
@@ -304,7 +304,7 @@ describe('PromQL WrappingPrettyPrinter', () => {
           '  sum by (le) (',
           '    rate(',
           '      http_request_duration_seconds_bucket{',
-          '        job="api"',
+          '        job = "api"',
           '      }[5m]',
           '    )',
           '  )',
