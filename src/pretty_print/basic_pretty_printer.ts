@@ -15,7 +15,6 @@ import {
   isParamLiteral,
   isProperNode,
 } from '../ast/is';
-import { isPromqlNode } from '../embedded_languages/promql/ast/is';
 import { PromQLBasicPrettyPrinter } from '../embedded_languages/promql/pretty_print';
 import {
   BinaryExpressionGroup,
