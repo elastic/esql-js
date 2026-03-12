@@ -866,7 +866,7 @@ ROW
     // this is the index:
     index =
       my_index
-  bytes[5m]`;
+    bytes[5m]`;
         assertReprint(src);
       });
 
@@ -874,7 +874,7 @@ ROW
         const src = `PROMQL
     index =
       my_index // this is the index
-  bytes[5m]`;
+    bytes[5m]`;
         assertReprint(src);
       });
 
