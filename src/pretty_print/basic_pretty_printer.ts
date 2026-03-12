@@ -270,11 +270,6 @@ export class BasicPrettyPrinter {
         return this.decorateWithComments(ctx.node, ctx.node.text || '<UNKNOWN>');
       }
 
-      if (isPromqlNode(ctx.node)) {
-        const text = PromQLBasicPrettyPrinter.print(ctx.node);
-        return this.decorateWithComments(ctx.node, text || '<UNKNOWN>');
-      }
-
       if (ctx.node.text) {
         const text = ctx.node.text.replace(/<EOF>/g, '').trim();
 
@@ -282,6 +277,12 @@ export class BasicPrettyPrinter {
       }
 
       return '<EXPRESSION>';
+    })
+
+    .on('visitPromqlExpression', (ctx) => {
+      const text = PromQLBasicPrettyPrinter.print(ctx.node);
+
+      return this.decorateWithComments(ctx.node, text || '<UNKNOWN>');
     })
 
     .on('visitHeaderCommand', (ctx) => {
