@@ -44,7 +44,7 @@ export const Default: Story = {
   },
 };
 
-const queryPromql = `PROMQL index=k8s step=1h result = sum(rate(http_requests_total{job="apiserver",handler="/api/comments"}[5m])) by (job)
+const queryPromql = `PROMQL index=k8s step=1h result = (sum(rate(http_requests_total{job="apiserver",handler="/api/comments"}[5m])) by (job))
   | EVAL client_ip = TO_IP(client_ip)
   | KEEP @timestamp, client_ip, event_duration, message
   | SORT @timestamp DESC
