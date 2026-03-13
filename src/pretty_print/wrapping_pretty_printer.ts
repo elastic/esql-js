@@ -29,6 +29,8 @@ import {
 } from './constants';
 import { getPrettyPrintStats } from './helpers';
 import { LeafPrinter } from './leaf_printer';
+import { PromQLWrappingPrettyPrinter } from '../embedded_languages/promql/pretty_print';
+import { PromQLAstQueryExpression } from '../embedded_languages';
 
 interface Input {
   indent: string;
@@ -553,6 +555,18 @@ export class WrappingPrettyPrinter {
       return { txt: text };
     })
 
+    .on('visitPromqlExpression', (ctx, inp: Input) => {
+      const node = ctx.node;
+      let promqlText = PromQLWrappingPrettyPrinter.print(node as PromQLAstQueryExpression, {
+        printWidth: inp.remaining,
+      });
+      const indentation = inp.indent;
+
+      promqlText = promqlText.replaceAll(/^/gm, indentation);
+
+      return { txt: promqlText };
+    })
+
     .on('visitHeaderCommand', (ctx, inp: Input): Output => {
       const opts = this.opts;
       const cmd = opts.lowercaseCommands ? ctx.node.name : ctx.node.name.toUpperCase();
@@ -938,9 +952,10 @@ export class WrappingPrettyPrinter {
       const opts = this.opts;
       const indent = inp?.indent ?? opts.indent ?? '';
       const remaining = inp?.remaining ?? opts.wrap;
-      const commands = ctx.node.commands;
+      const node = ctx.node;
+      const commands = node.commands;
       const commandCount = commands.length;
-      const hasHeaderCommands = !opts.skipHeader && ctx.node.header && ctx.node.header.length > 0;
+      const hasHeaderCommands = !opts.skipHeader && node.header && node.header.length > 0;
 
       let multiline = opts.multiline ?? commandCount > 3;
 

@@ -457,6 +457,28 @@ describe('single line query', () => {
     });
 
     describe('PROMQL', () => {
+      test('no parens query', () => {
+        assertReprint('PROMQL query');
+        assertReprint('PROMQL a = b query');
+      });
+
+      test('query in parens', () => {
+        assertReprint('PROMQL (query)');
+        assertReprint('PROMQL a = b (query)');
+      });
+
+      test('query in parens and names', () => {
+        assertReprint('PROMQL name = (query)');
+        assertReprint('PROMQL a = b name = (query)');
+      });
+
+      test('removes extra whitespace', () => {
+        const src = 'PROMQL step  =  "5m" \n col0 = ( sum( \n123))';
+        const { text } = reprint(src);
+
+        expect(text).toBe('PROMQL step = "5m" col0 = (sum(123))');
+      });
+
       test('realistic command', () => {
         const src =
           'PROMQL step = "5m" start = ?_tstart end = ?_tend index = kibana_sample_data_logstsdb col0 = (sum(avg(quantile_over_time(0.9, bytes{event.dataset="job"}[5m]))))';

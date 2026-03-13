@@ -62,7 +62,8 @@ export type ExpressionVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitIdentifierExpression'> &
     VisitorInput<Methods, 'visitMapExpression'> &
     VisitorInput<Methods, 'visitMapEntryExpression'> &
-    VisitorInput<Methods, 'visitParensExpression'>
+    VisitorInput<Methods, 'visitParensExpression'> &
+    VisitorInput<Methods, 'visitPromqlExpression'>
 >;
 
 /**
@@ -81,7 +82,8 @@ export type ExpressionVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitIdentifierExpression'>
   | VisitorOutput<Methods, 'visitMapExpression'>
   | VisitorOutput<Methods, 'visitMapEntryExpression'>
-  | VisitorOutput<Methods, 'visitParensExpression'>;
+  | VisitorOutput<Methods, 'visitParensExpression'>
+  | VisitorOutput<Methods, 'visitPromqlExpression'>;
 
 /**
  * Input that satisfies any command visitor input constraints.
@@ -264,6 +266,11 @@ export interface VisitorMethods<
     any,
     any
   >;
+  visitPromqlExpression?: Visitor<
+    contexts.PromqlExpressionVisitorContext<Visitors, Data>,
+    any,
+    any
+  >;
 }
 /* eslint-enable @typescript-eslint/no-explicit-any */
 
@@ -298,7 +305,9 @@ export type AstNodeToVisitorName<Node extends VisitorAstNode> = Node extends ESQ
                           ? 'visitMapEntryExpression'
                           : Node extends ast.ESQLParens
                             ? 'visitParensExpression'
-                            : never;
+                            : Node extends ast.ESQLAstPromqlQuery
+                              ? 'visitPromqlExpression'
+                              : never;
 
 /**
  * Asserts that a type is a function.

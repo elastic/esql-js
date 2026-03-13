@@ -52,6 +52,7 @@ import type {
 } from './types';
 import { Builder } from '../builder';
 import { isProperNode } from '../is';
+import { PromQLAstQueryExpression } from '../../embedded_languages';
 
 export class VisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
@@ -779,3 +780,8 @@ export class ParensExpressionVisitorContext<
     return this.visitExpression(this.child(), input);
   }
 }
+
+export class PromqlExpressionVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends VisitorContext<Methods, Data, PromQLAstQueryExpression> {}
