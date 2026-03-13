@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { WithSlider } from './WithSlicer';
+import { WithSlider } from './WithSlider';
 import { FormatEsql, FormatEsqlProps } from './FormatEsql';
 
 export interface InteractiveEsqlProps extends FormatEsqlProps {
