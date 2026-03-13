@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { WithSlider } from './WithSlicer';
+import { WithSlider } from './WithSlider';
 import { FormatPromQL, FormatPromQLProps } from './FormatPromQL';
 
 export interface InteractivePromQLProps extends FormatPromQLProps {

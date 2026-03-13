@@ -47,3 +47,14 @@ export const BinaryExpression: Story = {
     initialWidth: 80,
   },
 };
+
+export const Long: Story = {
+  args: {
+    query: `histogram_quantile(0.9, rate(demo_api_request_duration_seconds_bucket{job="demo"}[5m])) > 0.05
+        and
+      rate(demo_api_request_duration_seconds_count{job="demo"}[5m]) > 1
+      and ((node_memory_MemTotal_bytes - node_memory_MemAvailable_bytes + node_remainder * Math_PI) / node_memory_MemTotal_bytes * 100)
+      or (sum(rate(http_requests_total{job="apiserver",handler="/api/comments"}[5m])) by (job))`,
+    initialWidth: 80,
+  },
+};
