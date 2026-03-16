@@ -52,6 +52,7 @@ import { InputNamedOrPositionalDoubleParamsContext } from "./esql_parser.js";
 import { IdentifierOrParameterContext } from "./esql_parser.js";
 import { StringOrParameterContext } from "./esql_parser.js";
 import { LimitCommandContext } from "./esql_parser.js";
+import { LimitByGroupKeyContext } from "./esql_parser.js";
 import { SortCommandContext } from "./esql_parser.js";
 import { OrderExpressionContext } from "./esql_parser.js";
 import { KeepCommandContext } from "./esql_parser.js";
@@ -584,6 +585,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitLimitCommand?: (ctx: LimitCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.limitByGroupKey`.
+	 * @param ctx the parse tree
+	 */
+	enterLimitByGroupKey?: (ctx: LimitByGroupKeyContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.limitByGroupKey`.
+	 * @param ctx the parse tree
+	 */
+	exitLimitByGroupKey?: (ctx: LimitByGroupKeyContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.sortCommand`.
 	 * @param ctx the parse tree
