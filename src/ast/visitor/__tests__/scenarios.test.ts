@@ -13,6 +13,7 @@
  */
 
 import { parse } from '../../../parser';
+import { BasicPrettyPrinter } from '../../../pretty_print';
 import type { ESQLAstItem, ESQLAstQueryExpression } from '../../../types';
 import { Visitor } from '../visitor';
 
@@ -44,6 +45,20 @@ test('change LIMIT from 24 to 42', () => {
     .visitQuery(root);
 
   expect(limit()).toBe(42);
+});
+
+test('setLimit preserves LIMIT BY option', () => {
+  const { root } = parse('FROM index | LIMIT 24 BY category');
+
+  new Visitor()
+    .on('visitLimitCommand', (ctx) => {
+      ctx.setLimit(42);
+    })
+    .on('visitCommand', () => {})
+    .on('visitQuery', (ctx) => [...ctx.visitCommands()])
+    .visitQuery(root);
+
+  expect(BasicPrettyPrinter.print(root)).toBe('FROM index | LIMIT 42 BY category');
 });
 
 /**
