@@ -730,6 +730,16 @@ export class CstToAstConverter {
       }
     }
 
+    const limitByGroupKeyCtx = ctx.limitByGroupKey();
+    if (limitByGroupKeyCtx) {
+      const byOption = this.toByOption(limitByGroupKeyCtx, limitByGroupKeyCtx.fields());
+
+      if (byOption) {
+        command.args.push(byOption);
+        command.incomplete ||= byOption.incomplete;
+      }
+    }
+
     return command;
   }
 
@@ -841,19 +851,17 @@ export class CstToAstConverter {
     expr: cst.FieldsContext | undefined
   ): ast.ESQLCommandOption | undefined {
     const byCtx = ctx.BY();
+    const args = this.fromFields(expr);
 
     if (!byCtx || !expr) {
       return;
     }
 
-    const option = this.toOption(byCtx.getText().toLowerCase(), ctx);
-
-    option.args.push(...this.fromFields(expr));
+    const option = this.toOption(byCtx.getText().toLowerCase(), ctx, args, !args.length);
     option.location.min = byCtx.symbol.start;
 
     const lastArg = lastItem(option.args);
-
-    if (lastArg) option.location.max = lastArg.location.max;
+    option.location.max = lastArg?.location.max ?? byCtx.symbol.stop;
 
     return option;
   }

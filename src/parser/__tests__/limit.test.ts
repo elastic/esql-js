@@ -47,6 +47,27 @@ describe('LIMIT', () => {
         },
       ]);
     });
+
+    it('LIMIT with BY option (multiple fields)', () => {
+      const query = 'FROM index | LIMIT 10 BY category, long.field.name';
+      const { ast } = parse(query);
+
+      expect(ast[1]).toMatchObject({
+        type: 'command',
+        name: 'limit',
+        args: [
+          { type: 'literal', literalType: 'integer', value: 10 },
+          {
+            type: 'option',
+            name: 'by',
+            args: [
+              { type: 'column', name: 'category' },
+              { type: 'column', name: 'long.field.name' },
+            ],
+          },
+        ],
+      });
+    });
   });
 
   describe('when incorrectly formatted, returns errors', () => {
@@ -56,6 +77,27 @@ describe('LIMIT', () => {
       const { errors } = parse(text);
 
       expect(errors.length > 0).toBe(true);
+    });
+
+    it('keeps BY option incomplete when ctx.fields() is undefined', () => {
+      const text = 'FROM index | LIMIT 10 BY';
+      const { ast } = parse(text);
+
+      expect(ast[1].args).toHaveLength(2);
+      expect(ast[1]).toMatchObject({
+        type: 'command',
+        name: 'limit',
+        incomplete: true,
+        args: [
+          { type: 'literal', literalType: 'integer', value: 10 },
+          {
+            type: 'option',
+            name: 'by',
+            incomplete: true,
+            args: [],
+          },
+        ],
+      });
     });
   });
 });

@@ -232,6 +232,30 @@ describe('commands.limit', () => {
       expect(src2).toBe('FROM index | STATS AGG() | WHERE a == b');
       expect(node).toBe(undefined);
     });
+
+    it('preserves BY option when updating LIMIT value', () => {
+      const src = 'FROM index | LIMIT 10 BY category, long.field.name';
+      const { root } = parse(src);
+
+      const node = commands.limit.set(root, 42);
+      const src2 = BasicPrettyPrinter.print(root);
+
+      expect(src2).toBe('FROM index | LIMIT 42 BY category, long.field.name');
+      expect(node).toMatchObject({
+        type: 'command',
+        name: 'limit',
+        args: [
+          {
+            type: 'literal',
+            value: 42,
+          },
+          {
+            type: 'option',
+            name: 'by',
+          },
+        ],
+      });
+    });
   });
 
   describe('.upsert()', () => {

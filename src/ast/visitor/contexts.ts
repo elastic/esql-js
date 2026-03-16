@@ -423,8 +423,9 @@ export class LimitCommandVisitorContext<
 
   public setLimit(value: number): void {
     const literalNode = Builder.expression.literal.numeric({ value, literalType: 'integer' });
+    const options = this.node.args.filter((arg) => !Array.isArray(arg) && arg.type === 'option');
 
-    this.node.args = [literalNode];
+    this.node.args = [literalNode, ...options];
   }
 }
 
