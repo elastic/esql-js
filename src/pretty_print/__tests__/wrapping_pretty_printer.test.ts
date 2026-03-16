@@ -5,14 +5,14 @@
  * 2.0.
  */
 
-import { parse } from '../../parser';
+import { Parser } from '../../parser';
 import type { ESQLMap } from '../../types';
 import { Walker } from '../../ast/walker';
 import type { WrappingPrettyPrinterOptions } from '../wrapping_pretty_printer';
 import { WrappingPrettyPrinter } from '../wrapping_pretty_printer';
 
 const reprint = (src: string, opts?: WrappingPrettyPrinterOptions) => {
-  const { root } = parse(src);
+  const { root } = Parser.parse(src);
   const text = WrappingPrettyPrinter.print(root, opts);
 
   // console.log(JSON.stringify(root.commands, null, 2));
@@ -230,8 +230,7 @@ FROM index
 
       expect(text).toBe(
         `FROM k8s
-  | STATS count = COUNT()
-        BY @timestamp = BUCKET(@timestamp, 1 MINUTE)
+  | STATS count = COUNT() BY @timestamp = BUCKET(@timestamp, 1 MINUTE)
   | CHANGE_POINT count
         ON @timestamp
         AS type, pvalue
@@ -329,8 +328,7 @@ FROM index
       expect(text).toBe(`FROM index
   | FORK
       (
-          STATS count = COUNT()
-          BY category
+          STATS count = COUNT() BY category
         | WHERE count > 10
         | SORT count DESC
       )
@@ -782,6 +780,31 @@ FROM index
 -   | LIMIT 10`);
     });
 
+    test('STATS with multiple agg fields and BY: with default wrap, breaks at BY when line exceeds width', () => {
+      const query = `FROM kibana_sample_data_logs
+  | STATS count = COUNT(*), avg = AVG(bytes), p95 = PERCENTILE(bytes, 95), ext = VALUES(tags.keyword) BY ip
+  | EVAL newField = CASE(count < 100, "groupA", count > 100 AND count < 500, "groupB", "Other")
+  | KEEP newField`;
+      const text = reprint(query).text;
+      // With default wrap (80), STATS args overflow so options (BY) are broken to a new line
+      expect(text).toContain('BY ip');
+      expect(text).toMatch(/\|\s*STATS[\s\S]*?\n\s*BY ip/m);
+    });
+
+    test('STATS with multiple agg fields and BY: with large wrap, query fits on one line so BY stays on same line as STATS', () => {
+      const query = `FROM kibana_sample_data_logs
+      | STATS count = COUNT(*), avg = AVG(bytes), p95 = PERCENTILE(bytes, 95), ext = VALUES(tags.keyword) BY ip
+      | EVAL newField = CASE(count < 100, "groupA", count > 100 AND count < 500, "groupB", "Other")
+      | KEEP newField`;
+      const text = reprint(query, { wrap: 120, multiline: true }).text;
+
+      // With multiline: true and wrap 120, STATS line fits so BY is not broken to a new line
+      expect(text).toContain('BY ip');
+      const statsLine = text.split('\n').find((l) => l.includes('STATS') && l.includes('BY ip'));
+      expect(statsLine).toBeDefined();
+      expect(statsLine!.trim()).toMatch(/^\| STATS .+ BY ip$/);
+    });
+
     test('wraps function list', () => {
       const query = `
 FROM index
@@ -940,7 +963,7 @@ FROM index
   describe('map expression', () => {
     test('empty map', () => {
       const src = `ROW F(0, {"a": 0})`;
-      const { root } = parse(src);
+      const { root } = Parser.parse(src);
       const map = Walker.match(root, { type: 'map' }) as ESQLMap;
 
       map.entries = [];
@@ -956,7 +979,7 @@ FROM index
 
     test('empty map (multiline)', () => {
       const src = `ROW F(0, {"a": 0}) | LIMIT 1`;
-      const { root } = parse(src);
+      const { root } = Parser.parse(src);
       const map = Walker.match(root, { type: 'map' }) as ESQLMap;
 
       map.entries = [];
@@ -1503,15 +1526,13 @@ describe('subqueries (parens)', () => {
   (FROM index2
     | WHERE a > 10
     | EVAL b = a * 2
-    | STATS cnt = COUNT(*)
-          BY c
+    | STATS cnt = COUNT(*) BY c
     | SORT cnt DESC
     | LIMIT 10),
   index3,
   (FROM index4 | STATS COUNT(*))
   | WHERE d > 10
-  | STATS max = MAX(*)
-        BY e
+  | STATS max = MAX(*) BY e
   | SORT max DESC`
     );
   });
