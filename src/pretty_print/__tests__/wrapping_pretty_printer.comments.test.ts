@@ -1024,15 +1024,13 @@ FROM index`;
   /* before subquery */ (/* inside start */ FROM index2 /* after source */
     | WHERE a > 10 /* after where */
     | EVAL b = a * 2
-    | STATS cnt = COUNT(*)
-          BY c
+    | STATS cnt = COUNT(*) BY c
     | SORT cnt DESC
     | LIMIT 10) /* after first subquery */,
   index3,
   (FROM index4 | STATS COUNT(*)) /* after second */
   | WHERE d > 10
-  | STATS max = MAX(*)
-        BY e
+  | STATS max = MAX(*) BY e
   | SORT max DESC`;
 
       assertReprint(query, expected);
