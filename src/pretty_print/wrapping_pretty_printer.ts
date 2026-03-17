@@ -915,11 +915,20 @@ export class WrappingPrettyPrinter {
         options += (options ? ' ' : '') + out.txt;
       }
 
+      // Remaining width for options on the current line: wrap minus (indent + "| " + cmd + " " + args)
+      const pipeTab = opts.pipeTab ?? '  ';
+      const pipeAndSpaceLength = '| '.length;
+      const spaceBetweenCmdAndArgsLength = 1;
+      const linePrefixLength =
+        inp.indent.length +
+        pipeTab.length +
+        pipeAndSpaceLength +
+        cmd.length +
+        spaceBetweenCmdAndArgsLength +
+        args.txt.length;
+      const remainingForOptions = opts.wrap - linePrefixLength;
       breakOptions =
-        breakOptions ||
-        args.lines > 1 ||
-        optionsLines > 1 ||
-        options.length > opts.wrap - inp.remaining - cmd.length - 1 - args.txt.length;
+        breakOptions || args.lines > 1 || optionsLines > 1 || options.length > remainingForOptions;
 
       if (breakOptions) {
         options = optionsTxt.join('\n' + optionIndent);
