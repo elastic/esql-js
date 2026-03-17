@@ -787,7 +787,6 @@ FROM index
   | KEEP newField`;
       const text = reprint(query).text;
       // With default wrap (80), STATS args overflow so options (BY) are broken to a new line
-      expect(text).toContain('BY ip');
       expect(text).toMatch(/\|\s*STATS[\s\S]*?\n\s*BY ip/m);
     });
 
@@ -799,7 +798,6 @@ FROM index
       const text = reprint(query, { wrap: 120, multiline: true }).text;
 
       // With multiline: true and wrap 120, STATS line fits so BY is not broken to a new line
-      expect(text).toContain('BY ip');
       const statsLine = text.split('\n').find((l) => l.includes('STATS') && l.includes('BY ip'));
       expect(statsLine).toBeDefined();
       expect(statsLine!.trim()).toMatch(/^\| STATS .+ BY ip$/);
