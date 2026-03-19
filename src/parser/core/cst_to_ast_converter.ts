@@ -732,7 +732,13 @@ export class CstToAstConverter {
 
     const limitByGroupKeyCtx = ctx.limitByGroupKey();
     if (limitByGroupKeyCtx) {
-      const byOption = this.toByOption(limitByGroupKeyCtx, limitByGroupKeyCtx.fields());
+      const booleanExpressions = limitByGroupKeyCtx
+        .booleanExpression_list()
+        .filter((e) => !e.exception);
+      const args = booleanExpressions.map((e) =>
+        this.fromBooleanExpressionToExpressionOrUnknown(e)
+      );
+      const byOption = this.toByOption(limitByGroupKeyCtx, args);
 
       if (byOption) {
         command.args.push(byOption);
@@ -806,8 +812,8 @@ export class CstToAstConverter {
       command.args.push(...this.fromAggFields(ctx.aggFields()));
     }
 
-    if (ctx._grouping) {
-      const option = this.toByOption(ctx, ctx.fields());
+    if (ctx._grouping && ctx.fields()) {
+      const option = this.toByOption(ctx, this.fromFields(ctx.fields()));
 
       if (option) {
         command.args.push(option);
@@ -848,12 +854,11 @@ export class CstToAstConverter {
 
   private toByOption(
     ctx: antlr.ParserRuleContext & Pick<cst.StatsCommandContext, 'BY'>,
-    expr: cst.FieldsContext | undefined
+    args: ast.ESQLAstItem[]
   ): ast.ESQLCommandOption | undefined {
     const byCtx = ctx.BY();
-    const args = this.fromFields(expr);
 
-    if (!byCtx || !expr) {
+    if (!byCtx) {
       return;
     }
 
