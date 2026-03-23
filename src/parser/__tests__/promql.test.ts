@@ -517,4 +517,116 @@ map 7-19
       });
     });
   });
+
+  describe('with param as entire query', () => {
+    describe('unparenthesized: PROMQL ?param', () => {
+      it('parses named param as entire query', () => {
+        const text = 'PROMQL ?my_query';
+        const query = EsqlQuery.fromSrc(text);
+        const promqlCmd = query.ast.commands[0] as ESQLAstPromqlCommand;
+
+        expect(promqlCmd).toMatchObject({
+          type: 'command',
+          name: 'promql',
+          incomplete: false,
+        });
+
+        expect(promqlCmd.args.length).toBe(1);
+        expect(promqlCmd.args[0]).toMatchObject({
+          type: 'literal',
+          literalType: 'param',
+          paramType: 'named',
+          value: 'my_query',
+        });
+      });
+    });
+
+    describe('parenthesized: PROMQL (?param)', () => {
+      it('parses named param in parens as entire query', () => {
+        const text = 'PROMQL (?my_query)';
+        const query = EsqlQuery.fromSrc(text);
+        const promqlCmd = query.ast.commands[0] as ESQLAstPromqlCommand;
+
+        expect(promqlCmd).toMatchObject({
+          type: 'command',
+          name: 'promql',
+          incomplete: false,
+        });
+
+        expect(promqlCmd.args.length).toBe(1);
+        const parens = promqlCmd.args[0] as ESQLParens;
+        expect(parens.type).toBe('parens');
+        expect(parens.child).toMatchObject({
+          type: 'literal',
+          literalType: 'param',
+          paramType: 'named',
+          value: 'my_query',
+        });
+      });
+    });
+
+    describe('with assignment: PROMQL result = ?param', () => {
+      it('parses param query with variable assignment in parens', () => {
+        const text = 'PROMQL index=k8s result = (?my_query)';
+        const query = EsqlQuery.fromSrc(text);
+        const promqlCmd = query.ast.commands[0] as ESQLAstPromqlCommand;
+
+        expect(promqlCmd).toMatchObject({
+          type: 'command',
+          name: 'promql',
+          incomplete: false,
+        });
+
+        const assignExpr = promqlCmd.args[1] as ESQLBinaryExpression;
+        expect(assignExpr.type).toBe('function');
+        expect(assignExpr.subtype).toBe('binary-expression');
+        expect(assignExpr.name).toBe('=');
+
+        const leftArg = assignExpr.args[0];
+        expect(leftArg).toMatchObject({
+          type: 'identifier',
+          name: 'result',
+        });
+
+        const rightArg = assignExpr.args[1] as ESQLParens;
+        expect(rightArg.type).toBe('parens');
+        expect(rightArg.child).toMatchObject({
+          type: 'literal',
+          literalType: 'param',
+          paramType: 'named',
+          value: 'my_query',
+        });
+      });
+
+      it('parses param query with variable assignment without parens', () => {
+        const text = 'PROMQL index=k8s result = ?my_query';
+        const query = EsqlQuery.fromSrc(text);
+        const promqlCmd = query.ast.commands[0] as ESQLAstPromqlCommand;
+
+        expect(promqlCmd).toMatchObject({
+          type: 'command',
+          name: 'promql',
+          incomplete: false,
+        });
+
+        const assignExpr = promqlCmd.args[1] as ESQLBinaryExpression;
+        expect(assignExpr.type).toBe('function');
+        expect(assignExpr.subtype).toBe('binary-expression');
+        expect(assignExpr.name).toBe('=');
+
+        const leftArg = assignExpr.args[0];
+        expect(leftArg).toMatchObject({
+          type: 'identifier',
+          name: 'result',
+        });
+
+        expect(assignExpr.args[1]).toMatchObject({
+          type: 'literal',
+          literalType: 'param',
+          paramType: 'named',
+          value: 'my_query',
+        });
+      });
+    });
+  });
 });

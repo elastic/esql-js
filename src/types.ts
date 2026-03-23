@@ -214,7 +214,10 @@ export type ESQLAstPromqlCommandQuery =
   | ESQLParens
 
   /** name = ( query ) */
-  | ESQLBinaryExpression<'='>;
+  | ESQLBinaryExpression<'='>
+
+  /** ?param */
+  | ESQLParamLiteral;
 
 /**
  * This will be replaced in the future with a proper PROMQL query AST.
