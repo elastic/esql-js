@@ -2034,27 +2034,42 @@ export class CstToAstConverter {
     const lp = ctx.LP();
     const rp = ctx.RP();
     const valueNameCtx = ctx.valueName();
-    let node: ast.ESQLAstPromqlCommandQuery | undefined = this.fromPromqlQueryParts(queryPartCtxs);
+    let node: ast.ESQLAstPromqlCommandQuery | undefined;
+
+    // Check if the entire query is a named/positional param
+    const namedParam = ctx.NAMED_OR_POSITIONAL_PARAM();
+
+    if (namedParam) {
+      const text = namedParam.getText();
+      const paramValue = text.slice(1); // Remove the leading '?'
+      const valueAsNumber = Number(paramValue);
+      const isPositional = String(valueAsNumber) === paramValue;
+      const parserFields = this.getParserFields(ctx);
+
+      node = isPositional
+        ? Builder.param.positional({ value: valueAsNumber }, parserFields)
+        : Builder.param.named({ value: paramValue }, parserFields);
+    } else {
+      node = this.fromPromqlQueryParts(queryPartCtxs);
+    }
 
     if (!node) {
       return undefined;
     }
 
-    // No parenthesis
-    if (!lp) {
-      return node;
+    // Wrap in parentheses if present
+    if (lp) {
+      const closeParenText = rp?.getText() ?? '';
+      const hasCloseParen = rp && !/<missing /.test(closeParenText);
+      const parensLocation = getPosition(lp.symbol, hasCloseParen ? rp.symbol : ctx.stop);
+
+      node = Builder.expression.parens(node, {
+        location: parensLocation,
+        incomplete: !hasCloseParen || node.incomplete,
+      });
     }
 
-    const closeParenText = rp?.getText() ?? '';
-    const hasCloseParen = rp && !/<missing /.test(closeParenText);
-    const parensLocation = getPosition(lp.symbol, hasCloseParen ? rp.symbol : ctx.stop);
-
-    node = Builder.expression.parens(node, {
-      location: parensLocation,
-      incomplete: !hasCloseParen || node.incomplete,
-    });
-
-    // There's a "name = ( query )" assignment
+    // There's a "name = ..." assignment (e.g. "name = ( query )" or "name = ?param")
     if (valueNameCtx) {
       const valueNameId = this.fromIdentifier(valueNameCtx);
       node = Builder.expression.func.binary(
@@ -2062,7 +2077,7 @@ export class CstToAstConverter {
         [valueNameId, node],
         {},
         {
-          location: getPosition(valueNameCtx.start, hasCloseParen ? rp.symbol : ctx.stop),
+          location: getPosition(valueNameCtx.start, ctx.stop),
           incomplete: node.incomplete,
         }
       );
