@@ -73,6 +73,7 @@ import { EnrichPolicyNameContext } from "./esql_parser.js";
 import { EnrichWithClauseContext } from "./esql_parser.js";
 import { SampleCommandContext } from "./esql_parser.js";
 import { ChangePointCommandContext } from "./esql_parser.js";
+import { ChangePointConfigurationContext } from "./esql_parser.js";
 import { ForkCommandContext } from "./esql_parser.js";
 import { ForkSubQueriesContext } from "./esql_parser.js";
 import { ForkSubQueryContext } from "./esql_parser.js";
@@ -797,6 +798,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitChangePointCommand?: (ctx: ChangePointCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.changePointConfiguration`.
+	 * @param ctx the parse tree
+	 */
+	enterChangePointConfiguration?: (ctx: ChangePointConfigurationContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.changePointConfiguration`.
+	 * @param ctx the parse tree
+	 */
+	exitChangePointConfiguration?: (ctx: ChangePointConfigurationContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.forkCommand`.
 	 * @param ctx the parse tree
