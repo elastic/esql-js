@@ -608,7 +608,7 @@ export default class esql_lexer extends lexer_config {
 	private DEV_EXTERNAL_sempred(localctx: RuleContext, predIndex: number): boolean {
 		switch (predIndex) {
 		case 1:
-			return this.isDevVersion();
+			return this.isExternalDataSourcesEnabled();
 		}
 		return true;
 	}

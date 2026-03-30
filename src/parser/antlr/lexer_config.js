@@ -14,6 +14,10 @@ export default class lexer_config extends Lexer {
     return true;
   }
 
+  isExternalDataSourcesEnabled() {
+    return true;
+  }
+
   hasMetricsCommand() {
     return true;
   }
