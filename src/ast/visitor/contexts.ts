@@ -20,6 +20,7 @@ import type {
   ESQLAstJoinCommand,
   ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
+  ESQLAstUserAgentCommand,
   ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
@@ -608,6 +609,12 @@ export class MetricsInfoCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstMetricsInfoCommand> {}
+
+// USER_AGENT <qualifiedName> = <primaryExpression> [WITH <map>]
+export class UserAgentCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstUserAgentCommand> {}
 
 // Expressions -----------------------------------------------------------------
 

@@ -14,6 +14,7 @@ import type {
   ESQLAstJoinCommand,
   ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
+  ESQLAstUserAgentCommand,
   ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
@@ -251,6 +252,14 @@ export class GlobalVisitorContext<
         return this.visitMetricsInfoCommand(
           parent,
           commandNode as ESQLAstMetricsInfoCommand,
+          input as any
+        );
+      }
+      case 'user_agent': {
+        if (!this.methods.visitUserAgentCommand) break;
+        return this.visitUserAgentCommand(
+          parent,
+          commandNode as ESQLAstUserAgentCommand,
           input as any
         );
       }
@@ -558,6 +567,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitMetricsInfoCommand'> {
     const context = new contexts.MetricsInfoCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitMetricsInfoCommand', context, input);
+  }
+
+  public visitUserAgentCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstUserAgentCommand,
+    input: types.VisitorInput<Methods, 'visitUserAgentCommand'>
+  ): types.VisitorOutput<Methods, 'visitUserAgentCommand'> {
+    const context = new contexts.UserAgentCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitUserAgentCommand', context, input);
   }
 
   // #endregion

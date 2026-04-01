@@ -116,6 +116,7 @@ export type CommandVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitUriPartsCommand'> &
     VisitorInput<Methods, 'visitTsInfoCommand'> &
     VisitorInput<Methods, 'visitMetricsInfoCommand'> &
+    VisitorInput<Methods, 'visitUserAgentCommand'> &
     VisitorInput<Methods, 'visitRegisteredDomainCommand'>
 >;
 
@@ -151,6 +152,7 @@ export type CommandVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitUriPartsCommand'>
   | VisitorOutput<Methods, 'visitTsInfoCommand'>
   | VisitorOutput<Methods, 'visitMetricsInfoCommand'>
+  | VisitorOutput<Methods, 'visitUserAgentCommand'>
   | VisitorOutput<Methods, 'visitRegisteredDomainCommand'>;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -215,6 +217,11 @@ export interface VisitorMethods<
   visitTsInfoCommand?: Visitor<contexts.TsInfoCommandVisitorContext<Visitors, Data>, any, any>;
   visitMetricsInfoCommand?: Visitor<
     contexts.MetricsInfoCommandVisitorContext<Visitors, Data>,
+    any,
+    any
+  >;
+  visitUserAgentCommand?: Visitor<
+    contexts.UserAgentCommandVisitorContext<Visitors, Data>,
     any,
     any
   >;
