@@ -131,7 +131,10 @@ describe('USER_AGENT', () => {
       expect(map.entries).toHaveLength(2);
 
       const propertiesEntry = map.entries.find(
-        (e) => e.key.type === 'literal' && 'valueUnquoted' in e.key && e.key.valueUnquoted === 'properties'
+        (e) =>
+          e.key.type === 'literal' &&
+          'valueUnquoted' in e.key &&
+          e.key.valueUnquoted === 'properties'
       );
       expect(propertiesEntry?.value).toMatchObject({
         type: 'list',
