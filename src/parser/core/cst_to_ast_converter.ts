@@ -2386,6 +2386,7 @@ export class CstToAstConverter {
 
     if (qualifiedNameCtx && ctx.ASSIGN()) {
       if (expression && (expression.incomplete || expression.type === 'unknown')) {
+        expression.incomplete = true;
         command.incomplete = true;
       }
     } else if (qualifiedNameCtx) {

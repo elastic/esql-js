@@ -182,6 +182,39 @@ describe('USER_AGENT', () => {
     });
   });
 
+  describe('incomplete flag', () => {
+    it('is false when the full "ua = ua_str" expression is valid', () => {
+      const { ast } = EsqlQuery.fromSrc(`FROM index | USER_AGENT ua = user_agent`);
+      const cmd = getUserAgent(ast);
+
+      expect(cmd.incomplete).toBe(false);
+      expect(cmd.expression).toMatchObject({
+        type: 'column',
+        name: 'user_agent',
+        incomplete: false,
+      });
+    });
+
+    it('is true when only the target field is provided (no assignment)', () => {
+      const { ast } = EsqlQuery.fromSrc(`FROM index | USER_AGENT ua`);
+      const cmd = getUserAgent(ast);
+
+      expect(cmd.incomplete).toBe(true);
+      expect(cmd.expression).toBeUndefined();
+    });
+
+    it('is true when the assignment is present but the expression is missing', () => {
+      const { ast } = EsqlQuery.fromSrc(`FROM index | USER_AGENT ua =`);
+      const cmd = getUserAgent(ast);
+
+      expect(cmd.incomplete).toBe(true);
+      expect(cmd.expression).toMatchObject({
+        type: 'unknown',
+        incomplete: true,
+      });
+    });
+  });
+
   describe('incorrectly formatted', () => {
     it('errors on just the command keyword', () => {
       const { ast, errors } = EsqlQuery.fromSrc(`FROM index | USER_AGENT`);
