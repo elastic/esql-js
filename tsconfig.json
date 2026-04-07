@@ -15,7 +15,7 @@
     "esModuleInterop": true,
     // This is only for type checking, tsup will handle the emitted code.
     "module": "commonjs",
-    "moduleResolution": "node",
+    "moduleResolution": "bundler",
     // Compile to ES2022 (supports top-level await, Array.at(), etc.)
     "target": "ES2022",
     // Include ES2022 standard library types
@@ -37,7 +37,8 @@
     // Enable JSX support for React (used by Storybook stories)
     "jsx": "react-jsx",
     // Output compiled files to the lib/ directory
-    "outDir": "./lib"
+    "outDir": "./lib",
+    "rootDir": "./src"
   },
   "include": ["src"],
   "exclude": ["node_modules", "lib", "README.md", "**/*.test.ts", "src/stories"]
