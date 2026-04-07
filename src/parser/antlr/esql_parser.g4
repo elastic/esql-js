@@ -228,7 +228,7 @@ limitCommand
     ;
 
 limitByGroupKey:
-    {this.isDevVersion()}? BY booleanExpression (COMMA booleanExpression)*
+    BY booleanExpression (COMMA booleanExpression)*
     ;
 
 sortCommand
