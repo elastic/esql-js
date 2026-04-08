@@ -1545,7 +1545,7 @@
   resolved "https://registry.yarnpkg.com/@storybook/react-dom-shim/-/react-dom-shim-10.3.4.tgz#1e0362be30354bd4dc0dc20016c3b098531a6242"
   integrity sha512-VIm9YzreGubnOtQOZ6iqEfj6KncHvAkrCR/IilqnJq7DidPWuykrFszyajTASRMiY+p+TElOW+O1PGpv55qNGw==
 
-"@storybook/react-vite@^10.3.3":
+"@storybook/react-vite@10.3.4":
   version "10.3.4"
   resolved "https://registry.yarnpkg.com/@storybook/react-vite/-/react-vite-10.3.4.tgz#90c368dea38a03f9d8fb310f583ce4d2fd9f2658"
   integrity sha512-xaMt7NdvlAb+CwXn5TOiluQ+0WkkMN3mZhCThocpblWGoyfmHH7bgQ5ZwzT+IIp8DGOsAi/HkNmSyS7Z8HRLJg==
@@ -2911,7 +2911,7 @@ eslint-config-prettier@10.1.8:
   resolved "https://registry.yarnpkg.com/eslint-config-prettier/-/eslint-config-prettier-10.1.8.tgz#15734ce4af8c2778cc32f0b01b37b0b5cd1ecb97"
   integrity sha512-82GZUjRS0p/jganf6q1rEO25VSoHH0hKPCTrgillPjdI/3bgBhAE1QzHrHTizjpRvy6pGAvKjDJtk2pF9NDq8w==
 
-eslint-plugin-storybook@^10.3.3:
+eslint-plugin-storybook@10.3.4:
   version "10.3.4"
   resolved "https://registry.yarnpkg.com/eslint-plugin-storybook/-/eslint-plugin-storybook-10.3.4.tgz#b5e08106833c3488f69886d811476a1080a85904"
   integrity sha512-6jRb9ucYWKRkbuxpN+83YA3wAWuKn6rp+OVXivy0FPa82v8eciHG8OidbznmzrfcRJYkNWUb7GrPjG/rf4Vqaw==
@@ -5607,7 +5607,7 @@ react-docgen@^8.0.0, react-docgen@^8.0.2:
     resolve "^1.22.1"
     strip-indent "^4.0.0"
 
-react-dom@^19.2.4:
+react-dom@19.2.4:
   version "19.2.4"
   resolved "https://registry.yarnpkg.com/react-dom/-/react-dom-19.2.4.tgz#6fac6bd96f7db477d966c7ec17c1a2b1ad8e6591"
   integrity sha512-AXJdLo8kgMbimY95O2aKQqsz2iWi9jMgKJhRBAxECE4IFxfcazB2LmzloIoibJI3C12IlY20+KFaLv+71bUJeQ==
@@ -5619,7 +5619,7 @@ react-is@^18.0.0:
   resolved "https://registry.yarnpkg.com/react-is/-/react-is-18.3.1.tgz#e83557dc12eae63a99e003a46388b1dcbb44db7e"
   integrity sha512-/LLMVyas0ljjAtoYiPqYiL8VWXzUUdThrmU5+n20DZv+a+ClRoevUzw5JxU+Ieh5/c87ytoTBV9G1FiKfNJdmg==
 
-react@^19.2.4:
+react@19.2.4:
   version "19.2.4"
   resolved "https://registry.yarnpkg.com/react/-/react-19.2.4.tgz#438e57baa19b77cb23aab516cf635cd0579ee09a"
   integrity sha512-9nfp2hYpCwOjAN+8TZFGhtWEwgvWHXqESH8qT89AT/lWklpLON22Lc8pEtnpsZz7VmawabSU0gCjnj8aC0euHQ==
@@ -6079,7 +6079,7 @@ stack-utils@^2.0.3:
   dependencies:
     escape-string-regexp "^2.0.0"
 
-storybook@^10.3.3:
+storybook@10.3.4:
   version "10.3.4"
   resolved "https://registry.yarnpkg.com/storybook/-/storybook-10.3.4.tgz#9efa013affd6411b4ae1ba3a0d18613e0ff289a2"
   integrity sha512-866YXZy9k59tLPl9SN3KZZOFeBC/swxkuBVtW8iQjJIzfCrvk7zXQd8RSQ4ignmCdArVvY4lGMCAT4yNaZSt1g==
@@ -6691,7 +6691,7 @@ validate-npm-package-name@^7.0.0, validate-npm-package-name@^7.0.2:
   resolved "https://registry.yarnpkg.com/validate-npm-package-name/-/validate-npm-package-name-7.0.2.tgz#e57c3d721a4c8bbff454a246e7f7da811559ea0d"
   integrity sha512-hVDIBwsRruT73PbK7uP5ebUt+ezEtCmzZz3F59BSr2F6OVFnJ/6h8liuvdLrQ88Xmnk6/+xGGuq+pG9WwTuy3A==
 
-vite@^8.0.0:
+vite@8.0.3:
   version "8.0.3"
   resolved "https://registry.yarnpkg.com/vite/-/vite-8.0.3.tgz#036d9e3b077ff57b128660b3e3a5d2d12bac9b42"
   integrity sha512-B9ifbFudT1TFhfltfaIPgjo9Z3mDynBTJSUYxTjOQruf/zHH+ezCQKcoqO+h7a9Pw9Nm/OtlXAiGT1axBgwqrQ==
