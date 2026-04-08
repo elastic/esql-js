@@ -535,6 +535,12 @@ export class CstToAstConverter {
     if (metricsInfoCommandCtx) {
       return this.fromMetricsInfoCommand(metricsInfoCommandCtx);
     }
+
+    const userAgentCommandCtx = ctx.userAgentCommand();
+
+    if (userAgentCommandCtx) {
+      return this.fromUserAgentCommand(userAgentCommandCtx);
+    }
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
 
@@ -2190,7 +2196,7 @@ export class CstToAstConverter {
     if (limitOption) args.push(limitOption);
     const limit = limitOption ? (limitOption.args[0] as ast.ESQLLiteral) : undefined;
 
-    const withOption = this.fromMmrWithOption(ctx.commandNamedParameters());
+    const withOption = this.fromOptionalNamedParametersWithOption(ctx.commandNamedParameters());
     if (withOption) args.push(withOption);
     const namedParameters = withOption ? (withOption.args[0] as ast.ESQLMap) : undefined;
 
@@ -2267,26 +2273,6 @@ export class CstToAstConverter {
     return limitOption;
   }
 
-  private fromMmrWithOption(
-    namedParametersCtx: cst.CommandNamedParametersContext
-  ): ast.ESQLCommandOption | undefined {
-    if (!namedParametersCtx) return;
-
-    const withOption = this.fromCommandNamedParameters(namedParametersCtx);
-
-    const mapArg = withOption.args[0] as ast.ESQLMap | undefined;
-
-    if (mapArg) {
-      const incomplete =
-        mapArg.entries.some((entry) => entry.incomplete) || mapArg.entries.length === 0;
-
-      mapArg.incomplete = incomplete;
-      withOption.incomplete = incomplete;
-
-      return withOption;
-    }
-  }
-
   // --------------------------------------------------------------- URI_PARTS
 
   private fromUriPartsCommand(ctx: cst.UriPartsCommandContext): ast.ESQLAstUriPartsCommand {
@@ -2346,6 +2332,70 @@ export class CstToAstConverter {
     ctx: cst.MetricsInfoCommandContext
   ): ast.ESQLAstMetricsInfoCommand {
     return this.createCommand<'metrics_info', ast.ESQLAstMetricsInfoCommand>('metrics_info', ctx);
+  }
+
+  // --------------------------------------------------------------- USER_AGENT
+
+  private fromUserAgentCommand(ctx: cst.UserAgentCommandContext): ast.ESQLAstUserAgentCommand {
+    const args: ast.ESQLAstItem[] = [];
+
+    const qualifiedNameCtx = ctx.qualifiedName();
+    let targetField: ast.ESQLColumn | undefined;
+    let expression: ast.ESQLAstExpression | undefined;
+
+    if (qualifiedNameCtx && ctx.ASSIGN()) {
+      targetField = this.toColumn(qualifiedNameCtx);
+      expression = this.fromPrimaryExpressionStrict(ctx.primaryExpression());
+
+      const assignment = this.toFunction(
+        ctx.ASSIGN().getText(),
+        ctx,
+        undefined,
+        'binary-expression'
+      );
+      assignment.args.push(targetField, expression);
+      assignment.location = this.extendLocationToArgs(assignment);
+      args.push(assignment);
+    } else if (qualifiedNameCtx) {
+      targetField = this.toColumn(qualifiedNameCtx);
+      args.push(targetField);
+    }
+
+    const withOption = this.fromOptionalNamedParametersWithOption(ctx.commandNamedParameters());
+    if (withOption) {
+      args.push(withOption);
+    }
+
+    const namedParameters = withOption?.args[0] as ast.ESQLSingleAstItem | undefined;
+
+    const command = this.createCommand<'user_agent', ast.ESQLAstUserAgentCommand>(
+      'user_agent',
+      ctx,
+      {
+        args,
+        ...(namedParameters ? { namedParameters } : {}),
+      }
+    );
+
+    if (targetField) {
+      command.targetField = targetField;
+    }
+    if (expression) {
+      command.expression = expression;
+    }
+
+    if (qualifiedNameCtx && ctx.ASSIGN()) {
+      if (expression && (expression.incomplete || expression.type === 'unknown')) {
+        expression.incomplete = true;
+        command.incomplete = true;
+      }
+    } else if (qualifiedNameCtx) {
+      command.incomplete = true;
+    }
+
+    command.incomplete ||= withOption?.incomplete ?? false;
+
+    return command;
   }
 
   // -------------------------------------------------------------- expressions
@@ -2574,6 +2624,33 @@ export class CstToAstConverter {
     withOption.incomplete = map.incomplete;
 
     return withOption;
+  }
+
+  /**
+   * Optional `WITH { ... }` from the `commandNamedParameters` rule. Returns undefined when
+   * there is no map (e.g. missing `WITH`). When a map is present, propagates incomplete
+   * state if any entry is incomplete or the map has no entries.
+   */
+  private fromOptionalNamedParametersWithOption(
+    namedParametersCtx: cst.CommandNamedParametersContext | undefined
+  ): ast.ESQLCommandOption | undefined {
+    if (!namedParametersCtx) {
+      return;
+    }
+
+    const withOption = this.fromCommandNamedParameters(namedParametersCtx);
+
+    const mapArg = withOption.args[0] as ast.ESQLMap | undefined;
+
+    if (mapArg) {
+      const incomplete =
+        mapArg.entries.some((entry) => entry.incomplete) || mapArg.entries.length === 0;
+
+      mapArg.incomplete = incomplete;
+      withOption.incomplete = incomplete;
+
+      return withOption;
+    }
   }
 
   private collectInlineCast(ctx: cst.InlineCastContext): ast.ESQLInlineCast {
