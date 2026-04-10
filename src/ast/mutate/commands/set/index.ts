@@ -64,7 +64,7 @@ export const findBySettingName = (
  * @param value The new string value for the setting.
  * @returns The modified SET header command, or undefined if not found.
  */
-export const set = (
+export const update = (
   ast: ESQLAstQueryExpression,
   settingName: string,
   value: string
@@ -93,7 +93,7 @@ export const upsert = (
   settingName: string,
   value: string
 ): ESQLAstSetHeaderCommand => {
-  const existing = set(ast, settingName, value);
+  const existing = update(ast, settingName, value);
   if (existing) return existing;
 
   const identifier = Builder.identifier(settingName);

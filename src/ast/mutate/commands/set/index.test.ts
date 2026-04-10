@@ -64,12 +64,12 @@ describe('commands.set', () => {
     });
   });
 
-  describe('.set()', () => {
+  describe('.update()', () => {
     it('modifies the value of an existing setting', () => {
       const src = 'SET unmapped_fields = "DEFAULT"; FROM index';
       const { root } = Parser.parse(src);
 
-      commands.set.set(root, 'unmapped_fields', 'LOAD');
+      commands.set.update(root, 'unmapped_fields', 'LOAD');
       const printed = BasicPrettyPrinter.print(root);
 
       expect(printed).toBe('SET unmapped_fields = "LOAD"; FROM index');
@@ -79,7 +79,7 @@ describe('commands.set', () => {
       const src = 'SET approximation = TRUE; FROM index';
       const { root } = Parser.parse(src);
 
-      const node = commands.set.set(root, 'unmapped_fields', 'LOAD');
+      const node = commands.set.update(root, 'unmapped_fields', 'LOAD');
       const printed = BasicPrettyPrinter.print(root);
       expect(printed).toBe('SET approximation = TRUE; FROM index');
       expect(node).toBeUndefined();
@@ -89,7 +89,7 @@ describe('commands.set', () => {
       const src = 'SET approximation = TRUE; SET unmapped_fields = "DEFAULT"; FROM index';
       const { root } = Parser.parse(src);
 
-      commands.set.set(root, 'unmapped_fields', 'LOAD');
+      commands.set.update(root, 'unmapped_fields', 'LOAD');
       const printed = BasicPrettyPrinter.print(root);
 
       expect(printed).toBe('SET approximation = TRUE; SET unmapped_fields = "LOAD"; FROM index');
