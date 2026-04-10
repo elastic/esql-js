@@ -83,7 +83,8 @@ export const update = (
 
 /**
  * Updates the value of an existing SET setting, or inserts a new SET header
- * command if the setting does not exist.
+ * command if the setting does not exist. The new command is inserted as the last
+ * command in the header.
  *
  * @param ast The root AST node.
  * @param settingName The name of the setting (e.g. "unmapped_fields").
