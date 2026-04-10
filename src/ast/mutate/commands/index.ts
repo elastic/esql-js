@@ -7,10 +7,11 @@
 
 import * as from from './from';
 import * as limit from './limit';
+import * as set from './set';
 import * as sort from './sort';
 import * as stats from './stats';
 import * as where from './where';
 import * as join from './join';
 import * as rerank from './rerank';
 
-export { from, limit, sort, stats, where, join, rerank };
+export { from, limit, set, sort, stats, where, join, rerank };

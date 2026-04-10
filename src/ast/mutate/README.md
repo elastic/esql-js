@@ -66,5 +66,9 @@ console.log(src); // FROM index METADATA _lang, _id
   - `.join`
     - `.list()` &mdash; List all `JOIN` commands.
     - `.byIndex()` &mdash; Find a `JOIN` command by index.
-
+  - `.set`
+    - `.list()` &mdash; List all `SET` header commands.
+    - `.findBySettingName()` &mdash; Find a `SET` command by its setting name.
+    - `.set()` &mdash; Modify the value of an existing `SET` setting.
+    - `.upsert()` &mdash; Modify a `SET` setting value, or add a new `SET` command if it does not exist.
 
