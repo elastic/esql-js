@@ -7,6 +7,7 @@
 
 import { Builder } from '../../../builder';
 import { isAssignment } from '../../../is';
+import { Parser } from '../../../../parser';
 import type {
   ESQLAstQueryExpression,
   ESQLAstSetHeaderCommand,
@@ -14,7 +15,6 @@ import type {
   BinaryExpressionAssignmentOperator,
   ESQLIdentifier,
 } from '../../../../types';
-import { synth } from '../../../../composer';
 
 /**
  * Lists all SET header commands in the query AST.
@@ -73,10 +73,10 @@ export const update = (
   const cmd = findBySettingName(ast, settingName);
   if (!cmd) return undefined;
 
-  const newValueNode = synth.exp(value);
+  const newNode = Parser.parseExpression(value).root;
 
   const assignment = cmd.args[0] as ESQLBinaryExpression<BinaryExpressionAssignmentOperator>;
-  assignment.args[1] = newValueNode;
+  assignment.args[1] = newNode;
 
   return cmd;
 };
@@ -100,8 +100,8 @@ export const upsert = (
   if (existing) return existing;
 
   const identifier = Builder.identifier(settingName);
-  const newValueNode = synth.exp(value);
-  const assignment = Builder.expression.func.binary('=', [identifier, newValueNode]);
+  const newNode = Parser.parseExpression(value).root;
+  const assignment = Builder.expression.func.binary('=', [identifier, newNode]);
   const cmd = Builder.header.command.set([
     assignment as ESQLBinaryExpression<BinaryExpressionAssignmentOperator>,
   ]);
