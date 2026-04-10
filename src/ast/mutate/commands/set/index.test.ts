@@ -69,7 +69,7 @@ describe('commands.set', () => {
       const src = 'SET unmapped_fields = "DEFAULT"; FROM index';
       const { root } = Parser.parse(src);
 
-      commands.set.update(root, 'unmapped_fields', 'LOAD');
+      commands.set.update(root, 'unmapped_fields', '"LOAD"');
       const printed = BasicPrettyPrinter.print(root);
 
       expect(printed).toBe('SET unmapped_fields = "LOAD"; FROM index');
@@ -79,7 +79,7 @@ describe('commands.set', () => {
       const src = 'SET approximation = TRUE; FROM index';
       const { root } = Parser.parse(src);
 
-      const node = commands.set.update(root, 'unmapped_fields', 'LOAD');
+      const node = commands.set.update(root, 'unmapped_fields', '"LOAD"');
       const printed = BasicPrettyPrinter.print(root);
       expect(printed).toBe('SET approximation = TRUE; FROM index');
       expect(node).toBeUndefined();
@@ -89,10 +89,57 @@ describe('commands.set', () => {
       const src = 'SET approximation = TRUE; SET unmapped_fields = "DEFAULT"; FROM index';
       const { root } = Parser.parse(src);
 
-      commands.set.update(root, 'unmapped_fields', 'LOAD');
+      commands.set.update(root, 'unmapped_fields', '"LOAD"');
       const printed = BasicPrettyPrinter.print(root);
 
       expect(printed).toBe('SET approximation = TRUE; SET unmapped_fields = "LOAD"; FROM index');
+    });
+
+    it('modifies the value of an existing setting with a boolean value', () => {
+      const src = 'SET approximation = TRUE; FROM index';
+      const { root } = Parser.parse(src);
+
+      commands.set.update(root, 'approximation', 'FALSE');
+      const printed = BasicPrettyPrinter.print(root);
+
+      expect(printed).toBe('SET approximation = FALSE; FROM index');
+    });
+
+    it('modifies the value of an existing setting with a MAP value', () => {
+      const src = 'SET approximation = TRUE; FROM index';
+      const { root } = Parser.parse(src);
+
+      const node = commands.set.update(root, 'approximation', '{ "confidence_level": 0.99 }');
+      const printed = BasicPrettyPrinter.print(root);
+
+      expect(printed).toBe('SET approximation = {"confidence_level": 0.99}; FROM index');
+      expect(node).toMatchObject({
+        type: 'header-command',
+        name: 'set',
+        args: [
+          {
+            type: 'function',
+            subtype: 'binary-expression',
+            name: '=',
+            args: [
+              { type: 'identifier', name: 'approximation' },
+              {
+                type: 'map',
+                entries: [
+                  {
+                    key: {
+                      type: 'literal',
+                      literalType: 'keyword',
+                      valueUnquoted: 'confidence_level',
+                    },
+                    value: { type: 'literal', literalType: 'double', value: 0.99 },
+                  },
+                ],
+              },
+            ],
+          },
+        ],
+      });
     });
   });
 
@@ -101,7 +148,7 @@ describe('commands.set', () => {
       const src = 'SET unmapped_fields = "DEFAULT"; FROM index';
       const { root } = Parser.parse(src);
 
-      const node = commands.set.upsert(root, 'unmapped_fields', 'LOAD');
+      const node = commands.set.upsert(root, 'unmapped_fields', '"LOAD"');
       const printed = BasicPrettyPrinter.print(root);
 
       expect(printed).toBe('SET unmapped_fields = "LOAD"; FROM index');
@@ -115,7 +162,7 @@ describe('commands.set', () => {
       const src = 'FROM index | LIMIT 10';
       const { root } = Parser.parse(src);
 
-      const node = commands.set.upsert(root, 'unmapped_fields', 'LOAD');
+      const node = commands.set.upsert(root, 'unmapped_fields', '"LOAD"');
       const printed = BasicPrettyPrinter.print(root);
 
       expect(printed).toBe('SET unmapped_fields = "LOAD"; FROM index | LIMIT 10');
@@ -140,7 +187,7 @@ describe('commands.set', () => {
       const src = 'SET approximation = TRUE; FROM index';
       const { root } = Parser.parse(src);
 
-      commands.set.upsert(root, 'unmapped_fields', 'LOAD');
+      commands.set.upsert(root, 'unmapped_fields', '"LOAD"');
       const printed = BasicPrettyPrinter.print(root);
 
       expect(printed).toBe('SET approximation = TRUE; SET unmapped_fields = "LOAD"; FROM index');
