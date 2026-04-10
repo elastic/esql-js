@@ -12,7 +12,7 @@ import type {
   ESQLAstSetHeaderCommand,
   ESQLBinaryExpression,
   BinaryExpressionAssignmentOperator,
-  ESQLSingleAstItem,
+  ESQLIdentifier,
 } from '../../../../types';
 
 /**
@@ -46,7 +46,7 @@ export const findBySettingName = (
   for (const cmd of list(ast)) {
     const assignment = cmd.args[0];
     if (isAssignment(assignment)) {
-      const identifier = assignment.args[0] as ESQLSingleAstItem;
+      const identifier = assignment.args[0] as ESQLIdentifier;
       if (identifier.name === settingName) {
         return cmd;
       }
@@ -108,5 +108,26 @@ export const upsert = (
   }
   ast.header.push(cmd);
 
+  return cmd;
+};
+
+/**
+ * Removes a SET header command by its setting name.
+ *
+ * @param ast The root AST node.
+ * @param settingName The name of the setting to remove.
+ * @returns The removed SET header command, or undefined if not found.
+ */
+export const remove = (
+  ast: ESQLAstQueryExpression,
+  settingName: string
+): ESQLAstSetHeaderCommand | undefined => {
+  const cmd = findBySettingName(ast, settingName);
+  if (!cmd || !ast.header) return;
+
+  const index = ast.header.indexOf(cmd);
+  if (index === -1) return;
+
+  ast.header.splice(index, 1);
   return cmd;
 };

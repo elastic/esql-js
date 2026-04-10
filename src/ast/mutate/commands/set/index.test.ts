@@ -146,4 +146,37 @@ describe('commands.set', () => {
       expect(printed).toBe('SET approximation = TRUE; SET unmapped_fields = "LOAD"; FROM index');
     });
   });
+
+  describe('.remove()', () => {
+    it('removes a SET command by setting name', () => {
+      const src = 'SET unmapped_fields = "DEFAULT"; FROM index';
+      const { root } = Parser.parse(src);
+
+      commands.set.remove(root, 'unmapped_fields');
+      const printed = BasicPrettyPrinter.print(root);
+
+      expect(printed).toBe('FROM index');
+    });
+
+    it('returns undefined when the setting does not exist', () => {
+      const src = 'SET approximation = TRUE; FROM index';
+      const { root } = Parser.parse(src);
+
+      const removed = commands.set.remove(root, 'unmapped_fields');
+      const printed = BasicPrettyPrinter.print(root);
+
+      expect(removed).toBeUndefined();
+      expect(printed).toBe('SET approximation = TRUE; FROM index');
+    });
+
+    it('only removes the targeted setting when multiple exist', () => {
+      const src = 'SET approximation = TRUE; SET unmapped_fields = "DEFAULT"; FROM index';
+      const { root } = Parser.parse(src);
+
+      commands.set.remove(root, 'unmapped_fields');
+      const printed = BasicPrettyPrinter.print(root);
+
+      expect(printed).toBe('SET approximation = TRUE; FROM index');
+    });
+  });
 });
