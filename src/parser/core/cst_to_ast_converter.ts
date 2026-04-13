@@ -1359,40 +1359,40 @@ export class CstToAstConverter {
 
     command.args.push(value);
 
-    for (const configCtx of ctx.changePointConfiguration_list()) {
-      if (configCtx._key && configCtx._key.getText()) {
-        const key = this.toColumn(configCtx._key);
-        const option = Builder.option(
-          {
-            name: 'on',
-            args: [key],
-          },
-          {
-            location: getPosition(configCtx.ON().symbol, configCtx._key.stop),
-          }
-        );
+    if (ctx._key && ctx._key.getText()) {
+      const key = this.toColumn(ctx._key);
+      const option = Builder.option(
+        {
+          name: 'on',
+          args: [key],
+        },
+        {
+          location: getPosition(ctx.ON().symbol, ctx._key.stop),
+        }
+      );
 
-        command.key = key;
-        command.args.push(option);
-      } else if (configCtx._targetType && configCtx._targetPvalue) {
-        const type = this.toColumn(configCtx._targetType);
-        const pvalue = this.toColumn(configCtx._targetPvalue);
-        const option = Builder.option(
-          {
-            name: 'as',
-            args: [type, pvalue],
-          },
-          {
-            location: getPosition(configCtx.AS().symbol, configCtx._targetPvalue.stop),
-          }
-        );
+      command.key = key;
+      command.args.push(option);
+    }
 
-        command.target = {
-          type,
-          pvalue,
-        };
-        command.args.push(option);
-      }
+    if (ctx._targetType && ctx._targetPvalue) {
+      const type = this.toColumn(ctx._targetType);
+      const pvalue = this.toColumn(ctx._targetPvalue);
+      const option = Builder.option(
+        {
+          name: 'as',
+          args: [type, pvalue],
+        },
+        {
+          location: getPosition(ctx.AS().symbol, ctx._targetPvalue.stop),
+        }
+      );
+
+      command.target = {
+        type,
+        pvalue,
+      };
+      command.args.push(option);
     }
 
     return command;
