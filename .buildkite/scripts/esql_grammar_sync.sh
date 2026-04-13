@@ -158,7 +158,7 @@ main () {
   git config --global user.name "$MACHINE_USERNAME"
   git config --global user.email 'elasticmachine@users.noreply.github.com'
 
-  PR_TITLE='[ES|QL] Update grammars'
+  PR_TITLE='chore: [ES|QL] Update grammars'
   PR_BODY='This PR updates the ES|QL grammars (lexer and parser) and PromQL grammars to match the latest version in Elasticsearch.'
 
   # Check if a PR already exists
