@@ -220,63 +220,11 @@ describe('CHANGE_POINT command', () => {
   });
 
   describe('configuration order', () => {
-    it('parses AS before ON (reversed order)', () => {
+    it('Throws error if AS is before ON (reversed order)', () => {
       const text = `FROM index | CHANGE_POINT value AS type, pvalue ON key`;
       const query = EsqlQuery.fromSrc(text);
 
-      expect(query.errors.length).toBe(0);
-      expect(query.ast.commands[1]).toMatchObject({
-        type: 'command',
-        name: 'change_point',
-        value: {
-          type: 'column',
-          name: 'value',
-        },
-        key: {
-          type: 'column',
-          name: 'key',
-        },
-        target: {
-          type: {
-            type: 'column',
-            name: 'type',
-          },
-          pvalue: {
-            type: 'column',
-            name: 'pvalue',
-          },
-        },
-        args: [
-          {
-            type: 'column',
-            name: 'value',
-          },
-          {
-            type: 'option',
-            name: 'as',
-            args: [
-              {
-                type: 'column',
-                name: 'type',
-              },
-              {
-                type: 'column',
-                name: 'pvalue',
-              },
-            ],
-          },
-          {
-            type: 'option',
-            name: 'on',
-            args: [
-              {
-                type: 'column',
-                name: 'key',
-              },
-            ],
-          },
-        ],
-      });
+      expect(query.errors.length).toBe(1);
     });
   });
 
