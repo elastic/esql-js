@@ -62,7 +62,11 @@ export const findBySettingName = (
  *
  * @param ast The root AST node.
  * @param settingName The name of the setting to modify.
- * @param value The new string value for the setting.
+ * @param value The new value, parsed as an ES|QL expression. For example:
+ *   - `'"LOAD"'` → string literal `"LOAD"`
+ *   - `'true'` → boolean literal `TRUE`
+ *   - `'42'` → integer literal `42`
+ *   - `'{ "key": "value" }'` → map expression
  * @returns The modified SET header command, or undefined if not found.
  */
 export const update = (
@@ -88,7 +92,11 @@ export const update = (
  *
  * @param ast The root AST node.
  * @param settingName The name of the setting (e.g. "unmapped_fields").
- * @param value The string value for the setting.
+ * @param value The new value, parsed as an ES|QL expression. For example:
+ *   - `'"LOAD"'` → string literal `"LOAD"`
+ *   - `'true'` → boolean literal `TRUE`
+ *   - `'42'` → integer literal `42`
+ *   - `'{ "key": "value" }'` → map expression
  * @returns The modified or newly created SET header command.
  */
 export const upsert = (
