@@ -4,9 +4,6 @@
   "timezone": "Etc/UTC",
   "schedule": ["* * * * 1"],
   "minimumReleaseAge": "14 days",
-  "nvm": {
-    "enabled": true
-  },
   "packageRules": [
     {
       "description": "TypeScript compiler",
