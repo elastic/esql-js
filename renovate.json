@@ -1,4 +1,76 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["local>elastic/renovate-config"]
+  "extends": ["local>elastic/renovate-config"],
+  "timezone": "Etc/UTC",
+  "schedule": ["* * * * 1"],
+  "minimumReleaseAge": "14 days",
+  "packageRules": [
+    {
+      "description": "TypeScript compiler",
+      "matchPackageNames": ["typescript"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "typescript",
+      "groupSlug": "typescript"
+    },
+    {
+      "description": "Node.js version",
+      "matchManagers": ["nvm"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "node",
+      "groupSlug": "node"
+    },
+    {
+      "description": "@types/node",
+      "matchPackageNames": ["@types/node"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "node",
+      "groupSlug": "node"
+    },
+    {
+      "description": "React and Storybook",
+      "matchPackagePatterns": [
+        "^react$",
+        "^react-dom$",
+        "^@types/react$",
+        "^@types/react-dom$",
+        "^storybook$",
+        "^@storybook/",
+        "^eslint-plugin-storybook$"
+      ],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "react-storybook",
+      "groupSlug": "react-storybook"
+    },
+    {
+      "description": "Production dependencies",
+      "matchDepTypes": ["dependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "groupName": "dependencies",
+      "groupSlug": "dependencies"
+    },
+    {
+      "description": "Rest: Build, lint, release, and test tooling",
+      "matchDepTypes": ["devDependencies"],
+      "matchUpdateTypes": ["minor", "patch"],
+      "excludePackageNames": ["typescript"],
+      "excludePackagePatterns": [
+        "^react$",
+        "^react-dom$",
+        "^@types/react$",
+        "^@types/react-dom$",
+        "^storybook$",
+        "^@storybook/",
+        "^eslint-plugin-storybook$",
+        "^@types/node$"
+      ],
+      "groupName": "build-lint-test",
+      "groupSlug": "build-lint-test"
+    },
+    {
+      "description": "Major updates: one PR per package",
+      "matchUpdateTypes": ["major"],
+      "groupName": "{{{depName}}}",
+      "groupSlug": "{{{depNameSanitized}}}"
+    }
+  ]
 }
