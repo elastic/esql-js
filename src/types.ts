@@ -702,16 +702,6 @@ export interface ESQLIdentifier extends ESQLAstBaseItem {
   type: 'identifier';
 }
 
-export interface ESQLMessage {
-  type: 'error' | 'warning';
-  text: string;
-  location: ESQLLocation;
-  code: string;
-  errorType?: 'semantic';
-  requiresCallback?: 'getColumnsFor' | 'getSources' | 'getPolicies' | 'getJoinIndices' | string;
-  underlinedWarning?: boolean;
-}
-
 export interface EditorError {
   startLineNumber: number;
   endLineNumber: number;
