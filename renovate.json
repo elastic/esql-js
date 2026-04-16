@@ -28,18 +28,18 @@
     },
     {
       "description": "React and Storybook",
-      "matchPackagePatterns": [
-        "^react$",
-        "^react-dom$",
-        "^@types/react$",
-        "^@types/react-dom$",
-        "^storybook$",
-        "^@storybook/",
-        "^eslint-plugin-storybook$"
-      ],
       "matchUpdateTypes": ["minor", "patch"],
       "groupName": "react-storybook",
-      "groupSlug": "react-storybook"
+      "groupSlug": "react-storybook",
+      "matchPackageNames": [
+        "/^react$/",
+        "/^react-dom$/",
+        "/^@types/react$/",
+        "/^@types/react-dom$/",
+        "/^storybook$/",
+        "/^@storybook//",
+        "/^eslint-plugin-storybook$/"
+      ]
     },
     {
       "description": "Production dependencies",
@@ -52,19 +52,19 @@
       "description": "Rest: Build, lint, release, and test tooling",
       "matchDepTypes": ["devDependencies"],
       "matchUpdateTypes": ["minor", "patch"],
-      "excludePackageNames": ["typescript"],
-      "excludePackagePatterns": [
-        "^react$",
-        "^react-dom$",
-        "^@types/react$",
-        "^@types/react-dom$",
-        "^storybook$",
-        "^@storybook/",
-        "^eslint-plugin-storybook$",
-        "^@types/node$"
-      ],
       "groupName": "build-lint-test",
-      "groupSlug": "build-lint-test"
+      "groupSlug": "build-lint-test",
+      "matchPackageNames": [
+        "!typescript",
+        "!/^react$/",
+        "!/^react-dom$/",
+        "!/^@types/react$/",
+        "!/^@types/react-dom$/",
+        "!/^storybook$/",
+        "!/^@storybook//",
+        "!/^eslint-plugin-storybook$/",
+        "!/^@types/node$/"
+      ]
     },
     {
       "description": "Major updates: one PR per package",
