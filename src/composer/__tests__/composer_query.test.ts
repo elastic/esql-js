@@ -292,11 +292,11 @@ describe('high-level helpers', () => {
 
       expect(() => {
         query.sample(-0.1);
-      }).toThrowError('Probability must be between 0 and 1');
+      }).toThrow('Probability must be between 0 and 1');
 
       expect(() => {
         query.sample(1.1);
-      }).toThrowError('Probability must be between 0 and 1');
+      }).toThrow('Probability must be between 0 and 1');
     });
   });
 
