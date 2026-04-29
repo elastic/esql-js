@@ -17,6 +17,25 @@ describe('ES|QL Lexer/Parser', () => {
     expect(symbolicNames).toEqual(['FROM', 'FROM_WS', 'UNQUOTED_SOURCE', undefined]);
   });
 
+  it('should rewind to the current token start keeping a token prefix', () => {
+    const lexer = new ESQLLexer(new CharStream('(FROM logs)')) as ESQLLexer & {
+      rewindToTokenStart(charsToKeep: number): void;
+    };
+
+    lexer._tokenStartCharIndex = 0;
+    lexer._tokenStartLine = 1;
+    lexer._tokenStartColumn = 0;
+    lexer._input.seek(6);
+    lexer.line = 1;
+    lexer.column = 6;
+
+    lexer.rewindToTokenStart(1);
+
+    expect(lexer._input.index).toBe(1);
+    expect(lexer.line).toBe(1);
+    expect(lexer.column).toBe(1);
+  });
+
   it('should match token numbers between lexer and parser', () => {
     expect(ESQLLexer.FROM).toEqual(ESQLParser.FROM);
     expect(ESQLLexer.RENAME).toEqual(ESQLParser.RENAME);

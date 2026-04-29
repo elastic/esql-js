@@ -22,6 +22,12 @@ export default class lexer_config extends Lexer {
     return true;
   }
 
+  rewindToTokenStart(charsToKeep) {
+    this._input.seek(this._tokenStartCharIndex + charsToKeep);
+    this.line = this._tokenStartLine;
+    this.column = this._tokenStartColumn + charsToKeep;
+  }
+
   // PromQL parenthesis depth tracking for nested parentheses in PromQL queries
   incPromqlDepth() {
     this._promqlDepth++;
