@@ -1395,6 +1395,20 @@ export class CstToAstConverter {
       command.args.push(option);
     }
 
+    if (ctx.BY()) {
+      const booleanExpressions = (ctx._groupings ?? []).filter((e) => !e.exception);
+      const args = booleanExpressions.map((e) =>
+        this.fromBooleanExpressionToExpressionOrUnknown(e)
+      );
+
+      const byOption = this.toByOption(ctx, args);
+
+      if (byOption) {
+        command.args.push(byOption);
+        command.incomplete ||= byOption.incomplete;
+      }
+    }
+
     return command;
   };
 

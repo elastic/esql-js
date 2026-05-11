@@ -155,6 +155,27 @@ describe('CHANGE_POINT command', () => {
       });
     });
 
+    it('CHANGE_POINT with BY option (multiple fields)', () => {
+      const text = `FROM index | CHANGE_POINT value BY category, long.field.name`;
+      const query = EsqlQuery.fromSrc(text);
+
+      expect(query.ast.commands[1]).toMatchObject({
+        type: 'command',
+        name: 'change_point',
+        args: [
+          { type: 'column', name: 'value' },
+          {
+            type: 'option',
+            name: 'by',
+            args: [
+              { type: 'column', name: 'category' },
+              { type: 'column', name: 'long.field.name' },
+            ],
+          },
+        ],
+      });
+    });
+
     it('parses example query with all options', () => {
       const text = `
         FROM k8s
