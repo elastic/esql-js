@@ -84,8 +84,8 @@
     "ts-jest": "29.4.9",
     "tsup": "8.5.1",
     "typescript": "6.0.3",
-    "typescript-eslint": "8.58.2",
-    "vite": "8.0.9"
+    "typescript-eslint": "8.59.0",
+    "vite": "8.0.10"
   },
   "dependencies": {
     "antlr4": "4.13.2",
