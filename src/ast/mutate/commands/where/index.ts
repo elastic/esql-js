@@ -13,6 +13,7 @@ import type {
   ESQLColumn,
   ESQLCommand,
   ESQLIdentifier,
+  ESQLLocation,
   ESQLParamLiteral,
   ESQLProperNode,
 } from '../../../../types';
@@ -68,6 +69,10 @@ const matchNodeAgainstField = (node: ESQLProperNode, field: ESQLAstField): boole
   return LeafPrinter.print(node) === LeafPrinter.print(field);
 };
 
+const isInsideLocation = (node: ESQLProperNode, location: ESQLLocation): boolean => {
+  return node.location.min >= location.min && node.location.max <= location.max;
+};
+
 /**
  * Finds the first "WHERE" command which contains the specified text as one of
  * its comparison operands. The text can represent a field (including nested
@@ -104,9 +109,14 @@ export const byField = (
 
   for (const command of list(ast)) {
     let found: ESQLProperNode | undefined;
+    const subqueryLocations: ESQLLocation[] = [];
 
     const matchNode = (node: ESQLProperNode) => {
       if (found) {
+        return;
+      }
+      // Fields inside subqueries belong to the nested query, not the outer WHERE predicate.
+      if (subqueryLocations.some((location) => isInsideLocation(node, location))) {
         return;
       }
       if (matchNodeAgainstField(node, field)) {
@@ -115,6 +125,11 @@ export const byField = (
     };
 
     Walker.walk(command, {
+      visitParens: (node) => {
+        if (node.child?.type === 'query') {
+          subqueryLocations.push(node.location);
+        }
+      },
       visitColumn: matchNode,
       visitIdentifier: matchNode,
       visitLiteral: matchNode,
