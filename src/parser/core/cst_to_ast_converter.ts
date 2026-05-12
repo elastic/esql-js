@@ -82,11 +82,14 @@ export class CstToAstConverter {
   }
 
   private fromParserRuleToUnknown(ctx: antlr.ParserRuleContext): ast.ESQLUnknownItem {
+    const location = getPosition(ctx.start, ctx.stop);
+    const max = Math.min(location.max, this.parser.src.length - 1);
+
     return {
       type: 'unknown',
       name: 'unknown',
-      text: ctx.getText(),
-      location: getPosition(ctx.start, ctx.stop),
+      text: this.parser.src.slice(location.min, max + 1),
+      location: { min: location.min, max },
       incomplete: Boolean(ctx.exception),
     };
   }

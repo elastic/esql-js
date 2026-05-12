@@ -101,6 +101,7 @@ import { MatchExpressionContext } from "./esql_parser.js";
 import { LogicalNotContext } from "./esql_parser.js";
 import { BooleanDefaultContext } from "./esql_parser.js";
 import { IsNullContext } from "./esql_parser.js";
+import { LogicalInSubqueryContext } from "./esql_parser.js";
 import { RegexExpressionContext } from "./esql_parser.js";
 import { LogicalInContext } from "./esql_parser.js";
 import { LogicalBinaryContext } from "./esql_parser.js";
@@ -1094,6 +1095,18 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitIsNull?: (ctx: IsNullContext) => void;
+	/**
+	 * Enter a parse tree produced by the `logicalInSubquery`
+	 * labeled alternative in `esql_parser.booleanExpression`.
+	 * @param ctx the parse tree
+	 */
+	enterLogicalInSubquery?: (ctx: LogicalInSubqueryContext) => void;
+	/**
+	 * Exit a parse tree produced by the `logicalInSubquery`
+	 * labeled alternative in `esql_parser.booleanExpression`.
+	 * @param ctx the parse tree
+	 */
+	exitLogicalInSubquery?: (ctx: LogicalInSubqueryContext) => void;
 	/**
 	 * Enter a parse tree produced by the `regexExpression`
 	 * labeled alternative in `esql_parser.booleanExpression`.
