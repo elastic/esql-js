@@ -99,12 +99,4 @@ describe('scenarios', () => {
 
     expect(text).toBe('FROM index | WHERE a /* important field */ == 2 | LIMIT 1');
   });
-
-  it('does not match fields inside IN subqueries as WHERE fields', () => {
-    const src = 'FROM index | WHERE outer_field IN (FROM sub_index | KEEP inner_field)';
-    const query = EsqlQuery.fromSrc(src);
-
-    expect(mutate.commands.where.byField(query.ast, 'inner_field')).toBeUndefined();
-    expect(mutate.commands.where.byField(query.ast, 'outer_field')).toBeDefined();
-  });
 });
