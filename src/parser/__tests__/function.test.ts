@@ -453,6 +453,59 @@ describe('function AST nodes', () => {
         });
       });
 
+      it('IN subquery', () => {
+        const query = 'FROM a | WHERE a IN (FROM b | KEEP c)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression?.args.length).toBe(2);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'from' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
+      it('NOT IN subquery', () => {
+        const query = 'FROM a | WHERE a NOT IN (FROM b | KEEP c)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'not in');
+
+        expect(errors.length).toBe(0);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'not in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'from' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
       it('correctly parses location', () => {
         const src = 'FROM a | STATS a /* asdf */ IN /* 1 */ (1, /* 2 */ 2, /* 3 */ 3 /* 4 */ )';
         const { root } = parse(src);
@@ -464,6 +517,19 @@ describe('function AST nodes', () => {
 
         expect(expressionText).toBe('a /* asdf */ IN /* 1 */ (1, /* 2 */ 2, /* 3 */ 3 /* 4 */ )');
         expect(tupleText).toBe('(1, /* 2 */ 2, /* 3 */ 3 /* 4 */ )');
+      });
+
+      it('correctly parses subquery location', () => {
+        const src = 'FROM a | WHERE a /* left */ IN /* operator */ (FROM b | KEEP c)';
+        const { root } = parse(src);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+        const subquery = Walker.match(expression!, { type: 'parens' });
+
+        const expressionText = src.slice(expression!.location.min, expression!.location.max + 1);
+        const subqueryText = src.slice(subquery!.location.min, subquery!.location.max + 1);
+
+        expect(expressionText).toBe('a /* left */ IN /* operator */ (FROM b | KEEP c)');
+        expect(subqueryText).toBe('(FROM b | KEEP c)');
       });
     });
   });
