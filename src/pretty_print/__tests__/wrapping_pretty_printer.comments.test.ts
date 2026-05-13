@@ -1001,6 +1001,22 @@ FROM index`;
     });
   });
 
+  describe('IN subqueries', () => {
+    test('preserves comments inside and around IN subquery', () => {
+      assertReprint(
+        'FROM main_index_with_a_long_name | WHERE /* before */ main_field_with_a_long_name /* after */ IN /* between */ (/* inside start */ FROM sub_index_with_a_long_name /* after source */ | WHERE /* filter */ sub_field_with_a_long_name /* after field */ > 10 /* after filter */ | KEEP sub_field_with_a_long_name /* after keep */) /* end */',
+        `FROM main_index_with_a_long_name
+  | WHERE
+      /* before */ main_field_with_a_long_name /* after */ IN
+        /* between */ (/* inside start */ FROM sub_index_with_a_long_name /* after source */
+          | WHERE
+              /* filter */ sub_field_with_a_long_name /* after field */ >
+                10 /* after filter */
+          | KEEP sub_field_with_a_long_name /* after keep */) /* end */`
+      );
+    });
+  });
+
   describe('subqueries (parens)', () => {
     test('can print comments in complex subqueries', () => {
       // This single test covers comment preservation in wrapped output

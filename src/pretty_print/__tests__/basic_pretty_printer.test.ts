@@ -937,6 +937,15 @@ describe('single line query', () => {
             'FROM a | WHERE b IN ("a", "b", "c")'
           );
         });
+
+        test('subquery operand', () => {
+          expect(reprint('FROM a | WHERE b IN (FROM c | KEEP d)').text).toBe(
+            'FROM a | WHERE b IN (FROM c | KEEP d)'
+          );
+          expect(reprint('FROM a | WHERE b NOT IN (FROM c | KEEP d)').text).toBe(
+            'FROM a | WHERE b NOT IN (FROM c | KEEP d)'
+          );
+        });
       });
     });
 

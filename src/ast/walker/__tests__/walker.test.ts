@@ -88,6 +88,17 @@ describe('structurally can walk all nodes', () => {
       ]);
     });
 
+    test('can visit commands inside an IN subquery', () => {
+      const { ast } = parse('FROM index | WHERE field IN (FROM sub_index | KEEP sub_field)');
+      const commands: ESQLCommand[] = [];
+
+      walk(ast, {
+        visitCommand: (cmd) => commands.push(cmd),
+      });
+
+      expect(commands.map(({ name }) => name)).toStrictEqual(['from', 'where', 'from', 'keep']);
+    });
+
     test('can traverse JOIN command', () => {
       const { ast } = parse('FROM index | LEFT JOIN a ON c, d');
       const commands: ESQLCommand[] = [];
@@ -945,6 +956,28 @@ describe('structurally can walk all nodes', () => {
         },
       ]);
     });
+
+    test.each(['FROM a | WHERE a IN ()', 'FROM a | WHERE a IN ('])(
+      'visits incomplete IN expressions as unknown nodes: %s',
+      (src) => {
+        const { ast } = parse(src);
+        const functions: ESQLFunction[] = [];
+        const unknowns: ESQLUnknownItem[] = [];
+
+        walk(ast, {
+          visitFunction: (node) => functions.push(node),
+          visitUnknown: (node) => unknowns.push(node),
+        });
+
+        expect(functions).toEqual([]);
+        expect(unknowns).toMatchObject([
+          {
+            type: 'unknown',
+            incomplete: true,
+          },
+        ]);
+      }
+    );
   });
 
   describe('returns parent nodes', () => {

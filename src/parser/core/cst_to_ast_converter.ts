@@ -2721,6 +2721,10 @@ export class CstToAstConverter {
       return this.fromLogicalIn(ctx);
     }
 
+    if (ctx instanceof cst.LogicalInSubqueryContext) {
+      return this.fromLogicalInSubquery(ctx);
+    }
+
     if (ctx instanceof cst.RegexExpressionContext) {
       return this.fromRegexExpression(ctx);
     }
@@ -2775,20 +2779,39 @@ export class CstToAstConverter {
 
   private fromLogicalIn(ctx: cst.LogicalInContext) {
     const [leftCtx, ...rightCtxs] = ctx.valueExpression_list();
-    const left = resolveItem(
+    const left = this.fromLogicalInLeft(leftCtx);
+    const right = this.toTuple(rightCtxs, ctx.LP(), ctx.RP());
+
+    return this.toLogicalInFunction(ctx, left, right, ctx.stop?.stop ?? ctx.RP().symbol.stop);
+  }
+
+  private fromLogicalInSubquery(ctx: cst.LogicalInSubqueryContext): ast.ESQLAstExpression {
+    const left = this.fromLogicalInLeft(ctx.valueExpression());
+    const right = this.fromSubquery(ctx.subquery());
+
+    return this.toLogicalInFunction(ctx, left, right, ctx.stop?.stop ?? right.location.max);
+  }
+
+  private fromLogicalInLeft(leftCtx: cst.ValueExpressionContext): ast.ESQLAstExpression {
+    return resolveItem(
       this.visitValueExpression(leftCtx) ?? this.fromParserRuleToUnknown(leftCtx)
     ) as ast.ESQLAstExpression;
-    const right = this.toTuple(rightCtxs, ctx.LP(), ctx.RP());
-    const expression = this.toFunction(
+  }
+
+  private toLogicalInFunction(
+    ctx: cst.LogicalInContext | cst.LogicalInSubqueryContext,
+    left: ast.ESQLAstExpression,
+    right: ast.ESQLAstExpression,
+    max: number
+  ): ast.ESQLAstExpression {
+    return this.toFunction(
       ctx.NOT() ? 'not in' : 'in',
       ctx,
-      { min: ctx.start.start, max: ctx.stop?.stop ?? ctx.RP().symbol.stop },
+      { min: ctx.start.start, max },
       'binary-expression',
       [left, right],
       left.incomplete || right.incomplete
     );
-
-    return expression;
   }
 
   private fromRegexExpression(ctx: cst.RegexExpressionContext): ast.ESQLFunction | undefined {

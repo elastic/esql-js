@@ -335,4 +335,12 @@ describe('subqueries (parens)', () => {
 
     assertPrint(query);
   });
+
+  describe('IN subqueries', () => {
+    test('preserves comments around IN subquery', () => {
+      assertPrint(
+        'FROM a | WHERE /* before */ b /* after */ IN /* between */ (/* inside start */ FROM c /* after source */ | WHERE /* filter */ x > 1 /* after filter */ | KEEP b /* after keep */) /* end */'
+      );
+    });
+  });
 });
