@@ -21,10 +21,13 @@ export function* childrenOfPromqlNode(node: PromQLAstNode): Iterable<PromQLAstNo
       return;
     }
     case 'function': {
-      if (node.grouping) {
+      if (node.grouping && node.groupingPosition !== 'after') {
         yield node.grouping;
       }
       yield* node.args;
+      if (node.grouping && node.groupingPosition === 'after') {
+        yield node.grouping;
+      }
       return;
     }
     case 'selector': {
@@ -35,6 +38,49 @@ export function* childrenOfPromqlNode(node: PromQLAstNode): Iterable<PromQLAstNo
       const { labelName, value } = node;
       if (labelName) yield labelName;
       if (value) yield value;
+      return;
+    }
+    case 'binary-expression': {
+      yield node.left;
+      if (node.modifier) yield node.modifier;
+      yield node.right;
+      return;
+    }
+    case 'unary-expression': {
+      yield node.arg;
+      return;
+    }
+    case 'subquery': {
+      yield node.expr;
+      yield node.range;
+      if (node.resolution) yield node.resolution;
+      if (node.evaluation) yield node.evaluation;
+      return;
+    }
+    case 'parens': {
+      if (node.child) yield node.child;
+      return;
+    }
+    case 'evaluation': {
+      if (node.offset) yield node.offset;
+      if (node.at) yield node.at;
+      return;
+    }
+    case 'offset': {
+      if (node.duration) yield node.duration;
+      return;
+    }
+    case 'at': {
+      if (typeof node.value !== 'string') yield node.value;
+      return;
+    }
+    case 'modifier': {
+      yield* node.labels;
+      if (node.groupModifier) yield node.groupModifier;
+      return;
+    }
+    case 'group-modifier': {
+      yield* node.labels;
       return;
     }
   }
