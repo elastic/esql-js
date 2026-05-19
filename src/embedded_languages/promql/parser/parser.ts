@@ -11,6 +11,7 @@ import { default as PromQLParserGenerated } from '../../../parser/antlr/promql_p
 import { PromQLErrorListener } from './promql_error_listener';
 import { PromQLCstToAstConverter } from './cst_to_ast_converter';
 import { PromQLBuilder } from '../ast/builder';
+import { attachPromQLDecorations, collectPromQLDecorations } from './decorations';
 import type { PromQLAstQueryExpression, PromQLParseResult } from '../types';
 import type { EditorError } from '../../../types';
 
@@ -21,6 +22,13 @@ export interface PromQLParseOptions {
    * The offset will be added to all location values in the AST.
    */
   offset?: number;
+
+  /**
+   * When `true`, comments are collected from the token stream and attached to
+   * AST nodes via the `formatting` property. Required for the pretty-printer
+   * to round-trip comments. Defaults to `false`.
+   */
+  withFormatting?: boolean;
 }
 
 /**
@@ -101,6 +109,12 @@ export class PromQLParser {
           root: PromQLBuilder.expression.query(undefined, { incomplete: true }),
           errors: this.errors.getErrors(),
         };
+      }
+
+      if (this.options.withFormatting) {
+        this.tokens.fill();
+        const comments = collectPromQLDecorations(this.tokens, this.options.offset ?? 0);
+        attachPromQLDecorations(root, comments);
       }
 
       return {

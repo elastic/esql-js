@@ -22,6 +22,8 @@
     "target": "ES2022",
     // Include ES2022 standard library types
     "lib": ["ES2022"],
+    // Explicit ambient types — jest globals (describe/it/expect) and Node built-ins.
+    "types": ["jest", "node"],
     // Preserve comments in compiled output
     "removeComments": false,
     // Allow JS files so TypeScript can infer types from .js config files (e.g. lexer_config.js)
@@ -43,5 +45,5 @@
     "rootDir": "./src"
   },
   "include": ["src"],
-  "exclude": ["node_modules", "lib", "README.md", "**/*.test.ts", "src/stories"]
+  "exclude": ["node_modules", "lib", "README.md", "src/stories"]
 }
