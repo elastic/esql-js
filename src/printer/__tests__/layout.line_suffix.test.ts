@@ -33,6 +33,18 @@ describe('lineSuffix', () => {
     expect(layout(doc, { printWidth: 80 })).toBe('code // trailing');
   });
 
+  it('flushes suffix when more text follows but no newline exists', () => {
+    const doc = [text('a'), lineSuffix(text(' # c')), text('b')];
+
+    expect(layout(doc, { printWidth: 80 })).toBe('ab # c');
+  });
+
+  it('flushes suffix inside a flat group with no newline', () => {
+    const doc = group([text('a'), lineSuffix(text(' # c')), text(' '), text('b')]);
+
+    expect(layout(doc, { printWidth: 80 })).toBe('a b # c');
+  });
+
   it('suffix ordering with trailing punctuation', () => {
     const doc = [text('field'), lineSuffix(text(' // comment')), text(','), hardline, text('next')];
 
