@@ -248,7 +248,9 @@ selector 0-33 "http_requests_total"
       expect('\n' + tree).toBe(`
 selector 0-28 "http_requests_total"
 ├─ identifier 0-18 "http_requests_total"
-└─ evaluation 20-28 "evaluation"`);
+└─ evaluation 20-28 "evaluation"
+   └─ offset 20-28 "offset"
+      └─ literal 27-28 "5m"`);
     });
   });
 });
