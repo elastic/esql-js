@@ -146,7 +146,7 @@ export interface WalkerOptions {
 
 export type WalkerAstNode = types.ESQLAstNode | types.ESQLAstNode[];
 
-export type WalkerVisitorApi = Pick<Walker, 'abort'>;
+export type WalkerVisitorApi = Pick<Walker, 'abort' | 'skipChildren'>;
 
 /**
  * Iterates over all nodes in the AST and calls the appropriate visitor
@@ -539,11 +539,22 @@ export class Walker {
   };
 
   protected aborted: boolean = false;
+  protected skippedChildren: boolean = false;
 
   constructor(protected readonly options: WalkerOptions) {}
 
   public abort(): void {
     this.aborted = true;
+  }
+
+  public skipChildren(): void {
+    this.skippedChildren = true;
+  }
+
+  protected readAndResetSkippedChildren(): boolean {
+    const skipped = this.skippedChildren;
+    this.skippedChildren = false;
+    return skipped;
   }
 
   public walk(
@@ -594,6 +605,8 @@ export class Walker {
 
     const { options } = this;
     (options.visitCommand ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
+
     this.walkList(node.args, node);
   }
 
@@ -605,12 +618,16 @@ export class Walker {
 
     const { options } = this;
     (options.visitHeaderCommand ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
+
     this.walkList(node.args, node);
   }
 
   public walkOption(node: types.ESQLCommandOption, parent: types.ESQLCommand | undefined): void {
     const { options } = this;
     (options.visitCommandOption ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
+
     this.walkList(node.args, node);
   }
 
@@ -630,6 +647,8 @@ export class Walker {
   public walkListLiteral(node: types.ESQLList, parent: types.ESQLProperNode | undefined): void {
     const { options } = this;
     (options.visitListLiteral ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
+
     this.walkList(node.values, node);
   }
 
@@ -637,6 +656,7 @@ export class Walker {
     const { options } = this;
 
     (options.visitSource ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     const children: types.ESQLStringLiteral[] = [];
 
@@ -658,6 +678,7 @@ export class Walker {
     const { args } = node;
 
     (options.visitColumn ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (args) {
       this.walkList(args, node);
@@ -671,6 +692,7 @@ export class Walker {
     const { options } = this;
 
     (options.visitOrder ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     this.walkList(node.args, node);
   }
@@ -681,6 +703,8 @@ export class Walker {
   ): void {
     const { options } = this;
     (options.visitInlineCast ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
+
     this.walkExpression(node.value, node);
   }
 
@@ -690,6 +714,7 @@ export class Walker {
   ): void {
     const { options } = this;
     (options.visitFunction ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (node.operator) this.walkSingleAstItem(node.operator, node);
 
@@ -699,6 +724,8 @@ export class Walker {
   public walkMap(node: types.ESQLMap, parent: types.ESQLProperNode | undefined): void {
     const { options } = this;
     (options.visitMap ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
+
     this.walkList(node.entries, node);
   }
 
@@ -706,6 +733,7 @@ export class Walker {
     const { options } = this;
 
     (options.visitMapEntry ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
       this.walkSingleAstItem(resolveItem(node.value), node);
@@ -719,6 +747,7 @@ export class Walker {
   public walkParens(node: types.ESQLParens, parent: types.ESQLProperNode | undefined): void {
     const { options } = this;
     (options.visitParens ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (node.child) {
       this.walkSingleAstItem(node.child, node);
@@ -731,6 +760,7 @@ export class Walker {
   ): void {
     const { options } = this;
     (options.visitQuery ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (node.header && !options.skipHeader) {
       this.walkList(node.header, node);
@@ -816,6 +846,7 @@ export class Walker {
       }
       case 'literal': {
         (options.visitLiteral ?? options.visitAny)?.(node, parent, this);
+        this.readAndResetSkippedChildren();
         break;
       }
       case 'list': {
@@ -832,10 +863,12 @@ export class Walker {
       }
       case 'identifier': {
         (options.visitIdentifier ?? options.visitAny)?.(node, parent, this);
+        this.readAndResetSkippedChildren();
         break;
       }
       case 'unknown': {
         (options.visitUnknown ?? options.visitAny)?.(node, parent, this);
+        this.readAndResetSkippedChildren();
         break;
       }
     }
