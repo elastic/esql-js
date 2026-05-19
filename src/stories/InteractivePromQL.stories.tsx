@@ -58,3 +58,26 @@ export const Long: Story = {
     initialWidth: 80,
   },
 };
+
+export const WithComments: Story = {
+  args: {
+    query: [
+      '# Per-region p95 latency alert for the API service.',
+      'sum by (region) ( # Another comment about the grouping',
+      '  histogram_quantile( # Yes, you can add a comment here',
+      '    0.95, # 95th percentile bucket',
+      '    sum by (region, le # le is important here',
+      '  ) (',
+      '      # raw bucket counts over the last 5 minutes',
+      '      rate(http_request_duration_seconds_bucket{job="apiserver"}[5m]), # 5m rate',
+      '      rate(http_request_duration_seconds_bucket{job="apiserver"}[',
+      '        # 10 is important for SLOs with a 10-minute window',
+      '        10m]) # 10m rate',
+      '    )',
+      '  )',
+      ') > 0.5 # SLO threshold ~500ms',
+      '# Fires when any region exceeds the threshold.',
+    ].join('\n'),
+    initialWidth: 80,
+  },
+};
