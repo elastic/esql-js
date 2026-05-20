@@ -65,7 +65,9 @@ const queryPromqlComments = `PROMQL index=k8s step=1m result=(
   )
   /
   # normalise: divide by total across all jobs
-  sum(rate(http_requests_total[5m]))
+  sum(rate(http_requests_total[
+    # This should be exactly 5 minutes
+    5m]))
 )
   | KEEP @timestamp, job, result
   | SORT @timestamp DESC
