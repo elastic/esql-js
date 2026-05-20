@@ -25,6 +25,7 @@ const meta: Meta<typeof InteractiveEsql> = {
     lowercaseOptions: { control: 'boolean' },
     lowercaseFunctions: { control: 'boolean' },
     lowercaseKeywords: { control: 'boolean' },
+    withFormatting: { control: 'boolean' },
   },
 };
 
@@ -54,5 +55,26 @@ export const WithPromQL: Story = {
   args: {
     query: queryPromql,
     initialWidth: 80,
+  },
+};
+
+const queryPromqlComments = `PROMQL index=k8s step=1m result=(
+  # total HTTP request rate, aggregated per job
+  sum by (job) (
+    rate(http_requests_total{job="apiserver"}[5m]) # requests/sec
+  )
+  /
+  # normalise: divide by total across all jobs
+  sum(rate(http_requests_total[5m]))
+)
+  | KEEP @timestamp, job, result
+  | SORT @timestamp DESC
+  | LIMIT 100`;
+
+export const WithPromQLComments: Story = {
+  args: {
+    query: queryPromqlComments,
+    initialWidth: 80,
+    withFormatting: true,
   },
 };
