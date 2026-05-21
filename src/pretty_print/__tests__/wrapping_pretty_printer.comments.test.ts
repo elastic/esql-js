@@ -886,6 +886,25 @@ ROW
         assertReprint('PROMQL /* a */ index /* b */ = /* c */ my_index /* d */ bytes[5m]');
       });
     });
+
+    describe('PromQL comments inside embedded ES|QL PromQL expressions', () => {
+      test('preserves trailing # comment when PromQL expression fits on one line', () => {
+        const { text } = reprint('PROMQL up # is it up?');
+        expect(text).toContain('# is it up?');
+      });
+
+      test('preserves top # comment on PromQL expression', () => {
+        const src = 'PROMQL\n  # check rate\n  up';
+        const { text } = reprint(src);
+        expect(text).toContain('# check rate');
+      });
+
+      test('preserves # comments with a multi-command ES|QL query', () => {
+        const src = 'PROMQL up # is it up?\n  | LIMIT 10';
+        const { text } = reprint(src);
+        expect(text).toContain('# is it up?');
+      });
+    });
   });
 
   describe('header commands', () => {

@@ -283,7 +283,12 @@ export const layout = (doc: Doc, opts?: LayoutOpts): string => {
 
   propagateBreaks(doc);
 
-  while (commands.length > 0) {
+  while (commands.length > 0 || lineSuffixBuffer.length > 0) {
+    if (commands.length === 0) {
+      commands.push(...lineSuffixBuffer.reverse());
+      lineSuffixBuffer.length = 0;
+    }
+
     const { indent: indentVal, mode, doc: currentDoc } = commands.pop()!;
 
     if (typeof currentDoc === 'string') {
@@ -484,11 +489,6 @@ export const layout = (doc: Doc, opts?: LayoutOpts): string => {
 
       case 'break-parent':
         break;
-    }
-
-    if (commands.length === 0 && lineSuffixBuffer.length > 0) {
-      commands.push(...lineSuffixBuffer.reverse());
-      lineSuffixBuffer.length = 0;
     }
   }
 

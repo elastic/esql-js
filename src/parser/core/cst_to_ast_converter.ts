@@ -2130,7 +2130,10 @@ export class CstToAstConverter {
       return undefined;
     }
 
-    const parsed = PromQLParser.parse(text, { offset: location.min });
+    const parsed = PromQLParser.parse(text, {
+      offset: location.min,
+      withFormatting: this.parser.options.withFormatting,
+    });
 
     return parsed.root;
   }

@@ -107,38 +107,95 @@ export class PromQLWrappingPrettyPrinter {
   }
 
   public docQuery(query: promql.PromQLAstQueryExpression): printer.Doc {
-    if (!query.expression) return '';
-    return this.docExpression(query.expression);
+    const inner = query.expression ? this.docExpression(query.expression) : '';
+    return this.decorateWithComments(query, inner);
   }
 
   public docExpression(expr: promql.PromQLAstExpression): printer.Doc {
+    let doc: printer.Doc;
     switch (expr.type) {
-      case 'function':
-        return this.docFunction(expr);
+      case 'function': {
+        doc = this.docFunction(expr);
+        const right = expr.formatting?.rightSingleLine;
+        const skipRight = !!(right?.location && right.location.min < expr.location.max);
+        return this.decorateWithComments(expr, doc, skipRight);
+      }
       case 'selector':
-        return this.docSelector(expr);
+        doc = this.docSelector(expr);
+        break;
       case 'binary-expression':
-        return this.docBinaryExpression(expr);
+        doc = this.docBinaryExpression(expr);
+        break;
       case 'unary-expression':
-        return this.docUnaryExpression(expr);
+        doc = this.docUnaryExpression(expr);
+        break;
       case 'subquery':
-        return this.docSubquery(expr);
+        doc = this.docSubquery(expr);
+        break;
       case 'parens':
-        return this.docParens(expr);
+        doc = this.docParens(expr);
+        break;
+
+      // Leaf node types self-decorate with comments, because they are also
+      // reached via non-expression paths.
       case 'literal':
         return this.docLiteral(expr);
       case 'identifier':
         return this.docIdentifier(expr);
       case 'unknown':
-        return printer.text('<unknown>');
+        doc = printer.text('<unknown>');
+        break;
       default:
         return '';
     }
+    return this.decorateWithComments(expr, doc);
+  }
+
+  protected decorateWithComments(
+    node: promql.PromQLAstNode,
+    doc: printer.Doc,
+    skipRight = false
+  ): printer.Doc {
+    const formatting = node.formatting;
+    if (!formatting) return doc;
+
+    const { top, rightSingleLine, bottom } = formatting;
+    const right = skipRight ? undefined : rightSingleLine;
+    if (!top && !right && !bottom) return doc;
+
+    const parts: printer.Doc[] = [];
+
+    if (top) {
+      for (const comment of top) {
+        parts.push(printer.text(`#${comment.text}`), printer.hardline);
+      }
+    }
+
+    parts.push(doc);
+
+    if (right) {
+      parts.push(printer.lineSuffix(` #${right.text}`));
+      parts.push(printer.breakParent);
+    }
+
+    if (bottom) {
+      for (const comment of bottom) {
+        parts.push(printer.hardline, printer.text(`#${comment.text}`));
+      }
+    }
+
+    return parts;
   }
 
   protected docFunction(node: promql.PromQLFunction): printer.Doc {
     const name = this.formatFunctionName(node.name);
     const argDocs = node.args.map((arg) => this.docExpression(arg));
+
+    const right = node.formatting?.rightSingleLine;
+    const openParenSuffix: printer.Doc[] | undefined =
+      right?.location && right.location.min < node.location.max
+        ? [printer.lineSuffix(` #${right.text}`), printer.breakParent]
+        : undefined;
 
     if (node.grouping && node.groupingPosition === 'before') {
       const groupingDoc = this.docGrouping(node.grouping);
@@ -154,20 +211,25 @@ export class PromQLWrappingPrettyPrinter {
 
     if (node.grouping) {
       const groupingDoc = this.docGrouping(node.grouping);
-      const fnCall = this.docFunctionCall(name, argDocs);
+      const fnCall = this.docFunctionCall(name, argDocs, openParenSuffix);
       return printer.group([fnCall, printer.text(' '), groupingDoc]);
     }
 
-    return this.docFunctionCall(name, argDocs);
+    return this.docFunctionCall(name, argDocs, openParenSuffix);
   }
 
-  private docFunctionCall(name: string, argDocs: printer.Doc[]): printer.Doc {
+  private docFunctionCall(
+    name: string,
+    argDocs: printer.Doc[],
+    openParenSuffix?: printer.Doc[]
+  ): printer.Doc {
     if (argDocs.length === 0) {
       return printer.text(name + '()');
     }
 
     return printer.group([
       printer.text(name + '('),
+      ...(openParenSuffix ?? []),
       printer.indent([printer.softline, printer.join([printer.text(','), printer.line], argDocs)]),
       printer.softline,
       printer.text(')'),
@@ -181,10 +243,11 @@ export class PromQLWrappingPrettyPrinter {
   protected docGrouping(node: promql.PromQLGrouping): printer.Doc {
     const keyword = this.formatKeyword(node.name);
     const labelDocs = node.args.map((l) => this.docLabelName(l));
-    return printer.group([
+    const doc = printer.group([
       printer.text(keyword + ' '),
       printer.bracketedList('(', ')', ',', labelDocs),
     ]);
+    return this.decorateWithComments(node, doc);
   }
 
   protected docSelector(node: promql.PromQLSelector): printer.Doc {
@@ -199,7 +262,17 @@ export class PromQLWrappingPrettyPrinter {
     }
 
     if (node.duration) {
-      parts.push(printer.text('['), this.docExpression(node.duration), printer.text(']'));
+      const durationDoc = this.docExpression(node.duration);
+      if (node.duration.formatting?.top?.length) {
+        parts.push(
+          printer.text('['),
+          printer.indent([printer.hardline, durationDoc]),
+          printer.hardline,
+          printer.text(']')
+        );
+      } else {
+        parts.push(printer.text('['), durationDoc, printer.text(']'));
+      }
     }
 
     if (node.evaluation) {
@@ -217,12 +290,13 @@ export class PromQLWrappingPrettyPrinter {
   protected docLabel(node: promql.PromQLLabel): printer.Doc {
     const labelName = this.docLabelName(node.labelName);
     const value = node.value ? this.docLiteral(node.value) : '';
-    return printer.fill([
+    const doc = printer.fill([
       labelName,
       printer.text(' '),
       printer.text(node.operator),
       printer.indent([printer.line, value]),
     ]);
+    return this.decorateWithComments(node, doc);
   }
 
   protected docLabelName(node: promql.PromQLLabelName): printer.Doc {
@@ -354,24 +428,31 @@ export class PromQLWrappingPrettyPrinter {
   }
 
   protected docLiteral(node: promql.PromQLLiteral): printer.Doc {
+    let doc: printer.Doc;
     switch (node.literalType) {
       case 'integer':
-        return printer.text(String((node as promql.PromQLNumericLiteral).value));
+        doc = printer.text(String((node as promql.PromQLNumericLiteral).value));
+        break;
       case 'decimal':
-        return printer.text(this.formatDecimal(node as promql.PromQLNumericLiteral));
+        doc = printer.text(this.formatDecimal(node as promql.PromQLNumericLiteral));
+        break;
       case 'hexadecimal':
-        return printer.text('0x' + (node as promql.PromQLNumericLiteral).value.toString(16));
+        doc = printer.text('0x' + (node as promql.PromQLNumericLiteral).value.toString(16));
+        break;
       case 'string':
-        return printer.text(this.formatString(node as promql.PromQLStringLiteral));
+        doc = printer.text(this.formatString(node as promql.PromQLStringLiteral));
+        break;
       case 'time':
-        return printer.text((node as promql.PromQLTimeValue).value);
+        doc = printer.text((node as promql.PromQLTimeValue).value);
+        break;
       default:
-        return printer.text(String((node as promql.PromQLNumericLiteral).value));
+        doc = printer.text(String((node as promql.PromQLNumericLiteral).value));
     }
+    return this.decorateWithComments(node, doc);
   }
 
   protected docIdentifier(node: promql.PromQLIdentifier): printer.Doc {
-    return printer.text(node.name);
+    return this.decorateWithComments(node, printer.text(node.name));
   }
 
   private formatFunctionName(name: string): string {

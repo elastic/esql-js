@@ -23,7 +23,7 @@ export const FormatPromQL: React.FC<FormatPromQLProps> = ({ query, ...opts }) =>
   let error: string | undefined;
 
   try {
-    const { root, errors } = PromQLParser.parse(query);
+    const { root, errors } = PromQLParser.parse(query, { withFormatting: true });
 
     if (errors.length > 0) {
       error = errors.map((e) => e.message).join('\n');

@@ -13,14 +13,16 @@ import { FormatText } from './FormatText';
 export interface FormatEsqlProps extends WrappingPrettyPrinterOptions {
   /** The ES|QL query string to format. */
   query: string;
+  /** Whether to preserve comments from the source. */
+  withFormatting?: boolean;
 }
 
-export const FormatEsql: React.FC<FormatEsqlProps> = ({ query, ...opts }) => {
+export const FormatEsql: React.FC<FormatEsqlProps> = ({ query, withFormatting, ...opts }) => {
   let formatted: string;
   let error: string | undefined;
 
   try {
-    const { root, errors } = Parser.parse(query);
+    const { root, errors } = Parser.parse(query, { withFormatting });
 
     if (errors.length > 0) {
       error = errors.map((e) => e.message).join('\n');

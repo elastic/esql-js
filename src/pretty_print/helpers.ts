@@ -33,14 +33,19 @@ export const getPrettyPrintStats = (ast: WalkerAstNode): QueryPrettyPrintStats =
     hasRightSingleLineComments: false,
   };
 
+  const check = (node: ESQLAstBaseItem) => {
+    if (hasLineBreakingDecoration(node)) {
+      stats.hasLineBreakingDecorations = true;
+    }
+    if (!!node.formatting?.rightSingleLine) {
+      stats.hasRightSingleLineComments = true;
+    }
+  };
+
   Walker.walk(ast, {
-    visitAny: (node) => {
-      if (hasLineBreakingDecoration(node)) {
-        stats.hasLineBreakingDecorations = true;
-      }
-      if (!!node.formatting?.rightSingleLine) {
-        stats.hasRightSingleLineComments = true;
-      }
+    visitAny: check,
+    promql: {
+      visitPromqlAny: (node) => check(node as unknown as ESQLAstBaseItem),
     },
   });
 
