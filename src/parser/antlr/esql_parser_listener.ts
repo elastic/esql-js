@@ -28,6 +28,7 @@ import { ExternalCommandContext } from "./esql_parser.js";
 import { IndexPatternAndMetadataFieldsContext } from "./esql_parser.js";
 import { IndexPatternOrSubqueryContext } from "./esql_parser.js";
 import { SubqueryContext } from "./esql_parser.js";
+import { SubquerySourceCommandContext } from "./esql_parser.js";
 import { IndexPatternContext } from "./esql_parser.js";
 import { ClusterStringContext } from "./esql_parser.js";
 import { SelectorStringContext } from "./esql_parser.js";
@@ -87,6 +88,7 @@ import { FuseConfigurationContext } from "./esql_parser.js";
 import { FuseKeyByFieldsContext } from "./esql_parser.js";
 import { MetricsInfoCommandContext } from "./esql_parser.js";
 import { TsInfoCommandContext } from "./esql_parser.js";
+import { TsCollapseCommandContext } from "./esql_parser.js";
 import { LookupCommandContext } from "./esql_parser.js";
 import { InsistCommandContext } from "./esql_parser.js";
 import { UriPartsCommandContext } from "./esql_parser.js";
@@ -339,6 +341,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitSubquery?: (ctx: SubqueryContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.subquerySourceCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterSubquerySourceCommand?: (ctx: SubquerySourceCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.subquerySourceCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitSubquerySourceCommand?: (ctx: SubquerySourceCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.indexPattern`.
 	 * @param ctx the parse tree
@@ -943,6 +955,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitTsInfoCommand?: (ctx: TsInfoCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.tsCollapseCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterTsCollapseCommand?: (ctx: TsCollapseCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.tsCollapseCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitTsCollapseCommand?: (ctx: TsCollapseCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.lookupCommand`.
 	 * @param ctx the parse tree
