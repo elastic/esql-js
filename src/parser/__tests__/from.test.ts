@@ -497,5 +497,36 @@ describe('FROM', () => {
         expect(errors.length).toBeGreaterThan(0);
       });
     });
+
+    it('can parse row subquery as source', () => {
+      const text = 'FROM (ROW a = 1)';
+      const { ast, errors } = parse(text);
+
+      expect(errors.length).toBe(0);
+      expect(ast[0].args[0]).toMatchObject({
+        type: 'parens',
+        child: {
+          type: 'query',
+          commands: [{ type: 'command', name: 'row' }],
+        },
+      });
+    });
+
+    it('can parse row subquery with pipes', () => {
+      const text = 'FROM (ROW a = 1 | WHERE a > 0)';
+      const { ast, errors } = parse(text);
+
+      expect(errors.length).toBe(0);
+      expect(ast[0].args[0]).toMatchObject({
+        type: 'parens',
+        child: {
+          type: 'query',
+          commands: [
+            { type: 'command', name: 'row' },
+            { type: 'command', name: 'where' },
+          ],
+        },
+      });
+    });
   });
 });

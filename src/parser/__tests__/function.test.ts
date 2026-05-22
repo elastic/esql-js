@@ -531,6 +531,59 @@ describe('function AST nodes', () => {
         expect(expressionText).toBe('a /* left */ IN /* operator */ (FROM b | KEEP c)');
         expect(subqueryText).toBe('(FROM b | KEEP c)');
       });
+
+      it('IN row subquery', () => {
+        const query = 'FROM a | WHERE a IN (ROW b = 1 | KEEP b)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression?.args.length).toBe(2);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'row' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
+      it('NOT IN row subquery', () => {
+        const query = 'FROM a | WHERE a NOT IN (ROW b = 1 | KEEP b)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'not in');
+
+        expect(errors.length).toBe(0);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'not in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'row' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
     });
   });
 });

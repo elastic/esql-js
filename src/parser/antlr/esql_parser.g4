@@ -76,6 +76,7 @@ processingCommand
     | registeredDomainCommand
     | tsInfoCommand
     | userAgentCommand
+    | tsCollapseCommand
     | mmrCommand
     // in development
     | {this.isDevVersion()}? lookupCommand
@@ -124,7 +125,12 @@ indexPatternOrSubquery
     ;
 
 subquery
-    : LP fromCommand (PIPE processingCommand)* RP
+    : LP subquerySourceCommand (PIPE processingCommand)* RP
+    ;
+
+subquerySourceCommand
+    : fromCommand
+    | {this.isDevVersion()}? rowCommand
     ;
 
 indexPattern
@@ -370,6 +376,10 @@ metricsInfoCommand
 
 tsInfoCommand
     : TS_INFO
+    ;
+
+tsCollapseCommand
+    : TS_COLLAPSE
     ;
 
 //
