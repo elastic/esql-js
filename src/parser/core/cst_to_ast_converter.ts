@@ -652,15 +652,22 @@ export class CstToAstConverter {
   }
 
   private fromSubquery(ctx: cst.SubqueryContext): ast.ESQLParens {
-    const fromCommandCtx = ctx.fromCommand();
+    const sourceCommandCtx = ctx.subquerySourceCommand();
     const processingCommandCtxs = ctx.processingCommand_list();
     const commands: ast.ESQLCommand[] = [];
 
-    if (fromCommandCtx) {
-      const fromCommand = this.fromFromCommand(fromCommandCtx);
+    if (sourceCommandCtx) {
+      const fromCommandCtx = sourceCommandCtx.fromCommand();
+      const rowCommandCtx = sourceCommandCtx.rowCommand();
 
-      if (fromCommand) {
-        commands.push(fromCommand);
+      if (fromCommandCtx) {
+        const fromCommand = this.fromFromCommand(fromCommandCtx);
+
+        if (fromCommand) {
+          commands.push(fromCommand);
+        }
+      } else if (rowCommandCtx) {
+        commands.push(this.fromRowCommand(rowCommandCtx));
       }
     }
 
