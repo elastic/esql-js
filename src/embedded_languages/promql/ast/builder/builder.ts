@@ -17,6 +17,8 @@ import type {
   PromQLNumericLiteral,
   PromQLStringLiteral,
   PromQLTimeValue,
+  PromQLParamLiteral,
+  PromQLLabelValue,
   PromQLIdentifier,
   PromQLLabel,
   PromQLLabelMap,
@@ -271,6 +273,23 @@ export namespace PromQLBuilder {
           ...PromQLBuilder.parserFields(fromParser),
         };
       };
+
+      export const param = (
+        value: string | number,
+        fromParser?: Partial<AstNodeParserFields>
+      ): PromQLParamLiteral => {
+        const isPositional = typeof value === 'number';
+        return {
+          dialect: 'promql',
+          type: 'literal',
+          literalType: 'param',
+          paramKind: '?',
+          paramType: isPositional ? 'positional' : 'named',
+          name: '',
+          value,
+          ...PromQLBuilder.parserFields(fromParser),
+        };
+      };
     }
   }
 
@@ -302,7 +321,7 @@ export namespace PromQLBuilder {
   export const label = (
     labelName: PromQLLabelName,
     operator: PromQLLabelMatchOperator,
-    value: PromQLStringLiteral | undefined,
+    value: PromQLLabelValue | undefined,
     fromParser?: Partial<AstNodeParserFields>
   ): PromQLLabel => {
     return {

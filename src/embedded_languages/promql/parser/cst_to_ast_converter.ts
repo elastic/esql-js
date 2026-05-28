@@ -381,12 +381,8 @@ export class PromQLCstToAstConverter {
       }
     }
 
-    const stringToken = ctx.STRING();
-    let value: ast.PromQLStringLiteral | undefined;
-
-    if (stringToken) {
-      value = this.fromStringToken(stringToken.symbol);
-    }
+    const labelValueCtx = ctx.labelValue();
+    const value = this.fromLabelValue(labelValueCtx);
 
     const node = PromQLBuilder.label(labelName, operator, value, this.getParserFields(ctx));
 
@@ -398,7 +394,27 @@ export class PromQLCstToAstConverter {
       node.incomplete = true;
     }
 
+    if (labelValueCtx?.exception) {
+      node.incomplete = true;
+    }
+
     return node;
+  }
+
+  private fromLabelValue(ctx: cst.LabelValueContext | undefined): ast.PromQLLabelValue | undefined {
+    if (!ctx) return undefined;
+
+    const stringToken = ctx.STRING();
+    if (stringToken) {
+      return this.fromStringToken(stringToken.symbol);
+    }
+
+    const paramToken = ctx.NAMED_OR_POSITIONAL_PARAM();
+    if (paramToken) {
+      return this.fromNamedOrPositionalParamToken(paramToken.symbol);
+    }
+
+    return undefined;
   }
 
   private fromLabelName(ctx: cst.LabelNameContext): ast.PromQLLabelName | undefined {
@@ -800,6 +816,16 @@ export class PromQLCstToAstConverter {
       text,
       this.createParserFieldsFromToken(token)
     );
+  }
+
+  private fromNamedOrPositionalParamToken(token: antlr.Token): ast.PromQLParamLiteral {
+    const text = token.text ?? '';
+    const paramValue = text.slice(1);
+    const valueAsNumber = Number(paramValue);
+    const isPositional = String(valueAsNumber) === paramValue;
+    const value = isPositional ? valueAsNumber : paramValue;
+
+    return PromQLBuilder.expression.literal.param(value, this.createParserFieldsFromToken(token));
   }
 
   private unquoteString(text: string): string {
