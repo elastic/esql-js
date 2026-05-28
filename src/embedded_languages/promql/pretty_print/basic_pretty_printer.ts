@@ -19,6 +19,7 @@ import type {
   PromQLLiteral,
   PromQLModifier,
   PromQLNumericLiteral,
+  PromQLParamLiteral,
   PromQLParens,
   PromQLSelector,
   PromQLStringLiteral,
@@ -352,6 +353,8 @@ export class PromQLBasicPrettyPrinter {
         return this.printStringLiteral(node as PromQLStringLiteral);
       case 'time':
         return this.printTimeLiteral(node as PromQLTimeValue);
+      case 'param':
+        return this.printParamLiteral(node as PromQLParamLiteral);
       default:
         return String((node as PromQLNumericLiteral).value);
     }
@@ -406,6 +409,10 @@ export class PromQLBasicPrettyPrinter {
 
   protected printTimeLiteral(node: PromQLTimeValue): string {
     return node.value;
+  }
+
+  protected printParamLiteral(node: PromQLParamLiteral): string {
+    return `${node.paramKind}${node.value}`;
   }
 
   protected printIdentifier(node: PromQLIdentifier): string {

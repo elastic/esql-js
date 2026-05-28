@@ -8,7 +8,9 @@
 import type {
   PromQLBinaryExpression,
   PromQLFunction,
+  PromQLLabel,
   PromQLLiteral,
+  PromQLParamLiteral,
   PromQLParens,
   PromQLSelector,
   PromQLStringLiteral,
@@ -231,6 +233,61 @@ describe('PromQL Parser', () => {
       expect(resolution.name).toBe('*');
       expect(left.value).toBe('5m');
       expect(right.value).toBe(2);
+    });
+  });
+
+  describe('label parameter values', () => {
+    it('parses a named label parameter (?job)', () => {
+      const result = PromQLParser.parse('http_requests_total{job=?job}');
+
+      expect(result.errors).toHaveLength(0);
+
+      const selector = result.root.expression as PromQLSelector;
+      expect(selector.type).toBe('selector');
+
+      const label = selector.labelMap?.args[0] as PromQLLabel;
+      expect(label.incomplete).toBe(false);
+
+      const value = label.value as PromQLParamLiteral;
+      expect(value.literalType).toBe('param');
+      expect(value.paramType).toBe('named');
+      expect(value.paramKind).toBe('?');
+      expect(value.value).toBe('job');
+      expect(value.text).toBe('?job');
+    });
+
+    it('parses a positional label parameter (?1)', () => {
+      const result = PromQLParser.parse('http_requests_total{job=?1}');
+
+      expect(result.errors).toHaveLength(0);
+
+      const selector = result.root.expression as PromQLSelector;
+      const label = selector.labelMap?.args[0] as PromQLLabel;
+      const value = label.value as PromQLParamLiteral;
+
+      expect(value.literalType).toBe('param');
+      expect(value.paramType).toBe('positional');
+      expect(value.paramKind).toBe('?');
+      expect(value.value).toBe(1);
+      expect(value.text).toBe('?1');
+    });
+
+    it('parses a regex matcher with a named parameter (?pattern)', () => {
+      const result = PromQLParser.parse('http_requests_total{job=~?pattern}');
+
+      expect(result.errors).toHaveLength(0);
+
+      const selector = result.root.expression as PromQLSelector;
+      const label = selector.labelMap?.args[0] as PromQLLabel;
+
+      expect(label.operator).toBe('=~');
+
+      const value = label.value as PromQLParamLiteral;
+      expect(value.literalType).toBe('param');
+      expect(value.paramType).toBe('named');
+      expect(value.paramKind).toBe('?');
+      expect(value.value).toBe('pattern');
+      expect(value.text).toBe('?pattern');
     });
   });
 

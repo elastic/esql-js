@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { ESQLLocation, EditorError, ESQLAstBaseItem } from '../../types';
+import type { ESQLLocation, EditorError, ESQLAstBaseItem, ESQLParamLiteral } from '../../types';
 
 /**
  * All PromQL AST nodes have a `dialect: 'promql'` property to distinguish them
@@ -131,9 +131,9 @@ export interface PromQLLabel extends PromQLAstNodeBase {
   operator: PromQLLabelMatchOperator;
 
   /**
-   * The label value (string literal).
+   * The label value (string literal or named/positional parameter).
    */
-  value?: PromQLStringLiteral;
+  value?: PromQLLabelValue;
 }
 
 export type PromQLLabelMatchOperator = '=' | '!=' | '=~' | '!~';
@@ -359,7 +359,11 @@ export interface PromQLParens extends PromQLAstNodeBase<''> {
 
 // ------------------------------------------------------------------- literals
 
-export type PromQLLiteral = PromQLNumericLiteral | PromQLStringLiteral | PromQLTimeValue;
+export type PromQLLiteral =
+  | PromQLNumericLiteral
+  | PromQLStringLiteral
+  | PromQLTimeValue
+  | PromQLParamLiteral;
 
 /**
  * Represents a numeric literal (integer, decimal, or hexadecimal).
@@ -379,6 +383,28 @@ export interface PromQLStringLiteral extends PromQLAstNodeBase {
   value: string;
   valueUnquoted: string;
 }
+
+/**
+ * Represents an ES|QL named or positional parameter used as a PromQL label value.
+ *
+ * ```promql
+ * {job=?job}
+ * {job=?1}
+ * {job=~?pattern}
+ * ```
+ */
+export interface PromQLParamLiteral
+  extends PromQLAstNodeBase, ESQLParamLiteral<'named' | 'positional', '?'> {
+  type: 'literal';
+  literalType: 'param';
+  paramKind: '?';
+  paramType: 'named' | 'positional';
+}
+
+/**
+ * The value of a label matcher: either a string literal or a named/positional parameter.
+ */
+export type PromQLLabelValue = PromQLStringLiteral | PromQLParamLiteral;
 
 /**
  * Represents a time/duration value.

@@ -58,6 +58,14 @@ describe('parsed PromQL BasicPrettyPrinter', () => {
       test('multiple label matchers', () => {
         assertReprint('{job="api", instance=~"localhost:.*", status!="error"}');
       });
+
+      test('label with named parameter value', () => {
+        assertReprint('http_requests_total{job=?job}');
+      });
+
+      test('label with regex matcher and named parameter', () => {
+        assertReprint('http_requests_total{job=~?pattern}');
+      });
     });
 
     describe('range vector selectors', () => {
