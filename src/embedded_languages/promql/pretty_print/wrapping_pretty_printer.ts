@@ -445,6 +445,11 @@ export class PromQLWrappingPrettyPrinter {
       case 'time':
         doc = printer.text((node as promql.PromQLTimeValue).value);
         break;
+      case 'param':
+        doc = printer.text(
+          `${(node as promql.PromQLParamLiteral).paramKind}${(node as promql.PromQLParamLiteral).value}`
+        );
+        break;
       default:
         doc = printer.text(String((node as promql.PromQLNumericLiteral).value));
     }

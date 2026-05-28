@@ -419,6 +419,18 @@ describe('synthetic AST (Builder-constructed)', () => {
     });
   });
 
+  describe('param label values', () => {
+    test('named param as label value', () => {
+      const metric = PromQLBuilder.identifier('http_requests_total');
+      const labelName = PromQLBuilder.identifier('job');
+      const labelValue = PromQLBuilder.expression.literal.param('job');
+      const label = PromQLBuilder.label(labelName, '=', labelValue);
+      const labelMap = PromQLBuilder.labelMap([label]);
+      const selector = PromQLBuilder.expression.selector.node({ metric, labelMap });
+      expect(PromQLBasicPrettyPrinter.expression(selector)).toBe('http_requests_total{job=?job}');
+    });
+  });
+
   describe('special cases', () => {
     test('unknown node', () => {
       const unknown = PromQLBuilder.unknown();

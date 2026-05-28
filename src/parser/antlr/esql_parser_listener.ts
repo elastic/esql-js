@@ -91,6 +91,7 @@ import { TsInfoCommandContext } from "./esql_parser.js";
 import { TsCollapseCommandContext } from "./esql_parser.js";
 import { LookupCommandContext } from "./esql_parser.js";
 import { InsistCommandContext } from "./esql_parser.js";
+import { DedupCommandContext } from "./esql_parser.js";
 import { UriPartsCommandContext } from "./esql_parser.js";
 import { RegisteredDomainCommandContext } from "./esql_parser.js";
 import { UserAgentCommandContext } from "./esql_parser.js";
@@ -985,6 +986,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitInsistCommand?: (ctx: InsistCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.dedupCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterDedupCommand?: (ctx: DedupCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.dedupCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitDedupCommand?: (ctx: DedupCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.uriPartsCommand`.
 	 * @param ctx the parse tree

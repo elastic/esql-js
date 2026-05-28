@@ -417,6 +417,23 @@ describe('Walker PromQL support', () => {
     });
   });
 
+  describe('label param literal traversal', () => {
+    test('visitPromqlLiteral is called for a named param label value via Walker', () => {
+      const query = EsqlQuery.fromSrc('PROMQL bytes_in{job=?job}');
+      const literals: PromQLLiteral[] = [];
+
+      Walker.walk(query.ast, {
+        promql: {
+          visitPromqlLiteral: (node) => literals.push(node),
+        },
+      });
+
+      expect(literals).toHaveLength(1);
+      expect(literals[0].literalType).toBe('param');
+      expect(literals[0].value).toBe('job');
+    });
+  });
+
   describe('abort functionality with PromQL', () => {
     test('can abort PromQL traversal', () => {
       const query = EsqlQuery.fromSrc('PROMQL rate(sum(http_requests_total[5m]))');
