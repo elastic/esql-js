@@ -2,36 +2,52 @@
 name: grammar-sync-update
 description: >
   Use this skill when a grammar sync PR has landed (updating src/parser/antlr/) and a follow-up PR
-  is needed to wire a new ES|QL command into the AST layer. Covers all 7 files that need changes
-  and the exact patterns to follow.
+  is needed to wire a new ES|QL command or update an existing one in the AST layer. Covers all files
+  that need changes and the exact patterns to follow for both new and existing commands.
 ---
 
 # Grammar Sync Update
 
 ## When to use
 
-After the automated grammar sync bot merges a PR that adds a **new command**, run this skill to produce the follow-up wiring PR.
+After the automated grammar sync bot merges a PR, this skill covers two scenarios:
+
+**Scenario A — New command** (7 files to change): A brand-new `xxxCommand` rule appeared in the grammar with no handler anywhere in the TypeScript layer.
+
+**Scenario B — Existing command update** (1–3 files to change): An existing command's grammar rule gained a new option, new labeled field, or new sub-rule (e.g. `CHANGE_POINT` gained `BY`, `WHERE IN` gained subquery support).
 
 **You do NOT need this skill when:**
 - The grammar sync PR only updated ANTLR-generated files with no new grammar rules (`.ts`, `.interp`, `.tokens` only) — those are handled automatically.
 
 **You DO need this skill when:**
-- A new `xxxCommand` rule appears in `src/parser/antlr/esql_parser.g4` with no corresponding `fromXxxCommand()` in `cst_to_ast_converter.ts`.
-- The `esql_parser_listener.ts` has new `enterXxxCommand` / `exitXxxCommand` entries with no converter handler.
+- A new `xxxCommand` rule appears in `src/parser/antlr/esql_parser.g4` with no corresponding `fromXxxCommand()` in `cst_to_ast_converter.ts`. → **Use Scenario A below.**
+- The `esql_parser_listener.ts` has new `enterXxxCommand` / `exitXxxCommand` entries with no converter handler. → **Use Scenario A below.**
+- An existing command's grammar rule changed (new context method, new labeled alternative, new keyword option) and the converter no longer covers it. → **Use Scenario B below.**
 
 ## How to detect what changed
 
 ```bash
-# Find new command rules added in the grammar sync commit
+# 1. See the full grammar diff
+git diff HEAD~1 -- src/parser/antlr/esql_parser.g4
+
+# 2. Identify new command rules (Scenario A)
 git diff HEAD~1 -- src/parser/antlr/esql_parser.g4 | grep "^+.*[Cc]ommand\b"
 
-# Cross-check: listener entries without a converter method
+# 3. Cross-check: listener entries without a converter handler (Scenario A)
 grep "enter.*Command" src/parser/antlr/esql_parser_listener.ts | \
   sed 's/.*enter\([A-Za-z]*\)Command.*/\1/' | \
   while read cmd; do
     grep -q "from${cmd}Command" src/parser/core/cst_to_ast_converter.ts || echo "MISSING: $cmd"
   done
+
+# 4. Identify changed rules for existing commands (Scenario B)
+# Look for new labeled alternatives (_newField), new keyword tokens (BY, WITH, AS),
+# or new sub-rule methods (ctx.newSubRule()) added to an existing command rule.
+git diff HEAD~1 -- src/parser/antlr/esql_parser.g4 | grep "^[+-]" | grep -v "^---\|^+++"
 ```
+
+If step 2/3 shows an entirely new command → **Scenario A**.
+If step 4 shows additions inside an existing command rule → **Scenario B**.
 
 ---
 
@@ -245,7 +261,7 @@ Reference test files: `src/parser/__tests__/user_agent.test.ts`, `src/parser/__t
 
 ---
 
-## Checklist
+## Checklist — Scenario A (new command)
 
 - [ ] `src/types.ts` — new interface + union updated
 - [ ] `src/ast/visitor/contexts.ts` — `XxxCommandVisitorContext` added
@@ -257,6 +273,105 @@ Reference test files: `src/parser/__tests__/user_agent.test.ts`, `src/parser/__t
 - [ ] `yarn test` passes
 - [ ] `yarn build` passes (no TypeScript errors)
 - [ ] `yarn lint` passes
+
+---
+
+## Scenario B — Existing command update
+
+The grammar changed an **existing** command's rule: it gained a new option keyword (`BY`, `WITH`, `AS`), a new labeled alternative (`_newField`), or a new sub-rule. The converter method already exists — you only need to extend it.
+
+### Files to change
+
+#### `src/parser/core/cst_to_ast_converter.ts`
+
+Find the existing `fromXxxCommand()` method and add handling for what's new.
+
+**New keyword option** (e.g. `CHANGE_POINT … BY field1, field2`):
+```ts
+if (ctx.BY()) {
+  const args = (ctx._groupings ?? [])
+    .filter((e) => !e.exception)
+    .map((e) => this.fromBooleanExpressionToExpressionOrUnknown(e));
+
+  const byOption = this.toByOption(ctx, args);
+  if (byOption) {
+    command.args.push(byOption);
+    command.incomplete ||= byOption.incomplete;
+  }
+}
+```
+
+**New labeled field** (e.g. `_targetField` added to an existing rule):
+```ts
+if (ctx._targetField) {
+  const col = this.toColumn(ctx._targetField);
+  command.targetField = col;   // only if types.ts interface has this field
+  command.args.push(col);
+}
+```
+
+**New sub-rule variant** (e.g. `WHERE IN` gained a `LogicalInSubquery` alternative):
+```ts
+// In the existing expression handler, add a branch before the current logic:
+if (ctx instanceof cst.LogicalInSubqueryContext) {
+  return this.fromLogicalInSubquery(ctx);
+}
+// then add the new private method:
+private fromLogicalInSubquery(ctx: cst.LogicalInSubqueryContext): ast.ESQLAstExpression {
+  const left = this.fromLogicalInLeft(ctx.valueExpression());
+  const right = this.fromSubquery(ctx.subquery());
+  return this.toLogicalInFunction(ctx, left, right, ctx.stop?.stop ?? right.location.max);
+}
+```
+
+#### `src/types.ts` — only if the command gains new named fields
+
+If the existing interface (e.g. `ESQLAstChangePointCommand`) needs to expose the new option as a typed field, add it:
+```ts
+export interface ESQLAstChangePointCommand extends ESQLCommand<'change_point'> {
+  value: ESQLColumn;
+  key?: ESQLColumn;
+  target?: { type: ESQLColumn; pvalue: ESQLColumn };
+  // ← add new field only if consumers need typed access
+}
+```
+
+Skip this if the new option is only accessible via generic `args` — that's fine for options that don't need first-class API access.
+
+#### Tests
+
+Always update or add tests. For an existing command update, add to the existing test file (`src/parser/__tests__/xxx.test.ts`) rather than creating a new one.
+
+Cover:
+1. The new option/field parses correctly
+2. The AST shape is correct (`toMatchObject`)
+3. The pretty-printer round-trips the new syntax
+4. Walker traversal visits any new nodes (if the new option introduces new AST nodes)
+
+**Real example — `CHANGE_POINT BY`** (PR #104):
+- Added 21 lines to `change_point.test.ts`
+- Added 14 lines to `fromChangePointCommand()` in `cst_to_ast_converter.ts`
+- No `types.ts` change (BY option fits in generic `args`)
+- No visitor changes
+
+**Real example — `WHERE IN` subquery** (PR #107):
+- Refactored `fromLogicalIn()` in `cst_to_ast_converter.ts` into smaller methods + added subquery branch
+- Added tests to `src/parser/__tests__/function.test.ts` and `src/ast/walker/__tests__/walker.test.ts`
+- Added pretty-printer tests to 4 existing test files
+- No `types.ts` or visitor changes (subquery uses existing `ESQLParens` type)
+
+### Checklist — Scenario B (existing command update)
+
+- [ ] `src/parser/core/cst_to_ast_converter.ts` — existing handler extended
+- [ ] `src/types.ts` — interface updated only if new named fields are needed
+- [ ] Tests added/extended in existing test file
+- [ ] Pretty-printer tests added if new syntax affects printing
+- [ ] Walker tests added if new syntax introduces new traversable nodes
+- [ ] `yarn test` passes
+- [ ] `yarn build` passes
+- [ ] `yarn lint` passes
+
+---
 
 ## Reference: simple vs complex existing commands
 
