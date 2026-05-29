@@ -1,0 +1,269 @@
+---
+name: grammar-sync-update
+description: >
+  Use this skill when a grammar sync PR has landed (updating src/parser/antlr/) and a follow-up PR
+  is needed to wire a new ES|QL command into the AST layer. Covers all 7 files that need changes
+  and the exact patterns to follow.
+---
+
+# Grammar Sync Update
+
+## When to use
+
+After the automated grammar sync bot merges a PR that adds a **new command**, run this skill to produce the follow-up wiring PR.
+
+**You do NOT need this skill when:**
+- The grammar sync PR only updated ANTLR-generated files with no new grammar rules (`.ts`, `.interp`, `.tokens` only) — those are handled automatically.
+
+**You DO need this skill when:**
+- A new `xxxCommand` rule appears in `src/parser/antlr/esql_parser.g4` with no corresponding `fromXxxCommand()` in `cst_to_ast_converter.ts`.
+- The `esql_parser_listener.ts` has new `enterXxxCommand` / `exitXxxCommand` entries with no converter handler.
+
+## How to detect what changed
+
+```bash
+# Find new command rules added in the grammar sync commit
+git diff HEAD~1 -- src/parser/antlr/esql_parser.g4 | grep "^+.*[Cc]ommand\b"
+
+# Cross-check: listener entries without a converter method
+grep "enter.*Command" src/parser/antlr/esql_parser_listener.ts | \
+  sed 's/.*enter\([A-Za-z]*\)Command.*/\1/' | \
+  while read cmd; do
+    grep -q "from${cmd}Command" src/parser/core/cst_to_ast_converter.ts || echo "MISSING: $cmd"
+  done
+```
+
+---
+
+## Files to change (all 7, in order)
+
+### 1. `src/types.ts`
+
+**Add a typed interface** if the command has named fields (target field, inference ID, optional config, etc.):
+
+```ts
+export interface ESQLAstXxxCommand extends ESQLCommand<'xxx'> {
+  targetField: ESQLColumn;          // if there's a <qualifiedName> = <expr> pattern
+  expression?: ESQLAstExpression;   // the RHS
+  namedParameters?: ESQLMap;        // if there's a WITH { map } clause
+}
+```
+
+Add it to the `ESQLAstCommand` union (around line 15):
+
+```ts
+export type ESQLAstCommand =
+  | ESQLCommand
+  | ...
+  | ESQLAstXxxCommand;   // ← add here
+```
+
+If the command is trivial (only generic `args`, no named fields), use `ESQLCommand<'xxx'>` directly and skip the interface.
+
+---
+
+### 2. `src/ast/visitor/contexts.ts`
+
+Add a visitor context class near the end of the command context section (before the `// Expressions` comment, around line 613):
+
+```ts
+// XXX <qualifiedName> = <primaryExpression> [WITH <map>]
+export class XxxCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstXxxCommand> {}
+```
+
+Also add the import for `ESQLAstXxxCommand` at the top of the file.
+
+---
+
+### 3. `src/ast/visitor/types.ts`
+
+Three additions (search for `visitUserAgentCommand` to find the right spots):
+
+**A — `CommandVisitorInput` union** (all command inputs are ANDed together, ~line 116):
+```ts
+VisitorInput<Methods, 'visitXxxCommand'> &
+```
+
+**B — `CommandVisitorOutput` union** (all command outputs are ORed together, ~line 152):
+```ts
+| VisitorOutput<Methods, 'visitXxxCommand'>
+```
+
+**C — `VisitorMethods` interface** (~line 216):
+```ts
+visitXxxCommand?: Visitor<contexts.XxxCommandVisitorContext<Visitors, Data>, any, any>;
+```
+
+---
+
+### 4. `src/ast/visitor/global_visitor_context.ts`
+
+Two additions:
+
+**A — dispatcher `switch` case** (inside `visitCommandSpecific`, around line 258):
+```ts
+case 'xxx': {
+  if (!this.methods.visitXxxCommand) break;
+  return this.visitXxxCommand(
+    parent,
+    commandNode as ESQLAstXxxCommand,
+    input as any
+  );
+}
+```
+
+**B — public visitor method** (after the last `visitXxxCommand` method, around line 572):
+```ts
+public visitXxxCommand(
+  parent: contexts.VisitorContext | null,
+  node: ESQLAstXxxCommand,
+  input: types.VisitorInput<Methods, 'visitXxxCommand'>
+): types.VisitorOutput<Methods, 'visitXxxCommand'> {
+  const context = new contexts.XxxCommandVisitorContext(this, node, parent);
+  return this.visitWithSpecificContext('visitXxxCommand', context, input);
+}
+```
+
+Add the import for `ESQLAstXxxCommand` at the top of the file.
+
+---
+
+### 5. `src/parser/core/cst_to_ast_converter.ts`
+
+Two additions:
+
+**A — dispatcher** (inside the `if/else if` chain around line 440, after existing commands):
+```ts
+const xxxCommandCtx = ctx.xxxCommand();
+
+if (xxxCommandCtx) {
+  return this.fromXxxCommand(xxxCommandCtx);
+}
+```
+
+**B — converter method**:
+
+```ts
+private fromXxxCommand(ctx: cst.XxxCommandContext): ast.ESQLAstXxxCommand {
+  const command = this.createCommand<'xxx', ast.ESQLAstXxxCommand>('xxx', ctx);
+
+  // Assignment pattern: targetField = expression
+  if (ctx._targetField && ctx.ASSIGN()) {
+    const targetField = this.toColumn(ctx._targetField);
+    const expression = this.fromPrimaryExpression(ctx.primaryExpression());
+    const assignment = this.toFunction('=', ctx, undefined, 'binary-expression') as ast.ESQLBinaryExpression;
+    assignment.args.push(targetField, expression);
+    assignment.location = this.extendLocationToArgs(assignment);
+    command.targetField = targetField;
+    command.expression = expression;
+    command.args.push(assignment);
+  }
+
+  // Optional WITH { map } clause
+  const withOption = this.fromOptionalNamedParametersWithOption(ctx.namedParametersWithOption());
+  if (withOption) {
+    command.namedParameters = withOption.args[0] as ast.ESQLMap;
+    command.args.push(withOption);
+  }
+
+  if (ctx.exception) {
+    command.incomplete = true;
+  }
+
+  return command;
+}
+```
+
+**Patterns by grammar shape** — pick the one that matches:
+
+| Grammar shape | Converter call |
+|---|---|
+| Single column / qualified name | `this.toColumn(ctx._field)` |
+| Primary expression | `this.fromPrimaryExpression(ctx.primaryExpression())` |
+| Constant literal | `this.fromConstantToArray(ctx.constant())` |
+| String token | `this.fromStringToken(ctx.STRING().symbol)` |
+| Repeated sub-rule list | `ctx.xxxConfiguration_list()` loop |
+| Boolean expression | `this.fromBooleanExpression(ctx.booleanExpression())` |
+| Named option (`KEYWORD field`) | `Builder.option({ name: 'keyword', args: [...] }, { location })` |
+| Assignment `target = expr` | `this.toFunction('=', ctx, undefined, 'binary-expression')` |
+| WITH `{ map }` | `this.fromOptionalNamedParametersWithOption(ctx.namedParametersWithOption())` |
+
+---
+
+### 6. `src/pretty_print/constants.ts`
+
+The pretty printer is visitor-based and **requires no changes** for most new commands.
+
+Only update when:
+- Command args have **no commas** between them → add to `commandsWithNoCommaArgSeparator`
+- A command option uses `=` instead of a space before its value → add to `commandOptionsWithEqualsSeparator`
+
+```ts
+export const commandsWithNoCommaArgSeparator = new Set([
+  'dissect', 'sample', 'fork', 'promql',
+  'xxx', // ← add only if needed
+]);
+```
+
+---
+
+### 7. `src/parser/__tests__/xxx.test.ts` (new file)
+
+Minimum coverage:
+1. Parses basic syntax without errors
+2. AST shape matches expected structure (`toMatchObject`)
+3. Verifies `incomplete` flag for partial input
+4. Round-trips through the pretty-printer
+
+```ts
+import { parse } from '..';
+import { BasicPrettyPrinter } from '../../pretty_print';
+
+describe('XXX command', () => {
+  it('parses basic syntax', () => {
+    const { ast, errors } = parse('FROM a | XXX target = field');
+    expect(errors).toHaveLength(0);
+    expect(ast[1]).toMatchObject({
+      type: 'command',
+      name: 'xxx',
+      targetField: { type: 'column', name: 'target' },
+    });
+  });
+
+  it('round-trips through the printer', () => {
+    const src = 'FROM a | XXX target = field';
+    const { ast } = parse(src);
+    expect(BasicPrettyPrinter.query(ast)).toBe(src.toUpperCase());
+  });
+});
+```
+
+Reference test files: `src/parser/__tests__/user_agent.test.ts`, `src/parser/__tests__/change_point.test.ts`
+
+---
+
+## Checklist
+
+- [ ] `src/types.ts` — new interface + union updated
+- [ ] `src/ast/visitor/contexts.ts` — `XxxCommandVisitorContext` added
+- [ ] `src/ast/visitor/types.ts` — input union, output union, `VisitorMethods` updated
+- [ ] `src/ast/visitor/global_visitor_context.ts` — switch case + public method added
+- [ ] `src/parser/core/cst_to_ast_converter.ts` — dispatcher + `fromXxxCommand()` added
+- [ ] `src/pretty_print/constants.ts` — updated only if needed
+- [ ] `src/parser/__tests__/xxx.test.ts` — tests added
+- [ ] `yarn test` passes
+- [ ] `yarn build` passes (no TypeScript errors)
+- [ ] `yarn lint` passes
+
+## Reference: simple vs complex existing commands
+
+| Command | Interface | Visitor context | Test file |
+|---|---|---|---|
+| `SAMPLE` | none (generic) | none | `sample.test.ts` |
+| `URI_PARTS` | `ESQLAstUriPartsCommand` | `UriPartsCommandVisitorContext` | `uri_parts.test.ts` |
+| `USER_AGENT` | `ESQLAstUserAgentCommand` | `UserAgentCommandVisitorContext` | `user_agent.test.ts` |
+| `CHANGE_POINT` | `ESQLAstChangePointCommand` | none (no typed visitor) | `change_point.test.ts` |
+| `RERANK` | `ESQLAstRerankCommand` | `RerankCommandVisitorContext` | `rerank.test.ts` |
