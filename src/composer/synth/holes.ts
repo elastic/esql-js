@@ -7,6 +7,7 @@
 
 import { Builder } from '../../ast/builder';
 import { BasicPrettyPrinter, LeafPrinter } from '../../pretty_print';
+import { PromQLBasicPrettyPrinter } from '../../embedded_languages/promql/pretty_print';
 import { isProperNode } from '../../ast/is';
 import { SynthNode } from './synth_node';
 import { SynthLiteralFragment } from './synth_literal_fragment';
@@ -15,6 +16,7 @@ import type {
   SynthQualifiedColumnShorthand,
   SynthTemplateHole,
 } from './types';
+import type { PromQLAstExpression } from '../../embedded_languages/promql/types';
 
 class UnexpectedSynthHoleError extends Error {
   constructor(hole: unknown) {
@@ -107,8 +109,10 @@ export const holeToFragment = (hole: SynthTemplateHole): string => {
         }
 
         return list;
-      } else if (hole instanceof SynthNode || isProperNode(hole)) {
-        return BasicPrettyPrinter.print(hole);
+      } else if ((hole as unknown as { dialect?: string }).dialect === 'promql') {
+        return PromQLBasicPrettyPrinter.print(hole as unknown as PromQLAstExpression);
+      } else if (hole instanceof SynthNode || isProperNode(hole as unknown)) {
+        return BasicPrettyPrinter.print(hole as Parameters<typeof BasicPrettyPrinter.print>[0]);
       }
 
       throw new UnexpectedSynthHoleError(hole);

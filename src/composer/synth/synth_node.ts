@@ -9,6 +9,9 @@ import { Walker } from '../../ast/walker';
 import { Builder } from '../../ast/builder';
 import { BasicPrettyPrinter } from '../../pretty_print';
 import { printAst, type PrintAstOptions } from '../../debug';
+import { PromQLBasicPrettyPrinter } from '../../embedded_languages/promql/pretty_print/basic_pretty_printer';
+import { isPromqlNode } from '../../ast/walker/helpers';
+import { PromQLAstNode } from '../../embedded_languages';
 import type { ESQLProperNode } from '../../types';
 
 /**
@@ -23,13 +26,15 @@ import type { ESQLProperNode } from '../../types';
  * ```
  */
 export class SynthNode {
-  public static from<N extends ESQLProperNode>(node: N): N & SynthNode {
+  public static from<N extends ESQLProperNode | PromQLAstNode>(node: N): N & SynthNode {
     // Remove parser generated fields.
-    Walker.walk(node, {
-      visitAny: (n) => {
-        Object.assign(n, Builder.parserFields({}));
-      },
-    });
+    if (!isPromqlNode(node)) {
+      Walker.walk(node, {
+        visitAny: (n) => {
+          Object.assign(n, Builder.parserFields({}));
+        },
+      });
+    }
 
     node = Object.assign(new SynthNode(), node);
 
@@ -37,6 +42,10 @@ export class SynthNode {
   }
 
   toString(this: ESQLProperNode) {
+    if (isPromqlNode(this)) {
+      return PromQLBasicPrettyPrinter.print(this);
+    }
+
     return BasicPrettyPrinter.print(this);
   }
 

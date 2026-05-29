@@ -7,6 +7,10 @@
 
 import type * as synth from './synth';
 import type { ESQLAstCommand, ESQLCommand, ESQLOrderExpression, ESQLSource } from '../types';
+import type {
+  PromQLAstExpression,
+  PromQLAstQueryExpression,
+} from '../embedded_languages/promql/types';
 import type { ComposerQuery } from './composer_query';
 import type { ParameterHole, DoubleParameterHole } from './parameter_hole';
 
@@ -151,6 +155,42 @@ export interface ComposerQueryTagMethods extends Omit<SynthMethods, 'par' | 'dpa
   ts: FromSourcesQueryStarter & FromSourcesAndMetadataQueryStarter;
 
   /**
+   * Creates a new {@linkcode ComposerQuery} starting with a `PROMQL` source
+   * command. The expression can be any PromQL AST node (from node builders or
+   * the `pql` tag) or a raw PromQL string.
+   *
+   * Basic example:
+   *
+   * ```typescript
+   * const query = esql.promql(pqlFunc('rate', pqlSel('http_requests_total', '5m')));
+   * // PROMQL (rate(http_requests_total[5m]))
+   * ```
+   *
+   * With command-level params:
+   *
+   * ```typescript
+   * const query = esql.promql(pqlSel('up'), { params: { index: 'k8s' } });
+   * // PROMQL index=k8s (up)
+   * ```
+   *
+   * With a named output column:
+   *
+   * ```typescript
+   * const query = esql.promql(pqlFunc('sum', pqlSel('m', '5m')), { outputName: 'result' });
+   * // PROMQL result = (sum(m[5m]))
+   * ```
+   *
+   * Pipe additional processing commands as usual:
+   *
+   * ```typescript
+   * esql.promql(pqlFunc('rate', pqlSel('m', '5m')))
+   *   .limit(100)
+   *   .sort(['@timestamp', 'DESC']);
+   * ```
+   */
+  promql: PromqlQueryStarter;
+
+  /**
    * An AST no-op command that can be used in the query, for example in
    * conditional expressions.
    *
@@ -178,6 +218,44 @@ export type FromSourcesQueryStarter = (
 export type FromSourcesAndMetadataQueryStarter = (
   sources: ComposerSourceShorthand[],
   metadataFields?: ComposerColumnShorthand[]
+) => ComposerQuery;
+
+/**
+ * A PromQL expression that can be passed to {@link PromqlQueryStarter}.
+ */
+export type PromqlExpressionInput = PromQLAstExpression | PromQLAstQueryExpression | string;
+
+/**
+ * Options for {@link PromqlQueryStarter}.
+ */
+export interface PromqlStarterOpts {
+  /**
+   * Static key-value metadata parameters placed before the expression.
+   *
+   * ```typescript
+   * { params: { index: 'k8s', timeout: '10s' } }
+   * // PROMQL index=k8s timeout=10s (expr)
+   * ```
+   */
+  params?: Record<string, string>;
+
+  /**
+   * Names the query output column using assignment syntax.
+   *
+   * ```typescript
+   * { outputName: 'result' }
+   * // PROMQL result = (expr)
+   * ```
+   */
+  outputName?: string;
+}
+
+/**
+ * The signature of {@link ComposerQueryTagMethods.promql}.
+ */
+export type PromqlQueryStarter = (
+  expression: PromqlExpressionInput,
+  opts?: PromqlStarterOpts
 ) => ComposerQuery;
 
 /**
