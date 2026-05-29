@@ -22,5 +22,6 @@ jobs:
             refactor
             perf
             build
+            docs
             chore
             revert
