@@ -544,6 +544,12 @@ export class CstToAstConverter {
     if (userAgentCommandCtx) {
       return this.fromUserAgentCommand(userAgentCommandCtx);
     }
+
+    const dedupCommandCtx = ctx.dedupCommand();
+
+    if (dedupCommandCtx) {
+      return this.fromDedupCommand(dedupCommandCtx);
+    }
     // agent-marker: append new command dispatcher branches here
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
@@ -2299,6 +2305,12 @@ export class CstToAstConverter {
     limitOption.location.max = limitValueCtx.stop?.stop ?? limitToken.symbol.stop;
 
     return limitOption;
+  }
+
+  // ---------------------------------------------------------------- DEDUP
+
+  private fromDedupCommand(ctx: cst.DedupCommandContext): ast.ESQLCommand<'dedup'> {
+    return this.createCommand<'dedup'>('dedup', ctx);
   }
 
   // --------------------------------------------------------------- URI_PARTS
