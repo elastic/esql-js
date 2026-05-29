@@ -7,6 +7,7 @@
 
 import type { ParseOptions } from '../../parser';
 import type { ESQLAstExpression, ESQLProperNode } from '../../types';
+import type { PromQLAstExpression } from '../../embedded_languages/promql/types';
 import type { SynthLiteralFragment } from './synth_literal_fragment';
 import type { SynthNode } from './synth_node';
 
@@ -14,9 +15,15 @@ export type SynthGenerator<N extends ESQLProperNode> = (src: string, opts?: Pars
 
 export type SynthTemplateHole =
   /**
-   * A hole is normally an AST node.
+   * A hole is normally an ES|QL AST node.
    */
   | ESQLAstExpression
+
+  /**
+   * PromQL AST expression nodes can be interpolated directly into templates
+   * containing a PROMQL command.
+   */
+  | PromQLAstExpression
 
   /**
    * If a list of AST nodes is provided, it will be joined with a comma.

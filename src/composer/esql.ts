@@ -19,6 +19,8 @@ import type {
   FromSourcesAndMetadataQueryStarter,
   FromSourcesQueryStarter,
   ParametrizedComposerQueryTag,
+  PromqlQueryStarter,
+  PromqlStarterOpts,
 } from './types';
 import type { ESQLSource } from '../types';
 import { isSource } from '../ast/is';
@@ -177,6 +179,28 @@ const createFromSourceAndMetadataCommandStarter =
       : esql`${synth.kwd(cmd)} ${sourceNodes}`;
   };
 
+const createPromqlStarter = (): PromqlQueryStarter => (expression, opts?: PromqlStarterOpts) => {
+  const expr = typeof expression === 'string' ? synth.pql(expression) : expression;
+
+  const paramsPart = opts?.params
+    ? Object.entries(opts.params)
+        .map(([k, v]) => `${k}=${v}`)
+        .join(' ')
+    : '';
+
+  const outputName = opts?.outputName;
+
+  if (paramsPart && outputName) {
+    return esql`PROMQL ${synth.kwd(paramsPart)} ${synth.col(outputName)} = (${expr as synth.SynthTemplateHole})`;
+  } else if (paramsPart) {
+    return esql`PROMQL ${synth.kwd(paramsPart)} (${expr as synth.SynthTemplateHole})`;
+  } else if (outputName) {
+    return esql`PROMQL ${synth.col(outputName)} = (${expr as synth.SynthTemplateHole})`;
+  } else {
+    return esql`PROMQL (${expr as synth.SynthTemplateHole})`;
+  }
+};
+
 /**
  * ESQL query composer tag function.
  *
@@ -228,6 +252,8 @@ export const esql: ComposerQueryTag &
     from: createFromLikeStarter('FROM'),
 
     ts: createFromLikeStarter('TS'),
+
+    promql: createPromqlStarter(),
 
     get nop() {
       return synth.cmd`WHERE TRUE`;
