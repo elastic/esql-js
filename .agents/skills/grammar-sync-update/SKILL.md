@@ -65,7 +65,7 @@ export interface ESQLAstXxxCommand extends ESQLCommand<'xxx'> {
 }
 ```
 
-Add it to the `ESQLAstCommand` union (around line 15):
+Add it to the `ESQLAstCommand` union (search for `ESQLAstCommand` type definition):
 
 ```ts
 export type ESQLAstCommand =
@@ -80,7 +80,7 @@ If the command is trivial (only generic `args`, no named fields), use `ESQLComma
 
 ### 2. `src/ast/visitor/contexts.ts`
 
-Add a visitor context class near the end of the command context section (before the `// Expressions` comment, around line 613):
+Add a visitor context class before the `// Expressions` comment (search for that comment to find the spot):
 
 ```ts
 // XXX <qualifiedName> = <primaryExpression> [WITH <map>]
@@ -96,19 +96,19 @@ Also add the import for `ESQLAstXxxCommand` at the top of the file.
 
 ### 3. `src/ast/visitor/types.ts`
 
-Three additions (search for `visitUserAgentCommand` to find the right spots):
+Three additions. Search for `agent-marker` comments to find the exact insertion points:
 
-**A — `CommandVisitorInput` union** (all command inputs are ANDed together, ~line 116):
+**A — `CommandVisitorInput` union** (search for `agent-marker: append new VisitorInput entries here`):
 ```ts
 VisitorInput<Methods, 'visitXxxCommand'> &
 ```
 
-**B — `CommandVisitorOutput` union** (all command outputs are ORed together, ~line 152):
+**B — `CommandVisitorOutput` union** (search for `agent-marker: append new VisitorOutput entries here`):
 ```ts
 | VisitorOutput<Methods, 'visitXxxCommand'>
 ```
 
-**C — `VisitorMethods` interface** (~line 216):
+**C — `VisitorMethods` interface** (search for `visitUserAgentCommand?` — the last method — and append after it):
 ```ts
 visitXxxCommand?: Visitor<contexts.XxxCommandVisitorContext<Visitors, Data>, any, any>;
 ```
@@ -119,7 +119,7 @@ visitXxxCommand?: Visitor<contexts.XxxCommandVisitorContext<Visitors, Data>, any
 
 Two additions:
 
-**A — dispatcher `switch` case** (inside `visitCommandSpecific`, around line 258):
+**A — dispatcher `switch` case** (search for `visitCommandSpecific` — add a new `case` inside the `switch`):
 ```ts
 case 'xxx': {
   if (!this.methods.visitXxxCommand) break;
@@ -131,7 +131,7 @@ case 'xxx': {
 }
 ```
 
-**B — public visitor method** (after the last `visitXxxCommand` method, around line 572):
+**B — public visitor method** (search for `visitUserAgentCommand` — the last public visitor method — and append after it):
 ```ts
 public visitXxxCommand(
   parent: contexts.VisitorContext | null,
@@ -151,7 +151,7 @@ Add the import for `ESQLAstXxxCommand` at the top of the file.
 
 Two additions:
 
-**A — dispatcher** (inside the `if/else if` chain around line 440, after existing commands):
+**A — dispatcher** (search for `agent-marker: append new command dispatcher branches here` and add before it):
 ```ts
 const xxxCommandCtx = ctx.xxxCommand();
 

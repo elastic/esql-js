@@ -544,6 +544,7 @@ export class CstToAstConverter {
     if (userAgentCommandCtx) {
       return this.fromUserAgentCommand(userAgentCommandCtx);
     }
+    // agent-marker: append new command dispatcher branches here
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
 

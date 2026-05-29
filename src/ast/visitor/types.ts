@@ -117,7 +117,7 @@ export type CommandVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitTsInfoCommand'> &
     VisitorInput<Methods, 'visitMetricsInfoCommand'> &
     VisitorInput<Methods, 'visitUserAgentCommand'> &
-    VisitorInput<Methods, 'visitRegisteredDomainCommand'>
+    VisitorInput<Methods, 'visitRegisteredDomainCommand'> // agent-marker: append new VisitorInput entries here
 >;
 
 /**
@@ -153,7 +153,7 @@ export type CommandVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitTsInfoCommand'>
   | VisitorOutput<Methods, 'visitMetricsInfoCommand'>
   | VisitorOutput<Methods, 'visitUserAgentCommand'>
-  | VisitorOutput<Methods, 'visitRegisteredDomainCommand'>;
+  | VisitorOutput<Methods, 'visitRegisteredDomainCommand'>; // agent-marker: append new VisitorOutput entries here
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface VisitorMethods<
