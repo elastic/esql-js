@@ -132,6 +132,7 @@ subquery
 subquerySourceCommand
     : fromCommand
     | {this.isDevVersion()}? rowCommand
+    | {this.isDevVersion()}? timeSeriesCommand
     ;
 
 indexPattern
