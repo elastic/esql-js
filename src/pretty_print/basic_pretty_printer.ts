@@ -13,6 +13,7 @@ import {
   isIntegerLiteral,
   isLiteral,
   isParamLiteral,
+  isParens,
   isProperNode,
 } from '../ast/is';
 import { PromQLBasicPrettyPrinter } from '../embedded_languages/promql/pretty_print';
@@ -254,7 +255,7 @@ export class BasicPrettyPrinter {
 
     let expression = BasicPrettyPrinter.expression(node, this.opts);
     const sign = isNegative ? '-' : '';
-    const needsBrackets = !!sign && !isColumn(node) && !isLiteral(node);
+    const needsBrackets = !!sign && !isColumn(node) && !isLiteral(node) && !isParens(node);
 
     if (needsBrackets) {
       expression = `(${expression})`;
@@ -325,6 +326,7 @@ export class BasicPrettyPrinter {
       const wrapInBrackets =
         value.type !== 'literal' &&
         value.type !== 'column' &&
+        value.type !== 'parens' &&
         !(value.type === 'function' && value.subtype === 'variadic-call');
 
       let valueFormatted = ctx.visitValue();

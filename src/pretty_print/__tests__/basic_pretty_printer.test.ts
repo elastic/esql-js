@@ -615,7 +615,7 @@ describe('single line query', () => {
         test('negative numbers in brackets', () => {
           const { text } = reprint('ROW -(1)');
 
-          expect(text).toBe('ROW -1');
+          expect(text).toBe('ROW -(1)');
         });
 
         test('negative column names', () => {
@@ -627,13 +627,13 @@ describe('single line query', () => {
         test('plus unary expression', () => {
           const { text } = reprint('ROW +(23)');
 
-          expect(text).toBe('ROW 23');
+          expect(text).toBe('ROW (23)');
         });
 
         test('chained multiple unary expressions', () => {
           const { text } = reprint('ROW ----+-+(23)');
 
-          expect(text).toBe('ROW -23');
+          expect(text).toBe('ROW -(23)');
         });
 
         test('before another expression', () => {
@@ -663,7 +663,7 @@ describe('single line query', () => {
         test('two minuses is plus (with brackets)', () => {
           const { text } = reprint('ROW --(123)');
 
-          expect(text).toBe('ROW 123');
+          expect(text).toBe('ROW (123)');
         });
       });
 
@@ -725,9 +725,9 @@ describe('single line query', () => {
             assertReprint('FROM a | WHERE b / (c % 10)');
           });
 
-          test('division: left operand brackets at same group are redundant', () => {
-            assertReprint('FROM a | WHERE (b / c) * 10', 'FROM a | WHERE b / c * 10');
-            assertReprint('FROM a | WHERE (b * c) / 10', 'FROM a | WHERE b * c / 10');
+          test('division: left operand brackets are preserved', () => {
+            assertReprint('FROM a | WHERE (b / c) * 10');
+            assertReprint('FROM a | WHERE (b * c) / 10');
           });
 
           test('subtraction: same-group right operand always needs brackets', () => {
@@ -735,14 +735,14 @@ describe('single line query', () => {
             assertReprint('FROM a | WHERE a - (b - c)');
           });
 
-          test('addition: same-group right operand brackets are redundant', () => {
-            assertReprint('FROM a | WHERE a + (b + c)', 'FROM a | WHERE a + b + c');
-            assertReprint('FROM a | WHERE a + (b - c)', 'FROM a | WHERE a + b - c');
+          test('addition: same-group right operand brackets are preserved', () => {
+            assertReprint('FROM a | WHERE a + (b + c)');
+            assertReprint('FROM a | WHERE a + (b - c)');
           });
 
-          test('multiplication: same-group right operand brackets are redundant', () => {
-            assertReprint('FROM a | WHERE a * (b * c)', 'FROM a | WHERE a * b * c');
-            assertReprint('FROM a | WHERE a * (b / c)', 'FROM a | WHERE a * b / c');
+          test('multiplication: same-group right operand brackets are preserved', () => {
+            assertReprint('FROM a | WHERE a * (b * c)');
+            assertReprint('FROM a | WHERE a * (b / c)');
           });
 
           test('modulo: same-group right operand always needs brackets', () => {
@@ -771,7 +771,7 @@ describe('single line query', () => {
           test('inserts brackets where necessary due precedence - 4', () => {
             const { text } = reprint('FROM a | WHERE (1 + (1 + 2)) * ((3 - 4) / (5 + 6 + 7))');
 
-            expect(text).toBe('FROM a | WHERE (1 + 1 + 2) * (3 - 4) / (5 + 6 + 7)');
+            expect(text).toBe('FROM a | WHERE (1 + (1 + 2)) * ((3 - 4) / (5 + 6 + 7))');
           });
 
           test('inserts brackets where necessary due precedence - 5', () => {
@@ -779,19 +779,19 @@ describe('single line query', () => {
               'FROM a | WHERE (1 + (1 + 2)) * (((3 - 4) / (5 + 6 + 7)) + 1)'
             );
 
-            expect(text).toBe('FROM a | WHERE (1 + 1 + 2) * ((3 - 4) / (5 + 6 + 7) + 1)');
+            expect(text).toBe('FROM a | WHERE (1 + (1 + 2)) * (((3 - 4) / (5 + 6 + 7)) + 1)');
           });
 
           test('AND has higher precedence than OR', () => {
             assertReprint('FROM a | WHERE b AND (c OR d)');
-            assertReprint('FROM a | WHERE (b AND c) OR d', 'FROM a | WHERE b AND c OR d');
+            assertReprint('FROM a | WHERE (b AND c) OR d');
             assertReprint('FROM a | WHERE b OR c AND d');
             assertReprint('FROM a | WHERE (b OR c) AND d');
           });
 
           test('addition has higher precedence than AND', () => {
             assertReprint('FROM a | WHERE b + (c AND d)');
-            assertReprint('FROM a | WHERE (b + c) AND d', 'FROM a | WHERE b + c AND d');
+            assertReprint('FROM a | WHERE (b + c) AND d');
             assertReprint('FROM a | WHERE b AND c + d');
             assertReprint('FROM a | WHERE (b AND c) + d');
           });
@@ -800,9 +800,9 @@ describe('single line query', () => {
             assertReprint('FROM a | WHERE b / (c - d)');
             assertReprint('FROM a | WHERE b * (c - d)');
             assertReprint('FROM a | WHERE b * (c + d)');
-            assertReprint('FROM a | WHERE (b / c) - d', 'FROM a | WHERE b / c - d');
-            assertReprint('FROM a | WHERE (b * c) - d', 'FROM a | WHERE b * c - d');
-            assertReprint('FROM a | WHERE (b * c) + d', 'FROM a | WHERE b * c + d');
+            assertReprint('FROM a | WHERE (b / c) - d');
+            assertReprint('FROM a | WHERE (b * c) - d');
+            assertReprint('FROM a | WHERE (b * c) + d');
             assertReprint('FROM a | WHERE b - c / d');
             assertReprint('FROM a | WHERE (b - c) / d');
           });
@@ -1148,8 +1148,8 @@ describe('unary operator precedence and grouping', () => {
     assertReprint('ROW NOT a');
   });
 
-  test('NOT should not parenthesize literals unnecessarily', () => {
-    assertReprint('ROW NOT (a)', 'ROW NOT a');
+  test('NOT should preserve parentheses from source', () => {
+    assertReprint('ROW NOT (a)');
   });
 
   test('NOT should parenthesize OR expressions', () => {
@@ -1160,8 +1160,8 @@ describe('unary operator precedence and grouping', () => {
     assertReprint('ROW NOT (a AND b)');
   });
 
-  test('NOT should not parenthesize expressions with higher precedence', () => {
-    assertReprint('ROW NOT (a > b)', 'ROW NOT a > b');
+  test('NOT should preserve parentheses around higher-precedence expressions', () => {
+    assertReprint('ROW NOT (a > b)');
   });
 
   test('NOT should parenthesize OR expressions on the right side', () => {
