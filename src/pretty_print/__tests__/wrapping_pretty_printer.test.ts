@@ -1546,6 +1546,27 @@ describe('subqueries (parens)', () => {
   | SORT max DESC`
     );
   });
+
+  test('can print IN subqueries with ts source', () => {
+    assertReprint(
+      'FROM main_index_with_a_long_name | WHERE main_field_with_a_long_name IN (TS sub_index_with_a_long_name | WHERE sub_field_with_a_long_name > 10 | KEEP sub_field_with_a_long_name)',
+      `FROM main_index_with_a_long_name
+  | WHERE
+      main_field_with_a_long_name IN
+        (TS sub_index_with_a_long_name
+          | WHERE sub_field_with_a_long_name > 10
+          | KEEP sub_field_with_a_long_name)`
+    );
+  });
+
+  test('can print ts subquery in FROM', () => {
+    assertReprint(
+      'FROM index1, (TS k8s_with_a_long_index_name | STATS max_bytes = MAX(bytes) BY cluster)',
+      `FROM
+  index1,
+  (TS k8s_with_a_long_index_name | STATS max_bytes = MAX(bytes) BY cluster)`
+    );
+  });
 });
 
 test.todo('Idempotence on multiple times pretty printing');

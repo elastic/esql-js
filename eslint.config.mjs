@@ -6,7 +6,14 @@ import eslintConfigPrettier from 'eslint-config-prettier';
 import { requireLicenseHeader } from './lint-license-rule.mjs';
 
 export default defineConfig([
-  globalIgnores(['lib/', 'node_modules/', 'src/parser/antlr/', '*.js', '*.mjs']),
+  globalIgnores([
+    'lib/',
+    'node_modules/',
+    'src/parser/antlr/',
+    'storybook-static/',
+    '*.js',
+    '*.mjs',
+  ]),
   eslint.configs.recommended,
   ...tseslint.configs.recommended,
   {
