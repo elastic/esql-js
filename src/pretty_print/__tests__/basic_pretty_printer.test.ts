@@ -719,6 +719,37 @@ describe('single line query', () => {
             expect(text).toBe('FROM index | EVAL a = b / (c * 10)');
           });
 
+          test('division: same-group right operand always needs brackets', () => {
+            assertReprint('FROM a | WHERE b / (c * 10)');
+            assertReprint('FROM a | WHERE b / (c / 10)');
+            assertReprint('FROM a | WHERE b / (c % 10)');
+          });
+
+          test('division: left operand brackets at same group are redundant', () => {
+            assertReprint('FROM a | WHERE (b / c) * 10', 'FROM a | WHERE b / c * 10');
+            assertReprint('FROM a | WHERE (b * c) / 10', 'FROM a | WHERE b * c / 10');
+          });
+
+          test('subtraction: same-group right operand always needs brackets', () => {
+            assertReprint('FROM a | WHERE a - (b + c)');
+            assertReprint('FROM a | WHERE a - (b - c)');
+          });
+
+          test('addition: same-group right operand brackets are redundant', () => {
+            assertReprint('FROM a | WHERE a + (b + c)', 'FROM a | WHERE a + b + c');
+            assertReprint('FROM a | WHERE a + (b - c)', 'FROM a | WHERE a + b - c');
+          });
+
+          test('multiplication: same-group right operand brackets are redundant', () => {
+            assertReprint('FROM a | WHERE a * (b * c)', 'FROM a | WHERE a * b * c');
+            assertReprint('FROM a | WHERE a * (b / c)', 'FROM a | WHERE a * b / c');
+          });
+
+          test('modulo: same-group right operand always needs brackets', () => {
+            assertReprint('FROM a | WHERE a % (b * c)');
+            assertReprint('FROM a | WHERE a % (b / c)');
+          });
+
           test('inserts brackets where necessary due precedence', () => {
             const { text } = reprint('FROM a | WHERE (1 + 2) * 3');
 
