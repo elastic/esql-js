@@ -945,6 +945,12 @@ describe('single line query', () => {
           expect(reprint('FROM a | WHERE b NOT IN (FROM c | KEEP d)').text).toBe(
             'FROM a | WHERE b NOT IN (FROM c | KEEP d)'
           );
+          expect(reprint('FROM a | WHERE b IN (TS c | KEEP d)').text).toBe(
+            'FROM a | WHERE b IN (TS c | KEEP d)'
+          );
+          expect(reprint('FROM a | WHERE b NOT IN (TS c | KEEP d)').text).toBe(
+            'FROM a | WHERE b NOT IN (TS c | KEEP d)'
+          );
         });
       });
     });
@@ -1170,5 +1176,13 @@ describe('subqueries (parens)', () => {
       'FROM index1, (FROM index2 | WHERE a > 10 | EVAL b = a * 2 | STATS cnt = COUNT(*) BY c | SORT cnt DESC | LIMIT 10), index3, (FROM index4 | STATS COUNT(*)) | WHERE d > 10 | STATS max = MAX(*) BY e | SORT max DESC';
 
     assertReprint(src, expected);
+  });
+
+  test('can print ts subquery in FROM', () => {
+    assertReprint('FROM (TS k8s | LIMIT 5)');
+  });
+
+  test('can print mixed FROM subqueries with ts source', () => {
+    assertReprint('FROM idx, (TS k8s | STATS max_bytes = MAX(bytes) BY cluster)');
   });
 });
