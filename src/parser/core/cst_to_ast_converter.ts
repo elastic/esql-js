@@ -2614,7 +2614,13 @@ export class CstToAstConverter {
     } else if (ctx instanceof cst.FunctionContext) {
       return this.fromFunction(ctx);
     } else if (ctx instanceof cst.ParenthesizedExpressionContext) {
-      return this.fromBooleanExpressionToExpressionOrUnknown(ctx.booleanExpression());
+      const inner = this.fromBooleanExpressionToExpressionOrUnknown(ctx.booleanExpression());
+
+      return Builder.expression.parens(inner, {
+        text: ctx.getText(),
+        location: getPosition(ctx.start, ctx.stop),
+        incomplete: Boolean(ctx.exception) || inner.incomplete,
+      });
     } else if (ctx instanceof cst.InlineCastContext) {
       return this.collectInlineCast(ctx);
     } else if (ctx instanceof cst.ConstantDefaultContext) {

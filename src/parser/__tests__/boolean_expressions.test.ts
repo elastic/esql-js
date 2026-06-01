@@ -26,8 +26,11 @@ describe('Column Identifier Expressions', () => {
     const expression = root.commands[0].args[0];
 
     expect(expression).toMatchObject({
-      type: 'literal',
-      value: 123,
+      type: 'parens',
+      child: {
+        type: 'literal',
+        value: 123,
+      },
     });
   });
 
@@ -112,8 +115,11 @@ describe('Column Identifier Expressions', () => {
       name: 'not',
       args: [
         {
-          type: 'function',
-          name: 'and',
+          type: 'parens',
+          child: {
+            type: 'function',
+            name: 'and',
+          },
         },
       ],
     });
@@ -343,32 +349,38 @@ describe('Column Identifier Expressions', () => {
       name: 'or',
       args: [
         {
-          type: 'function',
-          name: 'and',
-          args: [
-            {
-              type: 'function',
-              name: '>',
-            },
-            {
-              type: 'function',
-              name: '<',
-            },
-          ],
+          type: 'parens',
+          child: {
+            type: 'function',
+            name: 'and',
+            args: [
+              {
+                type: 'function',
+                name: '>',
+              },
+              {
+                type: 'function',
+                name: '<',
+              },
+            ],
+          },
         },
         {
-          type: 'function',
-          name: 'and',
-          args: [
-            {
-              type: 'function',
-              name: '==',
-            },
-            {
-              type: 'function',
-              name: 'not',
-            },
-          ],
+          type: 'parens',
+          child: {
+            type: 'function',
+            name: 'and',
+            args: [
+              {
+                type: 'function',
+                name: '==',
+              },
+              {
+                type: 'function',
+                name: 'not',
+              },
+            ],
+          },
         },
       ],
     });
