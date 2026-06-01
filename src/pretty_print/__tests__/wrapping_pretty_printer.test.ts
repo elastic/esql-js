@@ -1451,6 +1451,23 @@ FROM a
 });
 
 describe('unary operator precedence and grouping', () => {
+  test('brackets preserved in division numerator', () => {
+    const { text } = reprint(
+      'FROM index | EVAL aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb / (ccccccccccccccccccccccccccccccccccccccccccccc * 100000000000)'
+    );
+
+    expect(text).toBe(
+      'FROM index\n' +
+        '  | EVAL\n' +
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
+        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb /\n' +
+        '          (ccccccccccccccccccccccccccccccccccccccccccccc *\n' +
+        '          100000000000)'
+    );
+  });
+});
+
+describe('unary operator precedence and grouping', () => {
   test('NOT should not parenthesize literals', () => {
     assertReprint('ROW NOT a');
     assertReprint(
