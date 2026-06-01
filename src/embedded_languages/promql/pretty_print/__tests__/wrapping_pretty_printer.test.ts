@@ -247,6 +247,33 @@ describe('PromQL WrappingPrettyPrinter', () => {
     });
   });
 
+  describe('binary operator grouping', () => {
+    test('same-group right operand: semantically needed parens preserved', () => {
+      assertPrint('a / (b * c)');
+      assertPrint('a / (b / c)');
+      assertPrint('a - (b + c)');
+      assertPrint('a - (b - c)');
+    });
+
+    test('same-group right operand: redundant parens preserved', () => {
+      assertPrint('a * (b / c)');
+      assertPrint('a * (b * c)');
+      assertPrint('a + (b - c)');
+      assertPrint('a + (b + c)');
+    });
+
+    test('parens preserved when outer expression wraps', () => {
+      assertNarrowPrint('long_left_metric / (b * c)', 'long_left_metric\n  / (b * c)', 20);
+      assertNarrowPrint('long_left_metric - (b + c)', 'long_left_metric\n  - (b + c)', 20);
+      assertNarrowPrint('long_left_metric * (b / c)', 'long_left_metric\n  * (b / c)', 20);
+    });
+
+    test('power: right-associative same-group parens preserved', () => {
+      assertPrint('a ^ (b ^ c)');
+      assertPrint('(a ^ b) ^ c');
+    });
+  });
+
   describe('subqueries', () => {
     test('simple subquery', () => {
       assertPrint('rate(http_requests_total[5m])[30m:1m]');
