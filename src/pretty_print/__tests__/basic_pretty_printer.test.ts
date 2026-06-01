@@ -713,6 +713,12 @@ describe('single line query', () => {
         });
 
         describe('grouping', () => {
+          test('brackets preserved in division numerator', () => {
+            const { text } = reprint('FROM index | EVAL a = b / (c * 10)');
+
+            expect(text).toBe('FROM index | EVAL a = b / (c * 10)');
+          });
+
           test('inserts brackets where necessary due precedence', () => {
             const { text } = reprint('FROM a | WHERE (1 + 2) * 3');
 
