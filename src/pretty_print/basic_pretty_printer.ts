@@ -444,7 +444,12 @@ export class BasicPrettyPrinter {
 
             const shouldGroup =
               operandGroup &&
-              (operandGroup === BinaryExpressionGroup.unknown || operandGroup < group);
+              (operandGroup === BinaryExpressionGroup.unknown ||
+                operandGroup < group ||
+                // Right operand at same precedence needs parens for /, -, %
+                (index === 1 &&
+                  operandGroup === group &&
+                  (node.name === '/' || node.name === '-' || node.name === '%')));
 
             if (shouldGroup) {
               formatted = `(${formatted})`;
