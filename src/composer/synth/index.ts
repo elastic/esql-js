@@ -10,4 +10,6 @@ export { exp, expression } from './expression';
 export { cmd, command } from './command';
 export { qry, query } from './query';
 export { hdr, header } from './header';
+export { pql, promqlExpression } from './promql';
 export * from './nodes';
+export * from './promql_nodes';

@@ -118,12 +118,22 @@ export class PromQLBasicPrettyPrinter {
     return this.printExpression(query.expression);
   }
 
-  public printExpression(expr: PromQLAstExpression | undefined): string {
+  public printExpression(
+    expr: PromQLAstExpression | PromQLLabel | PromQLLabelMap | PromQLOffset | PromQLAt | undefined
+  ): string {
     if (!expr) {
       return '';
     }
 
     switch (expr.type) {
+      case 'label':
+        return this.printLabel(expr);
+      case 'label-map':
+        return this.printLabelMap(expr);
+      case 'offset':
+        return this.printOffset(expr);
+      case 'at':
+        return this.printAt(expr);
       case 'function':
         return this.printFunction(expr);
       case 'selector':

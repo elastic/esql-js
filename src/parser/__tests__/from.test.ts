@@ -528,5 +528,36 @@ describe('FROM', () => {
         },
       });
     });
+
+    it('can parse ts subquery as source', () => {
+      const text = 'FROM (TS k8s)';
+      const { ast, errors } = parse(text);
+
+      expect(errors.length).toBe(0);
+      expect(ast[0].args[0]).toMatchObject({
+        type: 'parens',
+        child: {
+          type: 'query',
+          commands: [{ type: 'command', name: 'ts' }],
+        },
+      });
+    });
+
+    it('can parse ts subquery with pipes', () => {
+      const text = 'FROM (TS k8s | STATS max_bytes = max(bytes) BY cluster)';
+      const { ast, errors } = parse(text);
+
+      expect(errors.length).toBe(0);
+      expect(ast[0].args[0]).toMatchObject({
+        type: 'parens',
+        child: {
+          type: 'query',
+          commands: [
+            { type: 'command', name: 'ts' },
+            { type: 'command', name: 'stats' },
+          ],
+        },
+      });
+    });
   });
 });

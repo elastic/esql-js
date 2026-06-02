@@ -11,6 +11,6 @@ export { ComposerQuery } from './composer_query';
 export { ParameterHole } from './parameter_hole';
 
 export * as synth from './synth';
-export { qry, cmd, exp } from './synth';
+export { qry, cmd, exp, pql } from './synth';
 
 export { EsqlQuery } from './query';
