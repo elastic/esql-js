@@ -610,6 +610,12 @@ export class MetricsInfoCommandVisitorContext<
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstMetricsInfoCommand> {}
 
+// DEDUP
+export class DedupCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
+
 // USER_AGENT <qualifiedName> = <primaryExpression> [WITH <map>]
 export class UserAgentCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,

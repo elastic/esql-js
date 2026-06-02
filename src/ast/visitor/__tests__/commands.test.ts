@@ -362,3 +362,41 @@ test('can visit FROM command with complex subqueries', () => {
 
   expect(list).toEqual(['SUBQUERY', 'SUBQUERY']);
 });
+
+test('can visit DEDUP command via specific visitor', () => {
+  const { ast } = EsqlQuery.fromSrc(`
+    FROM index
+      | DEDUP
+      | LIMIT 10
+  `);
+  const visitor = new Visitor()
+    .on('visitDedupCommand', () => {
+      return 'DEDUP';
+    })
+    .on('visitCommand', (ctx) => {
+      return ctx.name();
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].join(' | ');
+    });
+  const text = visitor.visitQuery(ast);
+
+  expect(text).toBe('FROM | DEDUP | LIMIT');
+});
+
+test('"visitCommand" captures DEDUP when visitDedupCommand is not registered', () => {
+  const { ast } = EsqlQuery.fromSrc(`
+    FROM index
+      | DEDUP
+  `);
+  const visitor = new Visitor()
+    .on('visitCommand', (ctx) => {
+      return ctx.name();
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].join(' | ');
+    });
+  const text = visitor.visitQuery(ast);
+
+  expect(text).toBe('FROM | DEDUP');
+});
