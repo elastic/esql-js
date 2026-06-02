@@ -389,7 +389,6 @@ test('"visitCommand" captures DEDUP when visitDedupCommand is not registered', (
     FROM index
       | DEDUP
   `);
-  const visitDedupCommandSpy = jest.fn();
   const visitor = new Visitor()
     .on('visitCommand', (ctx) => {
       return ctx.name();
@@ -399,6 +398,5 @@ test('"visitCommand" captures DEDUP when visitDedupCommand is not registered', (
     });
   const text = visitor.visitQuery(ast);
 
-  expect(visitDedupCommandSpy).not.toHaveBeenCalled();
   expect(text).toBe('FROM | DEDUP');
 });
