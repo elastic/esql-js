@@ -725,9 +725,9 @@ describe('single line query', () => {
             assertReprint('FROM a | WHERE b / (c % 10)');
           });
 
-          test('division: left operand brackets at same group are redundant', () => {
-            assertReprint('FROM a | WHERE (b / c) * 10', 'FROM a | WHERE b / c * 10');
-            assertReprint('FROM a | WHERE (b * c) / 10', 'FROM a | WHERE b * c / 10');
+          test('division: left operand brackets at same group are preserved', () => {
+            assertReprint('FROM a | WHERE (b / c) * 10');
+            assertReprint('FROM a | WHERE (b * c) / 10');
           });
 
           test('subtraction: same-group right operand always needs brackets', () => {
@@ -735,14 +735,14 @@ describe('single line query', () => {
             assertReprint('FROM a | WHERE a - (b - c)');
           });
 
-          test('addition: same-group right operand brackets are redundant', () => {
-            assertReprint('FROM a | WHERE a + (b + c)', 'FROM a | WHERE a + b + c');
-            assertReprint('FROM a | WHERE a + (b - c)', 'FROM a | WHERE a + b - c');
+          test('addition: same-group right operand brackets are preserved', () => {
+            assertReprint('FROM a | WHERE a + (b + c)');
+            assertReprint('FROM a | WHERE a + (b - c)');
           });
 
-          test('multiplication: same-group right operand brackets are redundant', () => {
-            assertReprint('FROM a | WHERE a * (b * c)', 'FROM a | WHERE a * b * c');
-            assertReprint('FROM a | WHERE a * (b / c)', 'FROM a | WHERE a * b / c');
+          test('multiplication: same-group right operand brackets are preserved', () => {
+            assertReprint('FROM a | WHERE a * (b * c)');
+            assertReprint('FROM a | WHERE a * (b / c)');
           });
 
           test('modulo: same-group right operand always needs brackets', () => {

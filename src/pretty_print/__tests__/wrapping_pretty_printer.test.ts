@@ -1461,8 +1461,7 @@ describe('binary operator precedence and grouping', () => {
         '  | EVAL\n' +
         '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
         '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb /\n' +
-        '          (ccccccccccccccccccccccccccccccccccccccccccccc *\n' +
-        '          100000000000)'
+        '          (ccccccccccccccccccccccccccccccccccccccccccccc * 100000000000)'
     );
   });
 
@@ -1487,8 +1486,7 @@ describe('binary operator precedence and grouping', () => {
         '  | EVAL\n' +
         '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
         '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb -\n' +
-        '          (ccccccccccccccccccccccccccccccccccccccccccccc +\n' +
-        '          100000000000)'
+        '          (ccccccccccccccccccccccccccccccccccccccccccccc + 100000000000)'
     );
   });
 
@@ -1505,14 +1503,13 @@ describe('binary operator precedence and grouping', () => {
         '  | EVAL\n' +
         '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
         '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb %\n' +
-        '          (ccccccccccccccccccccccccccccccccccccccccccccc *\n' +
-        '          100000000000)'
+        '          (ccccccccccccccccccccccccccccccccccccccccccccc * 100000000000)'
     );
   });
 
-  test('multiplication: same-group right operand brackets are redundant', () => {
-    assertReprint('ROW a * (b * c)', 'ROW a * b * c');
-    assertReprint('ROW a * (b / c)', 'ROW a * b / c');
+  test('multiplication: same-group right operand brackets are preserved', () => {
+    assertReprint('ROW a * (b * c)');
+    assertReprint('ROW a * (b / c)');
 
     const { text } = reprint(
       'FROM index | EVAL aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb * (ccccccccccccccccccccccccccccccccccccccccccccc / 100000000000)'
@@ -1523,14 +1520,13 @@ describe('binary operator precedence and grouping', () => {
         '  | EVAL\n' +
         '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
         '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb *\n' +
-        '          ccccccccccccccccccccccccccccccccccccccccccccc /\n' +
-        '          100000000000'
+        '          (ccccccccccccccccccccccccccccccccccccccccccccc / 100000000000)'
     );
   });
 
-  test('addition: same-group right operand brackets are redundant', () => {
-    assertReprint('ROW a + (b + c)', 'ROW a + b + c');
-    assertReprint('ROW a + (b - c)', 'ROW a + b - c');
+  test('addition: same-group right operand brackets are preserved', () => {
+    assertReprint('ROW a + (b + c)');
+    assertReprint('ROW a + (b - c)');
   });
 });
 
