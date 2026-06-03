@@ -263,6 +263,10 @@ export class GlobalVisitorContext<
           input as any
         );
       }
+      case 'dedup': {
+        if (!this.methods.visitDedupCommand) break;
+        return this.visitDedupCommand(parent, commandNode, input as any);
+      }
     }
     return this.visitCommandGeneric(parent, commandNode, input as any);
   }
@@ -576,6 +580,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitUserAgentCommand'> {
     const context = new contexts.UserAgentCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitUserAgentCommand', context, input);
+  }
+
+  public visitDedupCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstCommand,
+    input: types.VisitorInput<Methods, 'visitDedupCommand'>
+  ): types.VisitorOutput<Methods, 'visitDedupCommand'> {
+    const context = new contexts.DedupCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitDedupCommand', context, input);
   }
 
   // #endregion
