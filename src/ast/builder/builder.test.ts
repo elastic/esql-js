@@ -7,6 +7,7 @@
 
 import { Builder } from '.';
 import { BasicPrettyPrinter } from '../../pretty_print';
+import { pql, pqlSel } from '../../composer/synth';
 
 describe('command', () => {
   test('can create a LIMIT command', () => {
@@ -671,5 +672,63 @@ describe('header', () => {
         ],
       });
     });
+  });
+});
+
+describe('Builder.command.promql', () => {
+  test('builds a basic PROMQL command', () => {
+    const cmd = Builder.command.promql(pql`up`);
+
+    expect(BasicPrettyPrinter.command(cmd)).toBe('PROMQL (up)');
+  });
+
+  test('builds with a single param', () => {
+    const cmd = Builder.command.promql(pql`up`, { index: 'k8s' });
+
+    expect(BasicPrettyPrinter.command(cmd)).toBe('PROMQL index = k8s (up)');
+  });
+
+  test('builds with multiple params, keeping time-duration values unquoted', () => {
+    const cmd = Builder.command.promql(pql`up`, { index: 'k8s', timeout: '10s' });
+
+    expect(BasicPrettyPrinter.command(cmd)).toBe('PROMQL index = k8s timeout = 10s (up)');
+  });
+
+  test('builds with outputName', () => {
+    const cmd = Builder.command.promql(pql`up`, undefined, 'health');
+
+    expect(BasicPrettyPrinter.command(cmd)).toBe('PROMQL health = (up)');
+  });
+
+  test('builds with params and outputName', () => {
+    const cmd = Builder.command.promql(
+      pql`rate(http_requests_total[5m])`,
+      { index: 'k8s' },
+      'result'
+    );
+
+    expect(BasicPrettyPrinter.command(cmd)).toBe(
+      'PROMQL index = k8s result = (rate(http_requests_total[5m]))'
+    );
+  });
+
+  test('accepts a pqlSel expression and wraps it in a query node', () => {
+    const cmd = Builder.command.promql(pqlSel('http_requests_total', '5m'));
+
+    expect(BasicPrettyPrinter.command(cmd)).toBe('PROMQL (http_requests_total[5m])');
+  });
+
+  test('sets type and name on the returned node', () => {
+    const cmd = Builder.command.promql(pql`up`);
+
+    expect(cmd.type).toBe('command');
+    expect(cmd.name).toBe('promql');
+  });
+
+  test('sets cmd.params and cmd.query convenience properties', () => {
+    const cmd = Builder.command.promql(pql`up`, { index: 'k8s' }, 'health');
+
+    expect(cmd.params?.type).toBe('map');
+    expect(cmd.query).toBeDefined();
   });
 });

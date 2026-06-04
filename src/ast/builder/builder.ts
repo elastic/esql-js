@@ -47,8 +47,15 @@ import type {
   ESQLDatePeriodLiteral,
   ESQLAstHeaderCommand,
   ESQLAstSetHeaderCommand,
+  ESQLAstPromqlCommand,
+  ESQLAstPromqlCommandQuery,
 } from '../../types';
 import type { AstNodeParserFields, AstNodeTemplate, PartialFields } from './types';
+import type {
+  PromQLAstQueryExpression,
+  PromQLAstExpression,
+} from '../../embedded_languages/promql/types';
+import { PromQLBuilder } from '../../embedded_languages/promql/ast/builder';
 
 export namespace Builder {
   /**
@@ -65,17 +72,82 @@ export namespace Builder {
     incomplete,
   });
 
-  export const command = <Name extends string>(
-    template: PartialFields<AstNodeTemplate<ESQLCommand<Name>>, 'args'>,
-    fromParser?: Partial<AstNodeParserFields>
-  ): ESQLCommand<Name> => {
-    return {
-      ...template,
-      ...Builder.parserFields(fromParser),
-      args: template.args ?? [],
-      type: 'command',
-    };
-  };
+  export interface CommandBuilder {
+    <Name extends string>(
+      template: PartialFields<AstNodeTemplate<ESQLCommand<Name>>, 'args'>,
+      fromParser?: Partial<AstNodeParserFields>
+    ): ESQLCommand<Name>;
+
+    promql(
+      query: PromQLAstQueryExpression | PromQLAstExpression,
+      params?: Record<string, string>,
+      outputName?: string,
+      fromParser?: Partial<AstNodeParserFields>
+    ): ESQLAstPromqlCommand;
+  }
+
+  export const command: CommandBuilder = Object.assign(
+    <Name extends string>(
+      template: PartialFields<AstNodeTemplate<ESQLCommand<Name>>, 'args'>,
+      fromParser?: Partial<AstNodeParserFields>
+    ): ESQLCommand<Name> => {
+      return {
+        ...template,
+        ...Builder.parserFields(fromParser),
+        args: template.args ?? [],
+        type: 'command',
+      };
+    },
+    {
+      promql: (
+        query: PromQLAstQueryExpression | PromQLAstExpression,
+        params?: Record<string, string>,
+        outputName?: string,
+        fromParser?: Partial<AstNodeParserFields>
+      ): ESQLAstPromqlCommand => {
+        const args: ESQLAstExpression[] = [];
+
+        let paramsMap: ESQLMap | undefined;
+        if (params && Object.keys(params).length > 0) {
+          const entries = Object.entries(params).map(([k, v]) =>
+            Builder.expression.entry(
+              Builder.identifier(k),
+              Builder.expression.literal.string(v, { unquoted: true })
+            )
+          );
+          paramsMap = Builder.expression.map({ entries, representation: 'assignment' });
+          args.push(paramsMap);
+        }
+
+        const queryExpr: PromQLAstQueryExpression =
+          (query as PromQLAstQueryExpression).type === 'query'
+            ? (query as PromQLAstQueryExpression)
+            : PromQLBuilder.expression.query(query as PromQLAstExpression);
+
+        const parensNode = Builder.expression.parens(queryExpr as unknown as ESQLAstExpression);
+        let queryNode: ESQLAstPromqlCommandQuery = parensNode;
+
+        if (outputName) {
+          queryNode = Builder.expression.func.binary(
+            '=',
+            [Builder.identifier(outputName), parensNode],
+            {}
+          );
+        }
+
+        args.push(queryNode);
+
+        return {
+          ...Builder.parserFields(fromParser),
+          name: 'promql',
+          args: args as ESQLAstPromqlCommand['args'],
+          type: 'command',
+          ...(paramsMap ? { params: paramsMap } : {}),
+          query: queryNode,
+        };
+      },
+    }
+  );
 
   export const option = (
     template: PartialFields<AstNodeTemplate<ESQLCommandOption>, 'args'>,
