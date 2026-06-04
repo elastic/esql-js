@@ -28,13 +28,16 @@ import type { ESQLProperNode } from '../../types';
 export class SynthNode {
   public static from<N extends ESQLProperNode | PromQLAstNode>(node: N): N & SynthNode {
     // Remove parser generated fields.
-    if (!isPromqlNode(node)) {
-      Walker.walk(node, {
-        visitAny: (n) => {
+    Walker.walk(node, {
+      visitAny: (n) => {
+        Object.assign(n, Builder.parserFields({}));
+      },
+      promql: {
+        visitPromqlAny: (n) => {
           Object.assign(n, Builder.parserFields({}));
         },
-      });
-    }
+      },
+    });
 
     node = Object.assign(new SynthNode(), node);
 

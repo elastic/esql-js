@@ -156,7 +156,10 @@ export class Walker {
   /**
    * Walks the AST and calls the appropriate visitor functions.
    */
-  public static readonly walk = (tree: WalkerAstNode, options: WalkerOptions): Walker => {
+  public static readonly walk = (
+    tree: WalkerAstNode | promql.PromQLAstNode,
+    options: WalkerOptions
+  ): Walker => {
     const walker = new Walker(options);
     walker.walk(tree);
     return walker;
@@ -558,7 +561,7 @@ export class Walker {
   }
 
   public walk(
-    tree: WalkerAstNode | undefined,
+    tree: WalkerAstNode | promql.PromQLAstNode | undefined,
     parent: types.ESQLProperNode | undefined = undefined
   ): void {
     if (this.aborted) return;
