@@ -13,6 +13,7 @@ import { Builder } from '../ast/builder';
 import type {
   ESQLAstExpression,
   ESQLAstHeaderCommand,
+  ESQLAstPromqlCommand,
   ESQLAstQueryExpression,
   ESQLCommand,
   ESQLNamedParamLiteral,
@@ -821,6 +822,20 @@ export class ComposerQuery {
     }
 
     return params;
+  }
+
+  /**
+   * Returns the `PROMQL` source command from the query AST, or `undefined`
+   * if the query does not start with a `PROMQL` command.
+   */
+  public promqlCommand(): ESQLAstPromqlCommand | undefined {
+    const first = this.ast.commands[0];
+
+    if (first?.type === 'command' && first.name === 'promql') {
+      return first as ESQLAstPromqlCommand;
+    }
+
+    return undefined;
   }
 
   public setParam(name: string, value: unknown): this {
