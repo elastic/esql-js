@@ -1450,6 +1450,90 @@ FROM a
   });
 });
 
+describe('binary operator precedence and grouping', () => {
+  test('brackets preserved in division numerator', () => {
+    const { text } = reprint(
+      'FROM index | EVAL aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb / (ccccccccccccccccccccccccccccccccccccccccccccc * 100000000000)'
+    );
+
+    expect(text).toBe(
+      'FROM index\n' +
+        '  | EVAL\n' +
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
+        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb /\n' +
+        '          (ccccccccccccccccccccccccccccccccccccccccccccc *\n' +
+        '          100000000000)'
+    );
+  });
+
+  test('division: same-group right operand brackets preserved', () => {
+    assertReprint('ROW a / (b * c)');
+    assertReprint('ROW a / (b / c)');
+    assertReprint('ROW a / (b % c)');
+  });
+
+  test('subtraction: same-group right operand brackets preserved (single-line)', () => {
+    assertReprint('ROW a - (b + c)');
+    assertReprint('ROW a - (b - c)');
+  });
+
+  test('subtraction: same-group right operand brackets preserved (wrapped)', () => {
+    const { text } = reprint(
+      'FROM index | EVAL aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb - (ccccccccccccccccccccccccccccccccccccccccccccc + 100000000000)'
+    );
+
+    expect(text).toBe(
+      'FROM index\n' +
+        '  | EVAL\n' +
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
+        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb -\n' +
+        '          (ccccccccccccccccccccccccccccccccccccccccccccc +\n' +
+        '          100000000000)'
+    );
+  });
+
+  test('modulo: same-group right operand brackets preserved', () => {
+    assertReprint('ROW a % (b * c)');
+    assertReprint('ROW a % (b / c)');
+
+    const { text } = reprint(
+      'FROM index | EVAL aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb % (ccccccccccccccccccccccccccccccccccccccccccccc * 100000000000)'
+    );
+
+    expect(text).toBe(
+      'FROM index\n' +
+        '  | EVAL\n' +
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
+        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb %\n' +
+        '          (ccccccccccccccccccccccccccccccccccccccccccccc *\n' +
+        '          100000000000)'
+    );
+  });
+
+  test('multiplication: same-group right operand brackets are redundant', () => {
+    assertReprint('ROW a * (b * c)', 'ROW a * b * c');
+    assertReprint('ROW a * (b / c)', 'ROW a * b / c');
+
+    const { text } = reprint(
+      'FROM index | EVAL aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb * (ccccccccccccccccccccccccccccccccccccccccccccc / 100000000000)'
+    );
+
+    expect(text).toBe(
+      'FROM index\n' +
+        '  | EVAL\n' +
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
+        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb *\n' +
+        '          ccccccccccccccccccccccccccccccccccccccccccccc /\n' +
+        '          100000000000'
+    );
+  });
+
+  test('addition: same-group right operand brackets are redundant', () => {
+    assertReprint('ROW a + (b + c)', 'ROW a + b + c');
+    assertReprint('ROW a + (b - c)', 'ROW a + b - c');
+  });
+});
+
 describe('unary operator precedence and grouping', () => {
   test('NOT should not parenthesize literals', () => {
     assertReprint('ROW NOT a');
@@ -1544,6 +1628,27 @@ describe('subqueries (parens)', () => {
   | WHERE d > 10
   | STATS max = MAX(*) BY e
   | SORT max DESC`
+    );
+  });
+
+  test('can print IN subqueries with ts source', () => {
+    assertReprint(
+      'FROM main_index_with_a_long_name | WHERE main_field_with_a_long_name IN (TS sub_index_with_a_long_name | WHERE sub_field_with_a_long_name > 10 | KEEP sub_field_with_a_long_name)',
+      `FROM main_index_with_a_long_name
+  | WHERE
+      main_field_with_a_long_name IN
+        (TS sub_index_with_a_long_name
+          | WHERE sub_field_with_a_long_name > 10
+          | KEEP sub_field_with_a_long_name)`
+    );
+  });
+
+  test('can print ts subquery in FROM', () => {
+    assertReprint(
+      'FROM index1, (TS k8s_with_a_long_index_name | STATS max_bytes = MAX(bytes) BY cluster)',
+      `FROM
+  index1,
+  (TS k8s_with_a_long_index_name | STATS max_bytes = MAX(bytes) BY cluster)`
     );
   });
 });

@@ -166,7 +166,11 @@ export class WrappingPrettyPrinter {
     const groupLeft = binaryExpressionGroup(left);
     const groupRight = binaryExpressionGroup(right);
     const doGroupLeft = groupLeft && groupLeft < group;
-    const doGroupRight = groupRight && groupRight < group;
+    const doGroupRight =
+      groupRight &&
+      (groupRight < group ||
+        // Right operand at same precedence needs parens for /, -, %
+        (groupRight === group && (node.name === '/' || node.name === '-' || node.name === '%')));
     const continueVerticalFlattening = group && inp.flattenBinExpOfType === group;
     const suffix = inp.suffix ?? '';
     const oneArgumentPerLine =

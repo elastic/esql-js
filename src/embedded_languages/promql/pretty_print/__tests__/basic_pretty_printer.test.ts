@@ -312,6 +312,32 @@ describe('parsed PromQL BasicPrettyPrinter', () => {
     });
   });
 
+  describe('binary operator grouping', () => {
+    test('same-group right operand: semantically needed parens preserved', () => {
+      assertReprint('a / (b * c)');
+      assertReprint('a / (b / c)');
+      assertReprint('a - (b + c)');
+      assertReprint('a - (b - c)');
+    });
+
+    test('same-group right operand: redundant parens preserved (faithful round-trip)', () => {
+      assertReprint('a * (b / c)');
+      assertReprint('a * (b * c)');
+      assertReprint('a + (b - c)');
+      assertReprint('a + (b + c)');
+    });
+
+    test('left operand parens preserved', () => {
+      assertReprint('(a / b) * c');
+      assertReprint('(a + b) - c');
+    });
+
+    test('power: right-associative same-group parens preserved', () => {
+      assertReprint('a ^ (b ^ c)');
+      assertReprint('(a ^ b) ^ c');
+    });
+  });
+
   describe('function calls', () => {
     describe('basic functions', () => {
       test('no argument function', () => {
