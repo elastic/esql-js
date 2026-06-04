@@ -69,11 +69,34 @@ Returns:
 }
 ```
 
+#### Construct a `PROMQL` source command:
+
+```ts
+import { Builder, pql, pqlSel } from '@elastic/esql';
+
+// From a pql-tagged expression
+const cmd1 = Builder.command.promql(pql`rate(http_requests_total[5m])`);
+// PROMQL (rate(http_requests_total[5m]))
+
+// From a node builder expression
+const cmd2 = Builder.command.promql(pqlSel('up'));
+// PROMQL (up)
+
+// With command-level params
+const cmd3 = Builder.command.promql(pqlSel('up'), { index: 'k8s', timeout: '10s' });
+// PROMQL index = k8s timeout = 10s (up)
+
+// With a named output column
+const cmd4 = Builder.command.promql(pqlSel('up'), undefined, 'health');
+// PROMQL health = (up)
+```
+
 
 ## API
 
 - `.parserFields()` &mdash; Constructs parser metadata fields (`location`, `text`, `incomplete`).
 - `.command()` &mdash; Constructs a command node.
+- `.command.promql()` &mdash; Constructs a `PROMQL` source command node.
 - `.option()` &mdash; Constructs a command option node.
 - `.comment()` &mdash; Constructs a comment node (single-line or multi-line).
 - `.identifier()` &mdash; Constructs an identifier node.
