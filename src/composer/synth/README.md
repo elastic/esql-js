@@ -150,3 +150,115 @@ The `qry` tag synthesizes a query AST node. Otherwise, it works the same as the
 const node = synth.qry`FROM index | WHERE my.field == 10`;
 // { type: 'query', commands: [ ... ]}
 ```
+
+## PromQL expressions
+
+The `synth` module includes first-class support for building embedded PromQL
+expressions. These are used with the `PROMQL` ES|QL source command.
+
+### `pql` — parse a PromQL string
+
+The `pql` tag parses a PromQL string into a
+`PromQLAstQueryExpression` node. Use it as a tagged template or a function call:
+
+```ts
+import { pql } from '@elastic/esql';
+
+// Tagged template
+const expr = pql`rate(http_requests_total[5m])`;
+
+// Function call
+const expr = pql('rate(http_requests_total[5m])');
+
+// Coerce to string to pretty-print
+String(expr); // 'rate(http_requests_total[5m])'
+```
+
+PromQL nodes can be composed by interpolating one inside another:
+
+```ts
+const range = pql`5m`;
+const selector = pql`http_requests_total{job="api"}[${range}]`;
+const func = pql`rate(${selector})`;
+String(func); // 'rate(http_requests_total{job="api"}[5m])'
+```
+
+### Node builders
+
+The node builders let you construct PromQL AST nodes programmatically, without
+string parsing.
+
+#### `pqlSel` — selector
+
+```ts
+import { pqlSel } from '@elastic/esql';
+
+pqlSel('up')                                    // up
+pqlSel('metric', '5m')                          // metric[5m]
+pqlSel('metric', { job: 'api' })                // metric{job="api"}
+pqlSel('metric', { job: 'api' }, '5m')          // metric{job="api"}[5m]
+pqlSel(undefined, { job: 'api' })               // {job="api"}
+```
+
+#### `pqlFunc` — function call or aggregation
+
+```ts
+import { pqlFunc, pqlSel } from '@elastic/esql';
+
+pqlFunc('rate', pqlSel('metric', '5m'))
+// rate(metric[5m])
+
+pqlFunc('sum', pqlSel('metric', '5m'), { by: ['job'] })
+// sum(metric[5m]) by (job)
+
+pqlFunc('histogram_quantile', [pqlNum(0.95), pqlSel('le_bucket', '5m')])
+// histogram_quantile(0.95, le_bucket[5m])
+```
+
+#### `pqlBinary` — binary expression
+
+```ts
+import { pqlBinary, pqlSel } from '@elastic/esql';
+
+pqlBinary('+', a, b)
+// a + b
+
+pqlBinary('==', a, b, { bool: true })
+// a == bool b
+
+pqlBinary('/', a, b, { on: ['job'], groupLeft: [] })
+// a / on(job) group_left b
+```
+
+#### Literals
+
+```ts
+import { pqlNum, pqlStr, pqlTime } from '@elastic/esql';
+
+pqlNum(0.95)   // 0.95
+pqlStr('val')  // "val"
+pqlTime('5m')  // 5m
+```
+
+#### Label matchers
+
+```ts
+import { pqlLabel, pqlLabels } from '@elastic/esql';
+
+pqlLabel('job', '=', 'api')            // job="api"
+pqlLabel('status', '=~', '2..')        // status=~"2.."
+
+pqlLabels({ job: 'api', env: 'prod' }) // {job="api", env="prod"}
+pqlLabels([pqlLabel('s', '!=', 'x')])  // {s!="x"}
+```
+
+#### Other builders
+
+| Function | Output |
+|---|---|
+| `pqlUnary('+' \| '-', expr)` | `+expr` / `-expr` |
+| `pqlParens(expr)` | `(expr)` |
+| `pqlSubquery(expr, '30m')` | `expr[30m:]` |
+| `pqlSubquery(expr, '30m', '5m')` | `expr[30m:5m]` |
+| `pqlOffset('5m')` | `offset 5m` |
+| `pqlAt('start()')` | `@ start()` |

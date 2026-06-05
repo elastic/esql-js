@@ -87,6 +87,74 @@ query.toRequest();
 query.toRequest().params; // [{ input : 123 }]
 ```
 
+## PromQL source queries
+
+ES|QL supports a `PROMQL` source command that embeds a PromQL expression as the
+data source of a query. Pass a raw PromQL string or a `pql`-tagged expression directly:
+
+```ts
+// pql tag
+esql.promql(esql.pql`sum(rate(metric[5m])) by (job)`).print();
+// PROMQL (sum(rate(metric[5m])) by (job))
+
+// Raw string
+esql.promql('rate(http_requests_total[5m])').print();
+// PROMQL (rate(http_requests_total[5m]))
+```
+
+The result is a `ComposerQuery`, so all chainable methods work as usual:
+
+```ts
+esql.promql(esql.pql`up`)
+  .where`value > 0`
+  .limit(100)
+  .print();
+// PROMQL (up) | WHERE value > 0 | LIMIT 100
+```
+
+### `esql.promql(expression, opts?)`
+
+| Option | Description | Example output |
+|---|---|---|
+| `params` | Key=value metadata before the expression | `PROMQL index = k8s (up)` |
+| `outputName` | Named output column using assignment syntax | `PROMQL result = (up)` |
+
+```ts
+// Command-level params
+esql.promql(esql.pql`up`, { params: { index: 'k8s' } }).print();
+// PROMQL index = k8s (up)
+
+// Named output column
+esql.promql(esql.pql`up`, { outputName: 'health' }).print();
+// PROMQL health = (up)
+
+// Both together
+esql.promql(esql.pql`up`, { params: { index: 'k8s' }, outputName: 'health' }).print();
+// PROMQL index = k8s health = (up)
+```
+
+### `esql.pql` — PromQL expression tag
+
+`esql.pql` is the `pql` tagged template exposed directly on the `esql` object,
+for convenience when you're already importing `esql`:
+
+```ts
+const expr = esql.pql`sum(rate(metric[5m])) by (job)`;
+esql.promql(expr).print();
+// PROMQL (sum(rate(metric[5m])) by (job))
+```
+
+### `query.promqlCommand`
+
+The `promqlCommand` getter on `ComposerQuery` returns the `PROMQL` command node:
+
+```ts
+const query = esql.promql(pqlSel('up'));
+const cmd = query.promqlCommand();
+
+cmd?.name;    // 'promql'
+```
+
 ## Conditionally add commands
 
 The simplest way to conditionally add commands to a query is to first construct
