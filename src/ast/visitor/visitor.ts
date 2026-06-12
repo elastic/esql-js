@@ -259,20 +259,19 @@ export class Visitor<
     );
   }
 
-  /* eslint-disable @typescript-eslint/no-explicit-any */
   public visitors<NewMethods extends VisitorMethods<Methods, Data>>(
     visitors: NewMethods
   ): Visitor<Methods & NewMethods, Data> {
     Object.assign(this.ctx.methods, visitors);
-    return this as any;
+    return this as unknown as Visitor<Methods & NewMethods, Data>;
   }
 
   public on<
     K extends keyof VisitorMethods<Methods, Data>,
     F extends VisitorMethods<Methods, Data>[K],
   >(visitor: K, fn: F): Visitor<Methods & { [KK in K]: F }, Data> {
-    (this.ctx.methods as any)[visitor] = fn;
-    return this as any;
+    Object.assign(this.ctx.methods, { [visitor]: fn });
+    return this as unknown as Visitor<Methods & { [KK in K]: F }, Data>;
   }
 
   /**
@@ -293,27 +292,29 @@ export class Visitor<
       switch (node.type) {
         case 'query': {
           this.ctx.assertMethodExists('visitQuery');
-          return this.ctx.methods.visitQuery!(ctx as any, input) as ReturnType<
-            NonNullable<Methods['visitQuery']>
-          >;
+          return this.ctx.methods.visitQuery!(
+            ctx as unknown as QueryVisitorContext<Methods, Data>,
+            input
+          ) as ReturnType<NonNullable<Methods['visitQuery']>>;
         }
         case 'header-command': {
           this.ctx.assertMethodExists('visitHeaderCommand');
-          return this.ctx.methods.visitHeaderCommand!(ctx as any, input) as ReturnType<
-            NonNullable<Methods['visitHeaderCommand']>
-          >;
+          return this.ctx.methods.visitHeaderCommand!(
+            ctx as unknown as HeaderCommandVisitorContext<Methods, Data>,
+            input
+          ) as ReturnType<NonNullable<Methods['visitHeaderCommand']>>;
         }
         case 'command': {
           this.ctx.assertMethodExists('visitCommand');
-          return this.ctx.methods.visitCommand!(ctx as any, input) as ReturnType<
-            NonNullable<Methods['visitCommand']>
-          >;
+          return this.ctx.methods.visitCommand!(
+            ctx as unknown as CommandVisitorContext<Methods, Data>,
+            input
+          ) as ReturnType<NonNullable<Methods['visitCommand']>>;
         }
       }
     }
     throw new Error(`Unsupported node type: ${typeof node}`);
   }
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   /**
    * Traverse the root node of ES|QL query with default context.
