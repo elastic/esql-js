@@ -75,6 +75,12 @@ const query = esql`
 
 query.pipe`LIMIT 10`;
 ```
+
+Use `.query` to append multiple piped commands at once:
+
+```ts
+query.query`WHERE status == ${{ status }} | STATS count = COUNT(*) | LIMIT ${{ limit }}`;
+```
 Check also the [`synth`](src/composer/synth/README.md) API for building independent nodes.
 
 
