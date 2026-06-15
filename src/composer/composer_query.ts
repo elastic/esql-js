@@ -8,6 +8,7 @@
 import { printTree } from 'tree-dump';
 import * as synth from './synth';
 import { BasicPrettyPrinter, WrappingPrettyPrinter } from '../pretty_print';
+import { SOURCE_COMMANDS } from '../parser';
 import { composerQuerySymbol, processTemplateHoles, validateParamName } from './util';
 import { Builder } from '../ast/builder';
 import type {
@@ -206,6 +207,123 @@ export class ComposerQuery {
    * ```
    */
   public readonly pipe: QueryCommandTag = this._createCommandTag(synth.cmd);
+
+  /**
+   * Similar to {@linkcode _createCommandTag}, but allows appending multiple
+   * commands at once by parsing a full query fragment.
+   */
+  private readonly _createMultiCommandTag = (
+    synthQueryTag: synth.SynthMethod<ESQLAstQueryExpression>
+  ): QueryCommandTag =>
+    ((templateOrQueryOrParamValues, ...rest: unknown[]) => {
+      const tagOrGeneratorWithParams =
+        (initialParamValues: Record<string, unknown>): QueryCommandTagParametrized =>
+        (templateOrQuery: string | TemplateStringsArray, ...holes: unknown[]) => {
+          const params: Record<string, unknown> = { ...initialParamValues };
+          let queryExpression: ESQLAstQueryExpression;
+
+          if (typeof templateOrQuery === 'string') {
+            const moreParamValues =
+              typeof holes[0] === 'object' && !Array.isArray(holes[0]) ? holes[0] : {};
+
+            Object.assign(params, moreParamValues);
+
+            queryExpression = synthQueryTag(templateOrQuery);
+          } else {
+            if (Array.isArray(holes))
+              processTemplateHoles(holes as ComposerQueryTagHole[], this.params);
+
+            queryExpression = synthQueryTag(
+              templateOrQuery as TemplateStringsArray,
+              ...(holes as synth.SynthTemplateHole[])
+            );
+          }
+
+          const firstCommand = queryExpression.commands[0];
+
+          if (firstCommand && SOURCE_COMMANDS.has(firstCommand.name.toUpperCase())) {
+            throw new Error(
+              `.query() does not accept source commands; use esql\`${firstCommand.name.toUpperCase()} ...\` to start a new query instead.`
+            );
+          }
+
+          for (const [name, value] of Object.entries(params)) {
+            validateParamName(name);
+            const exists = this.params.has(name);
+
+            if (exists) {
+              let newName: string;
+              while (true) {
+                newName = `${name}_${this.params.size}`;
+                if (!this.params.has(newName)) break;
+              }
+
+              this.params.set(newName, value);
+
+              const nodes = Walker.matchAll(queryExpression, {
+                type: 'literal',
+                literalType: 'param',
+                value: name,
+              }) as ESQLNamedParamLiteral[];
+
+              for (const node of nodes) {
+                node.value = newName;
+              }
+            } else {
+              this.params.set(name, value);
+            }
+          }
+
+          for (const command of queryExpression.commands) {
+            this.ast.commands.push(command);
+          }
+
+          if (queryExpression.header?.length) {
+            this.ast.header = this.ast.header || [];
+            this.ast.header.push(...queryExpression.header);
+          }
+
+          return this;
+        };
+
+      if (
+        !!templateOrQueryOrParamValues &&
+        typeof templateOrQueryOrParamValues === 'object' &&
+        !Array.isArray(templateOrQueryOrParamValues)
+      ) {
+        return tagOrGeneratorWithParams(
+          templateOrQueryOrParamValues as Record<string, unknown>
+        ) as QueryCommandTagParametrized;
+      }
+
+      const parametrized = tagOrGeneratorWithParams({});
+
+      if (typeof templateOrQueryOrParamValues === 'string') {
+        return parametrized(templateOrQueryOrParamValues, rest[0] as Record<string, unknown>);
+      } else {
+        return parametrized(
+          templateOrQueryOrParamValues as TemplateStringsArray,
+          ...(rest as ComposerQueryTagHole[])
+        );
+      }
+    }) as QueryCommandTag;
+
+  /**
+   * Appends multiple piped commands to the query in a single template literal.
+   * Unlike {@linkcode pipe}, which accepts exactly one command, this method
+   * parses a full pipeline fragment and appends all of its commands.
+   *
+   * ```typescript
+   * query.query`WHERE status == ${{ status }} | LIMIT ${{ limit }}`;
+   * ```
+   *
+   * All calling forms supported by {@linkcode pipe} are also supported here:
+   * pre-supplied params, string form, and `${{ }}` holes.
+   *
+   * Source commands (`FROM`, `ROW`, etc.) are not allowed in the fragment;
+   * use `esql\`FROM ...\`` to start a new query instead.
+   */
+  public readonly query: QueryCommandTag = this._createMultiCommandTag(synth.qry);
 
   /**
    * Appends a header command to the query. This is used to add commands like `SET`
