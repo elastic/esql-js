@@ -68,7 +68,7 @@ import {
   isParamLiteral,
   isProperNode,
 } from '../../ast/is';
-import { decorateWithComments } from './doc_helpers';
+import { commentListToDoc, commentToDoc, decorateWithComments } from './doc_helpers';
 
 export interface WrappingPrettyPrinterOptions extends BasicPrettyPrinterOptions {
   /**
@@ -225,12 +225,12 @@ export class WrappingPrettyPrinter {
   }
 
   /** Extract top-comment docs for a command (to place before its pipe). */
-  private extractTopCommentDocs(cmd: ESQLAstCommand): string[] {
+  private extractTopCommentDocs(cmd: ESQLAstCommand): Doc[] {
     const top = cmd.formatting?.top;
 
     if (!top?.length) return [];
 
-    return top.map((c) => LeafPrinter.comment(c));
+    return top.map((c) => commentToDoc(c));
   }
 
   // ---------------------------------------------------------- Header commands
@@ -373,7 +373,7 @@ export class WrappingPrettyPrinter {
     const leftComments = cmd.formatting?.left;
 
     if (leftComments?.length) {
-      return [LeafPrinter.commentList(leftComments), ' ', fullDoc];
+      return [commentListToDoc(leftComments), ' ', fullDoc];
     }
 
     return fullDoc;
@@ -522,9 +522,17 @@ export class WrappingPrettyPrinter {
     const innerCmds = innerQuery.commands;
     const pipeTabLen = this.opts.pipeTab.length;
     const innerCmdDocs = innerCmds.map((cmd, i) => this.docCmdVariant(cmd, i === 0, true));
-    const innerParts: Doc[] = [innerCmdDocs[0]];
+    const innerParts: Doc[] = [];
+
+    for (const c of this.extractTopCommentDocs(innerCmds[0])) {
+      innerParts.push(c, hardlineWithoutBreakParent);
+    }
+    innerParts.push(innerCmdDocs[0]);
 
     for (let i = 1; i < innerCmdDocs.length; i++) {
+      for (const c of this.extractTopCommentDocs(innerCmds[i])) {
+        innerParts.push(align(-pipeTabLen, [hardlineWithoutBreakParent, c]));
+      }
       innerParts.push(align(-pipeTabLen, [hardlineWithoutBreakParent, '| ', innerCmdDocs[i]]));
     }
 
@@ -652,13 +660,7 @@ export class WrappingPrettyPrinter {
     if (wrapLeft) leftDoc = ['(', leftDoc, ')'];
     if (wrapRight) rightDoc = ['(', rightDoc, ')'];
 
-    const hasLBD =
-      getPrettyPrintStats(leftItem).hasLineBreakingDecorations ||
-      getPrettyPrintStats(rightItem).hasLineBreakingDecorations;
-
-    return group([leftDoc, indent([line, operator + ' ', rightDoc])], {
-      shouldBreak: hasLBD,
-    });
+    return group([leftDoc, indent([line, operator + ' ', rightDoc])]);
   }
 
   /**

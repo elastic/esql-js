@@ -8,7 +8,38 @@
 import { breakParent, hardlineWithoutBreakParent, lineSuffix } from '../../printer/builders';
 import { LeafPrinter } from '../leaf_printer';
 import type { Doc } from '../../printer/types';
-import type { ESQLAstBaseItem } from '../../types';
+import type { ESQLAstBaseItem, ESQLAstComment, ESQLAstCommentMultiLine } from '../../types';
+
+export const commentToDoc = (node: ESQLAstComment): Doc => {
+  const raw = LeafPrinter.comment(node);
+
+  if (!raw.includes('\n')) return raw;
+
+  const lines = raw.split('\n');
+  const parts: Doc[] = [lines[0]];
+
+  for (let i = 1; i < lines.length; i++) {
+    parts.push(hardlineWithoutBreakParent, lines[i]);
+  }
+
+  return parts;
+};
+
+/**
+ * Convert a list of inline-prefix (`left`) comments to a Doc.
+ */
+export const commentListToDoc = (comments: ESQLAstCommentMultiLine[]): Doc => {
+  if (comments.length === 0) return '';
+  if (comments.length === 1) return commentToDoc(comments[0]);
+
+  const parts: Doc[] = [];
+  for (let i = 0; i < comments.length; i++) {
+    if (i > 0) parts.push(' ');
+    parts.push(commentToDoc(comments[i]));
+  }
+
+  return parts;
+};
 
 /**
  * Wraps a Doc with any comment decorations attached to the given AST node.
