@@ -53,9 +53,8 @@ FROM index | LIMIT 10`);
 
         expect('\n' + text).toBe(`
 SET timeout = "30s";
-FROM very_long_index_name_that_exceeds_line_length
-  | WHERE very_long_field_name == "value"
-  | LIMIT 100`);
+FROM
+  very_long_index_name_that_exceeds_line_length | WHERE very_long_field_name == "value" | LIMIT 100`);
       });
 
       test('multiple SET commands with long query', () => {
@@ -104,8 +103,7 @@ FROM very_long_index_name_that_exceeds_line_length | WHERE field == "value"`);
       expect('\n' + text).toBe(`
 FROM aaaaaaaaaaaa
   | RIGHT JOIN bbbbbbbbbbbbbbbbb
-        ON
-          dddddddddddddddddddddddddddddddddddddddd,
+        ON dddddddddddddddddddddddddddddddddddddddd,
           eeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee`);
     });
 
@@ -113,9 +111,8 @@ FROM aaaaaaaaaaaa
       assertReprint(
         `FROM employees
   | LEFT JOIN asdf
-        ON
-          aaaaaaaaaaaaaaaaaaaaaaaaa > bbbbbbbbbbbbbbbbbbbbb AND
-            ccccccccccccccccccc == dddddddddddddddddddddddddddddddddddddddd`
+        ON aaaaaaaaaaaaaaaaaaaaaaaaa > bbbbbbbbbbbbbbbbbbbbb
+            AND ccccccccccccccccccc == dddddddddddddddddddddddddddddddddddddddd`
       );
     });
   });
@@ -272,8 +269,8 @@ FROM index
       );
       expect(text).toBe(`FROM a
   | RERANK "query"
-        ON field1, field2, field3, field4, field5, field6, field7, field8, field9,
-          field10, field11, field12
+        ON field1, field2, field3, field4, field5, field6, field7, field8,
+          field9, field10, field11, field12
         WITH {"inference_id": "model"}`);
     });
   });
@@ -369,8 +366,9 @@ FROM index
   | FORK
       (
           WHERE x > 100
-        | KEEP field1, asd, asd, asd, asd, asd, asd, asd, asd, asd, asd, asd,
-            asd, asd, asd, asd, asd, asd, asd
+        | KEEP
+            field1, asd, asd, asd, asd, asd, asd, asd, asd, asd, asd, asd, asd,
+            asd, asd, asd, asd, asd, asd
       )
       (
           LIMIT 10
@@ -387,7 +385,7 @@ FROM index
       expect('\n' + text).toBe(`
 PROMQL
   step = "5m" start = ?_tstart end = ?_tend index = kibana_sample_data_logstsdb
-  col0 = (sum(avg(quantile_over_time(0.9, bytes{event.dataset="job"}[5m]))))`);
+  col0 = (sum(avg(quantile_over_time(0.9, bytes{event.dataset = "job"}[5m]))))`);
     });
 
     test('no parens query', () => {
@@ -401,7 +399,7 @@ PROMQL
         [
           'PROMQL',
           '  a = b',
-          '    some_very_very_ridiculously_long_query_such_that_it_needs_a_newline_break',
+          '  some_very_very_ridiculously_long_query_such_that_it_needs_a_newline_break',
         ].join('\n')
       );
     });
@@ -433,8 +431,9 @@ PROMQL
         'PROMQL name = (some_very_very_ridiculously_long_query_such_that_it_needs_a_newline_break)',
         [
           'PROMQL',
-          '  name =',
-          '    (some_very_very_ridiculously_long_query_such_that_it_needs_a_newline_break)',
+          '  name',
+          '    = (',
+          '      some_very_very_ridiculously_long_query_such_that_it_needs_a_newline_break)',
         ].join('\n')
       );
       assertReprint(
@@ -442,8 +441,9 @@ PROMQL
         [
           'PROMQL',
           '  a = b',
-          '  name =',
-          '    (some_very_very_ridiculously_long_query_such_that_it_needs_a_newline_break)',
+          '  name',
+          '    = (',
+          '      some_very_very_ridiculously_long_query_such_that_it_needs_a_newline_break)',
         ].join('\n')
       );
     });
@@ -570,8 +570,9 @@ describe('long query', () => {
       const text = reprint(query, { indent: '- ' }).text;
 
       expect('\n' + text).toBe(`
-- FROM index, another_index, yet_another_index, on-more-index, last_index,
--       very_last_index, ok_this_is_the_last_index`);
+- FROM
+-   index, another_index, yet_another_index, on-more-index, last_index,
+-   very_last_index, ok_this_is_the_last_index`);
     });
 
     test('wraps source list, leaves one item on last line', () => {
@@ -580,8 +581,9 @@ describe('long query', () => {
       const text = reprint(query).text;
 
       expect('\n' + text).toBe(`
-FROM index, another_index, yet_another_index, on-more-index, last_index,
-      very_last_index`);
+FROM
+  index, another_index, yet_another_index, on-more-index, last_index,
+  very_last_index`);
     });
 
     test('for a single very long source, prints a standalone line', () => {
@@ -602,8 +604,9 @@ FROM xxxxxxxxxx, yyyyyyyyyyy, zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz, aaaa,
       const text = reprint(query).text;
 
       expect('\n' + text).toBe(`
-FROM xxxxxxxxxx, yyyyyyyyyyy, zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz, aaaa,
-      bbbbbbbbbbbbbbbbbbb, ccccccccccccccccccccccccccc, gggggggggggggggg`);
+FROM
+  xxxxxxxxxx, yyyyyyyyyyy, zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz, aaaa,
+  bbbbbbbbbbbbbbbbbbb, ccccccccccccccccccccccccccc, gggggggggggggggg`);
     });
 
     test('keeps sources in a list, even if the last item consumes more than a line', () => {
@@ -614,8 +617,9 @@ FROM xxxxxxxxxx, yyyyyyyyyyy, zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz, aaaa,
       const text = reprint(query).text;
 
       expect('\n' + text).toBe(`
-FROM xxxxxxxxxx, yyyyyyyyyyy, zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz, aaaa,
-      bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb`);
+FROM
+  xxxxxxxxxx, yyyyyyyyyyy, zzzzzzzzzzzzzzzzzzzzzzzzzzzzzz, aaaa,
+  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb`);
     });
 
     test('breaks sources per-line, if list layout results into alone source per line', () => {
@@ -628,13 +632,9 @@ FROM xxxxxxxxxx, yyyyyyyyyyy, zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz,
 
       expect('\n' + text).toBe(`
 FROM
-  xxxxxxxxxx,
-  yyyyyyyyyyy,
-  zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz,
+  xxxxxxxxxx, yyyyyyyyyyy, zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz,
   aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa,
-  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb,
-  ccccccc,
-  ggggggggg`);
+  bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb, ccccccc, ggggggggg`);
     });
 
     test('breaks sources per-line, whe there is one large source', () => {
@@ -647,9 +647,7 @@ FROM xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
       expect('\n' + text).toBe(`
 FROM
   xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx,
-  yyyyyyyyyyy,
-  ccccccc,
-  ggggggggg`);
+  yyyyyyyyyyy, ccccccc, ggggggggg`);
     });
   });
 
@@ -702,9 +700,9 @@ FROM index1, index2, index2, index3, index4, index5, index6, index7, index8, ind
       const text = reprint(query, { pipeTab: '  ' }).text;
 
       expect('\n' + text).toBe(`
-FROM index1, index2, index2, index3, index4, index5, index6, index7, index8,
-      index9, index10, index11, index12, index13, index14, index15, index16,
-      index17
+FROM
+  index1, index2, index2, index3, index4, index5, index6, index7, index8,
+  index9, index10, index11, index12, index13, index14, index15, index16, index17
     METADATA _id, _source`);
     });
 
@@ -728,12 +726,9 @@ FROM
 
       expect('\n' + text).toBe(`
 👉 FROM
-👉   index,
-👉   another_index,
-👉   another_index,
+👉   index, another_index, another_index,
 👉   a_very_very_long_index_a_very_very_long_index_a_very_very_long_index,
-👉   another_index,
-👉   another_index
+👉   another_index, another_index
 👉     METADATA _id, _source`);
     });
 
@@ -813,7 +808,8 @@ FROM index
 
       expect('\n' + text).toBe(`
 - FROM index
--   | STATS AVG(height), SUM(weight), MIN(age), MAX(age), COUNT(*),
+-   | STATS
+-       AVG(height), SUM(weight), MIN(age), MAX(age), COUNT(*),
 -       SUPER_FUNCTION(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p)
 -   | LIMIT 10`);
     });
@@ -832,8 +828,8 @@ FROM index
 FROM index
   | STATS
       AVG(height),
-      SUPER_FUNCTION(some_column, another_column == "this is string",
-        1234567890.999991),
+      SUPER_FUNCTION(
+        some_column, another_column == "this is string", 1234567890.999991),
       SUM(weight)
   | LIMIT 10`);
     });
@@ -909,8 +905,7 @@ FROM index
   | STATS
       AVG(height),
       SUPER_FUNCTION(
-        "xxxx-xxxx-xxxxxxxxxxxxx-xxxxx-xxxxxxxx",
-        1234567890 + 1234567890,
+        "xxxx-xxxx-xxxxxxxxxxxxx-xxxxx-xxxxxxxx", 1234567890 + 1234567890,
         "zzzz-zzzz-zzzzzzzzzzzzzzzzz-zzzz-zzzzzzzzzzzzzz")
   | LIMIT 10`);
     });
@@ -929,10 +924,8 @@ FROM index
   | STATS
       AVG(height),
       SUPER_FUNCTION(
-        FUNC1(123 + 123123 - 12333.33 / FALSE),
-        FUNC2("abrakadabra what?"),
-        FUNC3(),
-        FUNC4())
+        FUNC1(123 + 123123 - 12333.33 / FALSE), FUNC2("abrakadabra what?"),
+        FUNC3(), FUNC4())
   | LIMIT 10`);
     });
 
@@ -948,12 +941,10 @@ FROM index
 FROM index
   | STATS
       SUPER_FUNCTION_NAME(
-        0.123123123123123 +
-          888811112.2323232 +
-          123123123123.12312 +
-          23232323.232323233 -
-          123 +
-          999)
+        0.123123123123123 + 888811112.2323232 + 123123123123.12312
+          + 23232323.232323233
+          - 123
+          + 999)
   | LIMIT 10`);
     });
   });
@@ -1016,8 +1007,9 @@ FROM index
       expect(text).toBe(`ROW
   FUNCTION(
     123456789,
-    {"abc1": 123, "abc2": 123, "abc3": 123, "abc4": 123, "abc5": 123, "abc6": 123,
-      "abc7": 123, "abc8": 123, "abc9": 123})`);
+    {
+      "abc1": 123, "abc2": 123, "abc3": 123, "abc4": 123, "abc5": 123,
+      "abc6": 123, "abc7": 123, "abc8": 123, "abc9": 123})`);
     });
 
     test('one long map entry', () => {
@@ -1028,8 +1020,7 @@ FROM index
 
       expect(text).toBe(`ROW
   FUNCTION(
-    123456789,
-    {"abcdefghijklmnopqrstuvwxyz-1": "abcdefghijklmnopqrstuvwxyz"})`);
+    123456789, {"abcdefghijklmnopqrstuvwxyz-1": "abcdefghijklmnopqrstuvwxyz"})`);
     });
 
     test('couple long map entries', () => {
@@ -1044,8 +1035,7 @@ FROM index
     123456789,
     {
       "abcdefghijklmnopqrstuvwxyz-1": "abcdefghijklmnopqrstuvwxyz",
-      "abcdefghijklmnopqrstuvwxyz-2": "abcdefghijklmnopqrstuvwxyz"
-    })`);
+      "abcdefghijklmnopqrstuvwxyz-2": "abcdefghijklmnopqrstuvwxyz"})`);
     });
 
     test('few long map entries', () => {
@@ -1064,9 +1054,9 @@ FROM index
       "abcdefghijklmnopqrstuvwxyz-2": "abcdefghijklmnopqrstuvwxyz",
       "abcdefghijklmnopqrstuvwxyz-3": "abcdefghijklmnopqrstuvwxyz",
       "abcdefghijklmnopqrstuvwxyz-4":
-        ["abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvwxyz",
-          "abcdefghijklmnopqrstuvwxyz"]
-    })`);
+        [
+          "abcdefghijklmnopqrstuvwxyz", "abcdefghijklmnopqrstuvwxyz",
+          "abcdefghijklmnopqrstuvwxyz"]})`);
     });
 
     test('can break up large map entries into two lines', () => {
@@ -1082,8 +1072,7 @@ FROM index
     {
       "abcdefghijklmnopqrstuvwxyz-1": "abcdefghijklmnopqrstuvwxyz",
       "abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-2":
-        "abcdefghijklmnopqrstuvwxyz"
-    })`);
+        "abcdefghijklmnopqrstuvwxyz"})`);
     });
 
     test('can break up large map entries into two lines when key is long', () => {
@@ -1099,8 +1088,7 @@ FROM index
     {
       "abcdefghijklmnopqrstuvwxyz-1": "abcdefghijklmnopqrstuvwxyz",
       "abc":
-        "abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz"
-    })`);
+        "abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz-abcdefghijklmnopqrstuvwxyz"})`);
     });
 
     test('supports wrapping in nested maps', () => {
@@ -1112,9 +1100,7 @@ FROM index
       "map":
         {
           "aaaaaaaaaaaaaaaaaaaaa": 111111111111111,
-          "bbbbbbbbbbbbbbbbbbbbbbbb": 222222222222222
-        }
-    })`
+          "bbbbbbbbbbbbbbbbbbbbbbbb": 222222222222222}})`
       );
     });
 
@@ -1138,9 +1124,9 @@ FROM index
         const text = reprint(src, { wrap: 60 }).text;
 
         expect(text).toBe(`PROMQL
-    index = my_very_long_index_name_that_should_wrap
-    time = ?param
-    bytes[5m]`);
+  index = my_very_long_index_name_that_should_wrap
+  time = ?param
+  bytes[5m]`);
       });
 
       test('long query', () => {
@@ -1149,11 +1135,10 @@ FROM index
 
         expect(text).toBe(
           `PROMQL
-    index = kibana_sample_data_logstsdb
-    step = ?_step
-    start = ?_something_very_very_long_to_force_wrapping
-    end = ?_end
-    rate(byres_counter[5m])`
+  index = kibana_sample_data_logstsdb step = ?_step
+  start = ?_something_very_very_long_to_force_wrapping
+  end = ?_end
+  rate(byres_counter[5m])`
         );
       });
 
@@ -1163,11 +1148,9 @@ FROM index
 
         expect(text).toBe(
           `PROMQL
-    index = kibana_sample_data_logstsdb
-    step = 5m
-    start = "2026-01-08T19:30:00.000Z"
-    end = ?_end
-    rate(byres_counter[5m])`
+  index = kibana_sample_data_logstsdb step = 5m
+  start = "2026-01-08T19:30:00.000Z" end = ?_end
+  rate(byres_counter[5m])`
         );
       });
     });
@@ -1191,13 +1174,8 @@ PROMQL
 
         expect('\n' + text).toBe(`
 PROMQL
-    key1 = value1
-    key2 = value2
-    key3 = value3
-    key4 = value4
-    key5 = value5
-    key6 = value6
-    key7 = value7
+  key1 = value1 key2 = value2 key3 = value3 key4 = value4 key5 = value5
+  key6 = value6 key7 = value7
   query_name = (query)`);
       });
     });
@@ -1216,8 +1194,8 @@ FROM index
 FROM index
   | STATS
       SUPER_FUNCTION_NAME(
-        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx" +
-          "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
+        "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+          + "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx")
   | LIMIT 10`);
     });
 
@@ -1234,13 +1212,8 @@ FROM index
 FROM index
   | STATS
       FN(
-        123456789 +
-          123456789 -
-          123456789 +
-          123456789 -
-          123456789 +
-          123456789 -
-          123456789)
+        123456789 + 123456789 - 123456789 + 123456789 - 123456789 + 123456789
+          - 123456789)
   | LIMIT 10`);
       });
 
@@ -1256,12 +1229,11 @@ FROM index
 FROM index
   | STATS
       SUPER_FUNCTION_NAME(
-        11111111111111.111 +
-          11111111111111.111 * 11111111111111.111 +
-          ANOTHER_FUNCTION_GOES_HERE("this will get wrapped", "at this word",
-            "and one more long string") -
-          111 +
-          111)
+        11111111111111.111 + 11111111111111.111 * 11111111111111.111
+          + ANOTHER_FUNCTION_GOES_HERE(
+            "this will get wrapped", "at this word", "and one more long string")
+          - 111
+          + 111)
   | LIMIT 10`);
       });
 
@@ -1277,13 +1249,11 @@ FROM index
 FROM index
   | STATS
       FN(
-        11111111111111.111 +
-          3333333333333.3335 *
-            3333333333333.3335 *
-            3333333333333.3335 *
-            3333333333333.3335 +
-          11111111111111.111 +
-          11111111111111.111)
+        11111111111111.111
+          + 3333333333333.3335 * 3333333333333.3335 * 3333333333333.3335
+            * 3333333333333.3335
+          + 11111111111111.111
+          + 11111111111111.111)
   | LIMIT 10`);
       });
 
@@ -1298,8 +1268,9 @@ FROM index
         expect('\n' + text).toBe(`
 FROM index
   | STATS
-      FN(11111111111111 - 11111111111111 - 11111111111111 - 11111111111111) WHERE
-        11111111111111 == AHA(11111111111111 + 11111111111111 + 11111111111111)
+      FN(11111111111111 - 11111111111111 - 11111111111111 - 11111111111111)
+        WHERE 11111111111111
+          == AHA(11111111111111 + 11111111111111 + 11111111111111)
   | LIMIT 10`);
       });
     });
@@ -1315,25 +1286,13 @@ ROW (asdf + asdf)::string, 1.2::string, "1234"::integer, (12321342134 + 23412341
 
       expect('\n' + text).toBe(`
 - ROW
--   (asdf + asdf)::string,
--   1.2::string,
--   "1234"::integer,
--   (12321342134 +
--     2341234123432 +
--     23423423423 +
--     234234234 +
--     234234323423 +
--     3343423424234234)::integer,
+-   (asdf + asdf)::STRING, 1.2::STRING, "1234"::INTEGER,
+-   (12321342134 + 2341234123432 + 23423423423 + 234234234 + 234234323423
+-     + 3343423424234234)::INTEGER,
 -   FUNCTION_NAME(
--     123456789 +
--       123456789 +
--       123456789 +
--       123456789 +
--       123456789 +
--       123456789 +
--       123456789,
--     "bbbbbbbbbbbbbb",
--     "aaaaaaaaaaa")::boolean`);
+-     123456789 + 123456789 + 123456789 + 123456789 + 123456789 + 123456789
+-       + 123456789,
+-     "bbbbbbbbbbbbbb", "aaaaaaaaaaa")::BOOLEAN`);
     });
   });
 
@@ -1346,7 +1305,8 @@ ROW (asdf + asdf)::string, 1.2::string, "1234"::integer, (12321342134 + 23412341
 
         expect('\n' + text).toBe(`
 ROW
-  [1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890,
+  [
+    1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890,
     1234567890, 1234567890, 1234567890]`);
       });
 
@@ -1359,7 +1319,8 @@ ROW
 
         expect('\n' + text).toBe(`
 ROW
-  [1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890,
+  [
+    1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890,
     1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890,
     1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890,
     1234567890, 1234567890, 1234567890]`);
@@ -1384,8 +1345,7 @@ ROW
                     1234567890,
                     1234567890,
                     1234567890,
-                    1234567890
-                  ]))))))))`);
+                    1234567890]))))))))`);
       });
     });
 
@@ -1397,7 +1357,8 @@ ROW
 
         expect('\n' + text).toBe(`
 ROW
-  ["some text", "another text", "one more text literal", "and another one",
+  [
+    "some text", "another text", "one more text literal", "and another one",
     "and one more", "and one more", "and one more", "and one more",
     "and one more"]`);
       });
@@ -1412,8 +1373,7 @@ ROW
   [
     "..............................................",
     "..............................................",
-    ".............................................."
-  ]`);
+    ".............................................."]`);
       });
     });
   });
@@ -1427,9 +1387,10 @@ ROW
       expect('\n' + text).toBe(`
 FROM a
   | WHERE
-      b IN
-        (1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890,
-          1234567890, 1234567890, 1234567890)`);
+      b
+        IN (
+          1234567890, 1234567890, 1234567890, 1234567890, 1234567890,
+          1234567890, 1234567890, 1234567890, 1234567890)`);
     });
 
     test('breaks lists with long items', () => {
@@ -1440,12 +1401,11 @@ FROM a
       expect('\n' + text).toBe(`
 FROM a
   | WHERE
-      b NOT IN
-        (
+      b
+        NOT IN (
           "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
           "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz",
-          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz"
-        )`);
+          "abcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyzabcdefghijklmnopqrstuvwxyz")`);
     });
   });
 });
@@ -1459,10 +1419,9 @@ describe('binary operator precedence and grouping', () => {
     expect(text).toBe(
       'FROM index\n' +
         '  | EVAL\n' +
-        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
-        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb /\n' +
-        '          (ccccccccccccccccccccccccccccccccccccccccccccc *\n' +
-        '          100000000000)'
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n' +
+        '        = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n' +
+        '          / (ccccccccccccccccccccccccccccccccccccccccccccc * 100000000000)'
     );
   });
 
@@ -1485,10 +1444,9 @@ describe('binary operator precedence and grouping', () => {
     expect(text).toBe(
       'FROM index\n' +
         '  | EVAL\n' +
-        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
-        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb -\n' +
-        '          (ccccccccccccccccccccccccccccccccccccccccccccc +\n' +
-        '          100000000000)'
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n' +
+        '        = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n' +
+        '          - (ccccccccccccccccccccccccccccccccccccccccccccc + 100000000000)'
     );
   });
 
@@ -1503,10 +1461,9 @@ describe('binary operator precedence and grouping', () => {
     expect(text).toBe(
       'FROM index\n' +
         '  | EVAL\n' +
-        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
-        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb %\n' +
-        '          (ccccccccccccccccccccccccccccccccccccccccccccc *\n' +
-        '          100000000000)'
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n' +
+        '        = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n' +
+        '          % (ccccccccccccccccccccccccccccccccccccccccccccc * 100000000000)'
     );
   });
 
@@ -1521,10 +1478,9 @@ describe('binary operator precedence and grouping', () => {
     expect(text).toBe(
       'FROM index\n' +
         '  | EVAL\n' +
-        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa =\n' +
-        '        bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb *\n' +
-        '          ccccccccccccccccccccccccccccccccccccccccccccc /\n' +
-        '          100000000000'
+        '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n' +
+        '        = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n' +
+        '          * ccccccccccccccccccccccccccccccccccccccccccccc / 100000000000'
     );
   });
 
@@ -1551,16 +1507,16 @@ describe('unary operator precedence and grouping', () => {
   test('NOT should parenthesize OR expressions', () => {
     assertReprint(
       `ROW
-  NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa OR
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`
+  NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    OR bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`
     );
   });
 
   test('NOT should parenthesize AND expressions', () => {
     assertReprint(
       `ROW
-  NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa AND
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`
+  NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    AND bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`
     );
   });
 
@@ -1570,28 +1526,28 @@ describe('unary operator precedence and grouping', () => {
   NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa >
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`,
       `ROW
-  NOT aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa >
-    bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb`
+  NOT aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    > bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb`
     );
   });
 
   test('NOT should parenthesize OR expressions on the right side', () => {
     assertReprint(
       `ROW
-  NOT aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa OR
-    NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ==
-      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa OR
-      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa ==
-        aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)`
+  NOT aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    OR NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      == aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      OR aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+        == aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa)`
     );
   });
 
   test('unary minus should parenthesize addition', () => {
     assertReprint(
       `ROW
-  -2 *
-    (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa +
-      bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`
+  -2
+    * (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+      + bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`
     );
   });
 });
@@ -1602,10 +1558,11 @@ describe('subqueries (parens)', () => {
       'FROM main_index_with_a_long_name | WHERE main_field_with_a_long_name IN (FROM sub_index_with_a_long_name | WHERE sub_field_with_a_long_name > 10 | KEEP sub_field_with_a_long_name)',
       `FROM main_index_with_a_long_name
   | WHERE
-      main_field_with_a_long_name IN
-        (FROM sub_index_with_a_long_name
-          | WHERE sub_field_with_a_long_name > 10
-          | KEEP sub_field_with_a_long_name)`
+      main_field_with_a_long_name
+        IN (
+          FROM sub_index_with_a_long_name
+            | WHERE sub_field_with_a_long_name > 10
+            | KEEP sub_field_with_a_long_name)`
     );
   });
 
@@ -1617,14 +1574,14 @@ describe('subqueries (parens)', () => {
       src,
       `FROM
   index1,
-  (FROM index2
-    | WHERE a > 10
-    | EVAL b = a * 2
-    | STATS cnt = COUNT(*) BY c
-    | SORT cnt DESC
-    | LIMIT 10),
-  index3,
-  (FROM index4 | STATS COUNT(*))
+  (
+    FROM index2
+      | WHERE a > 10
+      | EVAL b = a * 2
+      | STATS cnt = COUNT(*) BY c
+      | SORT cnt DESC
+      | LIMIT 10),
+  index3, (FROM index4 | STATS COUNT(*))
   | WHERE d > 10
   | STATS max = MAX(*) BY e
   | SORT max DESC`
@@ -1636,10 +1593,11 @@ describe('subqueries (parens)', () => {
       'FROM main_index_with_a_long_name | WHERE main_field_with_a_long_name IN (TS sub_index_with_a_long_name | WHERE sub_field_with_a_long_name > 10 | KEEP sub_field_with_a_long_name)',
       `FROM main_index_with_a_long_name
   | WHERE
-      main_field_with_a_long_name IN
-        (TS sub_index_with_a_long_name
-          | WHERE sub_field_with_a_long_name > 10
-          | KEEP sub_field_with_a_long_name)`
+      main_field_with_a_long_name
+        IN (
+          TS sub_index_with_a_long_name
+            | WHERE sub_field_with_a_long_name > 10
+            | KEEP sub_field_with_a_long_name)`
     );
   });
 
@@ -1653,4 +1611,21 @@ describe('subqueries (parens)', () => {
   });
 });
 
-test.todo('Idempotence on multiple times pretty printing');
+test('Idempotence on multiple times pretty printing', () => {
+  const queries = [
+    'FROM index',
+    'FROM index | WHERE a == 1 | LIMIT 10',
+    'FROM index | STATS AVG(height), SUM(weight), MIN(age), MAX(age), COUNT(*), SUPER_FUNCTION(a, b, c, d, e, f, g, h, i, j, k, l, m, n, o, p) | LIMIT 10',
+    'FROM index | EVAL x = (12321342134 + 2341234123432 + 23423423423 + 234234234 + 234234323423 + 3343423424234234)::INTEGER | LIMIT 10',
+    'FROM a | LEFT JOIN asdf ON aaaaaaaaaaaaaaaaaaaaaaaaa > bbbbbbbbbbbbbbbbbbbbb AND ccccccccccccccccccc == dddddddddddddddddddddddddddddddddddddddd',
+    'FROM main_index_with_a_long_name | WHERE main_field_with_a_long_name IN (FROM sub_index_with_a_long_name | WHERE sub_field_with_a_long_name > 10 | KEEP sub_field_with_a_long_name)',
+    'ROW [1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890, 1234567890]',
+    'PROMQL index = kibana_sample_data_logstsdb step = ?_step start = ?_something_very_very_long_to_force_wrapping end = ?_end rate(byres_counter[5m])',
+  ];
+
+  for (const src of queries) {
+    const once = reprint(src).text;
+    const twice = reprint(once).text;
+    expect(twice).toBe(once);
+  }
+});
