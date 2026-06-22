@@ -78,7 +78,6 @@ export class GlobalVisitorContext<
     input: types.VisitorInput<Methods, Method>
   ): types.VisitorOutput<Methods, Method> {
     this.assertMethodExists(method);
-    // This any could be cleaned by deleting this method, keeping it is atrade off between having it and a bit more of verbosity.
     /* eslint-disable-next-line @typescript-eslint/no-explicit-any */
     return this.methods[method]!(context as any, input);
   }
@@ -103,116 +102,205 @@ export class GlobalVisitorContext<
     commandNode: ESQLAstCommand,
     input: types.CommandVisitorInput<Methods>
   ): types.CommandVisitorOutput<Methods> {
-    // These anys could be cleaned by not using the AnyToVoid wrapper,
-    // but would like to understand better the tradeoffs before doing this change.
-    /* eslint-disable @typescript-eslint/no-explicit-any */
     switch (commandNode.name) {
       case 'from': {
         if (!this.methods.visitFromCommand) break;
-        return this.visitFromCommand(parent, commandNode, input as any);
+        return this.visitFromCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitFromCommand'>
+        );
       }
       case 'limit': {
         if (!this.methods.visitLimitCommand) break;
-        return this.visitLimitCommand(parent, commandNode, input as any);
+        return this.visitLimitCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitLimitCommand'>
+        );
       }
       case 'explain': {
         if (!this.methods.visitExplainCommand) break;
-        return this.visitExplainCommand(parent, commandNode, input as any);
+        return this.visitExplainCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitExplainCommand'>
+        );
       }
       case 'row': {
         if (!this.methods.visitRowCommand) break;
-        return this.visitRowCommand(parent, commandNode, input as any);
+        return this.visitRowCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitRowCommand'>
+        );
       }
       case 'ts': {
         if (!this.methods.visitTimeseriesCommand) break;
-        return this.visitTimeseriesCommand(parent, commandNode, input as any);
+        return this.visitTimeseriesCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitTimeseriesCommand'>
+        );
       }
       case 'show': {
         if (!this.methods.visitShowCommand) break;
-        return this.visitShowCommand(parent, commandNode, input as any);
+        return this.visitShowCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitShowCommand'>
+        );
       }
       case 'meta': {
         if (!this.methods.visitMetaCommand) break;
-        return this.visitMetaCommand(parent, commandNode, input as any);
+        return this.visitMetaCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitMetaCommand'>
+        );
       }
       case 'eval': {
         if (!this.methods.visitEvalCommand) break;
-        return this.visitEvalCommand(parent, commandNode, input as any);
+        return this.visitEvalCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitEvalCommand'>
+        );
       }
       case 'stats': {
         if (!this.methods.visitStatsCommand) break;
-        return this.visitStatsCommand(parent, commandNode, input as any);
+        return this.visitStatsCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitStatsCommand'>
+        );
       }
       case 'inline stats': {
         if (!this.methods.visitInlineStatsCommand) break;
-        return this.visitInlineStatsCommand(parent, commandNode, input as any);
+        return this.visitInlineStatsCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitInlineStatsCommand'>
+        );
       }
       case 'lookup': {
         if (!this.methods.visitLookupCommand) break;
-        return this.visitLookupCommand(parent, commandNode, input as any);
+        return this.visitLookupCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitLookupCommand'>
+        );
       }
       case 'keep': {
         if (!this.methods.visitKeepCommand) break;
-        return this.visitKeepCommand(parent, commandNode, input as any);
+        return this.visitKeepCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitKeepCommand'>
+        );
       }
       case 'sort': {
         if (!this.methods.visitSortCommand) break;
-        return this.visitSortCommand(parent, commandNode, input as any);
+        return this.visitSortCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitSortCommand'>
+        );
       }
       case 'where': {
         if (!this.methods.visitWhereCommand) break;
-        return this.visitWhereCommand(parent, commandNode, input as any);
+        return this.visitWhereCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitWhereCommand'>
+        );
       }
       case 'drop': {
         if (!this.methods.visitDropCommand) break;
-        return this.visitDropCommand(parent, commandNode, input as any);
+        return this.visitDropCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitDropCommand'>
+        );
       }
       case 'rename': {
         if (!this.methods.visitRenameCommand) break;
-        return this.visitRenameCommand(parent, commandNode, input as any);
+        return this.visitRenameCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitRenameCommand'>
+        );
       }
       case 'dissect': {
         if (!this.methods.visitDissectCommand) break;
-        return this.visitDissectCommand(parent, commandNode, input as any);
+        return this.visitDissectCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitDissectCommand'>
+        );
       }
       case 'grok': {
         if (!this.methods.visitGrokCommand) break;
-        return this.visitGrokCommand(parent, commandNode, input as any);
+        return this.visitGrokCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitGrokCommand'>
+        );
       }
       case 'enrich': {
         if (!this.methods.visitEnrichCommand) break;
-        return this.visitEnrichCommand(parent, commandNode, input as any);
+        return this.visitEnrichCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitEnrichCommand'>
+        );
       }
       case 'mv_expand': {
         if (!this.methods.visitMvExpandCommand) break;
-        return this.visitMvExpandCommand(parent, commandNode, input as any);
+        return this.visitMvExpandCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitMvExpandCommand'>
+        );
       }
       case 'join': {
         if (!this.methods.visitJoinCommand) break;
-        return this.visitJoinCommand(parent, commandNode as ESQLAstJoinCommand, input as any);
+        return this.visitJoinCommand(
+          parent,
+          commandNode as ESQLAstJoinCommand,
+          input as types.VisitorInput<Methods, 'visitJoinCommand'>
+        );
       }
       case 'rerank': {
         if (!this.methods.visitRerankCommand) break;
-        return this.visitRerankCommand(parent, commandNode as ESQLAstRerankCommand, input as any);
+        return this.visitRerankCommand(
+          parent,
+          commandNode as ESQLAstRerankCommand,
+          input as types.VisitorInput<Methods, 'visitRerankCommand'>
+        );
       }
       case 'change_point': {
         if (!this.methods.visitChangePointCommand) break;
         return this.visitChangePointCommand(
           parent,
           commandNode as ESQLAstChangePointCommand,
-          input as any
+          input as types.VisitorInput<Methods, 'visitChangePointCommand'>
         );
       }
       case 'fork': {
         if (!this.methods.visitForkCommand) break;
-        return this.visitForkCommand(parent, commandNode, input as any);
+        return this.visitForkCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitForkCommand'>
+        );
       }
       case 'completion': {
         if (!this.methods.visitCompletionCommand) break;
         return this.visitCompletionCommand(
           parent,
           commandNode as ESQLAstCompletionCommand,
-          input as any
+          input as types.VisitorInput<Methods, 'visitCompletionCommand'>
         );
       }
       case 'registered_domain': {
@@ -220,39 +308,55 @@ export class GlobalVisitorContext<
         return this.visitRegisteredDomainCommand(
           parent,
           commandNode as ESQLAstRegisteredDomainCommand,
-          input as any
+          input as types.VisitorInput<Methods, 'visitRegisteredDomainCommand'>
         );
       }
       case 'sample': {
         if (!this.methods.visitSampleCommand) break;
-        return this.visitSampleCommand(parent, commandNode, input as any);
+        return this.visitSampleCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitSampleCommand'>
+        );
       }
       case 'fuse': {
         if (!this.methods.visitFuseCommand) break;
-        return this.visitFuseCommand(parent, commandNode, input as any);
+        return this.visitFuseCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitFuseCommand'>
+        );
       }
       case 'mmr': {
         if (!this.methods.visitMmrCommand) break;
-        return this.visitMmrCommand(parent, commandNode, input as any);
+        return this.visitMmrCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitMmrCommand'>
+        );
       }
       case 'uri_parts': {
         if (!this.methods.visitUriPartsCommand) break;
         return this.visitUriPartsCommand(
           parent,
           commandNode as ESQLAstUriPartsCommand,
-          input as any
+          input as types.VisitorInput<Methods, 'visitUriPartsCommand'>
         );
       }
       case 'ts_info': {
         if (!this.methods.visitTsInfoCommand) break;
-        return this.visitTsInfoCommand(parent, commandNode as ESQLAstTsInfoCommand, input as any);
+        return this.visitTsInfoCommand(
+          parent,
+          commandNode as ESQLAstTsInfoCommand,
+          input as types.VisitorInput<Methods, 'visitTsInfoCommand'>
+        );
       }
       case 'metrics_info': {
         if (!this.methods.visitMetricsInfoCommand) break;
         return this.visitMetricsInfoCommand(
           parent,
           commandNode as ESQLAstMetricsInfoCommand,
-          input as any
+          input as types.VisitorInput<Methods, 'visitMetricsInfoCommand'>
         );
       }
       case 'user_agent': {
@@ -260,17 +364,24 @@ export class GlobalVisitorContext<
         return this.visitUserAgentCommand(
           parent,
           commandNode as ESQLAstUserAgentCommand,
-          input as any
+          input as types.VisitorInput<Methods, 'visitUserAgentCommand'>
         );
       }
       case 'dedup': {
         if (!this.methods.visitDedupCommand) break;
-        return this.visitDedupCommand(parent, commandNode, input as any);
+        return this.visitDedupCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitDedupCommand'>
+        );
       }
     }
-    return this.visitCommandGeneric(parent, commandNode, input as any);
+    return this.visitCommandGeneric(
+      parent,
+      commandNode,
+      input as types.VisitorInput<Methods, 'visitCommand'>
+    );
   }
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   public visitHeaderCommand(
     parent: contexts.VisitorContext | null,
@@ -617,52 +728,95 @@ export class GlobalVisitorContext<
       throw new Error('should not happen');
     }
 
-    /* eslint-disable @typescript-eslint/no-explicit-any */
     switch (expressionNode.type) {
       case 'column': {
         if (!this.methods.visitColumnExpression) break;
-        return this.visitColumnExpression(parent, expressionNode, input as any);
+        return this.visitColumnExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitColumnExpression'>
+        );
       }
       case 'source': {
         if (!this.methods.visitSourceExpression) break;
-        return this.visitSourceExpression(parent, expressionNode, input as any);
+        return this.visitSourceExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitSourceExpression'>
+        );
       }
       case 'function': {
         if (!this.methods.visitFunctionCallExpression) break;
-        return this.visitFunctionCallExpression(parent, expressionNode, input as any);
+        return this.visitFunctionCallExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitFunctionCallExpression'>
+        );
       }
       case 'literal': {
         if (!this.methods.visitLiteralExpression) break;
-        return this.visitLiteralExpression(parent, expressionNode, input as any);
+        return this.visitLiteralExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitLiteralExpression'>
+        );
       }
       case 'list': {
         if (!this.methods.visitListLiteralExpression) break;
-        return this.visitListLiteralExpression(parent, expressionNode, input as any);
+        return this.visitListLiteralExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitListLiteralExpression'>
+        );
       }
       case 'inlineCast': {
         if (!this.methods.visitInlineCastExpression) break;
-        return this.visitInlineCastExpression(parent, expressionNode, input as any);
+        return this.visitInlineCastExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitInlineCastExpression'>
+        );
       }
       case 'order': {
         if (!this.methods.visitOrderExpression) break;
-        return this.visitOrderExpression(parent, expressionNode, input as any);
+        return this.visitOrderExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitOrderExpression'>
+        );
       }
       case 'identifier': {
         if (!this.methods.visitIdentifierExpression) break;
-        return this.visitIdentifierExpression(parent, expressionNode, input as any);
+        return this.visitIdentifierExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitIdentifierExpression'>
+        );
       }
       case 'map': {
         if (!this.methods.visitMapExpression) break;
-        return this.visitMapExpression(parent, expressionNode, input as any);
+        return this.visitMapExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitMapExpression'>
+        );
       }
       case 'map-entry': {
         if (!this.methods.visitMapEntryExpression) break;
-        return this.visitMapEntryExpression(parent, expressionNode, input as any);
+        return this.visitMapEntryExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitMapEntryExpression'>
+        );
       }
       case 'query': {
         if ('dialect' in expressionNode && expressionNode.dialect === 'promql') {
           if (!this.methods.visitPromqlExpression) break;
-          return this.visitPromqlExpression(parent, expressionNode, input as any);
+          return this.visitPromqlExpression(
+            parent,
+            expressionNode,
+            input as types.VisitorInput<Methods, 'visitPromqlExpression'>
+          );
         }
         if (
           !this.methods.visitQuery ||
@@ -670,20 +824,31 @@ export class GlobalVisitorContext<
           !('commands' in expressionNode)
         )
           break;
-        return this.visitQuery(parent, expressionNode, input as any);
+        return this.visitQuery(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitQuery'>
+        );
       }
       case 'parens': {
         if (this.methods.visitParensExpression) {
-          const result = this.visitParensExpression(parent, expressionNode, input as any);
+          const result = this.visitParensExpression(
+            parent,
+            expressionNode,
+            input as types.VisitorInput<Methods, 'visitParensExpression'>
+          );
           if (result) return result;
         }
         // Parens wraps subqueries: can return null to let comments attach to nodes inside the subquery
         break;
       }
     }
-    return this.visitExpressionGeneric(parent, expressionNode, input as any);
+    return this.visitExpressionGeneric(
+      parent,
+      expressionNode,
+      input as types.VisitorInput<Methods, 'visitExpression'>
+    );
   }
-  /* eslint-enable @typescript-eslint/no-explicit-any */
 
   public visitQuery(
     parent: contexts.VisitorContext | null,

@@ -92,6 +92,8 @@ import { TsCollapseCommandContext } from "./esql_parser.js";
 import { LookupCommandContext } from "./esql_parser.js";
 import { InsistCommandContext } from "./esql_parser.js";
 import { DedupCommandContext } from "./esql_parser.js";
+import { HighlightCommandContext } from "./esql_parser.js";
+import { QualifiedNamesContext } from "./esql_parser.js";
 import { UriPartsCommandContext } from "./esql_parser.js";
 import { RegisteredDomainCommandContext } from "./esql_parser.js";
 import { UserAgentCommandContext } from "./esql_parser.js";
@@ -996,6 +998,26 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitDedupCommand?: (ctx: DedupCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.highlightCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterHighlightCommand?: (ctx: HighlightCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.highlightCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitHighlightCommand?: (ctx: HighlightCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.qualifiedNames`.
+	 * @param ctx the parse tree
+	 */
+	enterQualifiedNames?: (ctx: QualifiedNamesContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.qualifiedNames`.
+	 * @param ctx the parse tree
+	 */
+	exitQualifiedNames?: (ctx: QualifiedNamesContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.uriPartsCommand`.
 	 * @param ctx the parse tree
