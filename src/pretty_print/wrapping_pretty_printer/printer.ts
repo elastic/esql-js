@@ -21,6 +21,7 @@ import {
 import { layout } from '../../printer/layout';
 import type { Doc, LayoutOpts } from '../../printer';
 import type {
+  ESQLAstBaseItem,
   ESQLAstCommand,
   ESQLAstForkCommand,
   ESQLAstQueryExpression,
@@ -502,16 +503,19 @@ export class WrappingPrettyPrinter {
         return ['(', join([' | '], innerFlatDocs), ')'];
       });
       const branchesDoc: Doc = join([' '], flatBranches);
+      const doc = group([cmdName, ' ', branchesDoc]);
+      const leftComments = cmd.formatting?.left;
 
-      return decorateWithComments(cmd, group([cmdName, ' ', branchesDoc]));
+      return leftComments?.length ? [commentListToDoc(leftComments), ' ', doc] : doc;
     }
 
     // Multiline with expanded branch format
     const mlBranches = cmd.args.map((branch) => this.docForkBranch(branch));
     const branchesDoc = join([line], mlBranches);
     const fullDoc: Doc = group([cmdName, buildArgsSection(branchesDoc)], { shouldBreak: true });
+    const leftComments = cmd.formatting?.left;
 
-    return decorateWithComments(cmd, fullDoc);
+    return leftComments?.length ? [commentListToDoc(leftComments), ' ', fullDoc] : fullDoc;
   }
 
   /**
@@ -556,7 +560,9 @@ export class WrappingPrettyPrinter {
     }
 
     if (isPromqlNode(node)) {
-      return this.docPromql(node as PromQLAstQueryExpression);
+      const promqlDoc = this.docPromql(node as PromQLAstQueryExpression);
+
+      return decorateWithComments(node as unknown as ESQLAstBaseItem, promqlDoc);
     }
 
     switch (node.type) {
