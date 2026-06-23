@@ -44,6 +44,83 @@ ComposerQuery
                └─ literal "2"`);
 });
 
+describe('.print()', () => {
+  describe("'basic' format", () => {
+    test('prints the query on a single line', () => {
+      const query = esql`FROM index | WHERE foo > 42 | STATS count = COUNT(*) BY field1, field2 | LIMIT 10`;
+
+      expect(query.print('basic')).toBe(
+        'FROM index | WHERE foo > 42 | STATS count = COUNT(*) BY field1, field2 | LIMIT 10'
+      );
+    });
+
+    test('forwards options to the basic printer', () => {
+      const query = esql`FROM index | LIMIT 10`;
+
+      expect(query.print('basic', { lowercase: true })).toBe('from index | limit 10');
+    });
+  });
+
+  describe("'wrapping' format", () => {
+    test('is the default format', () => {
+      const query = esql`FROM index | WHERE foo > 42`;
+
+      expect(query.print()).toBe(query.print('wrapping'));
+    });
+
+    test('wraps long commands onto multiple lines', () => {
+      const query = esql`FROM index | STATS count = COUNT(*) BY field_one_long, field_two_long, field_three_long, field_four_long`;
+
+      expect('\n' + query.print('wrapping')).toBe(`
+FROM index
+  | STATS count = COUNT(*)
+        BY field_one_long, field_two_long, field_three_long, field_four_long`);
+    });
+
+    test('forwards options to the wrapping printer', () => {
+      const query = esql`FROM index | STATS count = COUNT(*) BY field_one_long, field_two_long, field_three_long, field_four_long`;
+
+      expect(query.print('wrapping', { wrap: 200 })).toBe(
+        'FROM index | STATS count = COUNT(*) BY field_one_long, field_two_long, field_three_long, field_four_long'
+      );
+    });
+  });
+
+  describe("'pipe-multiline' format", () => {
+    test('keeps a single-command query on one line', () => {
+      const query = esql`FROM index`;
+
+      expect(query.print('pipe-multiline')).toBe('FROM index');
+    });
+
+    test('prints one pipe per line', () => {
+      const query = esql`FROM index | WHERE foo > 42 | STATS count = COUNT(*) BY field1, field2 | LIMIT 10`;
+
+      expect('\n' + query.print('pipe-multiline')).toBe(`
+FROM index
+  | WHERE foo > 42
+  | STATS count = COUNT(*) BY field1, field2
+  | LIMIT 10`);
+    });
+
+    test('does not wrap within commands (long BY clause stays on one line)', () => {
+      const query = esql`FROM index | STATS count = COUNT(*) BY field_one_long, field_two_long, field_three_long, field_four_long`;
+
+      expect('\n' + query.print('pipe-multiline')).toBe(`
+FROM index
+  | STATS count = COUNT(*) BY field_one_long, field_two_long, field_three_long, field_four_long`);
+    });
+
+    test('forwards options while forcing pipe-per-line output', () => {
+      const query = esql`FROM index | LIMIT 10`;
+
+      expect('\n' + query.print('pipe-multiline', { lowercase: true })).toBe(`
+from index
+  | limit 10`);
+    });
+  });
+});
+
 describe('.pipe``', () => {
   test('can add additional commands to the query', () => {
     const query = esql`FROM kibana_ecommerce_index`;
