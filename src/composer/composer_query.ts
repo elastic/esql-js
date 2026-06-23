@@ -7,6 +7,7 @@
 
 import { printTree } from 'tree-dump';
 import * as synth from './synth';
+import type { BasicPrettyPrinterOptions, WrappingPrettyPrinterOptions } from '../pretty_print';
 import { BasicPrettyPrinter, WrappingPrettyPrinter } from '../pretty_print';
 import { SOURCE_COMMANDS } from '../parser';
 import { composerQuerySymbol, processTemplateHoles, validateParamName } from './util';
@@ -1244,14 +1245,30 @@ export class ComposerQuery {
   /**
    * Prints the query to a string in a specified format.
    *
-   * @param format The format of the printed query. Can be 'wrapping' for a
-   *     more readable format or 'basic' for a single line.
+   * - `wrapping` (default) — readable format that wraps long lines to fit a
+   *   width (80 characters by default).
+   * - `basic` — single line.
+   * - `pipe-multiline` — one pipe (command) per line.
+   *
+   * @param format The format of the printed query.
+   * @param opts Options forwarded to the underlying pretty-printer.
    * @returns The printed query string.
    */
-  public print(format: 'wrapping' | 'basic' = 'wrapping'): string {
-    return format === 'wrapping'
-      ? WrappingPrettyPrinter.print(this.ast)
-      : BasicPrettyPrinter.print(this.ast);
+  public print(format?: 'wrapping', opts?: WrappingPrettyPrinterOptions): string;
+  public print(format: 'basic', opts?: BasicPrettyPrinterOptions): string;
+  public print(format: 'pipe-multiline', opts?: BasicPrettyPrinterOptions): string;
+  public print(
+    format: 'wrapping' | 'basic' | 'pipe-multiline' = 'wrapping',
+    opts?: BasicPrettyPrinterOptions | WrappingPrettyPrinterOptions
+  ): string {
+    switch (format) {
+      case 'pipe-multiline':
+        return BasicPrettyPrinter.print(this.ast, { ...opts, multiline: true });
+      case 'basic':
+        return BasicPrettyPrinter.print(this.ast, opts);
+      default:
+        return WrappingPrettyPrinter.print(this.ast, opts);
+    }
   }
 
   /**
