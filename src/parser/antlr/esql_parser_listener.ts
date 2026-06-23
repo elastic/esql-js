@@ -97,6 +97,7 @@ import { QualifiedNamesContext } from "./esql_parser.js";
 import { UriPartsCommandContext } from "./esql_parser.js";
 import { RegisteredDomainCommandContext } from "./esql_parser.js";
 import { UserAgentCommandContext } from "./esql_parser.js";
+import { IpLocationCommandContext } from "./esql_parser.js";
 import { SetCommandContext } from "./esql_parser.js";
 import { SetFieldContext } from "./esql_parser.js";
 import { MmrCommandContext } from "./esql_parser.js";
@@ -1048,6 +1049,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitUserAgentCommand?: (ctx: UserAgentCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.ipLocationCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterIpLocationCommand?: (ctx: IpLocationCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.ipLocationCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitIpLocationCommand?: (ctx: IpLocationCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.setCommand`.
 	 * @param ctx the parse tree
