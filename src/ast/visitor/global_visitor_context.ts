@@ -15,6 +15,7 @@ import type {
   ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
   ESQLAstUserAgentCommand,
+  ESQLAstIpLocationCommand,
   ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
@@ -367,6 +368,14 @@ export class GlobalVisitorContext<
           input as types.VisitorInput<Methods, 'visitUserAgentCommand'>
         );
       }
+      case 'ip_location': {
+        if (!this.methods.visitIpLocationCommand) break;
+        return this.visitIpLocationCommand(
+          parent,
+          commandNode as ESQLAstIpLocationCommand,
+          input as types.VisitorInput<Methods, 'visitIpLocationCommand'>
+        );
+      }
       case 'dedup': {
         if (!this.methods.visitDedupCommand) break;
         return this.visitDedupCommand(
@@ -691,6 +700,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitUserAgentCommand'> {
     const context = new contexts.UserAgentCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitUserAgentCommand', context, input);
+  }
+
+  public visitIpLocationCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstIpLocationCommand,
+    input: types.VisitorInput<Methods, 'visitIpLocationCommand'>
+  ): types.VisitorOutput<Methods, 'visitIpLocationCommand'> {
+    const context = new contexts.IpLocationCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitIpLocationCommand', context, input);
   }
 
   public visitDedupCommand(
