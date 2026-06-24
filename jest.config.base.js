@@ -1,7 +1,13 @@
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the Elastic License
+ * 2.0; you may not use this file except in compliance with the Elastic License
+ * 2.0.
+ */
+
 /** @type {import('jest').Config} */
-const config = {
+export const baseConfig = {
   testEnvironment: 'node',
-  roots: ['<rootDir>/src'],
   // Disable Prettier for inline snapshots (Jest 29 does not support Prettier 3.x)
   prettierPath: null,
   // Only treat *.test.ts files as test suites (excludes fixtures, helpers, etc. in __tests__/)
@@ -24,5 +30,3 @@ const config = {
     ],
   },
 };
-
-export default config;

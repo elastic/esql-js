@@ -8,9 +8,9 @@ import { requireLicenseHeader } from './lint-license-rule.mjs';
 export default defineConfig([
   globalIgnores([
     '.yarn/',
-    'lib/',
+    '**/lib/',
     'node_modules/',
-    'src/parser/antlr/',
+    '**/parser/antlr/',
     'storybook-static/',
     '*.js',
     '*.mjs',
