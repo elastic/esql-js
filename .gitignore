@@ -1,6 +1,12 @@
 # dependencies
 node_modules/
 
+# Yarn Berry (release binary in .yarn/releases is committed on purpose)
+.yarn/cache
+.yarn/install-state.gz
+.yarn/*
+!.yarn/releases
+
 # build output
 lib/
 

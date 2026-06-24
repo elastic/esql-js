@@ -12,7 +12,7 @@ steps:
     key: 'check-and-build'
     agents: *agents
     command: |
-      yarn install --frozen-lockfile
+      yarn install --immutable
       yarn lint
       yarn format:check
       yarn build
