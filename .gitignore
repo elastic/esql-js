@@ -1,6 +1,10 @@
 # dependencies
 node_modules/
 
+# Yarn Berry
+.yarn/cache
+.yarn/install-state.gz
+
 # build output
 lib/
 

@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "author": "Kibana ES|QL team",
   "description": "A set of ts tools to parse, build and transform ES|QL queries programmatically.",
-  "packageManager": "yarn@1.22.22",
+  "packageManager": "yarn@4.17.0",
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
   "exports": {
@@ -79,8 +79,8 @@
     "prettier": "3.8.4",
     "react": "19.2.7",
     "react-dom": "19.2.7",
-    "storybook": "10.4.5",
     "semantic-release": "25.0.5",
+    "storybook": "10.4.5",
     "ts-jest": "29.4.11",
     "tsup": "8.5.1",
     "typescript": "6.0.3",
@@ -101,7 +101,6 @@
       "prettier --write"
     ]
   },
-  "private": false,
   "publishConfig": {
     "access": "public"
   }

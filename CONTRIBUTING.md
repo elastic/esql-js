@@ -8,7 +8,10 @@ Thank you for your interest in contributing to `@elastic/esql`! This document pr
   ```bash
   nvm use
   ```
-- **Yarn** — this project uses Yarn as its package manager (see `packageManager` in `package.json`).
+- **Yarn** — this project uses Yarn v4 (Berry). Enable Corepack so Node picks the right version automatically (one-time, system-wide):
+  ```bash
+  corepack enable
+  ```
 
 ## Getting Started
 

@@ -1,6 +1,7 @@
 # esql-js
 
 ## Setup
+- Run `corepack enable` once on a new machine (one-time).
 - Run `yarn install` for initial setup or after switching branches.
 - Run `yarn build:antlr4` to compile ANTLR grammars after grammar files change (requires `antlr` CLI; on macOS install via `brew bundle --file=./.buildkite/scripts/antlr4_tools/brewfile`).
 
