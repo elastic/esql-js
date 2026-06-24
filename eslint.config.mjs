@@ -7,6 +7,7 @@ import { requireLicenseHeader } from './lint-license-rule.mjs';
 
 export default defineConfig([
   globalIgnores([
+    '.yarn/',
     'lib/',
     'node_modules/',
     'src/parser/antlr/',
