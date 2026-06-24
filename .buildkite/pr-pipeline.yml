@@ -12,9 +12,9 @@ steps:
     key: 'check-and-build'
     agents: *agents
     command: |
-      mkdir -p "$HOME/.local/bin"
-      corepack enable --install-directory "$HOME/.local/bin"
-      export PATH="$HOME/.local/bin:$PATH"
+      export COREPACK_HOME=/tmp/corepack
+      corepack enable --install-directory /tmp/corepack/bin
+      export PATH="/tmp/corepack/bin:$PATH"
       yarn install --immutable
       yarn lint
       yarn format:check
