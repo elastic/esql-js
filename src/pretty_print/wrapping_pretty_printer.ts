@@ -672,6 +672,7 @@ export class WrappingPrettyPrinter {
       const wrapInBrackets =
         value.type !== 'literal' &&
         value.type !== 'column' &&
+        value.type !== 'parens' &&
         !(value.type === 'function' && value.subtype === 'variadic-call');
       const castType = ctx.node.castType;
 

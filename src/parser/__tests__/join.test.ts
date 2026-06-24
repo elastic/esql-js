@@ -446,44 +446,47 @@ describe('<TYPE> JOIN command', () => {
               name: 'on',
               args: [
                 {
-                  type: 'function',
-                  name: 'or',
-                  args: [
-                    {
-                      type: 'function',
-                      name: '<',
-                      args: [
-                        {
-                          type: 'column',
-                          name: 'right_value',
-                        },
-                        {
-                          type: 'literal',
-                          value: 5000,
-                        },
-                      ],
-                    },
-                    {
-                      type: 'function',
-                      name: 'not',
-                      args: [
-                        {
-                          type: 'function',
-                          name: '==',
-                          args: [
-                            {
-                              type: 'column',
-                              name: 'left_id',
-                            },
-                            {
-                              type: 'column',
-                              name: 'right_id',
-                            },
-                          ],
-                        },
-                      ],
-                    },
-                  ],
+                  type: 'parens',
+                  child: {
+                    type: 'function',
+                    name: 'or',
+                    args: [
+                      {
+                        type: 'function',
+                        name: '<',
+                        args: [
+                          {
+                            type: 'column',
+                            name: 'right_value',
+                          },
+                          {
+                            type: 'literal',
+                            value: 5000,
+                          },
+                        ],
+                      },
+                      {
+                        type: 'function',
+                        name: 'not',
+                        args: [
+                          {
+                            type: 'function',
+                            name: '==',
+                            args: [
+                              {
+                                type: 'column',
+                                name: 'left_id',
+                              },
+                              {
+                                type: 'column',
+                                name: 'right_id',
+                              },
+                            ],
+                          },
+                        ],
+                      },
+                    ],
+                  },
                 },
               ],
             },
