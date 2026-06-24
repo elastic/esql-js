@@ -21,6 +21,7 @@ import type {
   ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
   ESQLAstUserAgentCommand,
+  ESQLAstIpLocationCommand,
   ESQLAstRegisteredDomainCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
@@ -621,6 +622,12 @@ export class UserAgentCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstUserAgentCommand> {}
+
+// IP_LOCATION <qualifiedName> = <primaryExpression> [WITH <map>]
+export class IpLocationCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstIpLocationCommand> {}
 
 // Expressions -----------------------------------------------------------------
 
