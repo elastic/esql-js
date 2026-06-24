@@ -545,6 +545,12 @@ export class CstToAstConverter {
       return this.fromUserAgentCommand(userAgentCommandCtx);
     }
 
+    const ipLocationCommandCtx = ctx.ipLocationCommand();
+
+    if (ipLocationCommandCtx) {
+      return this.fromIpLocationCommand(ipLocationCommandCtx);
+    }
+
     const dedupCommandCtx = ctx.dedupCommand();
 
     if (dedupCommandCtx) {
@@ -2323,12 +2329,20 @@ export class CstToAstConverter {
   }
 
   private fromQualifiedNameAssignmentCommand<
-    TName extends 'registered_domain' | 'uri_parts',
+    TName extends 'registered_domain' | 'uri_parts' | 'user_agent' | 'ip_location',
     TCommand extends ast.ESQLCommand<TName> & {
       targetField: ast.ESQLColumn;
       expression?: ast.ESQLSingleAstItem;
+      namedParameters?: ast.ESQLSingleAstItem;
     },
-  >(name: TName, ctx: cst.RegisteredDomainCommandContext | cst.UriPartsCommandContext): TCommand {
+  >(
+    name: TName,
+    ctx:
+      | cst.RegisteredDomainCommandContext
+      | cst.UriPartsCommandContext
+      | cst.UserAgentCommandContext
+      | cst.IpLocationCommandContext
+  ): TCommand {
     const command = this.createCommand<TName, TCommand>(name, ctx);
     const qualifiedNameCtx = ctx.qualifiedName();
 
@@ -2340,6 +2354,7 @@ export class CstToAstConverter {
       command.expression = expression;
 
       if (expression.incomplete || expression.type === 'unknown') {
+        expression.incomplete = true;
         command.incomplete = true;
       }
 
@@ -2358,6 +2373,17 @@ export class CstToAstConverter {
       command.targetField = targetField;
       command.incomplete = true;
       command.args.push(targetField);
+    }
+
+    if (ctx instanceof cst.UserAgentCommandContext || ctx instanceof cst.IpLocationCommandContext) {
+      const withOption = this.fromOptionalNamedParametersWithOption(ctx.commandNamedParameters());
+
+      if (withOption) {
+        command.args.push(withOption);
+        command.namedParameters = withOption.args[0] as ast.ESQLSingleAstItem;
+      }
+
+      command.incomplete ||= withOption?.incomplete ?? false;
     }
 
     return command;
@@ -2380,65 +2406,13 @@ export class CstToAstConverter {
   // --------------------------------------------------------------- USER_AGENT
 
   private fromUserAgentCommand(ctx: cst.UserAgentCommandContext): ast.ESQLAstUserAgentCommand {
-    const args: ast.ESQLAstItem[] = [];
+    return this.fromQualifiedNameAssignmentCommand('user_agent', ctx);
+  }
 
-    const qualifiedNameCtx = ctx.qualifiedName();
-    let targetField: ast.ESQLColumn | undefined;
-    let expression: ast.ESQLAstExpression | undefined;
+  // --------------------------------------------------------------- IP_LOCATION
 
-    if (qualifiedNameCtx && ctx.ASSIGN()) {
-      targetField = this.toColumn(qualifiedNameCtx);
-      expression = this.fromPrimaryExpressionStrict(ctx.primaryExpression());
-
-      const assignment = this.toFunction(
-        ctx.ASSIGN().getText(),
-        ctx,
-        undefined,
-        'binary-expression'
-      );
-      assignment.args.push(targetField, expression);
-      assignment.location = this.extendLocationToArgs(assignment);
-      args.push(assignment);
-    } else if (qualifiedNameCtx) {
-      targetField = this.toColumn(qualifiedNameCtx);
-      args.push(targetField);
-    }
-
-    const withOption = this.fromOptionalNamedParametersWithOption(ctx.commandNamedParameters());
-    if (withOption) {
-      args.push(withOption);
-    }
-
-    const namedParameters = withOption?.args[0] as ast.ESQLSingleAstItem | undefined;
-
-    const command = this.createCommand<'user_agent', ast.ESQLAstUserAgentCommand>(
-      'user_agent',
-      ctx,
-      {
-        args,
-        ...(namedParameters ? { namedParameters } : {}),
-      }
-    );
-
-    if (targetField) {
-      command.targetField = targetField;
-    }
-    if (expression) {
-      command.expression = expression;
-    }
-
-    if (qualifiedNameCtx && ctx.ASSIGN()) {
-      if (expression && (expression.incomplete || expression.type === 'unknown')) {
-        expression.incomplete = true;
-        command.incomplete = true;
-      }
-    } else if (qualifiedNameCtx) {
-      command.incomplete = true;
-    }
-
-    command.incomplete ||= withOption?.incomplete ?? false;
-
-    return command;
+  private fromIpLocationCommand(ctx: cst.IpLocationCommandContext): ast.ESQLAstIpLocationCommand {
+    return this.fromQualifiedNameAssignmentCommand('ip_location', ctx);
   }
 
   // -------------------------------------------------------------- expressions

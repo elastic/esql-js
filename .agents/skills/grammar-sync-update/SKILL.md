@@ -149,6 +149,14 @@ Add the import for `ESQLAstXxxCommand` at the top of the file.
 
 ### 5. `src/parser/core/cst_to_ast_converter.ts`
 
+Before writing `fromXxxCommand`, grep `cst_to_ast_converter.ts` for an existing private helper. If the grammar shape matches, extend the helper and use a one-liner — don't copy another command's method body.
+
+| Grammar shape | Existing helper |
+|---|---|
+| `qualifiedName = expr` [+ `commandNamedParameters`] | `fromQualifiedNameAssignmentCommand` (`uri_parts`, `registered_domain`, `user_agent`, `ip_location`) |
+| `STATS` / `INLINE STATS` | `fromStatsLikeCommand` |
+| no args | `createCommand` one-liner |
+
 Two additions:
 
 **A — dispatcher** (search for `agent-marker: append new command dispatcher branches here` and add before it):
@@ -379,6 +387,8 @@ Cover:
 |---|---|---|---|
 | `SAMPLE` | none (generic) | none | `sample.test.ts` |
 | `URI_PARTS` | `ESQLAstUriPartsCommand` | `UriPartsCommandVisitorContext` | `uri_parts.test.ts` |
+| `REGISTERED_DOMAIN` | `ESQLAstRegisteredDomainCommand` | `RegisteredDomainCommandVisitorContext` | `registered_domain.test.ts` |
 | `USER_AGENT` | `ESQLAstUserAgentCommand` | `UserAgentCommandVisitorContext` | `user_agent.test.ts` |
+| `IP_LOCATION` | `ESQLAstIpLocationCommand` | `IpLocationCommandVisitorContext` | `ip_location.test.ts` |
 | `CHANGE_POINT` | `ESQLAstChangePointCommand` | none (no typed visitor) | `change_point.test.ts` |
 | `RERANK` | `ESQLAstRerankCommand` | `RerankCommandVisitorContext` | `rerank.test.ts` |

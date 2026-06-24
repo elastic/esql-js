@@ -162,6 +162,29 @@ test('can visit REGISTERED_DOMAIN command', () => {
   expect(list).toEqual(['REGISTERED_DOMAIN']);
 });
 
+test('can visit IP_LOCATION command', () => {
+  const { ast } = EsqlQuery.fromSrc(`
+    FROM index
+      | IP_LOCATION geo = client_ip
+  `);
+  const visitor = new Visitor()
+    .on('visitExpression', () => {
+      return null;
+    })
+    .on('visitIpLocationCommand', () => {
+      return 'IP_LOCATION';
+    })
+    .on('visitCommand', () => {
+      return null;
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].flat();
+    });
+  const list = visitor.visitQuery(ast).flat().filter(Boolean);
+
+  expect(list).toEqual(['IP_LOCATION']);
+});
+
 test('can visit RERANK command', () => {
   const { ast } = EsqlQuery.fromSrc(`
     FROM movies

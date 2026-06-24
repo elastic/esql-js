@@ -77,11 +77,13 @@ processingCommand
     | tsInfoCommand
     | userAgentCommand
     | tsCollapseCommand
+    | ipLocationCommand
     | mmrCommand
     // in development
     | {this.isDevVersion()}? lookupCommand
     | {this.isDevVersion()}? insistCommand
     | {this.isDevVersion()}? dedupCommand
+    | {this.isDevVersion()}? highlightCommand
     ;
 
 whereCommand
@@ -399,6 +401,14 @@ dedupCommand
     : DEV_DEDUP
     ;
 
+highlightCommand
+    : DEV_HIGHLIGHT queryText=string ON highlightFields=qualifiedNames commandNamedParameters
+    ;
+
+qualifiedNames
+    : qualifiedName (COMMA qualifiedName)*
+    ;
+
 uriPartsCommand
     : URI_PARTS qualifiedName ASSIGN primaryExpression
     ;
@@ -409,6 +419,10 @@ registeredDomainCommand
 
 userAgentCommand
     : USER_AGENT qualifiedName ASSIGN primaryExpression commandNamedParameters
+    ;
+
+ipLocationCommand
+    : IP_LOCATION qualifiedName ASSIGN primaryExpression commandNamedParameters
     ;
 
 setCommand

@@ -120,3 +120,28 @@ test('first command is a PROMQL command', () => {
   expect(cmd.type).toBe('command');
   expect(cmd.name).toBe('promql');
 });
+
+describe('promqlCommand() getter', () => {
+  test('returns the PROMQL command', () => {
+    const query = esql.promql(pqlSel('up'));
+    const cmd = query.promqlCommand();
+
+    expect(cmd).toBeDefined();
+    expect(cmd?.type).toBe('command');
+    expect(cmd?.name).toBe('promql');
+  });
+
+  test('returns undefined for non-PROMQL queries', () => {
+    const query = esql`FROM index`;
+
+    expect(query.promqlCommand()).toBeUndefined();
+  });
+
+  test('exposes params and query properties', () => {
+    const query = esql.promql(pqlSel('up'), { params: { index: 'k8s' }, outputName: 'health' });
+    const cmd = query.promqlCommand();
+
+    expect(cmd?.params?.type).toBe('map');
+    expect(cmd?.query).toBeDefined();
+  });
+});
