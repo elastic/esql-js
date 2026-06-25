@@ -38,10 +38,11 @@ describe('HIGHLIGHT', () => {
     const cmd = getHighlight(ast);
 
     expect(errors).toHaveLength(0);
-    expect(cmd.highlightFields).toHaveLength(3);
-    expect(cmd.highlightFields[0]).toMatchObject({ type: 'column', name: 'title' });
-    expect(cmd.highlightFields[1]).toMatchObject({ type: 'column', name: 'body' });
-    expect(cmd.highlightFields[2]).toMatchObject({ type: 'column', name: 'summary' });
+    expect(cmd.highlightFields).toMatchObject([
+      { type: 'column', name: 'title' },
+      { type: 'column', name: 'body' },
+      { type: 'column', name: 'summary' },
+    ]);
   });
 
   it('parses WITH map with pre_tags and post_tags', () => {
@@ -107,11 +108,30 @@ describe('HIGHLIGHT', () => {
     const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT');
     const cmd = getHighlight(ast);
 
-    expect(cmd).toMatchObject({
-      name: 'highlight',
-      incomplete: true,
-    });
+    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true });
     expect(cmd.queryText).toBeUndefined();
+  });
+
+  it('marks incomplete when ON clause is missing', () => {
+    const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT "fox"');
+    const cmd = getHighlight(ast);
+
+    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true });
+    expect(cmd.highlightFields).toBeUndefined();
+  });
+
+  it('marks incomplete when ON fields are missing', () => {
+    const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT "fox" ON');
+    const cmd = getHighlight(ast);
+
+    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true });
+  });
+
+  it('marks incomplete when WITH has no map', () => {
+    const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT "fox" ON content WITH');
+    const cmd = getHighlight(ast);
+
+    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true });
   });
 
   it('round-trips single-field syntax through the pretty-printer', () => {

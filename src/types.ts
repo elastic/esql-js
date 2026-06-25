@@ -192,7 +192,7 @@ export interface ESQLAstRegisteredDomainCommand extends ESQLCommand<'registered_
 
 export interface ESQLAstHighlightCommand extends ESQLCommand<'highlight'> {
   queryText?: ESQLStringLiteral;
-  highlightFields: ESQLColumn[];
+  highlightFields?: ESQLColumn[];
   namedParameters?: ESQLSingleAstItem;
 }
 

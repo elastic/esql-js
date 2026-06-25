@@ -2425,7 +2425,6 @@ export class CstToAstConverter {
 
   private fromHighlightCommand(ctx: cst.HighlightCommandContext): ast.ESQLAstHighlightCommand {
     const command = this.createCommand<'highlight', ast.ESQLAstHighlightCommand>('highlight', ctx);
-    command.highlightFields = [];
 
     const queryTextCtx = ctx._queryText;
     if (queryTextCtx && !queryTextCtx.exception) {
@@ -2446,12 +2445,19 @@ export class CstToAstConverter {
       onOption.location.min = onToken.symbol.start;
       command.args.push(onOption);
       command.highlightFields = fields;
+      command.incomplete ||= onOption.incomplete || fields.length === 0;
+    } else {
+      command.incomplete = true;
     }
 
-    const withOption = this.fromOptionalNamedParametersWithOption(ctx.commandNamedParameters());
+    const namedParamsCtx = ctx.commandNamedParameters();
+    const withOption = this.fromOptionalNamedParametersWithOption(namedParamsCtx);
     if (withOption) {
       command.namedParameters = withOption.args[0] as ast.ESQLSingleAstItem;
       command.args.push(withOption);
+      command.incomplete ||= withOption.incomplete;
+    } else if (namedParamsCtx?.WITH()) {
+      command.incomplete = true;
     }
 
     return command;
