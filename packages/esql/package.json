@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql",
-  "version": "0.0.1",
+  "version": "4.5.0",
   "author": "Kibana ES|QL team",
   "description": "A set of ts tools to parse, build and transform ES|QL queries programmatically.",
   "license": "Elastic-2.0",
