@@ -556,6 +556,12 @@ export class CstToAstConverter {
     if (dedupCommandCtx) {
       return this.fromDedupCommand(dedupCommandCtx);
     }
+
+    const highlightCommandCtx = ctx.highlightCommand();
+
+    if (highlightCommandCtx) {
+      return this.fromHighlightCommand(highlightCommandCtx);
+    }
     // agent-marker: append new command dispatcher branches here
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
@@ -2413,6 +2419,42 @@ export class CstToAstConverter {
 
   private fromIpLocationCommand(ctx: cst.IpLocationCommandContext): ast.ESQLAstIpLocationCommand {
     return this.fromQualifiedNameAssignmentCommand('ip_location', ctx);
+  }
+
+  // --------------------------------------------------------------- HIGHLIGHT
+
+  private fromHighlightCommand(ctx: cst.HighlightCommandContext): ast.ESQLAstHighlightCommand {
+    const command = this.createCommand<'highlight', ast.ESQLAstHighlightCommand>('highlight', ctx);
+    command.highlightFields = [];
+
+    const queryTextCtx = ctx._queryText;
+    if (queryTextCtx && !queryTextCtx.exception) {
+      const queryText = this.toStringLiteral(queryTextCtx);
+      command.queryText = queryText;
+      command.args.push(queryText);
+    } else {
+      command.incomplete = true;
+    }
+
+    const onToken = ctx.ON();
+    if (onToken && ctx._highlightFields) {
+      const fields = ctx._highlightFields
+        .qualifiedName_list()
+        .filter((qn) => !qn.exception)
+        .map((qn) => this.fromQualifiedName(qn));
+      const onOption = this.toOption('on', ctx._highlightFields, fields);
+      onOption.location.min = onToken.symbol.start;
+      command.args.push(onOption);
+      command.highlightFields = fields;
+    }
+
+    const withOption = this.fromOptionalNamedParametersWithOption(ctx.commandNamedParameters());
+    if (withOption) {
+      command.namedParameters = withOption.args[0] as ast.ESQLSingleAstItem;
+      command.args.push(withOption);
+    }
+
+    return command;
   }
 
   // -------------------------------------------------------------- expressions
