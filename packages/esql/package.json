@@ -50,8 +50,7 @@
     "build:antlr4:promql": "yarn build:antlr4:promql:lexer && yarn build:antlr4:promql:parser",
     "postbuild:antlr4:promql": "../../.buildkite/scripts/postbuild.sh promql",
     "build:antlr4:promql:parser": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_parser.g4",
-    "build:antlr4:promql:lexer": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_lexer.g4",
-    "semantic-release:dry-run": "semantic-release --dry-run --debug"
+    "build:antlr4:promql:lexer": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_lexer.g4"
   },
   "dependencies": {
     "antlr4": "4.13.2",
@@ -59,14 +58,8 @@
     "tslib": "2.8.1"
   },
   "devDependencies": {
-    "@semantic-release/changelog": "6.0.3",
-    "@semantic-release/commit-analyzer": "13.0.1",
-    "@semantic-release/github": "12.0.8",
-    "@semantic-release/npm": "13.1.5",
-    "@semantic-release/release-notes-generator": "14.1.1",
     "@types/jest": "30.0.0",
     "jest": "30.4.2",
-    "semantic-release": "25.0.5",
     "ts-jest": "29.4.11",
     "tsup": "8.5.1",
     "typescript": "6.0.3"
