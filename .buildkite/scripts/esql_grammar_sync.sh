@@ -175,8 +175,9 @@ main () {
 
   yarn install --immutable
 
-  # Note: We run build commands directly instead of `yarn build:antlr4` to skip
-  # the prebuild:antlr4 hook which uses `brew` (macOS only). CI has antlr installed.
+  # Note: We run the per-language build commands directly instead of `yarn build:antlr4`
+  # to skip the `antlr4:deps` step which uses `brew` (macOS only). CI has antlr installed.
+  # Each of these still runs its postbuild step (@ts-nocheck + listener rename) inline.
   # Pin the ANTLR version to avoid the broken Sonatype Central version-lookup API
   # in antlr4-tools (https://github.com/antlr/antlr4-tools/issues/18).
   export ANTLR4_TOOLS_ANTLR_VERSION="4.13.2"
