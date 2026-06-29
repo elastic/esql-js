@@ -613,7 +613,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/changelog-github@npm:^0.5.0":
+"@changesets/changelog-github@npm:0.5.2":
   version: 0.5.2
   resolution: "@changesets/changelog-github@npm:0.5.2"
   dependencies:
@@ -624,7 +624,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@changesets/cli@npm:^2.27.0":
+"@changesets/cli@npm:2.31.0":
   version: 2.31.0
   resolution: "@changesets/cli@npm:2.31.0"
   dependencies:
@@ -4440,8 +4440,8 @@ __metadata:
     "@babel/core": "npm:8.0.0"
     "@babel/eslint-parser": "npm:8.0.1"
     "@babel/runtime": "npm:8.0.0"
-    "@changesets/changelog-github": "npm:^0.5.0"
-    "@changesets/cli": "npm:^2.27.0"
+    "@changesets/changelog-github": "npm:0.5.2"
+    "@changesets/cli": "npm:2.31.0"
     "@eslint/js": "npm:10.0.1"
     "@storybook/react-vite": "npm:10.4.6"
     "@types/react": "npm:19.2.17"
