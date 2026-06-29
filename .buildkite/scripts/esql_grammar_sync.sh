@@ -14,7 +14,7 @@ synchronize_lexer_grammar () {
   source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/EsqlBaseLexer.g4"
   source_lib_dir="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/lexer"
   destination_file="$REPO_DIR/packages/esql/src/parser/antlr/esql_lexer.g4"
-  destination_lib_parent_dir="$REPO_DIR/src/parser/antlr"
+  destination_lib_parent_dir="$REPO_DIR/packages/esql/src/parser/antlr"
   destination_lib_dir="$destination_lib_parent_dir/lexer"
 
 # Copy the files
@@ -62,7 +62,7 @@ synchronize_parser_grammar () {
   source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/EsqlBaseParser.g4"
   source_lib_dir="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/parser"
   destination_file="$REPO_DIR/packages/esql/src/parser/antlr/esql_parser.g4"
-  destination_lib_parent_dir="$REPO_DIR/src/parser/antlr"
+  destination_lib_parent_dir="$REPO_DIR/packages/esql/src/parser/antlr"
   destination_lib_dir="$destination_lib_parent_dir/parser"
 
   echo "Copying base parser file..."
