@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import * as printer from '../../../printer';
-import { layout } from '../../../printer';
+import * as printer from '@elastic/pretty-printer';
+import { layout } from '@elastic/pretty-printer';
 import type * as promql from '../types';
 
 export interface PromQLWrappingPrettyPrinterOptions {
