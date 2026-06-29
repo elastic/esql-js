@@ -34,7 +34,8 @@
     "lib"
   ],
   "publishConfig": {
-    "access": "public"
+    "access": "public",
+    "provenance": true
   },
   "repository": "https://github.com/elastic/esql-js.git",
   "scripts": {

@@ -22,7 +22,7 @@
     "build:antlr4:promql": "yarn workspace @elastic/esql build:antlr4:promql",
     "changeset": "changeset",
     "changeset:version": "changeset version",
-    "changeset:publish": "changeset publish --provenance"
+    "changeset:publish": "changeset publish"
   },
   "devDependencies": {
     "@babel/core": "8.0.0",
