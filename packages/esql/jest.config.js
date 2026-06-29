@@ -5,11 +5,7 @@
  * 2.0.
  */
 
-import type { StorybookConfig } from '@storybook/react-vite';
+import { baseConfig } from '../../jest.config.base.js';
 
-const config: StorybookConfig = {
-  stories: ['../packages/*/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: [],
-  framework: '@storybook/react-vite',
-};
-export default config;
+/** @type {import('jest').Config} */
+export default { ...baseConfig, roots: ['<rootDir>/src'] };

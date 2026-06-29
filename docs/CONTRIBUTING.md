@@ -79,7 +79,7 @@ The parser is generated from ANTLR4 grammar files. These grammar files are synce
 
 ## Commit Message Convention
 
-This project uses [Conventional Commits](https://www.conventionalcommits.org/) following the **Angular** preset. Releases are automated via [semantic-release](https://github.com/semantic-release/semantic-release), so commit messages directly determine version bumps.
+This project uses [Conventional Commits](https://www.conventionalcommits.org/) for PR titles, enforced by CI. This keeps the history and changelog clean. Versioning and releases are handled by [Changesets](https://github.com/changesets/changesets): the version bump for each change is declared in a changeset file you add to your PR (see [Submitting Changes](#submitting-changes) and [RELEASE.md](./RELEASE.md)), **not** derived from the commit message.
 
 ### Format
 
@@ -93,20 +93,22 @@ This project uses [Conventional Commits](https://www.conventionalcommits.org/) f
 
 ### Commit Types
 
-| Type       | Description                          | Version Bump |
-|------------|--------------------------------------|--------------|
-| `feat`     | A new feature                        | Minor        |
-| `fix`      | A bug fix                            | Patch        |
-| `refactor` | Code change (no new feature or fix)  | Patch        |
-| `perf`     | Performance improvement              | Patch        |
-| `build`    | Build system or dependency changes   | Patch        |
-| `chore`    | Maintenance tasks                    | Patch        |
-| `revert`   | Reverts a previous commit            | Patch        |
-| `docs`     | Documentation only                   | No release   |
+These are the allowed PR-title types (validated by CI). They describe the change; they do **not** set the release version — that comes from the changeset.
+
+| Type       | Description                          |
+|------------|--------------------------------------|
+| `feat`     | A new feature                        |
+| `fix`      | A bug fix                            |
+| `refactor` | Code change (no new feature or fix)  |
+| `perf`     | Performance improvement              |
+| `build`    | Build system or dependency changes   |
+| `chore`    | Maintenance tasks                    |
+| `revert`   | Reverts a previous commit            |
+| `docs`     | Documentation only                   |
 
 ### Breaking Changes
 
-To trigger a **major** version bump, include `BREAKING CHANGE` or `BREAKING CHANGES` in the commit footer:
+For a breaking change, select a **major** bump when running `yarn changeset`, and document it in the PR body using a `BREAKING CHANGE:` footer:
 
 ```
 feat: redesign AST node structure
@@ -140,45 +142,36 @@ refactor(composer): simplify template tag internals
    yarn test
    ```
 
-4. Commit your changes using a [conventional commit message](#commit-message-convention).
+4. If your change should be released, add a changeset and choose the bump level:
+   ```bash
+   yarn changeset
+   ```
+   Commit the generated `.changeset/*.md` file with your PR. See [RELEASE.md](./RELEASE.md) for details. Internal-only changes (e.g. CI, tests, refactors with no published effect) don't need one.
 
-5. Push your branch and open a pull request against `main`.
+5. Commit your changes and push your branch.
+
+6. Open a pull request against `main` with a [conventional commit](#commit-message-convention) title.
 
 ## Merging Pull Requests
 
 When merging a pull request, select **squash and merge**. This collapses all commits into a single commit on `main`, keeping the history clean.
 
-Before completing the merge, verify that the squash commit message follows the [conventional commit format](#commit-message-convention) — this is critical because `semantic-release` reads the commit messages on `main` to determine version bumps and generate changelogs. A malformed merge commit will not trigger a release or may produce an incorrect one.
+Before completing the merge, verify that the squash commit message follows the [conventional commit format](#commit-message-convention) (the PR title is validated by CI and becomes the squash commit) — this keeps the history clean. Version bumps and changelog entries come from the changeset included in the PR, not from the commit message.
 
 
 ## Releasing (Maintainers only)
 
-Releases are fully automated via [semantic-release](https://github.com/semantic-release/semantic-release). There is no need to manually bump versions, tag commits, or publish to npm — the tooling handles all of it based on the commit history.
+Releases are managed by [Changesets](https://github.com/changesets/changesets). In short: changesets accumulated on `main` are collected into an auto-generated "Version Packages" PR; merging that PR bumps versions, updates changelogs, and publishes to npm with provenance. All packages share a single version (fixed mode).
 
-### How it works
-
-1. `semantic-release` analyzes all commits on the target branch since the last release.
-2. It determines the next version based on the [commit message types](#commit-message-convention).
-3. It generates a changelog, creates a GitHub release, and publishes to npm with provenance.
-
-### Triggering a release
-
-The release is triggered manually via the **Release** GitHub Actions workflow (`workflow_dispatch`):
-
-1. Go to **Actions** > **Release** in the GitHub repository.
-2. Click **Run workflow**.
-3. Select the branch to release from (defaults to `main`).
-4. The workflow will lint, format-check, build, and test the code before releasing.
+The full process — adding changesets, the Version PR, prereleases, required secrets, and dry-runs — is documented in **[RELEASE.md](./RELEASE.md)**.
 
 ### Dry run
 
-To preview what the next release would look like without actually publishing:
+To preview the pending version bump and changelog without publishing:
 
 ```bash
-yarn semantic-release:dry-run
+yarn changeset status
 ```
-
-This runs `semantic-release --dry-run` locally and logs the version that would be released and the changelog that would be generated.
 
 ## Backporting
 
@@ -197,7 +190,7 @@ git checkout -b 1.x v1.4.2
 git push upstream 1.x
 ```
 
-The branch name **must** follow the `semantic-release` [maintenance branch convention](https://semantic-release.gitbook.io/semantic-release/usage/workflow-configuration#maintenance-branches) (e.g., `1.x`, `1.2.x`, or `1.x.x`). This is already configured in `.releaserc.js`.
+Use a conventional maintenance branch name (e.g., `1.x`, `1.2.x`, or `1.x.x`). To cut a release from it, enter Changesets prerelease/maintenance mode as described in [RELEASE.md](./RELEASE.md).
 
 ### Automated backporting (recommended)
 

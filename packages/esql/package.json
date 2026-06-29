@@ -1,0 +1,66 @@
+{
+  "name": "@elastic/esql",
+  "version": "4.5.0",
+  "author": "Kibana ES|QL team",
+  "description": "A set of ts tools to parse, build and transform ES|QL queries programmatically.",
+  "license": "Elastic-2.0",
+  "sideEffects": false,
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    },
+    "./types": {
+      "types": "./lib/types.d.ts",
+      "import": "./lib/types.mjs",
+      "require": "./lib/types.js",
+      "default": "./lib/types.js"
+    }
+  },
+  "typesVersions": {
+    "*": {
+      "types": [
+        "./lib/types.d.ts"
+      ]
+    }
+  },
+  "files": [
+    "NOTICE.txt",
+    "LICENSE.txt",
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": "https://github.com/elastic/esql-js.git",
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "test": "jest",
+    "antlr4:deps": "brew bundle --file=../../.buildkite/scripts/antlr4_tools/brewfile",
+    "build:antlr4": "yarn antlr4:deps && yarn build:antlr4:esql && yarn build:antlr4:promql",
+    "build:antlr4:esql": "yarn build:antlr4:esql:lexer && yarn build:antlr4:esql:parser && ../../.buildkite/scripts/postbuild.sh esql",
+    "build:antlr4:esql:parser": "antlr -Dlanguage=TypeScript -lib src/parser/antlr/parser src/parser/antlr/esql_parser.g4",
+    "build:antlr4:esql:lexer": "antlr -Dlanguage=TypeScript -lib src/parser/antlr/lexer src/parser/antlr/esql_lexer.g4",
+    "build:antlr4:promql": "yarn build:antlr4:promql:lexer && yarn build:antlr4:promql:parser && ../../.buildkite/scripts/postbuild.sh promql",
+    "build:antlr4:promql:parser": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_parser.g4",
+    "build:antlr4:promql:lexer": "antlr -Dlanguage=TypeScript src/parser/antlr/promql_lexer.g4"
+  },
+  "dependencies": {
+    "antlr4": "4.13.2",
+    "tree-dump": "1.1.0",
+    "tslib": "2.8.1"
+  },
+  "devDependencies": {
+    "@types/jest": "30.0.0",
+    "jest": "30.4.2",
+    "ts-jest": "29.4.11",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3"
+  }
+}

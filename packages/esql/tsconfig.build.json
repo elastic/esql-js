@@ -5,11 +5,7 @@
  * 2.0.
  */
 
-import type { StorybookConfig } from '@storybook/react-vite';
-
-const config: StorybookConfig = {
-  stories: ['../packages/*/src/**/*.stories.@(js|jsx|mjs|ts|tsx)'],
-  addons: [],
-  framework: '@storybook/react-vite',
-};
-export default config;
+{
+  "extends": "./tsconfig.json",
+  "exclude": ["node_modules", "lib", "README.md", "src/stories", "**/*.test.ts", "**/__tests__/**"]
+}
