@@ -6,9 +6,11 @@
 - Run `yarn build:antlr4` to compile ANTLR grammars after grammar files change (requires `antlr` CLI; on macOS install via `brew bundle --file=./.buildkite/scripts/antlr4_tools/brewfile`).
 
 ## Overview
-This library provides an ES|QL and PromQL parser, AST builder, and pretty-printer for use in Kibana and other Elastic tooling. It is a TypeScript package compiled with `tsup` + `tsc`.
+This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main one is `packages/esql/` (`@elastic/esql`), which provides an ES|QL and PromQL parser, AST builder, and pretty-printer for use in Kibana and other Elastic tooling. It is a TypeScript package compiled with `tsup` + `tsc`.
 
 ### Key source areas
+Paths are relative to `packages/esql/`.
+
 | Path | Purpose |
 |------|---------|
 | `src/parser/antlr/` | Auto-generated ANTLR4 TypeScript files (lexer, parser, listener, interp). **Do not edit by hand.** |
@@ -20,9 +22,9 @@ This library provides an ES|QL and PromQL parser, AST builder, and pretty-printe
 | `src/embedded_languages/promql/` | Parallel structure for PromQL (own parser, builder, pretty-printer). |
 
 ### Grammar sync pipeline
-The CI job `.buildkite/scripts/esql_grammar_sync.sh` clones `elastic/elasticsearch`, copies the ANTLR grammar files into `src/parser/antlr/`, rebuilds the TypeScript artifacts, and opens a PR automatically.
+The CI job `.buildkite/scripts/esql_grammar_sync.sh` clones `elastic/elasticsearch`, copies the ANTLR grammar files into `packages/esql/src/parser/antlr/`, rebuilds the TypeScript artifacts, and opens a PR automatically.
 
-That PR only touches `src/parser/antlr/`. When a grammar change adds a **new command or new grammar rule**, a follow-up PR is needed to wire the new rule into the AST layer. Use the `/grammar-sync-update` skill for this.
+That PR only touches `packages/esql/src/parser/antlr/`. When a grammar change adds a **new command or new grammar rule**, a follow-up PR is needed to wire the new rule into the AST layer. Use the `/grammar-sync-update` skill for this.
 
 ## Testing
 ```
