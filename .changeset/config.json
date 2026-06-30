@@ -2,7 +2,7 @@
   "$schema": "https://unpkg.com/@changesets/config@3/schema.json",
   "changelog": "@changesets/changelog-github",
   "commit": false,
-  "fixed": [["@elastic/esql"]],
+  "fixed": [["@elastic/esql", "@elastic/pretty-printer"]],
   "linked": [],
   "access": "public",
   "baseBranch": "main",

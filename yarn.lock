@@ -827,8 +827,23 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@elastic/esql@workspace:packages/esql"
   dependencies:
+    "@elastic/pretty-printer": "workspace:^"
     "@types/jest": "npm:30.0.0"
     antlr4: "npm:4.13.2"
+    jest: "npm:30.4.2"
+    tree-dump: "npm:1.1.0"
+    ts-jest: "npm:29.4.11"
+    tslib: "npm:2.8.1"
+    tsup: "npm:8.5.1"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
+"@elastic/pretty-printer@workspace:^, @elastic/pretty-printer@workspace:packages/pretty-printer":
+  version: 0.0.0-use.local
+  resolution: "@elastic/pretty-printer@workspace:packages/pretty-printer"
+  dependencies:
+    "@types/jest": "npm:30.0.0"
     jest: "npm:30.4.2"
     tree-dump: "npm:1.1.0"
     ts-jest: "npm:29.4.11"

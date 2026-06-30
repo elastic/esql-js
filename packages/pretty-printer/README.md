@@ -1,9 +1,19 @@
-# Printer — Wadler-Lindig Pretty-Printer
+# @elastic/pretty-printer
 
-A pretty-printing library based on the Wadler-Lindig document algebra
-(Philip Wadler, *"A prettier printer"*, 2003; Christian Lindig's strict
+A general-purpose pretty-printing library based on the Wadler-Lindig document
+algebra (Philip Wadler, *"A prettier printer"*, 2003; Christian Lindig's strict
 formulation). The implementation draws heavily from Prettier's internal
 `doc-printer`.
+
+It contains no ES|QL, PromQL, or other domain knowledge — it is the standalone
+layout engine used by `@elastic/esql`'s pretty-printers, published so any
+project can build width-aware formatters on the same `Doc` IR.
+
+## Install
+
+```sh
+npm install @elastic/pretty-printer
+```
 
 ## How it works
 
@@ -19,7 +29,7 @@ Pretty-printing is a two-phase process:
 Example:
 
 ```ts
-import { text, group, indent, line, softline, join, layout } from './printer';
+import { text, group, indent, line, softline, join, layout } from '@elastic/pretty-printer';
 
 const doc = group([
   text('SELECT'),

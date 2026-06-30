@@ -7,7 +7,7 @@
 
 import { doc, print } from '../wrapping_pretty_printer';
 import { PromQLBuilder } from '../../ast/builder';
-import { dump } from '../../../../printer/dump';
+import { dump } from '@elastic/pretty-printer';
 
 describe('"unknown" nodes', () => {
   test('emits correct print tree', () => {

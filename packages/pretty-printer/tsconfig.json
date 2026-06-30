@@ -5,7 +5,14 @@
  * 2.0.
  */
 
-export type * from './types';
-export * from './builders';
-export * from './traversal';
-export * from './layout';
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "./lib",
+    "rootDir": "./src",
+    "jsx": "react-jsx",
+    "types": ["jest", "node"]
+  },
+  "include": ["src"],
+  "exclude": ["node_modules", "lib", "src/stories"]
+}

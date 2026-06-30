@@ -8,6 +8,8 @@
 ## Overview
 This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main one is `packages/esql/` (`@elastic/esql`), which provides an ES|QL and PromQL parser, AST builder, and pretty-printer for use in Kibana and other Elastic tooling. It is a TypeScript package compiled with `tsup` + `tsc`.
 
+`packages/pretty-printer/` (`@elastic/pretty-printer`) is a standalone, dependency-free Wadler-Lindig document algebra and layout engine. `@elastic/esql` depends on it.
+
 ### Key source areas
 Paths are relative to `packages/esql/`.
 
