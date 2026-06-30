@@ -9,11 +9,76 @@ import { Parser } from '..';
 import type { ESQLParens } from '../../types';
 import { BasicPrettyPrinter } from '../../pretty_print';
 
-const parse = (src: string) => Parser.parse(src).root;
+const parse = (src: string) => Parser.parse(src, { withParens: true }).root;
 const firstArg = (src: string) => parse(src).commands[0].args[0];
 const reprint = (src: string) => BasicPrettyPrinter.print(parse(src));
 
-describe('parenthesized expression parsing', () => {
+describe('expression parens are dropped by default', () => {
+  const firstArgDefault = (src: string) => Parser.parse(src).root.commands[0].args[0];
+
+  it('does not wrap a literal in ESQLParens', () => {
+    expect(firstArgDefault('ROW (123)')).toMatchObject({
+      type: 'literal',
+      value: 123,
+    });
+  });
+
+  it('does not wrap a column reference in ESQLParens', () => {
+    expect(firstArgDefault('ROW (a)')).toMatchObject({
+      type: 'column',
+      name: 'a',
+    });
+  });
+
+  it('drops redundant parens around a binary expression', () => {
+    expect(firstArgDefault('ROW (a + b)')).toMatchObject({
+      type: 'function',
+      name: '+',
+    });
+  });
+
+  it('drops nested redundant parens', () => {
+    expect(firstArgDefault('ROW ((a))')).toMatchObject({
+      type: 'column',
+      name: 'a',
+    });
+  });
+
+  it('preserves operand structure without parens nodes', () => {
+    expect(firstArgDefault('ROW (a + b) * c')).toMatchObject({
+      type: 'function',
+      name: '*',
+      args: [
+        { type: 'function', name: '+' },
+        { type: 'column', name: 'c' },
+      ],
+    });
+  });
+
+  it('NOT (expr) argument is unwrapped', () => {
+    expect(firstArgDefault('ROW NOT (a AND b)')).toMatchObject({
+      type: 'function',
+      name: 'not',
+      args: [{ type: 'function', name: 'and' }],
+    });
+  });
+
+  it('produces the same AST as the equivalent paren-free source', () => {
+    const strip = (root: unknown) =>
+      JSON.parse(
+        JSON.stringify(root, (k, v) =>
+          ['text', 'location', 'incomplete'].includes(k) ? undefined : v
+        )
+      );
+
+    const withRedundantParens = strip(Parser.parse('ROW a + (b * c)').root);
+    const parenFree = strip(Parser.parse('ROW a + b * c').root);
+
+    expect(withRedundantParens).toEqual(parenFree);
+  });
+});
+
+describe('expression parens preserved with { withParens: true }', () => {
   describe('AST structure', () => {
     it('wraps a literal in ESQLParens', () => {
       expect(firstArg('ROW (123)')).toMatchObject({
@@ -136,7 +201,7 @@ describe('parenthesized expression parsing', () => {
 
   describe('parens produce structurally distinct ASTs', () => {
     const strip = (src: string) => {
-      const { root } = Parser.parse(src);
+      const { root } = Parser.parse(src, { withParens: true });
 
       return JSON.parse(
         JSON.stringify(root, (k, v) =>

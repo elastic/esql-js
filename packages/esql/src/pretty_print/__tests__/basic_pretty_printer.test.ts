@@ -15,7 +15,7 @@ import type {
 import { BasicPrettyPrinter } from '../basic_pretty_printer';
 
 const reprint = (src: string, opts?: BasicPrettyPrinterOptions) => {
-  const { root } = Parser.parse(src);
+  const { root } = Parser.parse(src, { withParens: true });
   const text = BasicPrettyPrinter.print(root, opts);
 
   // console.log(JSON.stringify(root, null, 2));
@@ -1026,7 +1026,7 @@ describe('single line query', () => {
 
 describe('multiline query', () => {
   const multiline = (src: string, opts?: BasicPrettyPrinterMultilineOptions) => {
-    const { root } = Parser.parse(src);
+    const { root } = Parser.parse(src, { withParens: true });
     const text = BasicPrettyPrinter.multiline(root, opts);
 
     // console.log(JSON.stringify(ast, null, 2));

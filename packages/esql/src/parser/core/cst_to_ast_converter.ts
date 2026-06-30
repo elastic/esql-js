@@ -2602,6 +2602,10 @@ export class CstToAstConverter {
     } else if (ctx instanceof cst.ParenthesizedExpressionContext) {
       const inner = this.fromBooleanExpressionToExpressionOrUnknown(ctx.booleanExpression());
 
+      if (this.parser.options.withParens !== true) {
+        return inner;
+      }
+
       return Builder.expression.parens(inner, {
         text: ctx.getText(),
         location: getPosition(ctx.start, ctx.stop),
