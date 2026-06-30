@@ -134,6 +134,72 @@ describe('parenthesized expression parsing', () => {
     });
   });
 
+  describe('withParens: false (opt-out)', () => {
+    const firstArgNoParens = (src: string) =>
+      Parser.parse(src, { withParens: false }).root.commands[0].args[0];
+
+    it('does not wrap a literal in ESQLParens', () => {
+      expect(firstArgNoParens('ROW (123)')).toMatchObject({
+        type: 'literal',
+        value: 123,
+      });
+    });
+
+    it('does not wrap a column reference in ESQLParens', () => {
+      expect(firstArgNoParens('ROW (a)')).toMatchObject({
+        type: 'column',
+        name: 'a',
+      });
+    });
+
+    it('drops redundant parens around a binary expression', () => {
+      expect(firstArgNoParens('ROW (a + b)')).toMatchObject({
+        type: 'function',
+        name: '+',
+      });
+    });
+
+    it('drops nested redundant parens', () => {
+      expect(firstArgNoParens('ROW ((a))')).toMatchObject({
+        type: 'column',
+        name: 'a',
+      });
+    });
+
+    it('preserves operand structure without parens nodes', () => {
+      expect(firstArgNoParens('ROW (a + b) * c')).toMatchObject({
+        type: 'function',
+        name: '*',
+        args: [
+          { type: 'function', name: '+' },
+          { type: 'column', name: 'c' },
+        ],
+      });
+    });
+
+    it('NOT (expr) argument is unwrapped', () => {
+      expect(firstArgNoParens('ROW NOT (a AND b)')).toMatchObject({
+        type: 'function',
+        name: 'not',
+        args: [{ type: 'function', name: 'and' }],
+      });
+    });
+
+    it('matches the AST produced for the equivalent paren-free source', () => {
+      const strip = (root: unknown) =>
+        JSON.parse(
+          JSON.stringify(root, (k, v) =>
+            ['text', 'location', 'incomplete'].includes(k) ? undefined : v
+          )
+        );
+
+      const without = strip(Parser.parse('ROW a + (b * c)', { withParens: false }).root);
+      const natural = strip(Parser.parse('ROW a + b * c').root);
+
+      expect(without).toEqual(natural);
+    });
+  });
+
   describe('parens produce structurally distinct ASTs', () => {
     const strip = (src: string) => {
       const { root } = Parser.parse(src);

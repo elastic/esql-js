@@ -34,6 +34,18 @@ export interface ParseOptions {
    * comments and whitespace.
    */
   withFormatting?: boolean;
+
+  /**
+   * Whether to preserve user's parentheses around expressions as explicit
+   * *ParensExpression* nodes in the AST. Defaults to `true`. When set to
+   * `false`, redundant parentheses around expressions are dropped (the inner
+   * expression is returned directly), matching the behavior before explicit
+   * parens parsing was introduced.
+   *
+   * Note: parentheses with structural meaning (e.g. around sub-queries or
+   * FORK branches) are always preserved, regardless of this option.
+   */
+  withParens?: boolean;
 }
 
 export interface ParseResult<T extends ESQLProperNode = ESQLAstQueryExpression> {
