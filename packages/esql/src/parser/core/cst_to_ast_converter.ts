@@ -2602,7 +2602,7 @@ export class CstToAstConverter {
     } else if (ctx instanceof cst.ParenthesizedExpressionContext) {
       const inner = this.fromBooleanExpressionToExpressionOrUnknown(ctx.booleanExpression());
 
-      if (this.parser.options.withParens === false) {
+      if (this.parser.options.withParens !== true) {
         return inner;
       }
 

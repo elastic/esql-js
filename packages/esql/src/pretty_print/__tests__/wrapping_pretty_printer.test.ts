@@ -12,7 +12,7 @@ import type { WrappingPrettyPrinterOptions } from '../wrapping_pretty_printer';
 import { WrappingPrettyPrinter } from '../wrapping_pretty_printer';
 
 const reprint = (src: string, opts?: WrappingPrettyPrinterOptions) => {
-  const { root } = Parser.parse(src);
+  const { root } = Parser.parse(src, { withParens: true });
   const text = WrappingPrettyPrinter.print(root, opts);
 
   // console.log(JSON.stringify(root.commands, null, 2));

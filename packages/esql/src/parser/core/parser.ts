@@ -37,10 +37,13 @@ export interface ParseOptions {
 
   /**
    * Whether to preserve user's parentheses around expressions as explicit
-   * *ParensExpression* nodes in the AST. Defaults to `true`. When set to
-   * `false`, redundant parentheses around expressions are dropped (the inner
-   * expression is returned directly), matching the behavior before explicit
-   * parens parsing was introduced.
+   * *ParensExpression* nodes in the AST. Defaults to `false`, in which case
+   * redundant parentheses around expressions are dropped (the inner expression
+   * is returned directly). This is the default because consumers like
+   * validation expect a normalized AST without redundant parens.
+   *
+   * Set to `true` to keep the parentheses; this is mainly useful for
+   * pretty-printing, where the original parentheses should round-trip.
    *
    * Note: parentheses with structural meaning (e.g. around sub-queries or
    * FORK branches) are always preserved, regardless of this option.
