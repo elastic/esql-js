@@ -43,50 +43,49 @@ const assertDifferentAst = (src1: string, src2: string) => {
 
 describe('binary operator precedence', () => {
   it('AND has higher precedence than OR', () => {
-    // With faithful round-trip, explicit parens produce a different AST than implicit precedence
-    assertDifferentAst('FROM a | WHERE a AND b OR c', 'FROM a | WHERE (a AND b) OR c');
-    assertDifferentAst('FROM a | WHERE a OR b OR c', 'FROM a | WHERE (a OR b) OR c');
-    assertDifferentAst('FROM a | WHERE a AND b AND c', 'FROM a | WHERE (a AND b) AND c');
+    assertSameAst('FROM a | WHERE a AND b OR c', 'FROM a | WHERE (a AND b) OR c');
+    assertSameAst('FROM a | WHERE a OR b OR c', 'FROM a | WHERE (a OR b) OR c');
+    assertSameAst('FROM a | WHERE a AND b AND c', 'FROM a | WHERE (a AND b) AND c');
     assertDifferentAst('FROM a | WHERE a OR b AND c', 'FROM a | WHERE (a OR b) AND c');
   });
 
   it('LIKE (regex) has higher precedence than AND', () => {
-    assertDifferentAst('FROM a | WHERE a LIKE "b" OR c', 'FROM a | WHERE (a LIKE "b") OR c');
+    assertSameAst('FROM a | WHERE a LIKE "b" OR c', 'FROM a | WHERE (a LIKE "b") OR c');
     assertDifferentAst('FROM a | WHERE a AND b LIKE "c"', 'FROM a | WHERE (a AND b) LIKE "c"');
   });
 
   it('comparison has higher precedence than AND', () => {
-    assertDifferentAst('FROM a | WHERE a AND b < c', 'FROM a | WHERE a AND (b < c)');
-    assertDifferentAst('FROM a | WHERE a < b AND c', 'FROM a | WHERE (a < b) AND c');
+    assertSameAst('FROM a | WHERE a AND b < c', 'FROM a | WHERE a AND (b < c)');
+    assertSameAst('FROM a | WHERE a < b AND c', 'FROM a | WHERE (a < b) AND c');
     assertDifferentAst('FROM a | WHERE a AND b < c', 'FROM a | WHERE (a AND b) < c');
     assertDifferentAst('FROM a | WHERE a < b AND c', 'FROM a | WHERE a < (b AND c)');
   });
 
   it('addition has higher precedence than comparison', () => {
-    assertDifferentAst('FROM a | WHERE a > b + c', 'FROM a | WHERE a > (b + c)');
-    assertDifferentAst('FROM a | WHERE a + b > c', 'FROM a | WHERE (a + b) > c');
+    assertSameAst('FROM a | WHERE a > b + c', 'FROM a | WHERE a > (b + c)');
+    assertSameAst('FROM a | WHERE a + b > c', 'FROM a | WHERE (a + b) > c');
     assertDifferentAst('FROM a | WHERE a > b + c', 'FROM a | WHERE (a > b) + c');
     assertDifferentAst('FROM a | WHERE a + b > c', 'FROM a | WHERE a + (b > c)');
   });
 
   it('addition has higher precedence than AND (and LIKE)', () => {
-    assertDifferentAst('FROM a | WHERE a + b AND c', 'FROM a | WHERE (a + b) AND c');
+    assertSameAst('FROM a | WHERE a + b AND c', 'FROM a | WHERE (a + b) AND c');
     // TODO: this test should work once right side of LIKE does not return a list of "single items"
-    // assertDifferentAst('FROM a | WHERE a + b LIKE "c"', 'FROM a | WHERE (a + b) LIKE "c"');
-    assertDifferentAst('FROM a | WHERE a AND b + c', 'FROM a | WHERE a AND (b + c)');
+    // assertSameAst('FROM a | WHERE a + b LIKE "c"', 'FROM a | WHERE (a + b) LIKE "c"');
+    assertSameAst('FROM a | WHERE a AND b + c', 'FROM a | WHERE a AND (b + c)');
     assertDifferentAst('FROM a | WHERE a + b AND c', 'FROM a | WHERE a + (b AND c)');
     assertDifferentAst('FROM a | WHERE a AND b + c', 'FROM a | WHERE (a AND b) + c');
   });
 
   it('multiplication has higher precedence than addition', () => {
-    assertDifferentAst('FROM a | WHERE a * b + c', 'FROM a | WHERE (a * b) + c');
-    assertDifferentAst('FROM a | WHERE a + b * c', 'FROM a | WHERE a + (b * c)');
+    assertSameAst('FROM a | WHERE a * b + c', 'FROM a | WHERE (a * b) + c');
+    assertSameAst('FROM a | WHERE a + b * c', 'FROM a | WHERE a + (b * c)');
     assertDifferentAst('FROM a | WHERE a * b + c', 'FROM a | WHERE a * (b + c)');
     assertDifferentAst('FROM a | WHERE a + b * c', 'FROM a | WHERE (a + b) * c');
   });
 
   it('grouping addition in comparison is not necessary', () => {
-    assertDifferentAst(
+    assertSameAst(
       'FROM a | EVAL key = CASE(timestamp < t - 1 hour AND timestamp > t - 2 hour)',
       'FROM a | EVAL key = CASE(timestamp < (t - 1 hour) AND timestamp > (t - 2 hour))'
     );
