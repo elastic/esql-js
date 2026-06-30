@@ -1,6 +1,6 @@
 {
   "$schema": "https://unpkg.com/@changesets/config@3/schema.json",
-  "changelog": "@changesets/changelog-github",
+  "changelog": ["@changesets/changelog-github", { "repo": "elastic/esql-js" }],
   "commit": false,
   "fixed": [["@elastic/esql", "@elastic/pretty-printer"]],
   "linked": [],
