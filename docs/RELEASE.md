@@ -40,6 +40,8 @@ Review this PR, then merge it when you are ready to release.
 
 When the version PR is merged, the Changesets action runs again on `main`. This time there are no pending changesets, so instead of opening a PR it publishes every package to NPM `yarn changeset:publish`.
 
+The `changeset:publish` script delegates to `yarn workspaces foreach --all --no-private --topological npm publish --access public`.
+
 Each package declares `"publishConfig": { "provenance": true }` in its `package.json`. Changesets publishes via `yarn npm publish` under Yarn Berry, which reads that field and attaches [npm provenance](https://docs.npmjs.com/generating-provenance-statements) — linking the npm artifact to the specific GitHub Actions run that built it (verifiable via `npm audit signatures`). This requires `id-token: write` on the release job, which is already set.
 
 A GitHub Release is created automatically by the action for each published package.
