@@ -8,4 +8,4 @@ steps:
       provider: 'gcp'
       image: 'family/kibana-ubuntu-2404'
       imageProject: 'elastic-images-prod'
-      machineType: 'n2-standard-2'
+      machineType: 'c2-standard-16'
