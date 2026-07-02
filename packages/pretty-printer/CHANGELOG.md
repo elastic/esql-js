@@ -1,5 +1,11 @@
 # @elastic/pretty-printer
 
+## 4.7.1
+
+### Patch Changes
+
+- [#168](https://github.com/elastic/esql-js/pull/168) [`938d42b`](https://github.com/elastic/esql-js/commit/938d42bf38257857e3d518e32c12edd5d568cef7) Thanks [@bartoval](https://github.com/bartoval)! - Fix package publishing through Yarn workspaces.
+
 ## 4.7.0
 
 ### Minor Changes
