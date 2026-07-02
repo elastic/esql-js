@@ -104,6 +104,37 @@ FROM index
     });
   });
 
+  describe('bottom comments', () => {
+    test('preserves final own-line comment after last command', () => {
+      assertReprint(
+        `FROM logs* | WHERE KQL("term")
+// KEEP meow`,
+        `FROM logs*
+  | WHERE KQL("term")
+  // KEEP meow`
+      );
+    });
+
+    test('preserves final own-line comment after a single command', () => {
+      assertReprint(
+        `FROM logs*
+// KEEP meow`
+      );
+    });
+
+    test('preserves multiple final own-line comments in order', () => {
+      assertReprint(
+        `FROM logs* | LIMIT 10
+// one
+/* two */`,
+        `FROM logs*
+  | LIMIT 10
+  // one
+  /* two */`
+      );
+    });
+  });
+
   /**
    * @todo Tests skipped, while RERANK command grammar is being stabilized. We will
    * get back to it after 9.1 release.
