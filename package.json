@@ -22,7 +22,7 @@
     "build:antlr4:promql": "yarn workspace @elastic/esql build:antlr4:promql",
     "changeset": "changeset",
     "changeset:version": "changeset version",
-    "changeset:publish": "changeset publish"
+    "changeset:publish": "yarn workspaces foreach --all --no-private --topological npm publish --access public"
   },
   "devDependencies": {
     "@babel/core": "8.0.1",
