@@ -2441,9 +2441,10 @@ export class CstToAstConverter {
         .map((qn) => this.fromQualifiedName(qn));
       const onOption = this.toOption('on', ctx._highlightFields, fields);
       onOption.location.min = onToken.symbol.start;
+      onOption.incomplete ||= fields.length === 0;
       command.args.push(onOption);
       command.highlightFields = fields;
-      command.incomplete ||= onOption.incomplete || fields.length === 0;
+      command.incomplete ||= onOption.incomplete;
     } else {
       command.incomplete = true;
     }

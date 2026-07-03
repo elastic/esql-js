@@ -8,7 +8,11 @@
 import { EsqlQuery } from '../../composer/query';
 import { Walker } from '../../ast/walker';
 import { BasicPrettyPrinter } from '../../pretty_print';
-import type { ESQLAstHighlightCommand, ESQLAstQueryExpression } from '../../types';
+import type {
+  ESQLAstHighlightCommand,
+  ESQLAstQueryExpression,
+  ESQLSingleAstItem,
+} from '../../types';
 
 describe('HIGHLIGHT', () => {
   const getHighlight = (ast: ESQLAstQueryExpression): ESQLAstHighlightCommand =>
@@ -16,6 +20,8 @@ describe('HIGHLIGHT', () => {
       type: 'command',
       name: 'highlight',
     }) as ESQLAstHighlightCommand;
+
+  const getArgs = (cmd: ESQLAstHighlightCommand) => cmd.args as ESQLSingleAstItem[];
 
   it('parses basic syntax with a single field', () => {
     const src = 'FROM logs | HIGHLIGHT "fox" ON content';
@@ -30,6 +36,37 @@ describe('HIGHLIGHT', () => {
       queryText: { type: 'literal', valueUnquoted: 'fox' },
       highlightFields: [{ type: 'column', name: 'content' }],
     });
+  });
+
+  it('populates args with the query text, ON option, and WITH option', () => {
+    const src = 'FROM logs | HIGHLIGHT "fox" ON content WITH { "encoder": "html" }';
+    const { ast } = EsqlQuery.fromSrc(src);
+    const cmd = getHighlight(ast);
+
+    expect(getArgs(cmd)).toMatchObject([
+      { type: 'literal', valueUnquoted: 'fox' },
+      {
+        type: 'option',
+        name: 'on',
+        args: [{ type: 'column', name: 'content' }],
+      },
+      {
+        type: 'option',
+        name: 'with',
+        args: [
+          {
+            type: 'map',
+            entries: [
+              {
+                type: 'map-entry',
+                key: { type: 'literal', valueUnquoted: 'encoder' },
+                value: { type: 'literal', valueUnquoted: 'html' },
+              },
+            ],
+          },
+        ],
+      },
+    ]);
   });
 
   it('parses multiple highlight fields', () => {
@@ -108,30 +145,59 @@ describe('HIGHLIGHT', () => {
     const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT');
     const cmd = getHighlight(ast);
 
-    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true });
+    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true, args: [] });
     expect(cmd.queryText).toBeUndefined();
+    expect(cmd.highlightFields).toBeUndefined();
+    expect(cmd.namedParameters).toBeUndefined();
   });
 
   it('marks incomplete when ON clause is missing', () => {
     const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT "fox"');
     const cmd = getHighlight(ast);
 
-    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true });
+    expect(cmd).toMatchObject({
+      name: 'highlight',
+      incomplete: true,
+      queryText: { type: 'literal', valueUnquoted: 'fox' },
+    });
+    expect(getArgs(cmd)).toMatchObject([{ type: 'literal', valueUnquoted: 'fox' }]);
     expect(cmd.highlightFields).toBeUndefined();
+    expect(cmd.namedParameters).toBeUndefined();
   });
 
   it('marks incomplete when ON fields are missing', () => {
     const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT "fox" ON');
     const cmd = getHighlight(ast);
 
-    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true });
+    expect(cmd).toMatchObject({
+      name: 'highlight',
+      incomplete: true,
+      queryText: { type: 'literal', valueUnquoted: 'fox' },
+      highlightFields: [],
+    });
+    expect(getArgs(cmd)).toMatchObject([
+      { type: 'literal', valueUnquoted: 'fox' },
+      { type: 'option', name: 'on', incomplete: true, args: [] },
+    ]);
+    expect(cmd.namedParameters).toBeUndefined();
   });
 
   it('marks incomplete when WITH has no map', () => {
     const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT "fox" ON content WITH');
     const cmd = getHighlight(ast);
 
-    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true });
+    expect(cmd).toMatchObject({
+      name: 'highlight',
+      incomplete: true,
+      queryText: { type: 'literal', valueUnquoted: 'fox' },
+      highlightFields: [{ type: 'column', name: 'content' }],
+      namedParameters: { type: 'map', incomplete: true, entries: [] },
+    });
+    expect(getArgs(cmd)).toMatchObject([
+      { type: 'literal', valueUnquoted: 'fox' },
+      { type: 'option', name: 'on', incomplete: false },
+      { type: 'option', name: 'with', incomplete: true },
+    ]);
   });
 
   it('round-trips single-field syntax through the pretty-printer', () => {
