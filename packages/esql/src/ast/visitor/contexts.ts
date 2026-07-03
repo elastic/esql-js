@@ -23,6 +23,7 @@ import type {
   ESQLAstUserAgentCommand,
   ESQLAstIpLocationCommand,
   ESQLAstRegisteredDomainCommand,
+  ESQLAstHighlightCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
   ESQLAstUriPartsCommand,
@@ -628,6 +629,12 @@ export class IpLocationCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstIpLocationCommand> {}
+
+// HIGHLIGHT <string> ON <qualifiedNames> [WITH <map>]
+export class HighlightCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstHighlightCommand> {}
 
 // Expressions -----------------------------------------------------------------
 

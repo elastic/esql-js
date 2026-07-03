@@ -1,5 +1,16 @@
 # @elastic/esql
 
+## 4.8.0
+
+### Minor Changes
+
+- [#167](https://github.com/elastic/esql-js/pull/167) [`2e5127e`](https://github.com/elastic/esql-js/commit/2e5127ed343d06fe4b181f05678bb0e4e252c389) Thanks [@momovdg](https://github.com/momovdg)! - Add support for the `HIGHLIGHT` command in the ES|QL parser and AST.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/pretty-printer@4.8.0
+
 ## 4.7.1
 
 ### Patch Changes
