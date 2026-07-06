@@ -1,5 +1,14 @@
 # @elastic/esql
 
+## 4.9.1
+
+### Patch Changes
+
+- [#169](https://github.com/elastic/esql-js/pull/169) [`8154024`](https://github.com/elastic/esql-js/commit/8154024b64541c2a1d79039353c616bcf3b91839) Thanks [@momovdg](https://github.com/momovdg)! - Fix `WrappingPrettyPrinter` dropping final own-line comments attached as bottom formatting decorations.
+
+- Updated dependencies []:
+  - @elastic/pretty-printer@4.9.1
+
 ## 4.9.0
 
 ### Minor Changes
