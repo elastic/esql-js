@@ -1,5 +1,11 @@
 # @elastic/pretty-printer
 
+## 4.9.0
+
+### Patch Changes
+
+- [#174](https://github.com/elastic/esql-js/pull/174) [`8e6dd38`](https://github.com/elastic/esql-js/commit/8e6dd38a0cf647ac0385da5dac0fe71123c15438) Thanks [@elastic-vault-github-plugin-prod](https://github.com/apps/elastic-vault-github-plugin-prod)! - update grammar for subqueries
+
 ## 4.8.0
 
 ## 4.7.1

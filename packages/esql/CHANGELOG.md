@@ -1,5 +1,18 @@
 # @elastic/esql
 
+## 4.9.0
+
+### Minor Changes
+
+- [#174](https://github.com/elastic/esql-js/pull/174) [`8e6dd38`](https://github.com/elastic/esql-js/commit/8e6dd38a0cf647ac0385da5dac0fe71123c15438) Thanks [@elastic-vault-github-plugin-prod](https://github.com/apps/elastic-vault-github-plugin-prod)! - publish grammar to enable prod
+
+- [#174](https://github.com/elastic/esql-js/pull/174) [`8e6dd38`](https://github.com/elastic/esql-js/commit/8e6dd38a0cf647ac0385da5dac0fe71123c15438) Thanks [@elastic-vault-github-plugin-prod](https://github.com/apps/elastic-vault-github-plugin-prod)! - update grammar for subqueries
+
+### Patch Changes
+
+- Updated dependencies [[`8e6dd38`](https://github.com/elastic/esql-js/commit/8e6dd38a0cf647ac0385da5dac0fe71123c15438)]:
+  - @elastic/pretty-printer@4.9.0
+
 ## 4.8.0
 
 ### Minor Changes
