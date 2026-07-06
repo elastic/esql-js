@@ -1,5 +1,7 @@
 # @elastic/pretty-printer
 
+## 4.9.1
+
 ## 4.9.0
 
 ### Patch Changes
