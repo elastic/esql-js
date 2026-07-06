@@ -6,7 +6,7 @@
  */
 
 import { CharStreams, CommonTokenStream } from 'antlr4';
-import { default as PromQLLexer } from '../../../../parser/antlr/promql_lexer';
+import { PromqlLexer as PromQLLexer } from '@elastic/esql-promql-grammar';
 import { attachPromQLDecorations, collectPromQLDecorations } from '../decorations';
 import { PromQLParser } from '../parser';
 import type { PromQLFunction, PromQLSelector } from '../../types';

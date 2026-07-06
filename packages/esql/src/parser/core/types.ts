@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type * as esql_parser from '../antlr/esql_parser';
+import type * as esql_parser from '@elastic/esql-grammar';
 import type { CstToAstConverter } from './cst_to_ast_converter';
 import type { ESQLAstComment } from '../../types';
 
@@ -65,7 +65,7 @@ export interface ParsedFormattingLineBreakDecoration {
 type Functions<T> = {
   [K in keyof T]: T[K] extends (...args: unknown[]) => unknown ? K : never;
 };
-type GrammarRule = keyof Functions<InstanceType<typeof esql_parser.default>>;
+type GrammarRule = keyof Functions<InstanceType<typeof esql_parser.EsqlParser>>;
 type CstToAstConversion = keyof Functions<CstToAstConverter>;
 
 /**

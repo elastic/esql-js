@@ -1,0 +1,5 @@
+@elastic/esql-grammar (Auto-generated ANTLR4 TypeScript artifacts for the ES|QL grammar).
+Copyright 2025-2026 Elasticsearch B.V.
+
+The ANTLR files for the ES|QL language come from the Elasticsearch repository:
+https://github.com/elastic/elasticsearch/tree/main/x-pack/plugin/esql/src/main/antlr

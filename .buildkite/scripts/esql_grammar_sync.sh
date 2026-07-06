@@ -13,8 +13,8 @@ export GH_TOKEN="$VAULT_GITHUB_TOKEN"
 synchronize_lexer_grammar () {
   source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/EsqlBaseLexer.g4"
   source_lib_dir="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/lexer"
-  destination_file="$REPO_DIR/packages/esql/src/parser/antlr/esql_lexer.g4"
-  destination_lib_parent_dir="$REPO_DIR/packages/esql/src/parser/antlr"
+  destination_file="$REPO_DIR/packages/esql-grammar/src/esql_lexer.g4"
+  destination_lib_parent_dir="$REPO_DIR/packages/esql-grammar/src"
   destination_lib_dir="$destination_lib_parent_dir/lexer"
 
 # Copy the files
@@ -40,7 +40,7 @@ synchronize_lexer_grammar () {
 
 synchronize_promql_lexer_grammar () {
   source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/PromqlBaseLexer.g4"
-  destination_file="$REPO_DIR/packages/esql/src/parser/antlr/promql_lexer.g4"
+  destination_file="$REPO_DIR/packages/esql-promql-grammar/src/promql_lexer.g4"
 
   echo "Copying PromQL base lexer file..."
   cp "$source_file" "$destination_file"
@@ -61,8 +61,8 @@ synchronize_promql_lexer_grammar () {
 synchronize_parser_grammar () {
   source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/EsqlBaseParser.g4"
   source_lib_dir="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/parser"
-  destination_file="$REPO_DIR/packages/esql/src/parser/antlr/esql_parser.g4"
-  destination_lib_parent_dir="$REPO_DIR/packages/esql/src/parser/antlr"
+  destination_file="$REPO_DIR/packages/esql-grammar/src/esql_parser.g4"
+  destination_lib_parent_dir="$REPO_DIR/packages/esql-grammar/src"
   destination_lib_dir="$destination_lib_parent_dir/parser"
 
   echo "Copying base parser file..."
@@ -87,9 +87,17 @@ synchronize_parser_grammar () {
   echo "Parser file copied and modified successfully."
 }
 
+synchronize_promql_config () {
+  # The generated promql lexer/parser extend lexer_config/parser_config.
+  # Keep copies in sync with packages/esql-grammar/src/.
+  cp "$REPO_DIR/packages/esql-grammar/src/lexer_config.js" "$REPO_DIR/packages/esql-promql-grammar/src/lexer_config.js"
+  cp "$REPO_DIR/packages/esql-grammar/src/parser_config.js" "$REPO_DIR/packages/esql-promql-grammar/src/parser_config.js"
+  echo "PromQL config files synced."
+}
+
 synchronize_promql_parser_grammar () {
   source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/PromqlBaseParser.g4"
-  destination_file="$REPO_DIR/packages/esql/src/parser/antlr/promql_parser.g4"
+  destination_file="$REPO_DIR/packages/esql-promql-grammar/src/promql_parser.g4"
 
   echo "Copying PromQL base parser file..."
   cp "$source_file" "$destination_file"
@@ -136,16 +144,18 @@ main () {
   report_main_step "Synchronizing PromQL parser grammar..."
   synchronize_promql_parser_grammar
 
+  report_main_step "Syncing PromQL config files..."
+  synchronize_promql_config
+
   # Check for differences in grammar files
-  antlr_dir="./packages/esql/src/parser/antlr"
   set +e
   git diff --exit-code --quiet \
-    "$antlr_dir/esql_lexer.g4" \
-    "$antlr_dir/esql_parser.g4" \
-    "$antlr_dir/promql_lexer.g4" \
-    "$antlr_dir/promql_parser.g4" \
-    "$antlr_dir/lexer/" \
-    "$antlr_dir/parser/"
+    packages/esql-grammar/src/esql_lexer.g4 \
+    packages/esql-grammar/src/esql_parser.g4 \
+    packages/esql-grammar/src/lexer/ \
+    packages/esql-grammar/src/parser/ \
+    packages/esql-promql-grammar/src/promql_lexer.g4 \
+    packages/esql-promql-grammar/src/promql_parser.g4
   if [ $? -eq 0 ]; then
     echo "No differences found. Our work is done here."
     exit
@@ -189,7 +199,7 @@ main () {
   BRANCH_NAME="esql_grammar_sync_$(date +%s)"
   git checkout -b "$BRANCH_NAME"
 
-  git add packages/esql/src/parser/antlr/
+  git add packages/esql-grammar/src/ packages/esql-promql-grammar/src/
   git commit -m "feat: Update ES|QL grammars"
 
   report_main_step "Changes committed. Creating pull request."

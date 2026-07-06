@@ -10,6 +10,10 @@ This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main o
 
 `packages/pretty-printer/` (`@elastic/pretty-printer`) is a standalone, dependency-free Wadler-Lindig document algebra and layout engine. `@elastic/esql` depends on it.
 
+`packages/esql-types/` (`@elastic/esql-types`) holds all public TypeScript type definitions for the ES|QL and PromQL ASTs. It has zero runtime code and zero dependencies. `@elastic/esql` depends on it; `packages/esql/src/types.ts` is a thin re-export shim from it.
+
+`packages/esql-grammar/` (`@elastic/esql-grammar`) and `packages/esql-promql-grammar/` (`@elastic/esql-promql-grammar`) hold the auto-generated ANTLR4 TypeScript artifacts for ES|QL and PromQL respectively. **Do not edit their source files by hand** — they are managed by the CI grammar sync job (`.buildkite/scripts/esql_grammar_sync.sh`). `@elastic/esql` depends on both.
+
 ### Key source areas
 Paths are relative to `packages/esql/`.
 
@@ -17,7 +21,7 @@ Paths are relative to `packages/esql/`.
 |------|---------|
 | `src/parser/antlr/` | Auto-generated ANTLR4 TypeScript files (lexer, parser, listener, interp). **Do not edit by hand.** |
 | `src/parser/core/cst_to_ast_converter.ts` | Converts ANTLR CST → Kibana AST. Main place to add new command support. |
-| `src/types.ts` | All public AST node types. Add new command interfaces here. |
+| `src/types.ts` | Re-export shim. Real AST type definitions live in `packages/esql-types/src/`. Add new command interfaces there. |
 | `src/ast/builder/builder.ts` | Programmatic AST builder (used in tests and by consumers). |
 | `src/pretty_print/basic_pretty_printer.ts` | Visitor-based printer. Mostly generic; rarely needs changes. |
 | `src/pretty_print/constants.ts` | Sets/maps for commands with non-standard formatting rules. |
