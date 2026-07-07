@@ -1,2 +1,2 @@
-@elastic/pretty-printer (A general-purpose Wadler-Lindig document algebra and layout engine).
+@elastic/esql-types (Shared TypeScript types for ES|QL packages).
 Copyright 2025-2026 Elasticsearch B.V.
