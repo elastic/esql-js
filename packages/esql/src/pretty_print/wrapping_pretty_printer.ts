@@ -473,6 +473,24 @@ export class WrappingPrettyPrinter {
     return txt;
   }
 
+  protected printBottomDecorations(indent: string, node: ESQLAstBaseItem): string {
+    const formatting = node.formatting;
+
+    if (!formatting?.bottom?.length) {
+      return '';
+    }
+
+    let txt = '';
+
+    for (const decoration of formatting.bottom) {
+      if (decoration.type === 'comment') {
+        txt += '\n' + indent + LeafPrinter.comment(decoration);
+      }
+    }
+
+    return txt;
+  }
+
   protected decorateWithComments(
     { indent, suffix }: Input,
     node: ESQLAstBaseItem,
@@ -1054,7 +1072,8 @@ export class WrappingPrettyPrinter {
         const isFirstCommand = i === 0;
 
         const commandIndent = isFirstCommand ? indent : pipedCommandIndent;
-        const topDecorations = this.printTopDecorations(commandIndent, commands[i]);
+        const command = commands[i];
+        const topDecorations = this.printTopDecorations(commandIndent, command);
 
         if (topDecorations) {
           if (!isFirstCommand) {
@@ -1075,6 +1094,7 @@ export class WrappingPrettyPrinter {
         }
 
         text += out.txt;
+        text += this.printBottomDecorations(commandIndent, command);
         i++;
         hasCommands = true;
       }

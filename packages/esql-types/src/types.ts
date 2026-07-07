@@ -25,7 +25,8 @@ export type ESQLAstCommand =
   | ESQLAstMetricsInfoCommand
   | ESQLAstUserAgentCommand
   | ESQLAstIpLocationCommand
-  | ESQLAstRegisteredDomainCommand;
+  | ESQLAstRegisteredDomainCommand
+  | ESQLAstHighlightCommand;
 
 export type ESQLAstAllCommands = ESQLAstCommand | ESQLAstHeaderCommand;
 
@@ -187,6 +188,12 @@ export interface ESQLAstIpLocationCommand extends ESQLCommand<'ip_location'> {
 export interface ESQLAstRegisteredDomainCommand extends ESQLCommand<'registered_domain'> {
   targetField: ESQLColumn;
   expression?: ESQLAstExpression;
+}
+
+export interface ESQLAstHighlightCommand extends ESQLCommand<'highlight'> {
+  queryText?: ESQLStringLiteral;
+  highlightFields?: ESQLColumn[];
+  namedParameters?: ESQLSingleAstItem;
 }
 
 /**
