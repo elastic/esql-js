@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-promql-grammar",
-  "version": "4.9.1",
+  "version": "4.10.0",
   "author": "Kibana ES|QL team",
   "description": "Auto-generated ANTLR4 TypeScript artifacts for the PromQL grammar. Do not edit by hand.",
   "license": "Elastic-2.0",
