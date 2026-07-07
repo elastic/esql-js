@@ -11,6 +11,13 @@ export default defineConfig([
     '**/lib/',
     'node_modules/',
     '**/parser/antlr/',
+    // Generated ANTLR4 grammar artifacts — do not lint
+    'packages/esql-grammar/src/esql_*.ts',
+    'packages/esql-grammar/src/lexer_config.js',
+    'packages/esql-grammar/src/parser_config.js',
+    'packages/esql-promql-grammar/src/promql_*.ts',
+    'packages/esql-promql-grammar/src/lexer_config.js',
+    'packages/esql-promql-grammar/src/parser_config.js',
     'storybook-static/',
     '*.js',
     '*.mjs',

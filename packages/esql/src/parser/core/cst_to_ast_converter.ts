@@ -6,7 +6,7 @@
  */
 
 import type * as antlr from 'antlr4';
-import * as cst from '../antlr/esql_parser';
+import * as cst from '@elastic/esql-grammar';
 import type * as ast from '../../types';
 import { isCommand, isStringLiteral } from '../../ast/is';
 import { LeafPrinter } from '../../pretty_print';
@@ -14,7 +14,7 @@ import { getPosition } from './tokens';
 import { nonNullable, unescapeColumn } from './helpers';
 import { firstItem, lastItem, resolveItem, singleItems } from '../../ast/visitor/utils';
 import { type AstNodeParserFields, Builder } from '../../ast/builder';
-import { type ArithmeticUnaryContext } from '../antlr/esql_parser';
+import { type ArithmeticUnaryContext } from '@elastic/esql-grammar';
 import { PromQLParser } from '../../embedded_languages/promql/parser/parser';
 import type { AstNodeTemplate } from '../../ast/builder';
 import type { Parser } from './parser';
@@ -988,8 +988,8 @@ export class CstToAstConverter {
   private fromRenameClauses(clausesCtx: cst.RenameClauseContext[]): ast.ESQLAstItem[] {
     return clausesCtx
       .map((clause) => {
-        const asToken = clause.getToken(cst.default.AS, 0);
-        const assignToken = clause.getToken(cst.default.ASSIGN, 0);
+        const asToken = clause.getToken(cst.EsqlParser.AS, 0);
+        const assignToken = clause.getToken(cst.EsqlParser.ASSIGN, 0);
 
         const renameToken = asToken || assignToken;
 
@@ -1031,7 +1031,7 @@ export class CstToAstConverter {
     const command = this.createCommand('dissect', ctx);
     const primaryExpression = this.fromPrimaryExpressionStrict(ctx.primaryExpression());
     const stringContext = ctx.string_();
-    const pattern = stringContext.getToken(cst.default.QUOTED_STRING, 0);
+    const pattern = stringContext.getToken(cst.EsqlParser.QUOTED_STRING, 0);
     const doParseStringAndOptions = pattern && textExistsAndIsValid(pattern.getText());
 
     command.args.push(primaryExpression);
@@ -1084,7 +1084,7 @@ export class CstToAstConverter {
 
     for (let i = 0; i < stringContexts.length; i++) {
       const stringContext = stringContexts[i];
-      const pattern = stringContext.getToken(cst.default.QUOTED_STRING, 0);
+      const pattern = stringContext.getToken(cst.EsqlParser.QUOTED_STRING, 0);
       const doParseStringAndOptions = pattern && textExistsAndIsValid(pattern.getText());
 
       if (doParseStringAndOptions) {

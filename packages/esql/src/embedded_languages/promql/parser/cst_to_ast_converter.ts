@@ -6,7 +6,7 @@
  */
 
 import type * as antlr from 'antlr4';
-import * as cst from '../../../parser/antlr/promql_parser';
+import * as cst from '@elastic/esql-promql-grammar';
 import { getPosition } from '../../../parser/core/tokens';
 import { PromQLBuilder } from '../ast/builder';
 import type { AstNodeParserFields } from '../../../ast/builder/types';

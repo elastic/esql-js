@@ -6,8 +6,10 @@
  */
 
 import { CharStreams, CommonTokenStream, type CharStream } from 'antlr4';
-import { default as PromQLLexer } from '../../../parser/antlr/promql_lexer';
-import { default as PromQLParserGenerated } from '../../../parser/antlr/promql_parser';
+import {
+  PromqlLexer as PromQLLexer,
+  PromqlParser as PromQLParserGenerated,
+} from '@elastic/esql-promql-grammar';
 import { PromQLErrorListener } from './promql_error_listener';
 import { PromQLCstToAstConverter } from './cst_to_ast_converter';
 import { PromQLBuilder } from '../ast/builder';

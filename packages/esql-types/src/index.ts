@@ -5,4 +5,5 @@
  * 2.0.
  */
 
-export type * from '@elastic/esql-types';
+export type * from './types';
+export type * from './promql_types';

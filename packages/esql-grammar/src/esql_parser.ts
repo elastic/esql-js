@@ -1,5 +1,5 @@
 // @ts-nocheck
-// Generated from src/parser/antlr/esql_parser.g4 by ANTLR 4.13.2
+// Generated from src/esql_parser.g4 by ANTLR 4.13.2
 // noinspection ES6UnusedImports,JSUnusedGlobalSymbols,JSUnusedLocalSymbols
 
 import {

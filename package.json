@@ -17,9 +17,10 @@
     "prepare": "husky",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "build:antlr4": "yarn workspace @elastic/esql build:antlr4",
-    "build:antlr4:esql": "yarn workspace @elastic/esql build:antlr4:esql",
-    "build:antlr4:promql": "yarn workspace @elastic/esql build:antlr4:promql",
+    "build:antlr4": "yarn workspace @elastic/esql-grammar build:antlr4 && yarn workspace @elastic/esql-promql-grammar build:antlr4",
+    "build:antlr4:esql": "yarn workspace @elastic/esql-grammar build:antlr4",
+    "build:antlr4:promql": "yarn workspace @elastic/esql-promql-grammar build:antlr4",
+    "sync:grammars": "./.buildkite/scripts/grammar_sync_local.sh",
     "changeset": "changeset",
     "changeset:version": "changeset version",
     "changeset:publish": "yarn workspaces foreach --all --no-private --topological npm publish --access public --tolerate-republish"

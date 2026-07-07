@@ -823,10 +823,50 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@elastic/esql-grammar@workspace:^, @elastic/esql-grammar@workspace:packages/esql-grammar":
+  version: 0.0.0-use.local
+  resolution: "@elastic/esql-grammar@workspace:packages/esql-grammar"
+  dependencies:
+    "@types/jest": "npm:30.0.0"
+    antlr4: "npm:4.13.2"
+    jest: "npm:30.4.2"
+    ts-jest: "npm:29.4.11"
+    tslib: "npm:2.8.1"
+    tsup: "npm:8.5.1"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
+"@elastic/esql-promql-grammar@workspace:^, @elastic/esql-promql-grammar@workspace:packages/esql-promql-grammar":
+  version: 0.0.0-use.local
+  resolution: "@elastic/esql-promql-grammar@workspace:packages/esql-promql-grammar"
+  dependencies:
+    "@types/jest": "npm:30.0.0"
+    antlr4: "npm:4.13.2"
+    jest: "npm:30.4.2"
+    ts-jest: "npm:29.4.11"
+    tslib: "npm:2.8.1"
+    tsup: "npm:8.5.1"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
+"@elastic/esql-types@workspace:^, @elastic/esql-types@workspace:packages/esql-types":
+  version: 0.0.0-use.local
+  resolution: "@elastic/esql-types@workspace:packages/esql-types"
+  dependencies:
+    tsup: "npm:8.5.1"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
 "@elastic/esql@workspace:packages/esql":
   version: 0.0.0-use.local
   resolution: "@elastic/esql@workspace:packages/esql"
   dependencies:
+    "@elastic/esql-grammar": "workspace:^"
+    "@elastic/esql-promql-grammar": "workspace:^"
+    "@elastic/esql-types": "workspace:^"
     "@elastic/pretty-printer": "workspace:^"
     "@types/jest": "npm:30.0.0"
     antlr4: "npm:4.13.2"

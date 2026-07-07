@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { default as esql_lexer } from '../parser/antlr/esql_lexer';
+import { EsqlLexer as esql_lexer } from '@elastic/esql-grammar';
 
 let _quotableKeywords: Set<string> | undefined;
 

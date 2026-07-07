@@ -2,7 +2,15 @@
   "$schema": "https://unpkg.com/@changesets/config@3/schema.json",
   "changelog": ["@changesets/changelog-github", { "repo": "elastic/esql-js" }],
   "commit": false,
-  "fixed": [["@elastic/esql", "@elastic/pretty-printer"]],
+  "fixed": [
+    [
+      "@elastic/esql",
+      "@elastic/esql-types",
+      "@elastic/esql-grammar",
+      "@elastic/esql-promql-grammar",
+      "@elastic/pretty-printer"
+    ]
+  ],
   "linked": [],
   "access": "public",
   "baseBranch": "main",
