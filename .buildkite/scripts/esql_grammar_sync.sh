@@ -3,6 +3,7 @@ set -euo pipefail
 
 REPO_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
 WORK_DIR="$(dirname "$REPO_DIR")"
+ELASTICSEARCH_DIR="$WORK_DIR/elasticsearch"
 
 if [[ -z "${VAULT_GITHUB_TOKEN:-}" ]]; then
   echo "VAULT_GITHUB_TOKEN is not set."
@@ -10,113 +11,7 @@ if [[ -z "${VAULT_GITHUB_TOKEN:-}" ]]; then
 fi
 export GH_TOKEN="$VAULT_GITHUB_TOKEN"
 
-synchronize_lexer_grammar () {
-  source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/EsqlBaseLexer.g4"
-  source_lib_dir="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/lexer"
-  destination_file="$REPO_DIR/packages/esql-grammar/src/esql_lexer.g4"
-  destination_lib_parent_dir="$REPO_DIR/packages/esql-grammar/src"
-  destination_lib_dir="$destination_lib_parent_dir/lexer"
-
-# Copy the files
-  echo "Copying base lexer file..."
-  cp "$source_file" "$destination_file"
-  echo "Copying lexer lib files..."
-  rm -rf "$destination_lib_dir"
-  cp -r "$source_lib_dir" "$destination_lib_parent_dir"
-
-  # Insert the header
-  temp_file=$(mktemp)
-  printf "// DO NOT MODIFY THIS FILE BY HAND. IT IS MANAGED BY A CI JOB.\n\n%s" "$(cat "$destination_file")" > "$temp_file"
-  mv "$temp_file" "$destination_file"
-
-  # Replace the line containing "lexer grammar" with "lexer grammar esql_lexer;"
-  sed -i -e 's/lexer grammar.*$/lexer grammar esql_lexer;/' "$destination_file"
-
-  # Replace the line containing "superClass" with "superClass=lexer_config;"
-  sed -i -e 's/superClass.*$/superClass=lexer_config;/' "$destination_file"
-
-  echo "Lexer file copied and modified successfully."
-}
-
-synchronize_promql_lexer_grammar () {
-  source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/PromqlBaseLexer.g4"
-  destination_file="$REPO_DIR/packages/esql-promql-grammar/src/promql_lexer.g4"
-
-  echo "Copying PromQL base lexer file..."
-  cp "$source_file" "$destination_file"
-
-  temp_file=$(mktemp)
-  printf "// DO NOT MODIFY THIS FILE BY HAND. IT IS MANAGED BY A CI JOB.\n\n%s" "$(cat "$destination_file")" > "$temp_file"
-  mv "$temp_file" "$destination_file"
-
-  # Replace the line containing "lexer grammar" with "lexer grammar promql_lexer;"
-  sed -i -e 's/lexer grammar.*$/lexer grammar promql_lexer;/' "$destination_file"
-
-  # Replace the line containing "superClass" with "superClass=lexer_config;"
-  sed -i -e 's/superClass.*$/superClass=lexer_config;/' "$destination_file"
-
-  echo "PromQL lexer file copied and modified successfully."
-}
-
-synchronize_parser_grammar () {
-  source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/EsqlBaseParser.g4"
-  source_lib_dir="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/parser"
-  destination_file="$REPO_DIR/packages/esql-grammar/src/esql_parser.g4"
-  destination_lib_parent_dir="$REPO_DIR/packages/esql-grammar/src"
-  destination_lib_dir="$destination_lib_parent_dir/parser"
-
-  echo "Copying base parser file..."
-  cp "$source_file" "$destination_file"
-  echo "Copying parser lib files..."
-  rm -rf "$destination_lib_dir"
-  cp -r "$source_lib_dir" "$destination_lib_parent_dir"
-
-  temp_file=$(mktemp)
-  printf "// DO NOT MODIFY THIS FILE BY HAND. IT IS MANAGED BY A CI JOB.\n\n%s" "$(cat "$destination_file")" > "$temp_file"
-  mv "$temp_file" "$destination_file"
-
-  # Replace the line containing "parser grammar" with "parser grammar esql_parser;"
-  sed -i -e 's/parser grammar.*$/parser grammar esql_parser;/' "$destination_file"
-
-  # Replace tokenVocab=EsqlBaseLexer; with tokenVocab=esql_lexer;
-  sed -i -e 's/tokenVocab=EsqlBaseLexer;/tokenVocab=esql_lexer;/' "$destination_file"
-
-  # Replace the line containing "superClass" with "superClass=parser_config;"
-  sed -i -e 's/superClass.*$/superClass=parser_config;/' "$destination_file"
-
-  echo "Parser file copied and modified successfully."
-}
-
-synchronize_promql_config () {
-  # The generated promql lexer/parser extend lexer_config/parser_config.
-  # Keep copies in sync with packages/esql-grammar/src/.
-  cp "$REPO_DIR/packages/esql-grammar/src/lexer_config.js" "$REPO_DIR/packages/esql-promql-grammar/src/lexer_config.js"
-  cp "$REPO_DIR/packages/esql-grammar/src/parser_config.js" "$REPO_DIR/packages/esql-promql-grammar/src/parser_config.js"
-  echo "PromQL config files synced."
-}
-
-synchronize_promql_parser_grammar () {
-  source_file="$WORK_DIR/elasticsearch/x-pack/plugin/esql/src/main/antlr/PromqlBaseParser.g4"
-  destination_file="$REPO_DIR/packages/esql-promql-grammar/src/promql_parser.g4"
-
-  echo "Copying PromQL base parser file..."
-  cp "$source_file" "$destination_file"
-
-  temp_file=$(mktemp)
-  printf "// DO NOT MODIFY THIS FILE BY HAND. IT IS MANAGED BY A CI JOB.\n\n%s" "$(cat "$destination_file")" > "$temp_file"
-  mv "$temp_file" "$destination_file"
-
-  # Replace the line containing "parser grammar" with "parser grammar promql_parser;"
-  sed -i -e 's/parser grammar.*$/parser grammar promql_parser;/' "$destination_file"
-
-  # Replace tokenVocab=PromqlBaseLexer; with tokenVocab=promql_lexer;
-  sed -i -e 's/tokenVocab=PromqlBaseLexer;/tokenVocab=promql_lexer;/' "$destination_file"
-
-  # Replace the line containing "superClass" with "superClass=parser_config;"
-  sed -i -e 's/superClass.*$/superClass=parser_config;/' "$destination_file"
-
-  echo "PromQL parser file copied and modified successfully."
-}
+source "$REPO_DIR/.buildkite/scripts/grammar_sync_lib.sh"
 
 report_main_step () {
   echo "--- $1"
