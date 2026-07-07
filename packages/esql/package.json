@@ -48,6 +48,7 @@
     "@elastic/esql-promql-grammar": "workspace:^",
     "@elastic/esql-types": "workspace:^",
     "@elastic/pretty-printer": "workspace:^",
+    "antlr4": "4.13.2",
     "tree-dump": "1.1.0",
     "tslib": "2.8.1"
   },

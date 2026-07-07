@@ -869,6 +869,7 @@ __metadata:
     "@elastic/esql-types": "workspace:^"
     "@elastic/pretty-printer": "workspace:^"
     "@types/jest": "npm:30.0.0"
+    antlr4: "npm:4.13.2"
     jest: "npm:30.4.2"
     tree-dump: "npm:1.1.0"
     ts-jest: "npm:29.4.11"
