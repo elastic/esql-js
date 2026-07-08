@@ -135,6 +135,26 @@ FROM index
     });
   });
 
+  describe('multi-line block comments', () => {
+    test('re-indents continuation lines of a top comment on an expression', () => {
+      const query = `FROM index
+| EVAL
+  /* line1
+line2 */
+  x = 1,
+  y = 2`;
+      const text = reprint(query, { multiline: true }).text;
+
+      expect('\n' + text).toBe(`
+FROM index
+  | EVAL
+      /* line1
+      line2 */
+      x = 1,
+      y = 2`);
+    });
+  });
+
   /**
    * @todo Tests skipped, while RERANK command grammar is being stabilized. We will
    * get back to it after 9.1 release.

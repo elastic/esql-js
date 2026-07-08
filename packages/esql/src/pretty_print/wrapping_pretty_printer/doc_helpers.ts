@@ -60,14 +60,14 @@ export const decorateWithComments = (node: ESQLAstBaseItem, doc: Doc): Doc => {
   // Top comments go before the node
   if (top?.length) {
     for (const c of top) {
-      parts.push(LeafPrinter.comment(c));
+      parts.push(commentToDoc(c));
       parts.push(hardlineWithoutBreakParent);
     }
   }
 
   // Left inline comments
   if (left?.length) {
-    parts.push(LeafPrinter.commentList(left));
+    parts.push(commentListToDoc(left));
     parts.push(' ');
   }
 
@@ -76,7 +76,7 @@ export const decorateWithComments = (node: ESQLAstBaseItem, doc: Doc): Doc => {
   // Right inline comments
   if (right?.length) {
     parts.push(' ');
-    parts.push(LeafPrinter.commentList(right));
+    parts.push(commentListToDoc(right));
   }
 
   // Trailing single-line comment – deferred to end-of-line via lineSuffix
@@ -88,7 +88,7 @@ export const decorateWithComments = (node: ESQLAstBaseItem, doc: Doc): Doc => {
   // Bottom comments go after the node
   if (bottom?.length) {
     for (const c of bottom) {
-      parts.push(hardlineWithoutBreakParent, LeafPrinter.comment(c));
+      parts.push(hardlineWithoutBreakParent, commentToDoc(c));
     }
   }
 
