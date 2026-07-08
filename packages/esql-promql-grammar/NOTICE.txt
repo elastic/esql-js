@@ -1,0 +1,5 @@
+@elastic/esql-promql-grammar (Auto-generated ANTLR4 TypeScript artifacts for the PromQL grammar).
+Copyright 2025-2026 Elasticsearch B.V.
+
+The ANTLR files for the PromQL language come from the Elasticsearch repository:
+https://github.com/elastic/elasticsearch/tree/main/x-pack/plugin/esql/src/main/antlr

@@ -1,7 +1,7 @@
 ---
 name: grammar-sync-update
 description: >
-  Use this skill when a grammar sync PR has landed (updating src/parser/antlr/) and a follow-up PR
+  Use this skill when a grammar sync PR has landed (updating packages/esql/src/parser/antlr/) and a follow-up PR
   is needed to wire a new ES|QL command or update an existing one in the AST layer. Covers all files
   that need changes and the exact patterns to follow for both new and existing commands.
 ---
@@ -20,7 +20,7 @@ After the automated grammar sync bot merges a PR, this skill covers two scenario
 - The grammar sync PR only updated ANTLR-generated files with no new grammar rules (`.ts`, `.interp`, `.tokens` only) — those are handled automatically.
 
 **You DO need this skill when:**
-- A new `xxxCommand` rule appears in `src/parser/antlr/esql_parser.g4` with no corresponding `fromXxxCommand()` in `cst_to_ast_converter.ts`. → **Use Scenario A below.**
+- A new `xxxCommand` rule appears in `packages/esql/src/parser/antlr/esql_parser.g4` with no corresponding `fromXxxCommand()` in `cst_to_ast_converter.ts`. → **Use Scenario A below.**
 - The `esql_parser_listener.ts` has new `enterXxxCommand` / `exitXxxCommand` entries with no converter handler. → **Use Scenario A below.**
 - An existing command's grammar rule changed (new context method, new labeled alternative, new keyword option) and the converter no longer covers it. → **Use Scenario B below.**
 
@@ -28,22 +28,22 @@ After the automated grammar sync bot merges a PR, this skill covers two scenario
 
 ```bash
 # 1. See the full grammar diff
-git diff HEAD~1 -- src/parser/antlr/esql_parser.g4
+git diff HEAD~1 -- packages/esql/src/parser/antlr/esql_parser.g4
 
 # 2. Identify new command rules (Scenario A)
-git diff HEAD~1 -- src/parser/antlr/esql_parser.g4 | grep "^+.*[Cc]ommand\b"
+git diff HEAD~1 -- packages/esql/src/parser/antlr/esql_parser.g4 | grep "^+.*[Cc]ommand\b"
 
 # 3. Cross-check: listener entries without a converter handler (Scenario A)
-grep "enter.*Command" src/parser/antlr/esql_parser_listener.ts | \
+grep "enter.*Command" packages/esql/src/parser/antlr/esql_parser_listener.ts | \
   sed 's/.*enter\([A-Za-z]*\)Command.*/\1/' | \
   while read cmd; do
-    grep -q "from${cmd}Command" src/parser/core/cst_to_ast_converter.ts || echo "MISSING: $cmd"
+    grep -q "from${cmd}Command" packages/esql/src/parser/core/cst_to_ast_converter.ts || echo "MISSING: $cmd"
   done
 
 # 4. Identify changed rules for existing commands (Scenario B)
 # Look for new labeled alternatives (_newField), new keyword tokens (BY, WITH, AS),
 # or new sub-rule methods (ctx.newSubRule()) added to an existing command rule.
-git diff HEAD~1 -- src/parser/antlr/esql_parser.g4 | grep "^[+-]" | grep -v "^---\|^+++"
+git diff HEAD~1 -- packages/esql/src/parser/antlr/esql_parser.g4 | grep "^[+-]" | grep -v "^---\|^+++"
 ```
 
 If step 2/3 shows an entirely new command → **Scenario A**.
@@ -53,7 +53,7 @@ If step 4 shows additions inside an existing command rule → **Scenario B**.
 
 ## Files to change (all 7, in order)
 
-### 1. `src/types.ts`
+### 1. `packages/esql/src/types.ts`
 
 **Add a typed interface** if the command has named fields (target field, inference ID, optional config, etc.):
 
@@ -78,7 +78,7 @@ If the command is trivial (only generic `args`, no named fields), use `ESQLComma
 
 ---
 
-### 2. `src/ast/visitor/contexts.ts`
+### 2. `packages/esql/src/ast/visitor/contexts.ts`
 
 Add a visitor context class before the `// Expressions` comment (search for that comment to find the spot):
 
@@ -94,7 +94,7 @@ Also add the import for `ESQLAstXxxCommand` at the top of the file.
 
 ---
 
-### 3. `src/ast/visitor/types.ts`
+### 3. `packages/esql/src/ast/visitor/types.ts`
 
 Three additions. Search for `agent-marker` comments to find the exact insertion points:
 
@@ -115,7 +115,7 @@ visitXxxCommand?: Visitor<contexts.XxxCommandVisitorContext<Visitors, Data>, any
 
 ---
 
-### 4. `src/ast/visitor/global_visitor_context.ts`
+### 4. `packages/esql/src/ast/visitor/global_visitor_context.ts`
 
 Two additions:
 
@@ -147,7 +147,15 @@ Add the import for `ESQLAstXxxCommand` at the top of the file.
 
 ---
 
-### 5. `src/parser/core/cst_to_ast_converter.ts`
+### 5. `packages/esql/src/parser/core/cst_to_ast_converter.ts`
+
+Before writing `fromXxxCommand`, grep `cst_to_ast_converter.ts` for an existing private helper. If the grammar shape matches, extend the helper and use a one-liner — don't copy another command's method body.
+
+| Grammar shape | Existing helper |
+|---|---|
+| `qualifiedName = expr` [+ `commandNamedParameters`] | `fromQualifiedNameAssignmentCommand` (`uri_parts`, `registered_domain`, `user_agent`, `ip_location`) |
+| `STATS` / `INLINE STATS` | `fromStatsLikeCommand` |
+| no args | `createCommand` one-liner |
 
 Two additions:
 
@@ -209,7 +217,7 @@ private fromXxxCommand(ctx: cst.XxxCommandContext): ast.ESQLAstXxxCommand {
 
 ---
 
-### 6. `src/pretty_print/constants.ts`
+### 6. `packages/esql/src/pretty_print/constants.ts`
 
 The pretty printer is visitor-based and **requires no changes** for most new commands.
 
@@ -226,7 +234,7 @@ export const commandsWithNoCommaArgSeparator = new Set([
 
 ---
 
-### 7. `src/parser/__tests__/xxx.test.ts` (new file)
+### 7. `packages/esql/src/parser/__tests__/xxx.test.ts` (new file)
 
 Minimum coverage:
 1. Parses basic syntax without errors
@@ -257,19 +265,19 @@ describe('XXX command', () => {
 });
 ```
 
-Reference test files: `src/parser/__tests__/user_agent.test.ts`, `src/parser/__tests__/change_point.test.ts`
+Reference test files: `packages/esql/src/parser/__tests__/user_agent.test.ts`, `packages/esql/src/parser/__tests__/change_point.test.ts`
 
 ---
 
 ## Checklist — Scenario A (new command)
 
-- [ ] `src/types.ts` — new interface + union updated
-- [ ] `src/ast/visitor/contexts.ts` — `XxxCommandVisitorContext` added
-- [ ] `src/ast/visitor/types.ts` — input union, output union, `VisitorMethods` updated
-- [ ] `src/ast/visitor/global_visitor_context.ts` — switch case + public method added
-- [ ] `src/parser/core/cst_to_ast_converter.ts` — dispatcher + `fromXxxCommand()` added
-- [ ] `src/pretty_print/constants.ts` — updated only if needed
-- [ ] `src/parser/__tests__/xxx.test.ts` — tests added
+- [ ] `packages/esql/src/types.ts` — new interface + union updated
+- [ ] `packages/esql/src/ast/visitor/contexts.ts` — `XxxCommandVisitorContext` added
+- [ ] `packages/esql/src/ast/visitor/types.ts` — input union, output union, `VisitorMethods` updated
+- [ ] `packages/esql/src/ast/visitor/global_visitor_context.ts` — switch case + public method added
+- [ ] `packages/esql/src/parser/core/cst_to_ast_converter.ts` — dispatcher + `fromXxxCommand()` added
+- [ ] `packages/esql/src/pretty_print/constants.ts` — updated only if needed
+- [ ] `packages/esql/src/parser/__tests__/xxx.test.ts` — tests added
 - [ ] `yarn test` passes
 - [ ] `yarn build` passes (no TypeScript errors)
 - [ ] `yarn lint` passes
@@ -282,7 +290,7 @@ The grammar changed an **existing** command's rule: it gained a new option keywo
 
 ### Files to change
 
-#### `src/parser/core/cst_to_ast_converter.ts`
+#### `packages/esql/src/parser/core/cst_to_ast_converter.ts`
 
 Find the existing `fromXxxCommand()` method and add handling for what's new.
 
@@ -324,7 +332,7 @@ private fromLogicalInSubquery(ctx: cst.LogicalInSubqueryContext): ast.ESQLAstExp
 }
 ```
 
-#### `src/types.ts` — only if the command gains new named fields
+#### `packages/esql/src/types.ts` — only if the command gains new named fields
 
 If the existing interface (e.g. `ESQLAstChangePointCommand`) needs to expose the new option as a typed field, add it:
 ```ts
@@ -340,7 +348,7 @@ Skip this if the new option is only accessible via generic `args` — that's fin
 
 #### Tests
 
-Always update or add tests. For an existing command update, add to the existing test file (`src/parser/__tests__/xxx.test.ts`) rather than creating a new one.
+Always update or add tests. For an existing command update, add to the existing test file (`packages/esql/src/parser/__tests__/xxx.test.ts`) rather than creating a new one.
 
 Cover:
 1. The new option/field parses correctly
@@ -356,14 +364,14 @@ Cover:
 
 **Real example — `WHERE IN` subquery** (PR #107):
 - Refactored `fromLogicalIn()` in `cst_to_ast_converter.ts` into smaller methods + added subquery branch
-- Added tests to `src/parser/__tests__/function.test.ts` and `src/ast/walker/__tests__/walker.test.ts`
+- Added tests to `packages/esql/src/parser/__tests__/function.test.ts` and `packages/esql/src/ast/walker/__tests__/walker.test.ts`
 - Added pretty-printer tests to 4 existing test files
 - No `types.ts` or visitor changes (subquery uses existing `ESQLParens` type)
 
 ### Checklist — Scenario B (existing command update)
 
-- [ ] `src/parser/core/cst_to_ast_converter.ts` — existing handler extended
-- [ ] `src/types.ts` — interface updated only if new named fields are needed
+- [ ] `packages/esql/src/parser/core/cst_to_ast_converter.ts` — existing handler extended
+- [ ] `packages/esql/src/types.ts` — interface updated only if new named fields are needed
 - [ ] Tests added/extended in existing test file
 - [ ] Pretty-printer tests added if new syntax affects printing
 - [ ] Walker tests added if new syntax introduces new traversable nodes
@@ -379,6 +387,8 @@ Cover:
 |---|---|---|---|
 | `SAMPLE` | none (generic) | none | `sample.test.ts` |
 | `URI_PARTS` | `ESQLAstUriPartsCommand` | `UriPartsCommandVisitorContext` | `uri_parts.test.ts` |
+| `REGISTERED_DOMAIN` | `ESQLAstRegisteredDomainCommand` | `RegisteredDomainCommandVisitorContext` | `registered_domain.test.ts` |
 | `USER_AGENT` | `ESQLAstUserAgentCommand` | `UserAgentCommandVisitorContext` | `user_agent.test.ts` |
+| `IP_LOCATION` | `ESQLAstIpLocationCommand` | `IpLocationCommandVisitorContext` | `ip_location.test.ts` |
 | `CHANGE_POINT` | `ESQLAstChangePointCommand` | none (no typed visitor) | `change_point.test.ts` |
 | `RERANK` | `ESQLAstRerankCommand` | `RerankCommandVisitorContext` | `rerank.test.ts` |
