@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-types",
-  "version": "4.9.1",
+  "version": "4.10.0",
   "author": "Kibana ES|QL team",
   "description": "TypeScript type definitions for the ES|QL AST.",
   "license": "Elastic-2.0",
