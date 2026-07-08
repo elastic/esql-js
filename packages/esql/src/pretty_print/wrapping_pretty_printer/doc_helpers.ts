@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import { breakParent, hardlineWithoutBreakParent, lineSuffix } from '../../printer/builders';
+import { breakParent, hardlineWithoutBreakParent, lineSuffix } from '@elastic/pretty-printer';
 import { LeafPrinter } from '../leaf_printer';
-import type { Doc } from '../../printer/types';
+import type { Doc } from '@elastic/pretty-printer';
 import type { ESQLAstBaseItem, ESQLAstComment, ESQLAstCommentMultiLine } from '../../types';
 
 export const commentToDoc = (node: ESQLAstComment): Doc => {

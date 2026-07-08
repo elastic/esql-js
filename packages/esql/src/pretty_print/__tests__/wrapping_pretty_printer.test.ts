@@ -1480,7 +1480,7 @@ describe('binary operator precedence and grouping', () => {
         '  | EVAL\n' +
         '      aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa\n' +
         '        = bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb\n' +
-        '          * ccccccccccccccccccccccccccccccccccccccccccccc / 100000000000'
+        '          * (ccccccccccccccccccccccccccccccccccccccccccccc / 100000000000)'
     );
   });
 
@@ -1526,8 +1526,8 @@ describe('unary operator precedence and grouping', () => {
   NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa >
     bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`,
       `ROW
-  NOT aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
-    > bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb`
+  NOT (aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa
+    > bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb)`
     );
   });
 

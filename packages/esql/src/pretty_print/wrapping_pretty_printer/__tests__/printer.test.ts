@@ -7,7 +7,7 @@
 
 import { Parser } from '../../../parser';
 import { WrappingPrettyPrinter } from '../printer';
-import { layout } from '../../../printer';
+import { layout } from '@elastic/pretty-printer';
 import type { WrappingPrettyPrinterOptions } from '../printer';
 import { assertReprint } from './tools';
 

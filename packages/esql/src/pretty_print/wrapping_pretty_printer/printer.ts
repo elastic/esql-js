@@ -17,9 +17,9 @@ import {
   line,
   softline,
   text,
-} from '../../printer/builders';
-import { layout } from '../../printer/layout';
-import type { Doc, LayoutOpts } from '../../printer';
+  layout,
+} from '@elastic/pretty-printer';
+import type { Doc, LayoutOpts } from '@elastic/pretty-printer';
 import type {
   ESQLAstBaseItem,
   ESQLAstCommand,
@@ -67,7 +67,9 @@ import {
   isIntegerLiteral,
   isLiteral,
   isParamLiteral,
+  isParens,
   isProperNode,
+  isQuery,
 } from '../../ast/is';
 import { commentListToDoc, commentToDoc, decorateWithComments } from './doc_helpers';
 
@@ -206,6 +208,10 @@ export class WrappingPrettyPrinter {
     }
     multiLineParts.push(mlCmdDocs[0]);
 
+    for (const c of this.extractBottomCommentDocs(cmds[0])) {
+      multiLineParts.push(hardlineWithoutBreakParent, c);
+    }
+
     for (let i = 1; i < mlCmdDocs.length; i++) {
       const cmdDoc = mlCmdDocs[i];
       const topComments = this.extractTopCommentDocs(cmds[i]);
@@ -216,6 +222,10 @@ export class WrappingPrettyPrinter {
         }
       }
       multiLineParts.push(align(pipeTabLen, [hardlineWithoutBreakParent, '| ', cmdDoc]));
+
+      for (const c of this.extractBottomCommentDocs(cmds[i])) {
+        multiLineParts.push(align(pipeTabLen, [hardlineWithoutBreakParent, c]));
+      }
     }
 
     if (forceMultiline) {
@@ -232,6 +242,15 @@ export class WrappingPrettyPrinter {
     if (!top?.length) return [];
 
     return top.map((c) => commentToDoc(c));
+  }
+
+  /** Extract bottom-comment docs for a command (to place on the following line). */
+  private extractBottomCommentDocs(cmd: ESQLAstCommand): Doc[] {
+    const bottom = cmd.formatting?.bottom;
+
+    if (!bottom?.length) return [];
+
+    return bottom.map((c) => commentToDoc(c));
   }
 
   // ---------------------------------------------------------- Header commands
@@ -703,7 +722,7 @@ export class WrappingPrettyPrinter {
 
     let expression = this.docExpression(node);
     const sign = isNegative ? '-' : '';
-    const needsBrackets = !!sign && !isColumn(node) && !isLiteral(node);
+    const needsBrackets = !!sign && !isColumn(node) && !isLiteral(node) && !isParens(node);
 
     if (needsBrackets) expression = ['(', expression, ')'];
 
@@ -838,7 +857,12 @@ export class WrappingPrettyPrinter {
 
   protected docParens(node: ESQLParens): Doc {
     const childDoc = this.docExpression(node.child);
-    const d: Doc = group(['(', indent([softline, childDoc, ')'])]);
+
+    // Subqueries break onto their own line right after the opening paren;
+    // regular expressions keep the opening paren attached to their content.
+    const d: Doc = isQuery(node.child)
+      ? group(['(', indent([softline, childDoc, ')'])])
+      : group(['(', childDoc, ')']);
 
     return decorateWithComments(node, d);
   }
@@ -850,6 +874,7 @@ export class WrappingPrettyPrinter {
     const wrapInBrackets =
       value.type !== 'literal' &&
       value.type !== 'column' &&
+      value.type !== 'parens' &&
       !(value.type === 'function' && value.subtype === 'variadic-call');
 
     let valDoc = this.docExpression(value);
