@@ -18,7 +18,7 @@ This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main o
 
 `packages/prismjs-esql/` (`@elastic/prismjs-esql`) provides Prism.js and refractor syntax highlighting support for ES|QL.
 
-Unlike the rest of the repo, `@elastic/monaco-esql` and `@elastic/prismjs-esql` are MIT-licensed (not Elastic-2.0). `@elastic/monaco-esql`'s `src/` files carry an MIT header instead of the Elastic one; `@elastic/prismjs-esql` currently has the license-header rule disabled entirely. Both are exempted in `eslint.config.mjs`.
+Unlike the rest of the repo, `@elastic/monaco-esql` and `@elastic/prismjs-esql` are MIT-licensed (not Elastic-2.0): their `src/` files carry an MIT header instead of the Elastic one, scoped via overrides in `eslint.config.mjs`.
 
 ### Key source areas
 Paths are relative to `packages/esql/`.
