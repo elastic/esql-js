@@ -77,9 +77,9 @@ A [Husky](https://typicode.github.io/husky/) pre-commit hook runs `lint-staged` 
 
 The parser is generated from ANTLR4 grammar files. These grammar files are synced once a week from the ElasticSearch repository.
 
-## Commit Message Convention
+## Versioning and release notes
 
-This project uses [Conventional Commits](https://www.conventionalcommits.org/) for PR titles, enforced by CI. This keeps the history and changelog clean. Versioning and releases are handled by [Changesets](https://github.com/changesets/changesets): the version bump for each change is declared in a changeset file you add to your PR (see [Submitting Changes](#submitting-changes) and [RELEASE.md](./RELEASE.md)), **not** derived from the commit message.
+Versioning and releases are handled by [Changesets](https://github.com/changesets/changesets): the version bump for each change is declared in a changeset file you add to your PR (see [Submitting Changes](#submitting-changes) and [RELEASE.md](./RELEASE.md)).
 
 ### Format
 
