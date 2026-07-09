@@ -11,25 +11,22 @@ import {esql} from '@elastic/prismjs-esql';
 register(esql)
 ```
 
+## Development
 
-## Releasing
-
-Run test and build steps:
+This package is part of the [esql-js](https://github.com/elastic/esql-js)
+monorepo. From the repo root:
 
 ```
 yarn test
-yarn format
 yarn lint
+yarn format:check
 yarn build
 ```
 
-Publish with `release-it` tool:
-
-```
-npx release-it
-```
-
+Releases are managed with changesets and published in lockstep with the other
+`esql-js` packages.
 
 ## License
 
 MIT
+
