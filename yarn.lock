@@ -879,6 +879,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@elastic/monaco-esql@workspace:packages/monaco-esql":
+  version: 0.0.0-use.local
+  resolution: "@elastic/monaco-esql@workspace:packages/monaco-esql"
+  dependencies:
+    "@types/jest": "npm:30.0.0"
+    jest: "npm:30.4.2"
+    ts-jest: "npm:29.4.11"
+    tsup: "npm:8.5.1"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
 "@elastic/pretty-printer@workspace:^, @elastic/pretty-printer@workspace:packages/pretty-printer":
   version: 0.0.0-use.local
   resolution: "@elastic/pretty-printer@workspace:packages/pretty-printer"

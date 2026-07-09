@@ -8,7 +8,8 @@
       "@elastic/esql-types",
       "@elastic/esql-grammar",
       "@elastic/esql-promql-grammar",
-      "@elastic/pretty-printer"
+      "@elastic/pretty-printer",
+      "@elastic/monaco-esql"
     ]
   ],
   "linked": [],

@@ -14,6 +14,8 @@ This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main o
 
 `packages/esql-grammar/` (`@elastic/esql-grammar`) and `packages/esql-promql-grammar/` (`@elastic/esql-promql-grammar`) hold the auto-generated ANTLR4 TypeScript artifacts for ES|QL and PromQL respectively. **Do not edit their source files by hand** — they are managed by the CI grammar sync job (`.buildkite/scripts/esql_grammar_sync.sh`). `@elastic/esql` depends on both.
 
+`packages/monaco-esql/` (`@elastic/monaco-esql`) provides Monaco Editor language support for ES|QL.
+
 ### Key source areas
 Paths are relative to `packages/esql/`.
 
