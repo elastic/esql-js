@@ -893,6 +893,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@elastic/prismjs-esql@workspace:packages/prismjs-esql":
+  version: 0.0.0-use.local
+  resolution: "@elastic/prismjs-esql@workspace:packages/prismjs-esql"
+  dependencies:
+    "@types/jest": "npm:30.0.0"
+    jest: "npm:30.4.2"
+    ts-jest: "npm:29.4.11"
+    tsup: "npm:8.5.1"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
 "@emnapi/core@npm:1.10.0, @emnapi/core@npm:^1.4.3":
   version: 1.10.0
   resolution: "@emnapi/core@npm:1.10.0"
