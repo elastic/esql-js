@@ -92,8 +92,8 @@ LIMIT 123
 /* 3 */
 FROM index
   /* 1
- 2
- 3 */
+   2
+   3 */
   // sort
   /* sort 2 */
   | SORT abc
@@ -132,6 +132,26 @@ FROM index
   // one
   /* two */`
       );
+    });
+  });
+
+  describe('multi-line block comments', () => {
+    test('re-indents continuation lines of a top comment on an expression', () => {
+      const query = `FROM index
+| EVAL
+  /* line1
+line2 */
+  x = 1,
+  y = 2`;
+      const text = reprint(query, { multiline: true }).text;
+
+      expect('\n' + text).toBe(`
+FROM index
+  | EVAL
+      /* line1
+      line2 */
+      x = 1,
+      y = 2`);
     });
   });
 
@@ -451,7 +471,7 @@ ROW
   // 2
   /* 3 */
   // 4
-  /* 5 */ /* 6 */ 1::integer /* 7 */ /* 8 */ // 9`);
+  /* 5 */ /* 6 */ 1::INTEGER /* 7 */ /* 8 */ // 9`);
     });
   });
 
@@ -482,25 +502,21 @@ ROW
       assertReprint(`FROM a | WHERE b NOT IN (/* 1 */ 123456789 /* 2 */)`);
       assertReprint(`FROM a
   | WHERE
-      b IN
-        (
-          /* 1 */ 123456789 /* 2 */ // 3
-        )`);
+      b
+        IN (/* 1 */ 123456789 /* 2 */) // 3`);
       assertReprint(`FROM a
   | WHERE
-      b IN
-        (
+      b
+        IN (
           /* 1 */ 123456789 /* 2 */, // 3
-          "asdfasdfasdfasdfasdfasdfasdfasdfasfd" /* 4 */
-        )`);
+          "asdfasdfasdfasdfasdfasdfasdfasdfasfd" /* 4 */)`);
       assertReprint(`FROM a
   | WHERE
-      b IN
-        (
+      b
+        IN (
           /* 1 */ 123456789 /* 2 */, // 3
           "asdfasdfasdfasdfasdfasdfasdfasdfasfd" /* 4 */,
-          /* 5 */ 123456789 /* 6 */ // 7
-        )`);
+          /* 5 */ 123456789 /* 6 */) // 7`);
     });
   });
 
@@ -522,8 +538,8 @@ ROW 1
       // 2
       /* 3 */
       // 4
-      /* 5 */ /* 6 */ a AS
-        b /* 7 */ /* 8 */ // 9`);
+      /* 5 */ /* 6 */ a
+        AS b /* 7 */ /* 8 */ // 9`);
     });
 
     test('rename expression, surrounded from three sides with comments, and between other expressions', () => {
@@ -549,8 +565,8 @@ ROW 1
       // 2
       /* 3 */
       // 4
-      /* 5 */ /* 6 */ a AS
-        b /* 7 */ /* 8 */, // 9
+      /* 5 */ /* 6 */ a
+        AS b /* 7 */ /* 8 */, // 9
       x AS y`);
     });
 
@@ -570,8 +586,7 @@ ROW 1
   | RENAME
       x AS y,
       /* 1 */
-      /* 2 */ a /* 3 */ AS
-        /* 4 */
+      /* 2 */ a /* 3 */ AS /* 4 */
         /* 5 */ b /* 6 */,
       x AS y`);
     });
@@ -611,10 +626,8 @@ FROM index
 FROM index
   | RIGHT JOIN
       a
-        ON
-          // c.1
-          /* c.2 */ c /* c.3 */,
-          // d.1
+        ON // c.1
+          /* c.2 */ c /* c.3 */, // d.1
           /* d.2 */ d /* d.3 */`);
     });
 
@@ -628,7 +641,13 @@ FROM index
           /*1*/ aaaaaaaaaaaaaaaaaaaaaaaaa /*2*/ >
               /*3*/ bbbbbbbbbbbbbbbbbbbbb /*4*/ AND
             /*5*/ ccccccccccccccccccc /*6*/ ==
-              /*7*/ dddddddddddddddddddddddddddddddddddddddd /*8*/`
+              /*7*/ dddddddddddddddddddddddddddddddddddddddd /*8*/`,
+        `FROM employees
+  | LEFT JOIN
+      asdf
+        ON // hello world
+          /*1*/ aaaaaaaaaaaaaaaaaaaaaaaaa /*2*/ > /*3*/ bbbbbbbbbbbbbbbbbbbbb /*4*/ AND /*5*/ ccccccccccccccccccc /*6*/
+              == /*7*/ dddddddddddddddddddddddddddddddddddddddd /*8*/`
       );
     });
 
@@ -665,7 +684,8 @@ FROM index
         expect(text).toBe(
           `FROM logs-*-*
   | WHERE
-      QSTR("term") /* Search all fields using QSTR – e.g. WHERE QSTR("""debug""") */
+      QSTR(
+        "term") /* Search all fields using QSTR – e.g. WHERE QSTR("""debug""") */
   | LIMIT 10`
         );
       });
@@ -680,8 +700,7 @@ FROM index
         expect('\n' + text).toBe(`
 ROW
   // One is important here
-  1 +
-    2`);
+  1 + 2`);
       });
 
       test('second operand with top comment', () => {
@@ -693,8 +712,7 @@ ROW
 
         expect('\n' + text).toBe(`
 ROW
-  1 +
-    // Two is more important here
+  1 + // Two is more important here
     2`);
       });
 
@@ -716,7 +734,8 @@ ROW
         expect(text).toBe(
           `FROM logs-*-*
   | WHERE
-      QSTR("term") /* Search all fields using QSTR – e.g. WHERE QSTR("""debug""") */
+      QSTR(
+        "term") /* Search all fields using QSTR – e.g. WHERE QSTR("""debug""") */
   | LIMIT 10`
         );
       });
@@ -736,7 +755,8 @@ ROW
       /* t0 */
       // t1
       /* t2 */
-      /* l1 */ /* l2 */ QSTR(/* i1 */ "term" /* i2 */ /* i3 */) /* r1 */ /* r2 */ // r3
+      /* l1 */ /* l2 */ QSTR(
+        /* i1 */ "term" /* i2 */ /* i3 */) /* r1 */ /* r2 */ // r3
   | LIMIT 10`);
       });
     });
@@ -894,18 +914,18 @@ ROW
 
       test('single-line comment over assignment', () => {
         const src = `PROMQL
-    // this is the index:
-    index =
-      my_index
-    bytes[5m]`;
+  // this is the index:
+  index =
+    my_index
+  bytes[5m]`;
         assertReprint(src);
       });
 
       test('single-line comment after assignment', () => {
         const src = `PROMQL
-    index =
-      my_index // this is the index
-    bytes[5m]`;
+  index =
+    my_index // this is the index
+  bytes[5m]`;
         assertReprint(src);
       });
 
@@ -1057,12 +1077,13 @@ FROM index`;
         'FROM main_index_with_a_long_name | WHERE /* before */ main_field_with_a_long_name /* after */ IN /* between */ (/* inside start */ FROM sub_index_with_a_long_name /* after source */ | WHERE /* filter */ sub_field_with_a_long_name /* after field */ > 10 /* after filter */ | KEEP sub_field_with_a_long_name /* after keep */) /* end */',
         `FROM main_index_with_a_long_name
   | WHERE
-      /* before */ main_field_with_a_long_name /* after */ IN
-        /* between */ (/* inside start */ FROM sub_index_with_a_long_name /* after source */
-          | WHERE
-              /* filter */ sub_field_with_a_long_name /* after field */ >
-                10 /* after filter */
-          | KEEP sub_field_with_a_long_name /* after keep */) /* end */`
+      /* before */ main_field_with_a_long_name /* after */
+        IN /* between */ (
+          /* inside start */ FROM sub_index_with_a_long_name /* after source */
+            | WHERE
+                /* filter */ sub_field_with_a_long_name /* after field */
+                  > 10 /* after filter */
+            | KEEP sub_field_with_a_long_name /* after keep */) /* end */`
       );
     });
   });
@@ -1087,14 +1108,14 @@ FROM index`;
 
       const expected = `FROM
   index1,
-  /* before subquery */ (/* inside start */ FROM index2 /* after source */
-    | WHERE a > 10 /* after where */
-    | EVAL b = a * 2
-    | STATS cnt = COUNT(*) BY c
-    | SORT cnt DESC
-    | LIMIT 10) /* after first subquery */,
-  index3,
-  (FROM index4 | STATS COUNT(*)) /* after second */
+  /* before subquery */ (
+    /* inside start */ FROM index2 /* after source */
+      | WHERE a > 10 /* after where */
+      | EVAL b = a * 2
+      | STATS cnt = COUNT(*) BY c
+      | SORT cnt DESC
+      | LIMIT 10) /* after first subquery */,
+  index3, (FROM index4 | STATS COUNT(*)) /* after second */
   | WHERE d > 10
   | STATS max = MAX(*) BY e
   | SORT max DESC`;
