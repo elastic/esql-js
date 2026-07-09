@@ -3,7 +3,7 @@
   "version": "4.10.0",
   "author": "Kibana ES|QL team",
   "description": "Monaco Editor language support for ES|QL.",
-  "license": "Elastic-2.0",
+  "license": "MIT",
   "sideEffects": false,
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -17,7 +17,7 @@
   },
   "files": [
     "NOTICE.txt",
-    "LICENSE.txt",
+    "LICENSE",
     "lib"
   ],
   "publishConfig": {
@@ -28,11 +28,15 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
-    "test": "jest --passWithNoTests"
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "monaco-editor": ">=0.30.0"
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
     "jest": "30.4.2",
+    "monaco-editor": "0.55.1",
     "ts-jest": "29.4.11",
     "tsup": "8.5.1",
     "typescript": "6.0.3"
