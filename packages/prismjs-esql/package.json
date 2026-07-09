@@ -16,6 +16,7 @@
     }
   },
   "files": [
+    "NOTICE.txt",
     "LICENSE.txt",
     "lib"
   ],

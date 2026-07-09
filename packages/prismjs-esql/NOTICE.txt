@@ -1,0 +1,2 @@
+@elastic/prismjs-esql (Prism.js and Refractor syntax highlighting support for ES|QL).
+Copyright 2026 Elasticsearch B.V.
