@@ -63,6 +63,13 @@ export default defineConfig([
       'no-console': 'error',
     },
   },
+  {
+    // @elastic/prismjs-esql is MIT-licensed - the Elastic license header does not apply
+    files: ['packages/prismjs-esql/**'],
+    rules: {
+      'local-rules/require-license-header': 'off',
+    },
+  },
   eslintConfigPrettier,
   ...storybook.configs['flat/recommended'],
 ]);
