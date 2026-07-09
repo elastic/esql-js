@@ -1,0 +1,169 @@
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
+
+exports[`basic FROM command 1`] = `
+[
+  [
+    "FROM",
+    "token+command+keyword",
+  ],
+  [
+    " index",
+    "",
+  ],
+]
+`;
+
+exports[`booleans 1`] = `
+[
+  [
+    "ROW",
+    "token+command+keyword",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "TRUE",
+    "token+boolean",
+  ],
+  [
+    ",",
+    "token+punctuation",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "FALSE",
+    "token+boolean",
+  ],
+]
+`;
+
+exports[`cast 1`] = `
+[
+  [
+    "ROW",
+    "token+command+keyword",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "1.1",
+    "token+float+number",
+  ],
+  [
+    "::INTEGER",
+    "token+cast+operator",
+  ],
+]
+`;
+
+exports[`comments 1`] = `
+[
+  [
+    "// This is comment",
+    "token+comment",
+  ],
+  [
+    "
+",
+    "",
+  ],
+  [
+    "/* This is multiline comment */",
+    "token+multiline-comment+comment",
+  ],
+]
+`;
+
+exports[`functions 1`] = `
+[
+  [
+    "ROW",
+    "token+command+keyword",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "AVG",
+    "token+function",
+  ],
+  [
+    "(",
+    "token+punctuation",
+  ],
+  [
+    "COUNT",
+    "token+function",
+  ],
+  [
+    "(",
+    "token+punctuation",
+  ],
+  [
+    "123",
+    "token+integer+number",
+  ],
+  [
+    ")",
+    "token+punctuation",
+  ],
+  [
+    ")",
+    "token+punctuation",
+  ],
+]
+`;
+
+exports[`numbers 1`] = `
+[
+  [
+    "ROW",
+    "token+command+keyword",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "1",
+    "token+integer+number",
+  ],
+  [
+    ",",
+    "token+punctuation",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "3.14",
+    "token+float+number",
+  ],
+]
+`;
+
+exports[`strings 1`] = `
+[
+  [
+    "ROW",
+    "token+command+keyword",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    ""abc"",
+    "token+string",
+  ],
+]
+`;

@@ -1,14 +1,35 @@
-# @elastic/prismjs-esql
+# Prism.js and `refractor` ES|QL grammar
 
-Prism.js syntax highlighting support for ES|QL (the Elasticsearch Query
-Language).
+This package contains the ES|QL grammar for Prism.js and `refractor`.
 
-## Install
+Usage:
 
-```sh
-npm install @elastic/prismjs-esql
+```js
+import {register} from 'refractor';
+import {esql} from '@elastic/prismjs-esql';
+
+register(esql)
 ```
 
-## Status
 
-This package is under development; the public API is not yet stable.
+## Releasing
+
+Run test and build steps:
+
+```
+yarn test
+yarn format
+yarn lint
+yarn build
+```
+
+Publish with `release-it` tool:
+
+```
+npx release-it
+```
+
+
+## License
+
+MIT
