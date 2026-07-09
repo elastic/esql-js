@@ -1,0 +1,74 @@
+SET foo = "bar"; // Cool setting!
+SET some_setting /* comment */ = 123;
+
+// This is a comment, not a "string"
+/*asdf*/  EXPLAIN [ FROM index, "this=that", <logs-{now/d}> ]
+  | FROM index, metrics:index, "another_index", """index""", metrics-metrics-metrics METADATA _id, _index
+  | ROW num = 123, another_field = "value", arr.nested = [1, 2, 3], nested.`escaped`.??param = NULL
+  /* This is a multiline
+     comment */
+  | SHOW INFO
+  | FORK (WHERE ?param.test = "asdf" | LIMIT 123) (limit 123) (SAMPLE .01)
+  | NEW_COMMAND "hello"
+  | UNKNOWN_COMMAND
+  | METRICS index_pattern, logs-* BY date, ip
+  | EVAL kb = bytes / 1024 * -1.23e456 + ?param <= 3 << 1d, a = 5 WEEKS, foo = "ba\"asdfr", ? <== ?asdf
+  | WHERE process.name == "curl.exe /* asdf */" AND ?42 == 123 OR ?
+  | WHERE event_duration > /* very big number */ 5000000
+  | WHERE message LIKE "Connected*"
+  | KEEP kb, destination.address, date, ip, email, num, avg.avg.avg
+  // The ten is
+  // very sensible number
+  | LIMIT 10
+  | ROW 1.2, 3.4 /*cmt*/ , /* comment */ 42
+  | ROW ?, ?name, ?var_5, ?123, ??column
+  | ROW "asdf"
+  | STATS bytes = (SUM(destination.bytes, true) BY coord.?asdf.lat)::INTEGER
+  | SORT @timestamp DESC
+  | SORT kb, date ASC NULLS FIRST, ip DESC NULLS LAST
+  | DROP date, ip, AVG(FALSE, null, { "this": "is", "map": 123, "arr": [TRUE, FALSE] })
+  | RENAME field AS another_field, another_field AS field
+  | RENAME unique_queries AS `Unique Queries`
+  /**
+   * Description, not "string"
+   * @description This is a description
+   * @color #0077ff
+   */
+  | DISSECT field """%{date} - %{msg} - %{ip}"""
+  | WHERE KQL("""log.level:"warning"""")
+  | GROK dns.question.name "%{DATA}\\.%{GREEDYDATA:dns.question:string}"
+  | ENRICH languages_policy ON a WITH name = language_name, more
+  | MV_EXPAND column
+  | INLINESTATS count = COUNT(ROUND(AVG(
+      MV_AVG(department.salary_change)), 10))
+    BY languages
+  | LOOKUP index-pa* ON another_index == 1::STRING
+  | JOIN join_index ON join_index.field = index.field
+  | LEFT JOIN join_index ON TRUE
+  | RIGHT JOIN join_index ON field1, field2, field3
+  | LOOKUP JOIN join_index AS x ON x.foo = bar
+  | FUSE linear SCORE BY field1 KEY BY field2 GROUP BY field3 WITH {"normalizer": "minmax"}
+  | MMR ON dense_embedding LIMIT 10 WITH {"lambda": 0.5}
+  | EVAL buckets = DATE_TRUNC(5 m, @timestamp)
+
+// PROMQL examples
+| PROMQL (sum(bytes) by host)
+| PROMQL sum(bytes) by host
+| PROMQL index=metrics-* step="5m" col0=(sum(bytes) by host)
+| PROMQL index=metrics-* step="5m" (sum(bytes) by host)
+| PROMQL index=metrics-* step="5m" sum(bytes) by host
+| PROMQL "index"=metrics-* step="5m" sum(bytes) by host
+| PROMQL `index`=metrics-* step="5m" sum(bytes) by host
+| PROMQL ?param=metrics-* step= ?param col0=(sum(bytes) by host)
+| PROMQL index=metrics-*, index1,  index2  step=?param col0=(sum(bytes) by host)
+| PROMQL index=metrics-*, index1,  index2  step=?param (sum(bytes) by host)
+| PROMQL index=metrics-*, index1,  index2  step=?param sum(bytes) by host
+| PROMQL index= metrics-* , "index1" , `index2`, ?index, ?22  step=?param sum(bytes) by host
+| PROMQL /* some comment*/ index=metrics-* step="5m"  //other comment
+  col0=(sum(bytes) by host)
+| PROMQL 
+    index= metrics-* , "index1" , `index2`, ?index // multi line
+    step = ?param // multi line
+    sum(bytes)  // multi line
+    by host
+| PROMQL index=metrics-*, index1,  index2  step=?param http_requests_total{status="200|300"}

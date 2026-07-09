@@ -14,4 +14,7 @@
  * not use this file except in compliance with the License.
  */
 
-export * as monarch from './monarch';
+import { create } from './monarch';
+import * as definitions from './definitions';
+
+export const language = create(definitions);

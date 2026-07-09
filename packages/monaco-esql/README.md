@@ -1,13 +1,26 @@
-# @elastic/monaco-esql
+# ES|QL syntax grammar for Monaco editor
 
-Monaco Editor language support for ES|QL (the Elasticsearch Query Language).
+This package contains the ES|QL grammar for Monarch (the Monaco editor
+grammar engine).
 
-## Install
+<img width="725" alt="image" src="https://github.com/user-attachments/assets/a725841e-68d6-4765-aa29-54a3062e6a3e" />
 
-```sh
-npm install @elastic/monaco-esql
+## Usage
+
+To highlight ES|QL code in Monaco editor, you need to register ES|QL language
+and its Monarch grammar:
+
+```js
+import { language as monarchLanguage } from "@elastic/monaco-esql/lib/monarch-shared";
+
+monaco.languages.register({ id: "esql" });
+monaco.languages.setMonarchTokensProvider("esql", monarchLanguage);
 ```
 
-## Status
+## Releasing
 
-This package is under development; the public API is not yet stable.
+To release a new version, bump the `version` field in the `package.json` and add a `publish` label to the PR.
+
+## License
+
+MIT
