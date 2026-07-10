@@ -6,3 +6,4 @@
  */
 
 export * from './commandsNames';
+export * from './functionNames';
