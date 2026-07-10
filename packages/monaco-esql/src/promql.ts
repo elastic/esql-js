@@ -88,6 +88,9 @@ export const promQLQuery: languages.IMonarchLanguageRule[] = [
   [/"/, { token: 'string', next: '@promqlDoubleString', nextEmbedded: '@pop' }],
   [/`/, { token: 'string', next: '@promqlBacktickString', nextEmbedded: '@pop' }],
 
+  // variables control handling
+  [/\?{1,9}/, { token: '@rematch', next: '@promqlParamReference', nextEmbedded: '@pop' }],
+
   // Exit condition
   [
     /\|/,
@@ -129,6 +132,22 @@ const promQLQueryOverrideRules: {
     [/[^`\\]+/, 'string'],
     [/\\./, 'string.escape'],
     [/`/, { token: 'string', next: '@pop', nextEmbedded: 'promql' }],
+  ],
+
+  promqlParamReference: [
+    [
+      /\?{1,9}[a-zA-Z_][a-zA-Z_0-9]*/,
+      { token: 'variable.name.named', next: '@pop', nextEmbedded: 'promql' },
+    ],
+    [
+      /\?{1,9}[0-9]+/,
+      {
+        token: 'variable.name.positional',
+        next: '@pop',
+        nextEmbedded: 'promql',
+      },
+    ],
+    [/\?{1,9}/, { token: 'variable.name.unnamed', next: '@pop', nextEmbedded: 'promql' }],
   ],
 };
 

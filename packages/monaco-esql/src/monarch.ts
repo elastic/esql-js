@@ -165,7 +165,7 @@ export const create = (deps: CreateDependencies = {}): languages.IMonarchLanguag
           /\(/,
           {
             token: 'delimiter.parenthesis',
-            switchTo: '@firstCommandNameInSubQuery',
+            next: '@firstCommandNameInSubQuery',
           },
         ],
       ],
@@ -188,7 +188,8 @@ export const create = (deps: CreateDependencies = {}): languages.IMonarchLanguag
           { token: 'keyword.command.header.$0', switchTo: '@restOfQuery' },
         ],
         [
-          withLowercaseVariants(sourceCommands).join('|'),
+          // prevents partial matches (e.g. "TS" matching inside "TS_INFO")
+          `(?:${withLowercaseVariants(sourceCommands).join('|')})(?![_a-zA-Z0-9])`,
           { token: 'keyword.command.source.$0', switchTo: '@restOfQuery' },
         ],
         [
@@ -203,8 +204,8 @@ export const create = (deps: CreateDependencies = {}): languages.IMonarchLanguag
         // Try to match an exact command name
         { include: '@exactCommandName' },
 
-        // If not matched, go to restOfQuery
-        { include: '@restOfQuery' },
+        // If not matched, go to the previous state
+        ['', { token: '', next: '@pop' }],
       ],
 
       // Matches *command name*, i.e. the mnemonic.
