@@ -72,10 +72,11 @@ export default defineConfig([
     },
   },
   {
-    // @elastic/prismjs-esql is MIT-licensed - the Elastic license header does not apply
-    files: ['packages/prismjs-esql/**'],
+    // @elastic/prismjs-esql is MIT-licensed (unlike the rest of this
+    // Elastic-2.0 monorepo), so its published source uses the MIT header.
+    files: ['packages/prismjs-esql/src/**/*.{ts,tsx}'],
     rules: {
-      'local-rules/require-license-header': 'off',
+      'local-rules/require-license-header': ['error', { license: mitLicenseHeader }],
     },
   },
   eslintConfigPrettier,
