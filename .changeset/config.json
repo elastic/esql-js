@@ -9,6 +9,7 @@
       "@elastic/esql-grammar",
       "@elastic/esql-promql-grammar",
       "@elastic/pretty-printer",
+      "@elastic/monaco-esql",
       "@elastic/prismjs-esql"
     ]
   ],
