@@ -16,7 +16,11 @@ This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main o
 
 `packages/esql-grammar/` (`@elastic/esql-grammar`) and `packages/esql-promql-grammar/` (`@elastic/esql-promql-grammar`) hold the auto-generated ANTLR4 TypeScript artifacts for ES|QL and PromQL respectively. **Do not edit their source files by hand** — they are managed by the CI grammar sync job (`.buildkite/scripts/esql_grammar_sync.sh`). `@elastic/esql` depends on both.
 
-`packages/prismjs-esql/` (`@elastic/prismjs-esql`) provides Prism.js and refractor syntax highlighting support for ES|QL. Unlike the rest of the repo it is MIT-licensed: its files carry no Elastic license header (exempted in `eslint.config.mjs`).
+`packages/monaco-esql/` (`@elastic/monaco-esql`) provides Monaco Editor language support for ES|QL.
+
+`packages/prismjs-esql/` (`@elastic/prismjs-esql`) provides Prism.js and refractor syntax highlighting support for ES|QL.
+
+Unlike the rest of the repo, `@elastic/monaco-esql` and `@elastic/prismjs-esql` are MIT-licensed (not Elastic-2.0): their `src/` files carry an MIT header instead of the Elastic one, scoped via overrides in `eslint.config.mjs`.
 
 ### Key source areas
 Paths are relative to `packages/esql/`.

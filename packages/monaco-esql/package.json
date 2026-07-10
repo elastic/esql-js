@@ -1,8 +1,8 @@
 {
-  "name": "@elastic/prismjs-esql",
+  "name": "@elastic/monaco-esql",
   "version": "4.10.0",
   "author": "Kibana ES|QL team",
-  "description": "Prism.js and Refractor ES|QL language syntax definitions for highlighting",
+  "description": "Monaco Editor language support for ES|QL.",
   "license": "MIT",
   "sideEffects": false,
   "main": "./lib/index.js",
@@ -17,16 +17,8 @@
   },
   "files": [
     "NOTICE.txt",
-    "LICENSE.txt",
+    "LICENSE",
     "lib"
-  ],
-  "keywords": [
-    "esql",
-    "prism",
-    "prismjs",
-    "refractor",
-    "es|ql",
-    "elastic"
   ],
   "publishConfig": {
     "access": "public",
@@ -38,13 +30,13 @@
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
     "test": "jest"
   },
-  "dependencies": {
-    "@elastic/esql-definitions": "workspace:^"
+  "peerDependencies": {
+    "monaco-editor": ">=0.30.0"
   },
   "devDependencies": {
     "@types/jest": "30.0.0",
     "jest": "30.4.2",
-    "refractor": "5.0.0",
+    "monaco-editor": "0.55.1",
     "ts-jest": "29.4.11",
     "tsup": "8.5.1",
     "typescript": "6.0.3"

@@ -3,7 +3,7 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import { requireLicenseHeader } from './lint-license-rule.mjs';
+import { requireLicenseHeader, mitLicenseHeader } from './lint-license-rule.mjs';
 
 export default defineConfig([
   globalIgnores([
@@ -64,10 +64,19 @@ export default defineConfig([
     },
   },
   {
-    // @elastic/prismjs-esql is MIT-licensed - the Elastic license header does not apply
-    files: ['packages/prismjs-esql/**'],
+    // @elastic/monaco-esql is MIT-licensed (unlike the rest of this
+    // Elastic-2.0 monorepo), so its published source uses the MIT header.
+    files: ['packages/monaco-esql/src/**/*.{ts,tsx}'],
     rules: {
-      'local-rules/require-license-header': 'off',
+      'local-rules/require-license-header': ['error', { license: mitLicenseHeader }],
+    },
+  },
+  {
+    // @elastic/prismjs-esql is MIT-licensed (unlike the rest of this
+    // Elastic-2.0 monorepo), so its published source uses the MIT header.
+    files: ['packages/prismjs-esql/src/**/*.{ts,tsx}'],
+    rules: {
+      'local-rules/require-license-header': ['error', { license: mitLicenseHeader }],
     },
   },
   eslintConfigPrettier,

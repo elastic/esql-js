@@ -1,10 +1,19 @@
 import babelEslint from '@babel/eslint-parser';
 
-const licenseHeader = `/*
+export const licenseHeader = `/*
  * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
  * or more contributor license agreements. Licensed under the Elastic License
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
+ */`;
+
+export const mitLicenseHeader = `/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. See the NOTICE file distributed with
+ * this work for additional information regarding copyright
+ * ownership. Elasticsearch B.V. licenses this file to you under
+ * the MIT license (the "License"); you may
+ * not use this file except in compliance with the License.
  */`;
 
 export const requireLicenseHeader = {
@@ -26,7 +35,8 @@ export const requireLicenseHeader = {
     return {
       Program(program) {
         const license = init(context, program, function () {
-          const parsed = babelEslint.parse(licenseHeader, { requireConfigFile: false });
+          const header = context.options[0]?.license ?? licenseHeader;
+          const parsed = babelEslint.parse(header, { requireConfigFile: false });
           assert(!parsed.body.length, '"license" option must only include a single comment');
           assert(
             parsed.comments.length === 1,
@@ -34,7 +44,7 @@ export const requireLicenseHeader = {
           );
 
           return {
-            source: licenseHeader,
+            source: header,
             nodeValue: normalizeWhitespace(parsed.comments[0].value),
           };
         });
