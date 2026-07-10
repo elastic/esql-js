@@ -1,0 +1,37 @@
+{
+  "name": "@elastic/esql-definitions",
+  "version": "4.10.0",
+  "author": "Kibana ES|QL team",
+  "description": "Shared definitions for the ES|QL language (commands, functions, operators).",
+  "license": "Elastic-2.0",
+  "sideEffects": false,
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    }
+  },
+  "files": [
+    "NOTICE.txt",
+    "LICENSE.txt",
+    "lib"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": "https://github.com/elastic/esql-js.git",
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "test": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "tsup": "8.5.1",
+    "typescript": "6.0.3"
+  }
+}

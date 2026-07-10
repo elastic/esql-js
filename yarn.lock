@@ -823,6 +823,15 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@elastic/esql-definitions@workspace:packages/esql-definitions":
+  version: 0.0.0-use.local
+  resolution: "@elastic/esql-definitions@workspace:packages/esql-definitions"
+  dependencies:
+    tsup: "npm:8.5.1"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
 "@elastic/esql-grammar@workspace:^, @elastic/esql-grammar@workspace:packages/esql-grammar":
   version: 0.0.0-use.local
   resolution: "@elastic/esql-grammar@workspace:packages/esql-grammar"
