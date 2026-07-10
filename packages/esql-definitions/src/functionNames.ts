@@ -149,6 +149,7 @@ export const functionNames = [
   'ST_BUFFER',
   'ST_CENTROID_AGG',
   'ST_CONTAINS',
+  'ST_DIFFERENCE',
   'ST_DIMENSION',
   'ST_DISJOINT',
   'ST_DISTANCE',
@@ -158,11 +159,14 @@ export const functionNames = [
   'ST_GEOHEX',
   'ST_GEOMETRYTYPE',
   'ST_GEOTILE',
+  'ST_INTERSECTION',
   'ST_INTERSECTS',
   'ST_ISEMPTY',
   'ST_NPOINTS',
   'ST_SIMPLIFY',
   'ST_SIMPLIFYPRESERVETOPOLOGY',
+  'ST_SYMDIFFERENCE',
+  'ST_UNION',
   'ST_WITHIN',
   'ST_X',
   'ST_XMAX',
@@ -206,6 +210,7 @@ export const functionNames = [
   'TO_LONG',
   'TO_LOWER',
   'TO_RADIANS',
+  'TO_RANGE',
   'TO_STRING',
   'TO_TDIGEST',
   'TO_TEXT',
@@ -254,4 +259,8 @@ export const functionNames = [
   'NOT_EQUALS',
   'RLIKE',
   'SUB',
+
+  // -------------------------------------------------------- special functions
+  'DELAY', // Gated for Elasticsearch internal use
+  'CHICKEN', // Easter-egg
 ];
