@@ -1,52 +1,5 @@
+import { commandsNames } from '@elastic/esql-definitions';
 import type { RefractorLanguageDefinition } from './types';
-
-const commands = [
-  'CHANGE_POINT',
-  'COMPLETION',
-  'DEDUP',
-  'DISSECT',
-  'DROP',
-  'ENRICH',
-  'EVAL',
-  'EXPLAIN',
-  'FORK',
-  'FROM',
-  'FULL JOIN',
-  'FUSE',
-  'GROK',
-  'HIGHLIGHT',
-  'INLINESTATS',
-  'INSIST',
-  'JOIN',
-  'KEEP',
-  'LEFT JOIN',
-  'LIMIT',
-  'LOOKUP',
-  'LOOKUP JOIN',
-  'METRICS_INFO',
-  'METRICS',
-  'MMR',
-  'MV_EXPAND',
-  'OPTIONS',
-  'PROMQL',
-  'REGISTERED_DOMAIN',
-  'RENAME',
-  'RERANK',
-  'RIGHT JOIN',
-  'ROW',
-  'SAMPLE',
-  'SET',
-  'SHOW',
-  'SORT',
-  'STATS',
-  'TIMESERIES',
-  'TS',
-  'TS_COLLAPSE',
-  'TS_INFO',
-  'URI_PARTS',
-  'USER_AGENT',
-  'WHERE',
-];
 
 const functions = [
   'ABS',
@@ -349,7 +302,7 @@ export const esql: RefractorLanguageDefinition = function esql(Prism) {
 
     // Command names
     command: {
-      pattern: new RegExp('\\b(?:' + commands.join('|') + ')\\b', 'i'),
+      pattern: new RegExp('\\b(?:' + commandsNames.join('|') + ')\\b', 'i'),
       alias: ['keyword'],
     },
 

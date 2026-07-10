@@ -37,6 +37,9 @@
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
     "test": "jest"
   },
+  "dependencies": {
+    "@elastic/esql-definitions": "workspace:^"
+  },
   "devDependencies": {
     "@types/jest": "30.0.0",
     "jest": "30.4.2",
