@@ -1,0 +1,2 @@
+@elastic/esql-definitions (Shared definitions for the ES|QL language).
+Copyright 2025-2026 Elasticsearch B.V.

@@ -6,6 +6,7 @@
     [
       "@elastic/esql",
       "@elastic/esql-types",
+      "@elastic/esql-definitions",
       "@elastic/esql-grammar",
       "@elastic/esql-promql-grammar",
       "@elastic/pretty-printer",

@@ -1,9 +1,9 @@
 {
-  "name": "@elastic/prismjs-esql",
-  "version": "4.11.0",
+  "name": "@elastic/esql-definitions",
+  "version": "4.10.0",
   "author": "Kibana ES|QL team",
-  "description": "Prism.js and Refractor ES|QL language syntax definitions for highlighting",
-  "license": "MIT",
+  "description": "Shared definitions for the ES|QL language (commands, functions, operators).",
+  "license": "Elastic-2.0",
   "sideEffects": false,
   "main": "./lib/index.js",
   "types": "./lib/index.d.ts",
@@ -20,14 +20,6 @@
     "LICENSE.txt",
     "lib"
   ],
-  "keywords": [
-    "esql",
-    "prism",
-    "prismjs",
-    "refractor",
-    "es|ql",
-    "elastic"
-  ],
   "publishConfig": {
     "access": "public",
     "provenance": true
@@ -36,16 +28,9 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
-    "test": "jest"
-  },
-  "dependencies": {
-    "@elastic/esql-definitions": "workspace:^"
+    "test": "tsc --noEmit"
   },
   "devDependencies": {
-    "@types/jest": "30.0.0",
-    "jest": "30.4.2",
-    "refractor": "5.0.0",
-    "ts-jest": "29.4.11",
     "tsup": "8.5.1",
     "typescript": "6.0.3"
   }

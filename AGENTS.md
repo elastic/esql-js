@@ -12,6 +12,8 @@ This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main o
 
 `packages/esql-types/` (`@elastic/esql-types`) holds all public TypeScript type definitions for the ES|QL and PromQL ASTs. It has zero runtime code and zero dependencies. `@elastic/esql` depends on it; `packages/esql/src/types.ts` is a thin re-export shim from it.
 
+`packages/esql-definitions/` (`@elastic/esql-definitions`) holds shared definitions for the ES|QL language — lists of commands, functions, operators, and their metadata.
+
 `packages/esql-grammar/` (`@elastic/esql-grammar`) and `packages/esql-promql-grammar/` (`@elastic/esql-promql-grammar`) hold the auto-generated ANTLR4 TypeScript artifacts for ES|QL and PromQL respectively. **Do not edit their source files by hand** — they are managed by the CI grammar sync job (`.buildkite/scripts/esql_grammar_sync.sh`). `@elastic/esql` depends on both.
 
 `packages/monaco-esql/` (`@elastic/monaco-esql`) provides Monaco Editor language support for ES|QL.
