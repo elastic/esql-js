@@ -7,54 +7,27 @@
  * not use this file except in compliance with the License.
  */
 
-import { functionNames } from '@elastic/esql-definitions';
+import {
+  functionNames,
+  headerCommandNames,
+  sourceCommandNames,
+  processingCommandNames,
+  legacyCommandNames,
+} from '@elastic/esql-definitions';
 
-export const headerCommands = ['SET'];
+const byLengthDesc = (a: string, b: string) => b.length - a.length;
 
-export const sourceCommands = ['FROM', 'ROW', 'EXPLAIN', 'SHOW INFO', 'SHOW', 'TS', 'PROMQL'];
+export const headerCommands = headerCommandNames;
+
+export const sourceCommands = ['SHOW INFO', ...sourceCommandNames].sort(byLengthDesc);
 
 export const processingCommands = [
-  'CHANGE_POINT',
-  'COMPLETION',
-  'DEDUP',
-  'DISSECT',
-  'DROP',
-  'ENRICH',
-  'EVAL',
-  'FORK',
-  'FULL JOIN',
-  'FUSE',
-  'GROK',
-  'HIGHLIGHT',
+  ...processingCommandNames,
+  ...legacyCommandNames,
   'INFO',
-  'INLINESTATS',
-  'INSIST',
-  'IP_LOCATION',
-  'JOIN',
-  'KEEP',
-  'LEFT JOIN',
   'LEFT',
-  'LIMIT',
-  'LOOKUP JOIN',
-  'LOOKUP',
-  'METRICS_INFO',
-  'TS_COLLAPSE',
-  'TS_INFO',
-  'METRICS',
-  'MMR',
-  'MV_EXPAND',
-  'REGISTERED_DOMAIN',
-  'RENAME',
-  'RERANK',
-  'RIGHT JOIN',
   'RIGHT',
-  'SAMPLE',
-  'SORT',
-  'STATS',
-  'URI_PARTS',
-  'USER_AGENT',
-  'WHERE',
-];
+].sort(byLengthDesc);
 
 export const options = ['BY', 'ON', 'WITH', 'METADATA', 'WHERE', 'SCORE', 'KEY', 'GROUP', 'LIMIT'];
 

@@ -7,7 +7,7 @@
  * not use this file except in compliance with the License.
  */
 
-import { commandsNames, functionNames } from '@elastic/esql-definitions';
+import { commandNames, functionNames } from '@elastic/esql-definitions';
 import type { RefractorLanguageDefinition } from './types';
 
 const keywords = [
@@ -60,7 +60,7 @@ export const esql: RefractorLanguageDefinition = function esql(Prism) {
 
     // Command names
     command: {
-      pattern: new RegExp('\\b(?:' + commandsNames.join('|') + ')\\b', 'i'),
+      pattern: new RegExp('\\b(?:' + commandNames.join('|') + ')\\b', 'i'),
       alias: ['keyword'],
     },
 

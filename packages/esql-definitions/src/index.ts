@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export * from './commandsNames';
+export * from './commandNames';
 export * from './functionNames';

@@ -5,7 +5,11 @@
  * 2.0.
  */
 
-export const commandsNames = [
+export const headerCommandNames = ['SET'];
+
+export const sourceCommandNames = ['EXPLAIN', 'FROM', 'PROMQL', 'ROW', 'SHOW', 'TS'];
+
+export const processingCommandNames = [
   'CHANGE_POINT',
   'COMPLETION',
   'DEDUP',
@@ -13,10 +17,8 @@ export const commandsNames = [
   'DROP',
   'ENRICH',
   'EVAL',
-  'EXPLAIN',
   'EXTERNAL',
   'FORK',
-  'FROM',
   'FULL JOIN',
   'FUSE',
   'GROK',
@@ -34,26 +36,26 @@ export const commandsNames = [
   'METRICS_INFO',
   'MMR',
   'MV_EXPAND',
-  'PROMQL',
   'REGISTERED_DOMAIN',
   'RENAME',
   'RERANK',
   'RIGHT JOIN',
-  'ROW',
   'SAMPLE',
-  'SET',
-  'SHOW',
   'SORT',
   'STATS',
-  'TS',
   'TS_COLLAPSE',
   'TS_INFO',
   'URI_PARTS',
   'USER_AGENT',
   'WHERE',
+];
 
-  // Legacy commands - don't exist anymore
-  'METRICS',
-  'OPTIONS',
-  'TIMESERIES',
+/* Legacy commands - don't exist anymore */
+export const legacyCommandNames = ['METRICS', 'OPTIONS', 'TIMESERIES'];
+
+export const commandNames = [
+  ...headerCommandNames,
+  ...sourceCommandNames,
+  ...processingCommandNames,
+  ...legacyCommandNames,
 ];
