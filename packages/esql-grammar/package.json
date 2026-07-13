@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-grammar",
-  "version": "4.10.0",
+  "version": "4.11.0",
   "author": "Kibana ES|QL team",
   "description": "Auto-generated ANTLR4 TypeScript artifacts for the ES|QL grammar. Do not edit by hand.",
   "license": "Elastic-2.0",
