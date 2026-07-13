@@ -1,5 +1,19 @@
 # @elastic/esql
 
+## 4.11.0
+
+### Minor Changes
+
+- [#143](https://github.com/elastic/esql-js/pull/143) [`8e45272`](https://github.com/elastic/esql-js/commit/8e452723fa969bca11a9216ae54efdb3149a33f2) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Re-implement ES|QL pretty-printer on top of Doc IR
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.11.0
+  - @elastic/esql-grammar@4.11.0
+  - @elastic/esql-promql-grammar@4.11.0
+  - @elastic/pretty-printer@4.11.0
+
 ## 4.10.0
 
 ### Minor Changes
