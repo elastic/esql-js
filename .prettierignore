@@ -3,3 +3,5 @@
 **/parser/antlr/
 packages/esql-grammar/src/esql_*.ts
 packages/esql-promql-grammar/src/promql_*.ts
+packages/esql-definitions/elasticsearch/
+packages/esql-definitions/src/generated/
