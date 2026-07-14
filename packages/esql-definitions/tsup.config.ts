@@ -8,7 +8,7 @@
 import { defineConfig } from 'tsup';
 
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: ['src/index.ts', 'src/commandNames.ts', 'src/functionNames.ts'],
   format: ['cjs', 'esm'],
   outDir: 'lib',
   clean: true,

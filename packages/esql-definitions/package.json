@@ -13,6 +13,18 @@
       "import": "./lib/index.mjs",
       "require": "./lib/index.js",
       "default": "./lib/index.js"
+    },
+    "./commandNames": {
+      "types": "./lib/commandNames.d.ts",
+      "import": "./lib/commandNames.mjs",
+      "require": "./lib/commandNames.js",
+      "default": "./lib/commandNames.js"
+    },
+    "./functionNames": {
+      "types": "./lib/functionNames.d.ts",
+      "import": "./lib/functionNames.mjs",
+      "require": "./lib/functionNames.js",
+      "default": "./lib/functionNames.js"
     }
   },
   "files": [
