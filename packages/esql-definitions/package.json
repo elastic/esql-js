@@ -25,6 +25,18 @@
       "import": "./lib/functionNames.mjs",
       "require": "./lib/functionNames.js",
       "default": "./lib/functionNames.js"
+    },
+    "./keywords": {
+      "types": "./lib/keywords.d.ts",
+      "import": "./lib/keywords.mjs",
+      "require": "./lib/keywords.js",
+      "default": "./lib/keywords.js"
+    },
+    "./temporalUnits": {
+      "types": "./lib/temporalUnits.d.ts",
+      "import": "./lib/temporalUnits.mjs",
+      "require": "./lib/temporalUnits.js",
+      "default": "./lib/temporalUnits.js"
     }
   },
   "files": [
