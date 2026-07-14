@@ -63,15 +63,19 @@ export class ESQLErrorListener extends antlr4.ErrorListener<unknown> {
       return;
     }
 
-    const textMessage = `SyntaxError: ${message}`;
-
     const tokenPosition = getPosition(offendingSymbol as antlr4.Token);
     const startColumn = offendingSymbol && tokenPosition ? tokenPosition.min + 1 : column + 1;
     const endColumn = offendingSymbol && tokenPosition ? tokenPosition.max + 1 : column + 2;
 
-    const code = isUnquotedIdentifierError(recognizer, offendingSymbol, message)
-      ? 'invalidUnquotedIdentifier'
-      : 'syntaxError';
+    const unquotedIdentifierError = isUnquotedIdentifierError(recognizer, offendingSymbol, message);
+    const invalidChar = unquotedIdentifierError
+      ? message.replace(TOKEN_RECOGNITION_ERROR_PREFIX, '').trim()
+      : undefined;
+
+    const code = unquotedIdentifierError ? 'invalidUnquotedIdentifier' : 'syntaxError';
+    const textMessage = unquotedIdentifierError
+      ? `invalidUnquotedIdentifier: Field name contains invalid character ${invalidChar}`
+      : `SyntaxError: ${message}`;
 
     this.errors.push({
       startLineNumber: line,

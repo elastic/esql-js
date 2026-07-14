@@ -62,7 +62,12 @@ describe('RENAME', () => {
       const { errors } = EsqlQuery.fromSrc(src);
 
       expect(errors).toMatchObject([
-        { code: 'invalidUnquotedIdentifier', startColumn: 39, endColumn: 40 },
+        {
+          code: 'invalidUnquotedIdentifier',
+          message: "invalidUnquotedIdentifier: Field name contains invalid character '-'",
+          startColumn: 39,
+          endColumn: 40,
+        },
         { code: 'syntaxError', startColumn: 40, endColumn: 42 },
       ]);
     });
