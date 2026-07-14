@@ -7,3 +7,4 @@
 
 export * from './commandsNames';
 export * from './functionNames';
+export type * from './definition_types';
