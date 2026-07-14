@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-{
-  "extends": "./tsconfig.json",
-  "exclude": ["node_modules", "lib", "README.md", "**/*.test.ts", "**/__tests__/**"]
-}
+import { baseConfig } from '../../jest.config.base.js';
+
+/** @type {import('jest').Config} */
+export default { ...baseConfig, roots: ['<rootDir>/src'] };

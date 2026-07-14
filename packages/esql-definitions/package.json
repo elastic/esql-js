@@ -13,6 +13,72 @@
       "import": "./lib/index.mjs",
       "require": "./lib/index.js",
       "default": "./lib/index.js"
+    },
+    "./commands": {
+      "types": "./lib/generated/commands.d.ts",
+      "import": "./lib/generated/commands.mjs",
+      "require": "./lib/generated/commands.js",
+      "default": "./lib/generated/commands.js"
+    },
+    "./functions": {
+      "types": "./lib/generated/functions/index.d.ts",
+      "import": "./lib/generated/functions/index.mjs",
+      "require": "./lib/generated/functions/index.js",
+      "default": "./lib/generated/functions/index.js"
+    },
+    "./operators": {
+      "types": "./lib/generated/operators/index.d.ts",
+      "import": "./lib/generated/operators/index.mjs",
+      "require": "./lib/generated/operators/index.js",
+      "default": "./lib/generated/operators/index.js"
+    },
+    "./settings": {
+      "types": "./lib/generated/settings.d.ts",
+      "import": "./lib/generated/settings.mjs",
+      "require": "./lib/generated/settings.js",
+      "default": "./lib/generated/settings.js"
+    },
+    "./inline-cast": {
+      "types": "./lib/generated/inline_cast.d.ts",
+      "import": "./lib/generated/inline_cast.mjs",
+      "require": "./lib/generated/inline_cast.js",
+      "default": "./lib/generated/inline_cast.js"
+    },
+    "./promql-functions": {
+      "types": "./lib/generated/promql_functions/index.d.ts",
+      "import": "./lib/generated/promql_functions/index.mjs",
+      "require": "./lib/generated/promql_functions/index.js",
+      "default": "./lib/generated/promql_functions/index.js"
+    },
+    "./promql-operators": {
+      "types": "./lib/generated/promql_operators/index.d.ts",
+      "import": "./lib/generated/promql_operators/index.mjs",
+      "require": "./lib/generated/promql_operators/index.js",
+      "default": "./lib/generated/promql_operators/index.js"
+    },
+    "./function-docs": {
+      "types": "./lib/generated/function_docs/index.d.ts",
+      "import": "./lib/generated/function_docs/index.mjs",
+      "require": "./lib/generated/function_docs/index.js",
+      "default": "./lib/generated/function_docs/index.js"
+    },
+    "./operator-docs": {
+      "types": "./lib/generated/operator_docs/index.d.ts",
+      "import": "./lib/generated/operator_docs/index.mjs",
+      "require": "./lib/generated/operator_docs/index.js",
+      "default": "./lib/generated/operator_docs/index.js"
+    },
+    "./promql-function-docs": {
+      "types": "./lib/generated/promql_function_docs/index.d.ts",
+      "import": "./lib/generated/promql_function_docs/index.mjs",
+      "require": "./lib/generated/promql_function_docs/index.js",
+      "default": "./lib/generated/promql_function_docs/index.js"
+    },
+    "./promql-operator-docs": {
+      "types": "./lib/generated/promql_operator_docs/index.d.ts",
+      "import": "./lib/generated/promql_operator_docs/index.mjs",
+      "require": "./lib/generated/promql_operator_docs/index.js",
+      "default": "./lib/generated/promql_operator_docs/index.js"
     }
   },
   "files": [
@@ -28,9 +94,14 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
-    "test": "tsc --noEmit"
+    "generate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate.ts",
+    "test": "jest"
   },
   "devDependencies": {
+    "@types/jest": "30.0.0",
+    "@types/node": "25.2.3",
+    "jest": "30.4.2",
+    "ts-jest": "29.4.11",
     "tsup": "8.5.1",
     "typescript": "6.0.3"
   }
