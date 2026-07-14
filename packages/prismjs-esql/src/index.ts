@@ -7,7 +7,8 @@
  * not use this file except in compliance with the License.
  */
 
-import { commandNames, functionNames } from '@elastic/esql-definitions';
+import { commandNames } from '@elastic/esql-definitions/commandNames';
+import { functionNames } from '@elastic/esql-definitions/functionNames';
 import type { RefractorLanguageDefinition } from './types';
 
 const keywords = [

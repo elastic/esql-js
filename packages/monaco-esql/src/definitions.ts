@@ -8,12 +8,12 @@
  */
 
 import {
-  functionNames,
   headerCommandNames,
   sourceCommandNames,
   processingCommandNames,
   legacyCommandNames,
-} from '@elastic/esql-definitions';
+} from '@elastic/esql-definitions/commandNames';
+import { functionNames } from '@elastic/esql-definitions/functionNames';
 
 const byLengthDesc = (a: string, b: string) => b.length - a.length;
 
