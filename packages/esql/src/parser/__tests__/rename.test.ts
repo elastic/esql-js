@@ -54,4 +54,33 @@ describe('RENAME', () => {
       });
     });
   });
+
+  describe('incorrectly formatted', () => {
+    it('reports real, token-located syntaxErrors when the new (unquoted) name needs backticks', () => {
+      // The invalid identifier is the *new* name (right of AS).
+      const src = 'FROM logs-* | RENAME agent.id AS agent-id';
+      const { errors } = EsqlQuery.fromSrc(src);
+
+      expect(errors).toMatchObject([
+        { code: 'invalidUnquotedIdentifier', startColumn: 39, endColumn: 40 },
+        { code: 'syntaxError', startColumn: 40, endColumn: 42 },
+      ]);
+    });
+
+    it('collapses to a single, unlocated parseError when the old (unquoted) name needs backticks', () => {
+      // The invalid identifier is the *old* name (left of AS).
+      const src = 'FROM logs-* | RENAME agent-id AS agentId';
+      const { errors } = EsqlQuery.fromSrc(src);
+
+      expect(errors).toMatchObject([
+        {
+          code: 'parseError',
+          startLineNumber: 0,
+          startColumn: 0,
+          endLineNumber: 0,
+          endColumn: 0,
+        },
+      ]);
+    });
+  });
 });

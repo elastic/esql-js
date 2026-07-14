@@ -6,6 +6,7 @@
  */
 
 import * as antlr4 from 'antlr4';
+import { EsqlLexer } from '@elastic/esql-grammar';
 import { getPosition } from './tokens';
 import type { EditorError } from '../../types';
 
@@ -13,6 +14,28 @@ import type { EditorError } from '../../types';
 const SYNTAX_ERRORS_TO_IGNORE = [
   `mismatched input '<EOF>' expecting {'row', 'from', 'ts', 'set', 'show'}`,
 ];
+
+const TOKEN_RECOGNITION_ERROR_PREFIX = 'token recognition error at:';
+
+// Lexer modes in which an unquoted identifier/pattern is expected (e.g. RENAME's
+// old/new names). A "token recognition error" raised while in one of these modes
+// means the offending character can never form a valid unquoted identifier there
+// (unlike, say, WHERE, where the same character may be a valid operator) — i.e.
+// the identifier likely needs backticks.
+const UNQUOTED_IDENTIFIER_ERROR_MODES = new Set<number>([EsqlLexer.RENAME_MODE]);
+
+function isUnquotedIdentifierError(
+  recognizer: antlr4.Recognizer<unknown>,
+  offendingSymbol: unknown,
+  message: string
+): boolean {
+  return (
+    offendingSymbol == null &&
+    message.startsWith(TOKEN_RECOGNITION_ERROR_PREFIX) &&
+    recognizer instanceof antlr4.Lexer &&
+    UNQUOTED_IDENTIFIER_ERROR_MODES.has(recognizer.getMode())
+  );
+}
 
 const REPLACE_DEV = /,{0,1}(?<!\s)\s*DEV_\w+\s*/g;
 const REPLACE_ORPHAN_COMMA = /{, /g;
@@ -46,6 +69,10 @@ export class ESQLErrorListener extends antlr4.ErrorListener<unknown> {
     const startColumn = offendingSymbol && tokenPosition ? tokenPosition.min + 1 : column + 1;
     const endColumn = offendingSymbol && tokenPosition ? tokenPosition.max + 1 : column + 2;
 
+    const code = isUnquotedIdentifierError(recognizer, offendingSymbol, message)
+      ? 'invalidUnquotedIdentifier'
+      : 'syntaxError';
+
     this.errors.push({
       startLineNumber: line,
       endLineNumber: line,
@@ -53,7 +80,7 @@ export class ESQLErrorListener extends antlr4.ErrorListener<unknown> {
       endColumn,
       message: textMessage,
       severity: 'error',
-      code: 'syntaxError',
+      code,
     });
   }
 
