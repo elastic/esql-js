@@ -37,6 +37,26 @@ function isUnquotedIdentifierError(
   );
 }
 
+const ID_CHARS_BEFORE = /[a-zA-Z0-9._@*]+$/;
+const ID_CHARS_AFTER = /^[^\s|,()[\]]+/;
+
+function expandSpanToIdentifier(
+  lexer: antlr4.Lexer,
+  column: number
+): { startColumn: number; endColumn: number } {
+  const input = (lexer as unknown as { inputStream: antlr4.CharStream }).inputStream;
+  const errorIdx = lexer._tokenStartCharIndex;
+  const src = input.getText(0, input.size - 1);
+
+  const beforeLen = ID_CHARS_BEFORE.exec(src.slice(0, errorIdx))?.[0].length ?? 0;
+  const afterLen = ID_CHARS_AFTER.exec(src.slice(errorIdx + 1))?.[0].length ?? 0;
+
+  return {
+    startColumn: column + 1 - beforeLen,
+    endColumn: column + 2 + afterLen,
+  };
+}
+
 const REPLACE_DEV = /,{0,1}(?<!\s)\s*DEV_\w+\s*/g;
 const REPLACE_ORPHAN_COMMA = /{, /g;
 
@@ -64,10 +84,13 @@ export class ESQLErrorListener extends antlr4.ErrorListener<unknown> {
     }
 
     const tokenPosition = getPosition(offendingSymbol as antlr4.Token);
-    const startColumn = offendingSymbol && tokenPosition ? tokenPosition.min + 1 : column + 1;
-    const endColumn = offendingSymbol && tokenPosition ? tokenPosition.max + 1 : column + 2;
+    let startColumn = offendingSymbol && tokenPosition ? tokenPosition.min + 1 : column + 1;
+    let endColumn = offendingSymbol && tokenPosition ? tokenPosition.max + 1 : column + 2;
 
     const unquotedIdentifierError = isUnquotedIdentifierError(recognizer, offendingSymbol, message);
+    if (unquotedIdentifierError) {
+      ({ startColumn, endColumn } = expandSpanToIdentifier(recognizer as antlr4.Lexer, column));
+    }
     const invalidChar = unquotedIdentifierError
       ? message.replace(TOKEN_RECOGNITION_ERROR_PREFIX, '').trim()
       : undefined;

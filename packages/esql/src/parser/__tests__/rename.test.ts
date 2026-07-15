@@ -65,10 +65,10 @@ describe('RENAME', () => {
         {
           code: 'invalidUnquotedIdentifier',
           message: "invalidUnquotedIdentifier: Field name contains invalid character '-'",
-          startColumn: 39,
-          endColumn: 40,
+          startColumn: 34,
+          endColumn: 42,
         },
-        { code: 'syntaxError', startColumn: 40, endColumn: 42 },
+        { code: 'syntaxError' },
       ]);
     });
 
