@@ -14,6 +14,15 @@ import {
   legacyCommandNames,
 } from '@elastic/esql-definitions/commandNames';
 import { functionNames } from '@elastic/esql-definitions/functionNames';
+import {
+  optionNames,
+  literalNames,
+  sortModifierNames,
+  namedBinaryOperatorNames,
+  namedUnaryOperatorNames,
+} from '@elastic/esql-definitions/keywords';
+
+export { temporalUnits, type TemporalUnit } from '@elastic/esql-definitions/temporalUnits';
 
 const byLengthDesc = (a: string, b: string) => b.length - a.length;
 
@@ -29,9 +38,9 @@ export const processingCommands = [
   'RIGHT',
 ].sort(byLengthDesc);
 
-export const options = ['BY', 'ON', 'WITH', 'METADATA', 'WHERE', 'SCORE', 'KEY', 'GROUP', 'LIMIT'];
+export const literals = literalNames;
 
-export const literals = ['TRUE', 'FALSE', 'NULL'];
+export const options = optionNames;
 
 export const functions = functionNames;
 
@@ -87,24 +96,7 @@ export const delimiters = [
 
 export const operators = {
   named: {
-    binary: ['AND', 'OR', 'IS', 'IN', 'AS', 'LIKE', 'RLIKE'],
-    other: ['ASC', 'DESC', 'FIRST', 'LAST', 'NULLS', 'NOT'],
+    binary: namedBinaryOperatorNames,
+    other: [...sortModifierNames, ...namedUnaryOperatorNames],
   },
 };
-
-export type TemporalUnit = [unit: string, ...abbreviations: string[]];
-
-/**
- * @see https://www.elastic.co/docs/reference/query-languages/esql/esql-time-spans#esql-time-spans-table
- */
-export const temporalUnits: TemporalUnit[] = [
-  ['YEAR', 'Y', 'YR', 'YEARS'],
-  ['QUARTER', 'Q', 'QUARTERS'],
-  ['MONTH', 'MO', 'MONTHS'],
-  ['WEEK', 'W', 'WEEKS'],
-  ['DAY', 'D', 'DAYS'],
-  ['HOUR', 'H', 'HOURS'],
-  ['MINUTE', 'M', 'MIN', 'MINUTES'],
-  ['SECOND', 'S', 'SEC', 'SECONDS'],
-  ['MILLISECOND', 'MS', 'MILLISECONDS'],
-];

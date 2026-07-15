@@ -5,6 +5,8 @@
  * 2.0.
  */
 
+export const literalNames = ['TRUE', 'FALSE', 'NULL'];
+
 /**
  * Keywords which appear as options or sub-clauses inside commands.
  */
@@ -31,8 +33,12 @@ export const optionNames = [
  */
 export const sortModifierNames = ['ASC', 'DESC', 'FIRST', 'LAST', 'NULLS'];
 
+/**
+ * Binary expressions with a latin name.
+ */
 export const namedBinaryOperatorNames = ['AND', 'OR', 'IS', 'IN', 'AS', 'LIKE', 'RLIKE'];
 
+/**
+ * Unary expressions with a latin name.
+ */
 export const namedUnaryOperatorNames = ['NOT'];
-
-export const literalNames = ['TRUE', 'FALSE', 'NULL'];

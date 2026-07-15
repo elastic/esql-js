@@ -9,24 +9,15 @@
 
 import { commandNames } from '@elastic/esql-definitions/commandNames';
 import { functionNames } from '@elastic/esql-definitions/functionNames';
+import {
+  optionNames,
+  sortModifierNames,
+  namedBinaryOperatorNames,
+  namedUnaryOperatorNames,
+} from '@elastic/esql-definitions/keywords';
 import type { RefractorLanguageDefinition } from './types';
 
-const keywords = [
-  'BY',
-  'ASC',
-  'DESC',
-  'FIRST',
-  'LAST',
-  'ON',
-  'WITH',
-  'METADATA',
-  'NULLS',
-  'SCORE',
-  'KEY',
-  'GROUP',
-];
-
-const namedBinaryOperators = ['AND', 'OR', 'IS', 'IN', 'AS', 'LIKE', 'RLIKE', 'RLIKE', 'WHERE'];
+const keywords = [...optionNames, ...sortModifierNames];
 
 export const esql: RefractorLanguageDefinition = function esql(Prism) {
   Prism.languages.esql = {
@@ -71,7 +62,12 @@ export const esql: RefractorLanguageDefinition = function esql(Prism) {
     },
 
     'named-binary-operator': {
-      pattern: new RegExp('\\b(?:' + namedBinaryOperators.join('|') + ')\\b', 'i'),
+      pattern: new RegExp('\\b(?:' + namedBinaryOperatorNames.join('|') + ')\\b', 'i'),
+      alias: ['keyword'],
+    },
+
+    'named-unary-operator': {
+      pattern: new RegExp('\\b(?:' + namedUnaryOperatorNames.join('|') + ')\\b', 'i'),
       alias: ['keyword'],
     },
 
