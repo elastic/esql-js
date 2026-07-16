@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-definitions",
-  "version": "4.10.0",
+  "version": "4.12.0",
   "author": "Kibana ES|QL team",
   "description": "Shared definitions for the ES|QL language (commands, functions, operators).",
   "license": "Elastic-2.0",
