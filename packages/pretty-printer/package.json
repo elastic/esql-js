@@ -1,6 +1,6 @@
 {
   "name": "@elastic/pretty-printer",
-  "version": "4.12.0",
+  "version": "4.13.0",
   "author": "Kibana ES|QL team",
   "description": "A general-purpose Wadler-Lindig document algebra and layout engine for width-aware pretty-printing.",
   "license": "Elastic-2.0",
