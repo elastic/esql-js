@@ -122,6 +122,99 @@ exports[`functions 1`] = `
 ]
 `;
 
+exports[`named operators 1`] = `
+[
+  [
+    "FROM",
+    "token+command+keyword",
+  ],
+  [
+    " index ",
+    "",
+  ],
+  [
+    "|",
+    "token+operator",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "WHERE",
+    "token+command+keyword",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "NOT",
+    "token+named-unary-operator+keyword",
+  ],
+  [
+    " a ",
+    "",
+  ],
+  [
+    "LIKE",
+    "token+named-binary-operator+keyword",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    ""b*"",
+    "token+string",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "AND",
+    "token+named-binary-operator+keyword",
+  ],
+  [
+    " c ",
+    "",
+  ],
+  [
+    "IN",
+    "token+named-binary-operator+keyword",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "(",
+    "token+punctuation",
+  ],
+  [
+    "1",
+    "token+integer+number",
+  ],
+  [
+    ",",
+    "token+punctuation",
+  ],
+  [
+    " ",
+    "",
+  ],
+  [
+    "2",
+    "token+integer+number",
+  ],
+  [
+    ")",
+    "token+punctuation",
+  ],
+]
+`;
+
 exports[`numbers 1`] = `
 [
   [
