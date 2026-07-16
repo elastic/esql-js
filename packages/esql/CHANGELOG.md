@@ -1,5 +1,21 @@
 # @elastic/esql
 
+## 4.12.0
+
+### Minor Changes
+
+- [#191](https://github.com/elastic/esql-js/pull/191) [`0058d27`](https://github.com/elastic/esql-js/commit/0058d27da8a15374395feab03d1a72fdfc2440dc) Thanks [@elastic-vault-github-plugin-prod](https://github.com/apps/elastic-vault-github-plugin-prod)! - Support primary expressions, including function calls, on the left-hand side of match (:) expressions
+
+### Patch Changes
+
+- [#190](https://github.com/elastic/esql-js/pull/190) [`eed8b68`](https://github.com/elastic/esql-js/commit/eed8b6823208d396b685d35ec2465a2b5995bf3a) Thanks [@momovdg](https://github.com/momovdg)! - Parser errors caused by invalid characters in unquoted identifiers now produce a dedicated `invalidUnquotedIdentifier` error code instead of the generic `syntaxError`. The error span covers the full identifier rather than just the offending character, making it easier for consumers to extract and rewrite the identifier.
+
+- Updated dependencies [[`0058d27`](https://github.com/elastic/esql-js/commit/0058d27da8a15374395feab03d1a72fdfc2440dc)]:
+  - @elastic/esql-grammar@4.12.0
+  - @elastic/esql-types@4.12.0
+  - @elastic/esql-promql-grammar@4.12.0
+  - @elastic/pretty-printer@4.12.0
+
 ## 4.11.0
 
 ### Minor Changes
