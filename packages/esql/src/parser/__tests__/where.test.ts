@@ -9,6 +9,7 @@ import { parse } from '..';
 import { EsqlQuery } from '../../composer/query';
 import type { ESQLColumn, ESQLCommand, ESQLFunction, ESQLInlineCast } from '../../types';
 import { Walker } from '../../ast/walker';
+import { BasicPrettyPrinter } from '../../pretty_print';
 
 describe('WHERE', () => {
   describe('correctly formatted', () => {
@@ -140,6 +141,40 @@ describe('WHERE', () => {
           'abc /*a*/ ::  /*a*/ INTEGER'
         );
         expect(text.slice(column.location.min, column.location.max + 1)).toBe('abc');
+      });
+
+      it('supports primary expressions in match expression', () => {
+        const text = `FROM index | WHERE CONCAT(a, b) : "query"`;
+        const { errors, root } = parse(text);
+
+        expect(errors).toHaveLength(0);
+        expect(root.commands[1]).toMatchObject({
+          type: 'command',
+          name: 'where',
+          args: [
+            {
+              type: 'function',
+              subtype: 'binary-expression',
+              name: ':',
+              args: [
+                {
+                  type: 'function',
+                  name: 'concat',
+                  args: [
+                    { type: 'column', name: 'a' },
+                    { type: 'column', name: 'b' },
+                  ],
+                },
+                {
+                  type: 'literal',
+                  literalType: 'keyword',
+                  valueUnquoted: 'query',
+                },
+              ],
+            },
+          ],
+        });
+        expect(BasicPrettyPrinter.print(root)).toBe(text);
       });
     });
   });
