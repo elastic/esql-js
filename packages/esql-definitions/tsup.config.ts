@@ -27,7 +27,14 @@ const generatedEntries = [
   .filter((entry) => existsSync(entry));
 
 export default defineConfig({
-  entry: ['src/index.ts', ...generatedEntries],
+  entry: [
+    'src/index.ts',
+    'src/commandNames.ts',
+    'src/functionNames.ts',
+    'src/keywords.ts',
+    'src/temporalUnits.ts',
+    ...generatedEntries,
+  ],
   format: ['cjs', 'esm'],
   outDir: 'lib',
   clean: true,

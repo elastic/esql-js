@@ -23,8 +23,6 @@ import type { PromQLAstQueryExpression } from '../../embedded_languages/promql/t
 const textExistsAndIsValid = (text: string | undefined): text is string =>
   !!(text && !/<missing /.test(text));
 
-type ESQLAstMatchBooleanExpression = ast.ESQLColumn | ast.ESQLBinaryExpression | ast.ESQLInlineCast;
-
 /**
  * Transforms an ANTLR ES|QL Concrete Syntax Tree (CST) into a
  * Kibana Abstract Syntax Tree (AST).
@@ -2995,34 +2993,20 @@ export class CstToAstConverter {
     return this.visitValueExpression(ctx.valueExpression());
   }
 
-  private visitMatchExpression(ctx: cst.MatchExpressionContext): ESQLAstMatchBooleanExpression {
+  private visitMatchExpression(ctx: cst.MatchExpressionContext): ast.ESQLAstExpression {
     return this.visitMatchBooleanExpression(ctx.matchBooleanExpression());
   }
 
   private visitMatchBooleanExpression(
     ctx: cst.MatchBooleanExpressionContext
-  ): ESQLAstMatchBooleanExpression {
-    let expression: ESQLAstMatchBooleanExpression = this.toColumn(ctx.qualifiedName());
-    const dataTypeCtx = ctx.dataType();
+  ): ast.ESQLAstExpression {
+    const expression = this.fromPrimaryExpressionStrict(ctx.primaryExpression());
     const constantCtx = ctx.constant();
-
-    if (dataTypeCtx) {
-      expression = Builder.expression.inlineCast(
-        {
-          castType: dataTypeCtx.getText().toLowerCase(),
-          value: expression,
-        },
-        {
-          location: getPosition(ctx.start, dataTypeCtx.stop),
-          incomplete: Boolean(ctx.exception),
-        }
-      );
-    }
 
     if (constantCtx) {
       const constantExpression = this.fromConstantToArray(constantCtx);
 
-      expression = this.toBinaryExpression(':', ctx, [expression, constantExpression]);
+      return this.toBinaryExpression(':', ctx, [expression, constantExpression]);
     }
 
     return expression;

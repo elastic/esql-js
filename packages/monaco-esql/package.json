@@ -1,6 +1,6 @@
 {
   "name": "@elastic/monaco-esql",
-  "version": "4.11.0",
+  "version": "4.12.0",
   "author": "Kibana ES|QL team",
   "description": "Monaco Editor language support for ES|QL.",
   "license": "MIT",
@@ -32,6 +32,9 @@
   },
   "peerDependencies": {
     "monaco-editor": ">=0.30.0"
+  },
+  "dependencies": {
+    "@elastic/esql-definitions": "workspace:^"
   },
   "devDependencies": {
     "@types/jest": "30.0.0",

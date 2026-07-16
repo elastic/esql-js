@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-definitions",
-  "version": "4.10.0",
+  "version": "4.12.0",
   "author": "Kibana ES|QL team",
   "description": "Shared definitions for the ES|QL language (commands, functions, operators).",
   "license": "Elastic-2.0",
@@ -79,6 +79,30 @@
       "import": "./lib/generated/promql_operator_docs/index.mjs",
       "require": "./lib/generated/promql_operator_docs/index.js",
       "default": "./lib/generated/promql_operator_docs/index.js"
+    },
+    "./commandNames": {
+      "types": "./lib/commandNames.d.ts",
+      "import": "./lib/commandNames.mjs",
+      "require": "./lib/commandNames.js",
+      "default": "./lib/commandNames.js"
+    },
+    "./functionNames": {
+      "types": "./lib/functionNames.d.ts",
+      "import": "./lib/functionNames.mjs",
+      "require": "./lib/functionNames.js",
+      "default": "./lib/functionNames.js"
+    },
+    "./keywords": {
+      "types": "./lib/keywords.d.ts",
+      "import": "./lib/keywords.mjs",
+      "require": "./lib/keywords.js",
+      "default": "./lib/keywords.js"
+    },
+    "./temporalUnits": {
+      "types": "./lib/temporalUnits.d.ts",
+      "import": "./lib/temporalUnits.mjs",
+      "require": "./lib/temporalUnits.js",
+      "default": "./lib/temporalUnits.js"
     }
   },
   "files": [

@@ -954,6 +954,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@elastic/monaco-esql@workspace:packages/monaco-esql"
   dependencies:
+    "@elastic/esql-definitions": "workspace:^"
     "@types/jest": "npm:30.0.0"
     jest: "npm:30.4.2"
     monaco-editor: "npm:0.55.1"

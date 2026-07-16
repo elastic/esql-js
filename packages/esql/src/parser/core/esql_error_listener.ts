@@ -7,6 +7,11 @@
 
 import * as antlr4 from 'antlr4';
 import { getPosition } from './tokens';
+import {
+  TOKEN_RECOGNITION_ERROR_PREFIX,
+  isUnquotedIdentifierError,
+  expandSpanToIdentifier,
+} from './helpers';
 import type { EditorError } from '../../types';
 
 // These will need to be manually updated whenever the relevant grammar changes.
@@ -40,11 +45,22 @@ export class ESQLErrorListener extends antlr4.ErrorListener<unknown> {
       return;
     }
 
-    const textMessage = `SyntaxError: ${message}`;
-
     const tokenPosition = getPosition(offendingSymbol as antlr4.Token);
-    const startColumn = offendingSymbol && tokenPosition ? tokenPosition.min + 1 : column + 1;
-    const endColumn = offendingSymbol && tokenPosition ? tokenPosition.max + 1 : column + 2;
+    let startColumn = offendingSymbol && tokenPosition ? tokenPosition.min + 1 : column + 1;
+    let endColumn = offendingSymbol && tokenPosition ? tokenPosition.max + 1 : column + 2;
+
+    const unquotedIdentifierError = isUnquotedIdentifierError(recognizer, offendingSymbol, message);
+    if (unquotedIdentifierError) {
+      ({ startColumn, endColumn } = expandSpanToIdentifier(recognizer as antlr4.Lexer, column));
+    }
+    const invalidChar = unquotedIdentifierError
+      ? message.replace(TOKEN_RECOGNITION_ERROR_PREFIX, '').trim()
+      : undefined;
+
+    const code = unquotedIdentifierError ? 'invalidUnquotedIdentifier' : 'syntaxError';
+    const textMessage = unquotedIdentifierError
+      ? `invalidUnquotedIdentifier: Field name contains invalid character ${invalidChar}`
+      : `SyntaxError: ${message}`;
 
     this.errors.push({
       startLineNumber: line,
@@ -53,7 +69,7 @@ export class ESQLErrorListener extends antlr4.ErrorListener<unknown> {
       endColumn,
       message: textMessage,
       severity: 'error',
-      code: 'syntaxError',
+      code,
     });
   }
 

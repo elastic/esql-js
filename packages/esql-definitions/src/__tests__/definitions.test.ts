@@ -8,7 +8,7 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { generateAll } from '../../scripts/generate_lib';
-import { commandsNames } from '../commandsNames';
+import { commandNames } from '../commandNames';
 import { functionNames } from '../functionNames';
 
 const packageDir = join(__dirname, '..', '..');
@@ -44,12 +44,12 @@ describe('definition sync', () => {
     );
   });
 
-  test('every synced command appears in the hand-maintained commandsNames list', () => {
+  test('every synced command appears in the hand-maintained commandNames list', () => {
     for (const command of result!.data.commands) {
       const upper = command.name.toUpperCase();
       const candidates = [upper, upper.replace(/_/g, ' '), upper.replace(/_/g, '')];
 
-      expect(candidates.some((candidate) => commandsNames.includes(candidate))).toBe(true);
+      expect(candidates.some((candidate) => commandNames.includes(candidate))).toBe(true);
     }
   });
 
