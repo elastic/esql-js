@@ -13,6 +13,12 @@
       "import": "./lib/index.mjs",
       "require": "./lib/index.js",
       "default": "./lib/index.js"
+    },
+    "./lib/definitions": {
+      "types": "./lib/definitions.d.ts",
+      "import": "./lib/definitions.mjs",
+      "require": "./lib/definitions.js",
+      "default": "./lib/definitions.js"
     }
   },
   "files": [
