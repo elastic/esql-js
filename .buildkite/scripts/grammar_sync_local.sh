@@ -1,7 +1,7 @@
 #!/usr/bin/env bash
-# Sync ES|QL and PromQL grammars from a local elasticsearch checkout and
-# regenerate the TypeScript artifacts. For local verification of the latest
-# grammars — no cloning, no PRs.
+# Sync ES|QL and PromQL grammars plus ES|QL language definitions from a local
+# elasticsearch checkout and regenerate the TypeScript artifacts. For local
+# verification of the latest grammars/definitions — no cloning, no PRs.
 #
 # Usage:
 #   .buildkite/scripts/grammar_sync_local.sh [path-to-elasticsearch]
@@ -20,15 +20,21 @@ fi
 
 source "$REPO_DIR/.buildkite/scripts/grammar_sync_lib.sh"
 
-echo "--- Syncing grammars from $ELASTICSEARCH_DIR"
-synchronize_all_grammars
+echo "--- Syncing grammars and definitions from $ELASTICSEARCH_DIR"
+synchronize_all
 
 echo "--- Rebuilding ANTLR TypeScript artifacts"
 cd "$REPO_DIR"
 export ANTLR4_TOOLS_ANTLR_VERSION="${ANTLR4_TOOLS_ANTLR_VERSION:-4.13.2}"
 yarn build:antlr4
 
+echo "--- Generating ES|QL definition modules"
+yarn workspace @elastic/esql-definitions generate
+
 echo "--- Done. Changes:"
-git -C "$REPO_DIR" diff --stat -- \
+# git status (not diff --stat) so a first-time definitions sync shows up too
+git -C "$REPO_DIR" status --short -- \
   packages/esql-grammar/src/ \
-  packages/esql-promql-grammar/src/
+  packages/esql-promql-grammar/src/ \
+  packages/esql-definitions/elasticsearch/ \
+  packages/esql-definitions/src/generated/

@@ -5,10 +5,36 @@
  * 2.0.
  */
 
+import { existsSync } from 'node:fs';
+
 import { defineConfig } from 'tsup';
 
+// Generated from elasticsearch/ by `yarn generate`
+const generatedEntries = [
+  'commands.ts',
+  'settings.ts',
+  'inline_cast.ts',
+  'functions/index.ts',
+  'function_docs/index.ts',
+  'operators/index.ts',
+  'operator_docs/index.ts',
+  'promql_functions/index.ts',
+  'promql_function_docs/index.ts',
+  'promql_operators/index.ts',
+  'promql_operator_docs/index.ts',
+]
+  .map((name) => `src/generated/${name}`)
+  .filter((entry) => existsSync(entry));
+
 export default defineConfig({
-  entry: ['src/index.ts'],
+  entry: [
+    'src/index.ts',
+    'src/commandNames.ts',
+    'src/functionNames.ts',
+    'src/keywords.ts',
+    'src/temporalUnits.ts',
+    ...generatedEntries,
+  ],
   format: ['cjs', 'esm'],
   outDir: 'lib',
   clean: true,

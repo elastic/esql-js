@@ -86,3 +86,10 @@ test('cast', () => {
 
   expect(tokens).toMatchSnapshot();
 });
+
+test('named operators', () => {
+  const tokens = tokenize(`FROM index | WHERE NOT a LIKE "b*" AND c IN (1, 2)`);
+
+  expect(tokens).toContainEqual(['NOT', 'token+named-unary-operator+keyword']);
+  expect(tokens).toMatchSnapshot();
+});

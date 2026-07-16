@@ -18,6 +18,8 @@ export default defineConfig([
     'packages/esql-promql-grammar/src/promql_*.ts',
     'packages/esql-promql-grammar/src/lexer_config.js',
     'packages/esql-promql-grammar/src/parser_config.js',
+    // Generated ES|QL definition modules — do not lint
+    'packages/esql-definitions/src/generated/',
     'storybook-static/',
     '*.js',
     '*.mjs',

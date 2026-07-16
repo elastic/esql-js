@@ -885,6 +885,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@elastic/esql-definitions@workspace:packages/esql-definitions"
   dependencies:
+    "@types/jest": "npm:30.0.0"
+    "@types/node": "npm:25.2.3"
+    jest: "npm:30.4.2"
+    ts-jest: "npm:29.4.11"
     tsup: "npm:8.5.1"
     typescript: "npm:6.0.3"
   languageName: unknown
@@ -950,6 +954,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@elastic/monaco-esql@workspace:packages/monaco-esql"
   dependencies:
+    "@elastic/esql-definitions": "workspace:^"
     "@types/jest": "npm:30.0.0"
     jest: "npm:30.4.2"
     monaco-editor: "npm:0.55.1"
@@ -3041,7 +3046,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:*":
+"@types/node@npm:*, @types/node@npm:25.2.3":
   version: 25.2.3
   resolution: "@types/node@npm:25.2.3"
   dependencies:

@@ -42,7 +42,11 @@ main () {
   report_main_step "Syncing PromQL config files..."
   synchronize_promql_config
 
-  # Check for differences in grammar files
+  report_main_step "Synchronizing ES|QL definitions..."
+  synchronize_esql_definitions
+
+  # Check for differences in synced files (untracked files in elasticsearch/
+  # do not show up in `git diff`, hence the additional `git status` check)
   set +e
   git diff --exit-code --quiet \
     packages/esql-grammar/src/esql_lexer.g4 \
@@ -50,7 +54,9 @@ main () {
     packages/esql-grammar/src/lexer/ \
     packages/esql-grammar/src/parser/ \
     packages/esql-promql-grammar/src/promql_lexer.g4 \
-    packages/esql-promql-grammar/src/promql_parser.g4
+    packages/esql-promql-grammar/src/promql_parser.g4 \
+    packages/esql-definitions/elasticsearch/ \
+    && [ -z "$(git status --porcelain -- packages/esql-definitions/elasticsearch/)" ]
   if [ $? -eq 0 ]; then
     echo "No differences found. Our work is done here."
     exit
@@ -63,8 +69,8 @@ main () {
   git config --global user.name "$MACHINE_USERNAME"
   git config --global user.email 'elasticmachine@users.noreply.github.com'
 
-  PR_TITLE='chore: [ES|QL] Update grammars'
-  PR_BODY='This PR updates the ES|QL grammars (lexer and parser) and PromQL grammars to match the latest version in Elasticsearch.'
+  PR_TITLE='chore: [ES|QL] Update grammars and definitions'
+  PR_BODY='This PR updates the ES|QL grammars (lexer and parser), PromQL grammars, and ES|QL language definitions to match the latest version in Elasticsearch.'
 
   # Check if a PR already exists
   pr_search_result=$(gh pr list --search "$PR_TITLE" --state open --author "$MACHINE_USERNAME" --limit 1 --json title -q ".[].title")
@@ -90,12 +96,20 @@ main () {
   yarn build:antlr4:esql
   yarn build:antlr4:promql
 
+  report_main_step "Generating ES|QL definition modules."
+
+  yarn workspace @elastic/esql-definitions generate
+
   # Create branch and commit
   BRANCH_NAME="esql_grammar_sync_$(date +%s)"
   git checkout -b "$BRANCH_NAME"
 
-  git add packages/esql-grammar/src/ packages/esql-promql-grammar/src/
-  git commit -m "feat: Update ES|QL grammars"
+  git add \
+    packages/esql-grammar/src/ \
+    packages/esql-promql-grammar/src/ \
+    packages/esql-definitions/elasticsearch/ \
+    packages/esql-definitions/src/generated/
+  git commit -m "feat: Update ES|QL grammars and definitions"
 
   report_main_step "Changes committed. Creating pull request."
 

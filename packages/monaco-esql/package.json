@@ -39,6 +39,9 @@
   "peerDependencies": {
     "monaco-editor": ">=0.30.0"
   },
+  "dependencies": {
+    "@elastic/esql-definitions": "workspace:^"
+  },
   "devDependencies": {
     "@types/jest": "30.0.0",
     "jest": "30.4.2",
