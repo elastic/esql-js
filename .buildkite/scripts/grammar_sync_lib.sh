@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# Shared grammar-copy functions, used by:
+# Shared grammar/definitions copy functions, used by:
 #   - esql_grammar_sync.sh    (CI job: clones elasticsearch, opens a PR)
 #   - grammar_sync_local.sh   (local runner: uses an existing elasticsearch checkout)
 #
@@ -126,10 +126,37 @@ synchronize_promql_config () {
   echo "PromQL config files synced."
 }
 
-synchronize_all_grammars () {
+synchronize_esql_definitions () {
+  # Copies the machine-readable ES|QL and PromQL language definitions that
+  # Elasticsearch publishes for Kibana.
+  local esql_source_dir="$ELASTICSEARCH_DIR/docs/reference/query-languages/esql/kibana/generated"
+  local promql_source_dir="$ELASTICSEARCH_DIR/docs/reference/query-languages/promql/kibana/generated"
+  local destination_dir="$REPO_DIR/packages/esql-definitions/elasticsearch"
+
+  if [ ! -d "$esql_source_dir" ]; then
+    echo "No ES|QL definitions found at: $esql_source_dir" >&2
+    return 1
+  fi
+
+  echo "Copying ES|QL and PromQL definition files..."
+  rm -rf "$destination_dir"
+  mkdir -p "$destination_dir"
+  cp -r "$esql_source_dir" "$destination_dir/esql"
+
+  if [ -d "$promql_source_dir" ]; then
+    cp -r "$promql_source_dir" "$destination_dir/promql"
+  else
+    echo "Warning: no PromQL definitions found at: $promql_source_dir — skipping." >&2
+  fi
+
+  echo "ES|QL and PromQL definitions copied successfully."
+}
+
+synchronize_all () {
   synchronize_lexer_grammar
   synchronize_parser_grammar
   synchronize_promql_lexer_grammar
   synchronize_promql_parser_grammar
   synchronize_promql_config
+  synchronize_esql_definitions
 }

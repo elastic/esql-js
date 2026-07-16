@@ -12,7 +12,7 @@ This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main o
 
 `packages/esql-types/` (`@elastic/esql-types`) holds all public TypeScript type definitions for the ES|QL and PromQL ASTs. It has zero runtime code and zero dependencies. `@elastic/esql` depends on it; `packages/esql/src/types.ts` is a thin re-export shim from it.
 
-`packages/esql-definitions/` (`@elastic/esql-definitions`) holds shared definitions for the ES|QL language — lists of commands, functions, operators, and their metadata.
+`packages/esql-definitions/` (`@elastic/esql-definitions`) holds shared definitions for the ES|QL and PromQL languages — lists of commands, functions, operators, settings, and their metadata. Its `elasticsearch/` folder (raw JSON + docs markdown synced from the elasticsearch repo's `kibana/generated/` trees, unpublished; multiple `<project>` dirs partition the definitions) and `src/generated/` (TypeScript modules produced from it by `yarn workspace @elastic/esql-definitions generate`) are managed by the grammar sync job.
 
 `packages/esql-grammar/` (`@elastic/esql-grammar`) and `packages/esql-promql-grammar/` (`@elastic/esql-promql-grammar`) hold the auto-generated ANTLR4 TypeScript artifacts for ES|QL and PromQL respectively. **Do not edit their source files by hand** — they are managed by the CI grammar sync job (`.buildkite/scripts/esql_grammar_sync.sh`). `@elastic/esql` depends on both.
 
@@ -36,9 +36,9 @@ Paths are relative to `packages/esql/`.
 | `src/embedded_languages/promql/` | Parallel structure for PromQL (own parser, builder, pretty-printer). |
 
 ### Grammar sync pipeline
-The CI job `.buildkite/scripts/esql_grammar_sync.sh` clones `elastic/elasticsearch`, copies the ANTLR grammar files into `packages/esql/src/parser/antlr/`, rebuilds the TypeScript artifacts, and opens a PR automatically.
+The CI job `.buildkite/scripts/esql_grammar_sync.sh` clones `elastic/elasticsearch`, copies the ANTLR grammar files into `packages/esql-grammar/src/` and `packages/esql-promql-grammar/src/`, copies the ES|QL and PromQL definition trees into `packages/esql-definitions/elasticsearch/`, rebuilds the TypeScript artifacts (ANTLR build + definitions codegen), and opens a PR automatically. To run the same sync against a local elasticsearch checkout: `.buildkite/scripts/grammar_sync_local.sh [path-to-elasticsearch]` (or `yarn sync:grammars`).
 
-That PR only touches `packages/esql/src/parser/antlr/`. When a grammar change adds a **new command or new grammar rule**, a follow-up PR is needed to wire the new rule into the AST layer. Use the `/grammar-sync-update` skill for this.
+When a grammar change adds a **new command or new grammar rule**, a follow-up PR is needed to wire the new rule into the AST layer. Use the `/grammar-sync-update` skill for this.
 
 ## Testing
 ```
