@@ -18,6 +18,10 @@ const reprint = (src: string, opts?: WrappingPrettyPrinterOptions) => {
 
 describe('WrappingPrettyPrinter (Doc IR)', () => {
   describe('basic queries', () => {
+    test('empty query', () => {
+      expect(reprint('')).toBe('');
+    });
+
     test('single command', () => {
       expect(reprint('FROM index')).toBe('FROM index');
     });

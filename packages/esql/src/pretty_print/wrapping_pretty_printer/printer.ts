@@ -181,6 +181,9 @@ export class WrappingPrettyPrinter {
 
   protected docQuery(query: ESQLAstQueryExpression): Doc {
     const cmds = query.commands;
+
+    if (!cmds.length) return '';
+
     const hasHeader = !this.opts.skipHeader && !!query.header?.length;
     const forceMultiline =
       this.opts.multiline || getPrettyPrintStats(query).hasLineBreakingDecorations;
