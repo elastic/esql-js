@@ -1,0 +1,55 @@
+{
+  "name": "@elastic/elasticsearch-search-dsl",
+  "version": "4.13.0",
+  "author": "Elastic",
+  "description": "Elasticsearch Search DSL for JavaScript/TypeScript",
+  "license": "Apache-2.0",
+  "sideEffects": false,
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    }
+  },
+  "files": [
+    "NOTICE.txt",
+    "LICENSE",
+    "lib"
+  ],
+  "keywords": [
+    "elasticsearch",
+    "elastic",
+    "search",
+    "dsl",
+    "typescript"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": "https://github.com/elastic/esql-js.git",
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json",
+    "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "test": "jest"
+  },
+  "peerDependencies": {
+    "@elastic/elasticsearch": ">=8.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@elastic/elasticsearch": {
+      "optional": true
+    }
+  },
+  "devDependencies": {
+    "@types/jest": "30.0.0",
+    "jest": "30.4.2",
+    "ts-jest": "29.4.11",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3"
+  }
+}
