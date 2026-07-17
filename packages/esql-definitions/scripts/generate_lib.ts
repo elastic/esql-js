@@ -114,6 +114,7 @@ const COMMAND_SPEC: ObjectSpec = {
     { src: 'name', required: true },
     { src: 'license' },
     { src: 'observability_tier', dst: 'observabilityTier' },
+    { src: 'output' },
   ],
   drop: ['comment', 'type'],
 };

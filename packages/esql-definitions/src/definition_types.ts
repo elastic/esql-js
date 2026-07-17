@@ -11,12 +11,28 @@
  * `elasticsearch/` by the grammar sync CI job.
  */
 
+export interface CommandOutputColumn {
+  type: string;
+  default?: boolean;
+}
+
+export interface CommandOutputDefinition {
+  /** `'none'` or the dimension that selects a variant. */
+  vary_by: string;
+  /** Name of the command parameter that selects the active variant, if any. */
+  selected_by?: string;
+  /** Map of variant name. */
+  variants: Record<string, Record<string, CommandOutputColumn>>;
+}
+
 /** A single item from `elasticsearch/esql/<project>/definition/commands/`. */
 export interface CommandDefinition {
   name: string;
   /** License tier required for the command, e.g. `'PLATINUM'`. */
   license?: string;
   observabilityTier?: string;
+  /** Output column metadata for commands that produce a fixed set of columns. */
+  output?: CommandOutputDefinition;
 }
 
 export interface ParamHint {
