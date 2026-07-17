@@ -11,7 +11,10 @@
       "@elastic/esql-promql-grammar",
       "@elastic/pretty-printer",
       "@elastic/monaco-esql",
-      "@elastic/prismjs-esql"
+      "@elastic/prismjs-esql",
+      "@elastic/elasticsearch-query-builder",
+      "@elastic/elasticsearch-esql-dsl",
+      "@elastic/elasticsearch-search-dsl"
     ]
   ],
   "linked": [],

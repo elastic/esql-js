@@ -20,7 +20,13 @@ This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main o
 
 `packages/prismjs-esql/` (`@elastic/prismjs-esql`) provides Prism.js and refractor syntax highlighting support for ES|QL.
 
-Unlike the rest of the repo, `@elastic/monaco-esql` and `@elastic/prismjs-esql` are MIT-licensed (not Elastic-2.0): their `src/` files carry an MIT header instead of the Elastic one, scoped via overrides in `eslint.config.mjs`.
+`packages/query-builder/` (`@elastic/elasticsearch-query-builder`) provides shared utilities for building Elasticsearch queries: operator symbols, escaping helpers, and a base expression type.
+
+`packages/esql-dsl/` (`@elastic/elasticsearch-esql-dsl`) provides a fluent, type-safe ES|QL query builder that renders to query strings. Depends on `@elastic/elasticsearch-query-builder`.
+
+`packages/search-dsl/` (`@elastic/elasticsearch-search-dsl`) provides an Elasticsearch Search DSL for JavaScript/TypeScript (early stage).
+
+Unlike the rest of the repo, `@elastic/monaco-esql` and `@elastic/prismjs-esql` are MIT-licensed (not Elastic-2.0): their `src/` files carry an MIT header instead of the Elastic one, scoped via overrides in `eslint.config.mjs`. Similarly, `@elastic/elasticsearch-query-builder`, `@elastic/elasticsearch-esql-dsl`, and `@elastic/elasticsearch-search-dsl` (migrated from the `elasticsearch-dsl-js` repo) are Apache-2.0-licensed: their `src/` files carry an Apache SPDX header, scoped the same way.
 
 ### Key source areas
 Paths are relative to `packages/esql/`.

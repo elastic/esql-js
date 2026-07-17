@@ -7,6 +7,11 @@ export const licenseHeader = `/*
  * 2.0.
  */`;
 
+export const apacheLicenseHeader = `/*
+ * Copyright Elasticsearch B.V. and contributors
+ * SPDX-License-Identifier: Apache-2.0
+ */`;
+
 export const mitLicenseHeader = `/*
  * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
  * or more contributor license agreements. See the NOTICE file distributed with
