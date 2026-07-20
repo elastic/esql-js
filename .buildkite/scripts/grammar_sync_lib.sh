@@ -72,6 +72,9 @@ synchronize_lexer_grammar () {
   sedi -e 's/superClass.*$/superClass=lexer_config;/' "$destination_file"
 
   strip_java_only_directives "$destination_file"
+  find "$destination_lib_dir" -name '*.g4' | while read -r f; do
+    strip_java_only_directives "$f"
+  done
 
   echo "Lexer file copied and modified successfully."
 }
@@ -101,6 +104,9 @@ synchronize_parser_grammar () {
   sedi -e 's/superClass.*$/superClass=parser_config;/' "$destination_file"
 
   strip_java_only_directives "$destination_file"
+  find "$destination_lib_dir" -name '*.g4' | while read -r f; do
+    strip_java_only_directives "$f"
+  done
 
   echo "Parser file copied and modified successfully."
 }
