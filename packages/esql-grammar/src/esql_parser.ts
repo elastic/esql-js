@@ -24,7 +24,6 @@ type int = number;
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
-import org.elasticsearch.xpack.esql.action.EsqlCapabilities;
 
 import parser_config from './parser_config.js';
 
@@ -806,8 +805,8 @@ export default class esql_parser extends parser_config {
 				this.enterOuterAlt(localctx, 7);
 				{
 				this.state = 272;
-				if (!(EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled())) {
-					throw this.createFailedPredicateException("EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled()");
+				if (!(false)) {
+					throw this.createFailedPredicateException("false");
 				}
 				this.state = 273;
 				this.externalCommand();
@@ -6637,7 +6636,7 @@ export default class esql_parser extends parser_config {
 		case 1:
 			return this.isDevVersion();
 		case 2:
-			return EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled();
+			return false;
 		}
 		return true;
 	}
