@@ -102,6 +102,7 @@ import mvCountDocs from './mv_count';
 import mvDedupeDocs from './mv_dedupe';
 import mvDifferenceDocs from './mv_difference';
 import mvFirstDocs from './mv_first';
+import mvInRangeDocs from './mv_in_range';
 import mvIntersectionDocs from './mv_intersection';
 import mvIntersectsDocs from './mv_intersects';
 import mvLastDocs from './mv_last';
@@ -335,6 +336,7 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   mv_dedupe: mvDedupeDocs,
   mv_difference: mvDifferenceDocs,
   mv_first: mvFirstDocs,
+  mv_in_range: mvInRangeDocs,
   mv_intersection: mvIntersectionDocs,
   mv_intersects: mvIntersectsDocs,
   mv_last: mvLastDocs,

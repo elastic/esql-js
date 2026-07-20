@@ -47,9 +47,6 @@ export const commandDefinitions: CommandDefinition[] = [
     name: 'inline_stats',
   },
   {
-    name: 'insist',
-  },
-  {
     name: 'ip_location',
     output: {
       vary_by: 'database_file',

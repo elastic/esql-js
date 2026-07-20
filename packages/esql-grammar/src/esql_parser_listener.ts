@@ -9,6 +9,7 @@ import {ParseTreeListener} from "antlr4";
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+import { EsqlCapabilities } from './esql_capabilities.js';
 
 
 import { StatementsContext } from "./esql_parser.js";
@@ -90,7 +91,6 @@ import { MetricsInfoCommandContext } from "./esql_parser.js";
 import { TsInfoCommandContext } from "./esql_parser.js";
 import { TsCollapseCommandContext } from "./esql_parser.js";
 import { LookupCommandContext } from "./esql_parser.js";
-import { InsistCommandContext } from "./esql_parser.js";
 import { DedupCommandContext } from "./esql_parser.js";
 import { HighlightCommandContext } from "./esql_parser.js";
 import { QualifiedNamesContext } from "./esql_parser.js";
@@ -128,6 +128,8 @@ import { ParenthesizedExpressionContext } from "./esql_parser.js";
 import { FunctionContext } from "./esql_parser.js";
 import { FunctionExpressionContext } from "./esql_parser.js";
 import { FunctionNameContext } from "./esql_parser.js";
+import { FunctionParamContext } from "./esql_parser.js";
+import { LambdaContext } from "./esql_parser.js";
 import { MapExpressionContext } from "./esql_parser.js";
 import { EntryExpressionContext } from "./esql_parser.js";
 import { MapValueContext } from "./esql_parser.js";
@@ -980,16 +982,6 @@ export default class esql_parserListener extends ParseTreeListener {
 	 */
 	exitLookupCommand?: (ctx: LookupCommandContext) => void;
 	/**
-	 * Enter a parse tree produced by `esql_parser.insistCommand`.
-	 * @param ctx the parse tree
-	 */
-	enterInsistCommand?: (ctx: InsistCommandContext) => void;
-	/**
-	 * Exit a parse tree produced by `esql_parser.insistCommand`.
-	 * @param ctx the parse tree
-	 */
-	exitInsistCommand?: (ctx: InsistCommandContext) => void;
-	/**
 	 * Enter a parse tree produced by `esql_parser.dedupCommand`.
 	 * @param ctx the parse tree
 	 */
@@ -1407,6 +1399,26 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitFunctionName?: (ctx: FunctionNameContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.functionParam`.
+	 * @param ctx the parse tree
+	 */
+	enterFunctionParam?: (ctx: FunctionParamContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.functionParam`.
+	 * @param ctx the parse tree
+	 */
+	exitFunctionParam?: (ctx: FunctionParamContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.lambda`.
+	 * @param ctx the parse tree
+	 */
+	enterLambda?: (ctx: LambdaContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.lambda`.
+	 * @param ctx the parse tree
+	 */
+	exitLambda?: (ctx: LambdaContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.mapExpression`.
 	 * @param ctx the parse tree
