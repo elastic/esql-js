@@ -33,7 +33,7 @@ describe('HIGHLIGHT', () => {
       type: 'command',
       name: 'highlight',
       incomplete: false,
-      queryText: { type: 'literal', valueUnquoted: 'fox' },
+      queryExpression: { type: 'literal', valueUnquoted: 'fox' },
       highlightFields: [{ type: 'column', name: 'content' }],
     });
   });
@@ -146,7 +146,7 @@ describe('HIGHLIGHT', () => {
     const cmd = getHighlight(ast);
 
     expect(cmd).toMatchObject({ name: 'highlight', incomplete: true, args: [] });
-    expect(cmd.queryText).toBeUndefined();
+    expect(cmd.queryExpression).toBeUndefined();
     expect(cmd.highlightFields).toBeUndefined();
     expect(cmd.namedParameters).toBeUndefined();
   });
@@ -158,7 +158,7 @@ describe('HIGHLIGHT', () => {
     expect(cmd).toMatchObject({
       name: 'highlight',
       incomplete: true,
-      queryText: { type: 'literal', valueUnquoted: 'fox' },
+      queryExpression: { type: 'literal', valueUnquoted: 'fox' },
     });
     expect(getArgs(cmd)).toMatchObject([{ type: 'literal', valueUnquoted: 'fox' }]);
     expect(cmd.highlightFields).toBeUndefined();
@@ -172,7 +172,7 @@ describe('HIGHLIGHT', () => {
     expect(cmd).toMatchObject({
       name: 'highlight',
       incomplete: true,
-      queryText: { type: 'literal', valueUnquoted: 'fox' },
+      queryExpression: { type: 'literal', valueUnquoted: 'fox' },
       highlightFields: [],
     });
     expect(getArgs(cmd)).toMatchObject([
@@ -189,7 +189,7 @@ describe('HIGHLIGHT', () => {
     expect(cmd).toMatchObject({
       name: 'highlight',
       incomplete: true,
-      queryText: { type: 'literal', valueUnquoted: 'fox' },
+      queryExpression: { type: 'literal', valueUnquoted: 'fox' },
       highlightFields: [{ type: 'column', name: 'content' }],
       namedParameters: { type: 'map', incomplete: true, entries: [] },
     });

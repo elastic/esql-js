@@ -2424,10 +2424,10 @@ export class CstToAstConverter {
 
     const queryExprCtx = ctx._queryExpression;
     if (queryExprCtx && !queryExprCtx.exception) {
-      const queryText = this.fromBooleanExpression(queryExprCtx);
-      if (queryText) {
-        command.queryText = queryText;
-        command.args.push(queryText);
+      const queryExpr = this.fromBooleanExpression(queryExprCtx);
+      if (queryExpr) {
+        command.queryExpression = queryExpr;
+        command.args.push(queryExpr);
       } else {
         command.incomplete = true;
       }
