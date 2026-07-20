@@ -465,7 +465,7 @@ const definition: FunctionDefinition = {
       returnType: 'version',
     },
   ],
-  preview: false,
+  preview: true,
   snapshotOnly: false,
 };
 

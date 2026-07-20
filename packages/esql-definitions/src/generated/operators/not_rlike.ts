@@ -32,6 +32,9 @@ const definition: OperatorDefinition = {
           name: 'pattern',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
       ],
       variadic: true,
@@ -48,6 +51,9 @@ const definition: OperatorDefinition = {
           name: 'pattern',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
       ],
       variadic: true,

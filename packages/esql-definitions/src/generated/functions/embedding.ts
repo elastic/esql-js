@@ -59,7 +59,7 @@ const definition: FunctionDefinition = {
       returnType: 'dense_vector',
     },
   ],
-  preview: false,
+  preview: true,
   snapshotOnly: false,
 };
 
