@@ -15,6 +15,7 @@ parser grammar esql_parser;
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+import org.elasticsearch.xpack.esql.action.EsqlCapabilities;
 }
 
 options {
@@ -47,7 +48,7 @@ sourceCommand
     | promqlCommand
     // in development
     | {this.isDevVersion()}? explainCommand
-    | {false}? externalCommand
+    | {EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled()}? externalCommand
     ;
 
 processingCommand
