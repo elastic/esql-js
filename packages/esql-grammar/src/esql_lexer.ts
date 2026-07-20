@@ -669,7 +669,7 @@ export default class esql_lexer extends lexer_config {
 	private DEV_EXTERNAL_sempred(localctx: RuleContext, predIndex: number): boolean {
 		switch (predIndex) {
 		case 2:
-			return EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled();
+			return false;
 		}
 		return true;
 	}
