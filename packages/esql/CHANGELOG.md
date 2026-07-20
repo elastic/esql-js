@@ -1,5 +1,17 @@
 # @elastic/esql
 
+## 4.14.0
+
+### Patch Changes
+
+- [#194](https://github.com/elastic/esql-js/pull/194) [`9d6b907`](https://github.com/elastic/esql-js/commit/9d6b907d00267a719855cd32a6fc24b8e5d18be0) Thanks [@momovdg](https://github.com/momovdg)! - Fix crash in `WrappingPrettyPrinter` when printing an empty query
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.14.0
+  - @elastic/esql-grammar@4.14.0
+  - @elastic/esql-promql-grammar@4.14.0
+  - @elastic/pretty-printer@4.14.0
+
 ## 4.13.0
 
 ### Patch Changes
