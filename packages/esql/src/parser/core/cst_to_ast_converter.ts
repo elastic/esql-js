@@ -2422,11 +2422,15 @@ export class CstToAstConverter {
   private fromHighlightCommand(ctx: cst.HighlightCommandContext): ast.ESQLAstHighlightCommand {
     const command = this.createCommand<'highlight', ast.ESQLAstHighlightCommand>('highlight', ctx);
 
-    const queryTextCtx = ctx._queryText;
-    if (queryTextCtx && !queryTextCtx.exception) {
-      const queryText = this.toStringLiteral(queryTextCtx);
-      command.queryText = queryText;
-      command.args.push(queryText);
+    const queryExprCtx = ctx._queryExpression;
+    if (queryExprCtx && !queryExprCtx.exception) {
+      const queryText = this.fromBooleanExpression(queryExprCtx);
+      if (queryText) {
+        command.queryText = queryText;
+        command.args.push(queryText);
+      } else {
+        command.incomplete = true;
+      }
     } else {
       command.incomplete = true;
     }
@@ -3386,7 +3390,12 @@ export class CstToAstConverter {
     const functionExpressionCtx = ctx.functionExpression();
     const functionNameCtx = functionExpressionCtx.functionName();
     const mapExpressionCtx = functionExpressionCtx.mapExpression();
-    const args = this.fromBooleanExpressions(functionExpressionCtx.booleanExpression_list());
+    const args = this.fromBooleanExpressions(
+      functionExpressionCtx
+        .functionParam_list()
+        .map((p) => p.booleanExpression())
+        .filter((e): e is cst.BooleanExpressionContext => e != null)
+    );
     const fn: ast.ESQLFunctionCallExpression = {
       type: 'function',
       subtype: 'variadic-call',
