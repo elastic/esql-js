@@ -89,10 +89,7 @@ export default defineConfig([
     // The elasticsearch-dsl packages are Apache-2.0-licensed (unlike the rest
     // of this Elastic-2.0 monorepo), so their published source uses the Apache
     // SPDX header.
-    files: [
-      'packages/query-builder/src/**/*.{ts,tsx}',
-      'packages/esql-dsl/src/**/*.{ts,tsx}',
-    ],
+    files: ['packages/query-builder/src/**/*.{ts,tsx}', 'packages/esql-dsl/src/**/*.{ts,tsx}'],
     rules: {
       'local-rules/require-license-header': ['error', { license: apacheLicenseHeader }],
     },
