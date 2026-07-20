@@ -9,6 +9,7 @@ import {ParseTreeListener} from "antlr4";
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+import { EsqlCapabilities } from './esql_capabilities.js';
 
 
 import { StatementsContext } from "./esql_parser.js";

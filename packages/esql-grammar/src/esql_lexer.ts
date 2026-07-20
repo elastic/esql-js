@@ -19,6 +19,7 @@ import {
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+import { EsqlCapabilities } from './esql_capabilities.js';
 
 import lexer_config from './lexer_config.js';
 
@@ -669,7 +670,7 @@ export default class esql_lexer extends lexer_config {
 	private DEV_EXTERNAL_sempred(localctx: RuleContext, predIndex: number): boolean {
 		switch (predIndex) {
 		case 2:
-			return false;
+			return EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled();
 		}
 		return true;
 	}

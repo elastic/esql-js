@@ -24,6 +24,7 @@ type int = number;
  * 2.0; you may not use this file except in compliance with the Elastic License
  * 2.0.
  */
+import { EsqlCapabilities } from './esql_capabilities.js';
 
 import parser_config from './parser_config.js';
 
@@ -805,8 +806,8 @@ export default class esql_parser extends parser_config {
 				this.enterOuterAlt(localctx, 7);
 				{
 				this.state = 272;
-				if (!(false)) {
-					throw this.createFailedPredicateException("false");
+				if (!(EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled())) {
+					throw this.createFailedPredicateException("EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled()");
 				}
 				this.state = 273;
 				this.externalCommand();
@@ -6636,7 +6637,7 @@ export default class esql_parser extends parser_config {
 		case 1:
 			return this.isDevVersion();
 		case 2:
-			return false;
+			return EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled();
 		}
 		return true;
 	}
