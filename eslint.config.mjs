@@ -92,7 +92,6 @@ export default defineConfig([
     files: [
       'packages/query-builder/src/**/*.{ts,tsx}',
       'packages/esql-dsl/src/**/*.{ts,tsx}',
-      'packages/search-dsl/src/**/*.{ts,tsx}',
     ],
     rules: {
       'local-rules/require-license-header': ['error', { license: apacheLicenseHeader }],

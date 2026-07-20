@@ -13,8 +13,7 @@
       "@elastic/monaco-esql",
       "@elastic/prismjs-esql",
       "@elastic/elasticsearch-query-builder",
-      "@elastic/elasticsearch-esql-dsl",
-      "@elastic/elasticsearch-search-dsl"
+      "@elastic/elasticsearch-esql-dsl"
     ]
   ],
   "linked": [],
