@@ -20,28 +20,6 @@ antlr_source_dir () {
   echo "$ELASTICSEARCH_DIR/x-pack/plugin/esql/src/main/antlr"
 }
 
-# Strip Java-target-only ANTLR constructs that the TypeScript code generator would emit
-# verbatim into the generated .ts files (producing invalid TypeScript).
-# Specifically:
-#   1. @header { ... } blocks — used by the Java target to inject imports; the TypeScript
-#      target emits the block contents literally at the top of each generated file.
-#   2. Java capability-flag semantic predicates of the form {EsqlCapabilities...}? — these
-#      reference a Java class that has no TypeScript equivalent. The rule alternative is kept;
-#      only the gating predicate is removed, making the rule unconditionally available in the
-#      TypeScript parser (consistent with how the parser handles dev-version rules via
-#      isDevVersion()).
-# Safe to call on grammars that contain neither construct.
-strip_java_only_directives () {
-  local file="$1"
-  # Remove Java import lines inside @header blocks — the TypeScript ANTLR target emits
-  # @header contents verbatim, so any Java import produces invalid TypeScript.
-  sedi -e '/^import org\./d' "$file"
-  # Replace Java capability-flag predicates with {false}? so the guarded rule alternative
-  # is kept but never active in the TypeScript parser, matching the Java behaviour where
-  # these capabilities are disabled by default.
-  sedi -e 's/{EsqlCapabilities[^}]*}?/{false}?/g' "$file"
-}
-
 prepend_generated_header () {
   local file="$1"
   local temp_file
@@ -71,11 +49,6 @@ synchronize_lexer_grammar () {
   # Replace the line containing "superClass" with "superClass=lexer_config;"
   sedi -e 's/superClass.*$/superClass=lexer_config;/' "$destination_file"
 
-  strip_java_only_directives "$destination_file"
-  find "$destination_lib_dir" -name '*.g4' | while read -r f; do
-    strip_java_only_directives "$f"
-  done
-
   echo "Lexer file copied and modified successfully."
 }
 
@@ -103,11 +76,6 @@ synchronize_parser_grammar () {
   # Replace the line containing "superClass" with "superClass=parser_config;"
   sedi -e 's/superClass.*$/superClass=parser_config;/' "$destination_file"
 
-  strip_java_only_directives "$destination_file"
-  find "$destination_lib_dir" -name '*.g4' | while read -r f; do
-    strip_java_only_directives "$f"
-  done
-
   echo "Parser file copied and modified successfully."
 }
 
@@ -125,8 +93,6 @@ synchronize_promql_lexer_grammar () {
 
   # Replace the line containing "superClass" with "superClass=lexer_config;"
   sedi -e 's/superClass.*$/superClass=lexer_config;/' "$destination_file"
-
-  strip_java_only_directives "$destination_file"
 
   echo "PromQL lexer file copied and modified successfully."
 }
@@ -148,8 +114,6 @@ synchronize_promql_parser_grammar () {
 
   # Replace the line containing "superClass" with "superClass=parser_config;"
   sedi -e 's/superClass.*$/superClass=parser_config;/' "$destination_file"
-
-  strip_java_only_directives "$destination_file"
 
   echo "PromQL parser file copied and modified successfully."
 }
