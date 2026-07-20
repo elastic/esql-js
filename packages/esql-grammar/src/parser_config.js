@@ -13,10 +13,6 @@ export default class parser_config extends Parser {
     return true;
   }
 
-  isExternalDataSourcesEnabled() {
-    return true;
-  }
-
   hasMetricsCommand() {
     return true;
   }
