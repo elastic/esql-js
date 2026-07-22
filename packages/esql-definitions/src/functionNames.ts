@@ -100,6 +100,7 @@ export const functionNames = [
   'MV_FIRST',
   'MV_INTERSECTION',
   'MV_INTERSECTS',
+  'MV_IN_RANGE',
   'MV_LAST',
   'MV_MAX',
   'MV_MEDIAN_ABSOLUTE_DEVIATION',

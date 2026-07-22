@@ -370,7 +370,7 @@ const definition: FunctionDefinition = {
       returnType: 'boolean',
     },
   ],
-  preview: false,
+  preview: true,
   snapshotOnly: false,
 };
 

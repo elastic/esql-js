@@ -216,6 +216,22 @@ const definition: OperatorDefinition = {
       params: [
         {
           name: 'lhs',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'rhs',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'lhs',
           type: 'flattened',
           optional: false,
         },
@@ -302,6 +318,22 @@ const definition: OperatorDefinition = {
         {
           name: 'rhs',
           type: 'geotile',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'lhs',
+          type: 'histogram',
+          optional: false,
+        },
+        {
+          name: 'rhs',
+          type: 'histogram',
           optional: false,
         },
       ],
@@ -446,6 +478,22 @@ const definition: OperatorDefinition = {
         {
           name: 'rhs',
           type: 'long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'lhs',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'rhs',
+          type: 'tdigest',
           optional: false,
         },
       ],

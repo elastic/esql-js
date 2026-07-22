@@ -102,6 +102,7 @@ import mvCountDefinition from './mv_count';
 import mvDedupeDefinition from './mv_dedupe';
 import mvDifferenceDefinition from './mv_difference';
 import mvFirstDefinition from './mv_first';
+import mvInRangeDefinition from './mv_in_range';
 import mvIntersectionDefinition from './mv_intersection';
 import mvIntersectsDefinition from './mv_intersects';
 import mvLastDefinition from './mv_last';
@@ -335,6 +336,7 @@ export const functionDefinitions: FunctionDefinition[] = [
   mvDedupeDefinition,
   mvDifferenceDefinition,
   mvFirstDefinition,
+  mvInRangeDefinition,
   mvIntersectionDefinition,
   mvIntersectsDefinition,
   mvLastDefinition,

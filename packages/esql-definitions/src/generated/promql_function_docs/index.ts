@@ -77,6 +77,7 @@ import sumOverTimeDocs from './sum_over_time';
 import tanDocs from './tan';
 import tanhDocs from './tanh';
 import timeDocs from './time';
+import topkDocs from './topk';
 import vectorDocs from './vector';
 import yearDocs from './year';
 
@@ -148,6 +149,7 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   tan: tanDocs,
   tanh: tanhDocs,
   time: timeDocs,
+  topk: topkDocs,
   vector: vectorDocs,
   year: yearDocs,
 };

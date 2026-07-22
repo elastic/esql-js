@@ -242,7 +242,7 @@ const definition: FunctionDefinition = {
       returnType: 'long',
     },
   ],
-  preview: false,
+  preview: true,
   snapshotOnly: false,
 };
 
