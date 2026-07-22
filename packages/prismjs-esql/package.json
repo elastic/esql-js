@@ -1,6 +1,6 @@
 {
   "name": "@elastic/prismjs-esql",
-  "version": "4.14.0",
+  "version": "4.15.0",
   "author": "Kibana ES|QL team",
   "description": "Prism.js and Refractor ES|QL language syntax definitions for highlighting",
   "license": "MIT",
