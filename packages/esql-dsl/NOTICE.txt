@@ -1,0 +1,2 @@
+@elastic/elasticsearch-esql-dsl (Elasticsearch ES|QL DSL for JavaScript/TypeScript).
+Copyright 2025-2026 Elasticsearch B.V.

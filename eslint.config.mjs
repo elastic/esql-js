@@ -3,7 +3,11 @@ import { defineConfig, globalIgnores } from 'eslint/config';
 import eslint from '@eslint/js';
 import tseslint from 'typescript-eslint';
 import eslintConfigPrettier from 'eslint-config-prettier';
-import { requireLicenseHeader, mitLicenseHeader } from './lint-license-rule.mjs';
+import {
+  requireLicenseHeader,
+  mitLicenseHeader,
+  apacheLicenseHeader,
+} from './lint-license-rule.mjs';
 
 export default defineConfig([
   globalIgnores([
@@ -79,6 +83,15 @@ export default defineConfig([
     files: ['packages/prismjs-esql/src/**/*.{ts,tsx}'],
     rules: {
       'local-rules/require-license-header': ['error', { license: mitLicenseHeader }],
+    },
+  },
+  {
+    // The elasticsearch-dsl packages are Apache-2.0-licensed (unlike the rest
+    // of this Elastic-2.0 monorepo), so their published source uses the Apache
+    // SPDX header.
+    files: ['packages/query-builder/src/**/*.{ts,tsx}', 'packages/esql-dsl/src/**/*.{ts,tsx}'],
+    rules: {
+      'local-rules/require-license-header': ['error', { license: apacheLicenseHeader }],
     },
   },
   eslintConfigPrettier,
