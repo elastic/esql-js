@@ -1,5 +1,15 @@
 # @elastic/esql
 
+## 4.15.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.15.0
+  - @elastic/esql-grammar@4.15.0
+  - @elastic/esql-promql-grammar@4.15.0
+  - @elastic/pretty-printer@4.15.0
+
 ## 4.14.0
 
 ### Patch Changes
