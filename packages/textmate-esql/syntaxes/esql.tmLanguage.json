@@ -1,0 +1,296 @@
+{
+  "name": "ES|QL",
+  "scopeName": "source.esql",
+  "fileTypes": ["esql"],
+  "patterns": [
+    {
+      "include": "#comment"
+    },
+    {
+      "include": "#string-triple"
+    },
+    {
+      "include": "#string-double"
+    },
+    {
+      "include": "#string-backtick"
+    },
+    {
+      "include": "#pipe"
+    },
+    {
+      "include": "#semicolon"
+    },
+    {
+      "include": "#function-call"
+    },
+    {
+      "include": "#source-command"
+    },
+    {
+      "include": "#processing-command"
+    },
+    {
+      "include": "#header-command"
+    },
+    {
+      "include": "#option-keyword"
+    },
+    {
+      "include": "#named-operator"
+    },
+    {
+      "include": "#literal"
+    },
+    {
+      "include": "#parameter"
+    },
+    {
+      "include": "#type-cast"
+    },
+    {
+      "include": "#time-interval"
+    },
+    {
+      "include": "#number"
+    },
+    {
+      "include": "#delimiter"
+    },
+    {
+      "include": "#bracket"
+    }
+  ],
+  "repository": {
+    "comment": {
+      "patterns": [
+        {
+          "name": "comment.block.documentation.esql",
+          "begin": "/\\*\\*(?!/)",
+          "end": "\\*/",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.begin.esql"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.end.esql"
+            }
+          }
+        },
+        {
+          "name": "comment.block.esql",
+          "begin": "/\\*",
+          "end": "\\*/",
+          "beginCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.begin.esql"
+            }
+          },
+          "endCaptures": {
+            "0": {
+              "name": "punctuation.definition.comment.end.esql"
+            }
+          }
+        },
+        {
+          "name": "comment.line.double-slash.esql",
+          "match": "//.*$"
+        }
+      ]
+    },
+    "string-triple": {
+      "name": "string.quoted.triple.esql",
+      "begin": "\"\"\"",
+      "end": "\"\"\"",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.esql"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.esql"
+        }
+      }
+    },
+    "string-double": {
+      "name": "string.quoted.double.esql",
+      "begin": "\"",
+      "end": "\"",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.esql"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.esql"
+        }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.esql",
+          "match": "\\\\(?:[abfnrtv\\\\\"']|x[0-9A-Fa-f]{1,4}|u[0-9A-Fa-f]{4}|U[0-9A-Fa-f]{8})"
+        }
+      ]
+    },
+    "string-backtick": {
+      "name": "string.quoted.backtick.esql",
+      "begin": "`",
+      "end": "`",
+      "beginCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.begin.esql"
+        }
+      },
+      "endCaptures": {
+        "0": {
+          "name": "punctuation.definition.string.end.esql"
+        }
+      },
+      "patterns": [
+        {
+          "name": "constant.character.escape.esql",
+          "match": "\\\\."
+        }
+      ]
+    },
+    "pipe": {
+      "name": "keyword.operator.pipe.esql",
+      "match": "\\|"
+    },
+    "semicolon": {
+      "name": "punctuation.separator.semicolon.esql",
+      "match": ";"
+    },
+    "function-call": {
+      "match": "(?i)\\b(MV_MEDIAN_ABSOLUTE_DEVIATION|MEDIAN_ABSOLUTE_DEVIATION|MV_PSERIES_WEIGHTED_SUM|TO_CARTESIANPOINT|TO_CARTESIANSHAPE|TO_UNSIGNED_LONG|ST_CENTROID_AGG|TO_TIMEDURATION|COUNT_DISTINCT|MV_PERCENTILE|ST_EXTENT_AGG|ST_INTERSECTS|TO_DATE_NANOS|TO_DATEPERIOD|DATE_EXTRACT|WEIGHTED_AVG|BYTE_LENGTH|DATE_FORMAT|FROM_BASE64|ST_CONTAINS|ST_DISJOINT|ST_DISTANCE|ST_ENVELOPE|STARTS_WITH|TO_DATETIME|TO_GEOPOINT|TO_GEOSHAPE|BIT_LENGTH|CATEGORIZE|CIDR_MATCH|DATE_PARSE|DATE_TRUNC|PERCENTILE|TO_BOOLEAN|TO_DEGREES|TO_INTEGER|TO_RADIANS|TO_VERSION|DATE_DIFF|ENDS_WITH|IP_PREFIX|MV_APPEND|MV_CONCAT|MV_DEDUPE|MV_MEDIAN|ST_WITHIN|SUBSTRING|TO_BASE64|TO_DOUBLE|TO_STRING|COALESCE|GREATEST|MV_COUNT|MV_FIRST|MV_SLICE|TO_LOWER|TO_UPPER|MV_LAST|MV_SORT|REPLACE|REVERSE|ST_XMAX|ST_XMIN|ST_YMAX|ST_YMIN|STD_DEV|TO_LONG|BUCKET|CONCAT|LENGTH|LOCATE|MEDIAN|MV_AVG|MV_MAX|MV_MIN|MV_SUM|MV_ZIP|REPEAT|SIGNUM|VALUES|ATAN2|COUNT|FLOOR|HYPOT|LEAST|LOG10|LTRIM|MATCH|RIGHT|ROUND|RTRIM|SPACE|SPLIT|TO_IP|ACOS|ASIN|ATAN|CASE|CBRT|CEIL|COSH|HASH|LEFT|QSTR|SINH|SQRT|ST_X|ST_Y|TANH|TRIM|ABS|AVG|COS|EXP|LOG|MAX|MIN|NOW|POW|SIN|SUM|TAN|TAU|TOP|PI|E)\\s*(\\()",
+      "captures": {
+        "1": {
+          "name": "support.function.esql"
+        },
+        "2": {
+          "name": "punctuation.bracket.round.begin.esql"
+        }
+      }
+    },
+    "source-command": {
+      "name": "keyword.control.source.esql",
+      "match": "(?i)\\b(?:SHOW\\s+INFO|EXPLAIN|PROMQL|FROM|SHOW|ROW|TS)\\b"
+    },
+    "processing-command": {
+      "name": "keyword.control.processing.esql",
+      "match": "(?i)\\b(?:REGISTERED_DOMAIN|CHANGE_POINT|METRICS_INFO|TS_COLLAPSE|INLINESTATS|LOOKUP\\s+JOIN|COMPLETION|USER_AGENT|RIGHT\\s+JOIN|FULL\\s+JOIN|LEFT\\s+JOIN|MV_EXPAND|URI_PARTS|DISSECT|TS_INFO|ENRICH|INSIST|LOOKUP|RENAME|RERANK|SAMPLE|LIMIT|RIGHT|STATS|WHERE|DROP|EVAL|FORK|FUSE|GROK|INFO|JOIN|KEEP|LEFT|SORT|MMR)\\b"
+    },
+    "header-command": {
+      "name": "keyword.control.header.esql",
+      "match": "(?i)\\b(?:SET)\\b"
+    },
+    "option-keyword": {
+      "name": "keyword.other.option.esql",
+      "match": "(?i)\\b(?:METADATA|WHERE|SCORE|GROUP|LIMIT|WITH|KEY|BY|ON)\\b"
+    },
+    "named-operator": {
+      "name": "keyword.operator.word.esql",
+      "match": "(?i)\\b(?:RLIKE|FIRST|NULLS|LIKE|DESC|LAST|AND|ASC|NOT|OR|IS|IN|AS)\\b"
+    },
+    "literal": {
+      "name": "constant.language.esql",
+      "match": "(?i)\\b(?:FALSE|TRUE|NULL)\\b"
+    },
+    "parameter": {
+      "patterns": [
+        {
+          "name": "variable.parameter.named.esql",
+          "match": "\\?{1,9}[a-zA-Z_][a-zA-Z_0-9]*"
+        },
+        {
+          "name": "variable.parameter.positional.esql",
+          "match": "\\?{1,9}[0-9]+"
+        },
+        {
+          "name": "variable.parameter.unnamed.esql",
+          "match": "\\?{1,9}"
+        }
+      ]
+    },
+    "type-cast": {
+      "name": "storage.type.esql",
+      "match": "::\\w+\\b"
+    },
+    "time-interval": {
+      "name": "constant.numeric.time.esql",
+      "match": "(?i)\\b\\d+(_+\\d+)*\\s*(?:MILLISECONDS|MILLISECOND|QUARTERS|QUARTER|MINUTES|SECONDS|MONTHS|MINUTE|SECOND|YEARS|MONTH|WEEKS|HOURS|YEAR|WEEK|DAYS|HOUR|DAY|MIN|SEC|YR|MO|MS|Y|Q|W|D|H|M|S)\\b"
+    },
+    "number": {
+      "patterns": [
+        {
+          "name": "constant.numeric.float.esql",
+          "match": "\\b\\d+(_+\\d+)*[eE][-+]?\\d+(_+\\d+)*\\b"
+        },
+        {
+          "name": "constant.numeric.float.esql",
+          "match": "\\b\\d*(_+\\d+)*\\.\\d+(_+\\d+)*([eE][-+]?\\d+(_+\\d+)*)?\\b"
+        },
+        {
+          "name": "constant.numeric.integer.esql",
+          "match": "\\b\\d+(_+\\d+)*\\b"
+        }
+      ]
+    },
+    "delimiter": {
+      "patterns": [
+        {
+          "name": "keyword.operator.comparison.esql",
+          "match": "=~|==|!=|<=|>=|<|>"
+        },
+        {
+          "name": "keyword.operator.assignment.esql",
+          "match": "="
+        },
+        {
+          "name": "keyword.operator.arithmetic.esql",
+          "match": "\\+|-|\\*|/|%"
+        },
+        {
+          "name": "punctuation.separator.comma.esql",
+          "match": ","
+        },
+        {
+          "name": "punctuation.accessor.dot.esql",
+          "match": "\\."
+        }
+      ]
+    },
+    "bracket": {
+      "patterns": [
+        {
+          "match": "\\[",
+          "name": "punctuation.bracket.square.begin.esql"
+        },
+        {
+          "match": "\\]",
+          "name": "punctuation.bracket.square.end.esql"
+        },
+        {
+          "match": "\\(",
+          "name": "punctuation.bracket.round.begin.esql"
+        },
+        {
+          "match": "\\)",
+          "name": "punctuation.bracket.round.end.esql"
+        },
+        {
+          "match": "\\{",
+          "name": "punctuation.bracket.curly.begin.esql"
+        },
+        {
+          "match": "\\}",
+          "name": "punctuation.bracket.curly.end.esql"
+        }
+      ]
+    }
+  }
+}
