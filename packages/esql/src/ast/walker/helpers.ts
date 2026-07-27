@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { PromQLAstNode } from '../../embedded_languages/promql/types';
+import type { PromQLAstNode } from '@elastic/esql-types';
 import type {
   ESQLAstCommand,
   ESQLAstQueryExpression,
