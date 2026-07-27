@@ -5,7 +5,13 @@
  * 2.0.
  */
 
-import type { ESQLLocation, EditorError, ESQLAstBaseItem, ESQLParamLiteral } from './types';
+import type {
+  ESQLLocation,
+  EditorError,
+  ESQLAstBaseItem,
+  ESQLParamKinds,
+  ESQLParamLiteral,
+} from './types';
 
 /**
  * All PromQL AST nodes have a `dialect: 'promql'` property to distinguish them
@@ -105,7 +111,7 @@ export interface PromQLFunction extends PromQLAstNodeBase {
  */
 export interface PromQLGrouping extends PromQLAstNodeBase<'by' | 'without'> {
   type: 'grouping';
-  args: PromQLLabelName[];
+  args: PromQLLabelListItem[];
 }
 
 // --------------------------------------------------------------------- Labels
@@ -142,6 +148,11 @@ export type PromQLLabelMatchOperator = '=' | '!=' | '=~' | '!~';
  * Represents a label name which can be an identifier, string, or number.
  */
 export type PromQLLabelName = PromQLIdentifier | PromQLStringLiteral | PromQLNumericLiteral;
+
+/**
+ * Represents an item in a grouping or vector-matching label list.
+ */
+export type PromQLLabelListItem = PromQLLabelName | PromQLParamLiteral;
 
 /**
  * Represents the label map (curly braces with label matchers) in a selector.
@@ -305,7 +316,7 @@ export type PromQLSetOperator = 'and' | 'or' | 'unless';
  */
 export interface PromQLModifier extends PromQLAstNodeBase<'on' | 'ignoring'> {
   type: 'modifier';
-  labels: PromQLLabelName[];
+  labels: PromQLLabelListItem[];
   groupModifier?: PromQLGroupModifier;
 }
 
@@ -314,7 +325,7 @@ export interface PromQLModifier extends PromQLAstNodeBase<'on' | 'ignoring'> {
  */
 export interface PromQLGroupModifier extends PromQLAstNodeBase<'group_left' | 'group_right'> {
   type: 'group-modifier';
-  labels: PromQLLabelName[];
+  labels: PromQLLabelListItem[];
 }
 
 /**
@@ -385,19 +396,20 @@ export interface PromQLStringLiteral extends PromQLAstNodeBase {
 }
 
 /**
- * Represents an ES|QL named or positional parameter used as a PromQL label value.
+ * Represents an ES|QL named or positional parameter used in PromQL.
  *
  * ```promql
  * {job=?job}
  * {job=?1}
  * {job=~?pattern}
+ * sum by (??labels) (metric)
  * ```
  */
 export interface PromQLParamLiteral
-  extends PromQLAstNodeBase, ESQLParamLiteral<'named' | 'positional', '?'> {
+  extends PromQLAstNodeBase, ESQLParamLiteral<'named' | 'positional', ESQLParamKinds> {
   type: 'literal';
   literalType: 'param';
-  paramKind: '?';
+  paramKind: ESQLParamKinds;
   paramType: 'named' | 'positional';
 }
 

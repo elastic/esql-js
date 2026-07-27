@@ -248,6 +248,10 @@ describe('parsed PromQL BasicPrettyPrinter', () => {
         assertReprint('a / on(job, instance) b');
       });
 
+      test('on with a double parameter', () => {
+        assertReprint('a / on(??labels) b');
+      });
+
       test('group_left', () => {
         assertReprint('a * on(job) group_left b');
       });
@@ -428,6 +432,10 @@ describe('parsed PromQL BasicPrettyPrinter', () => {
 
       test('multiple labels', () => {
         assertReprint('sum by (job, instance) (http_requests_total)');
+      });
+
+      test('double parameter', () => {
+        assertReprint('sum by (??labels) (http_requests_total)');
       });
     });
 

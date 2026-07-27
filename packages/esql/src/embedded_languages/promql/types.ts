@@ -15,6 +15,7 @@ export type {
   PromQLLabel,
   PromQLLabelMatchOperator,
   PromQLLabelName,
+  PromQLLabelListItem,
   PromQLLabelMap,
   PromQLSelector,
   PromQLEvaluation,

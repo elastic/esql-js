@@ -351,6 +351,19 @@ describe('Walker PromQL support', () => {
       expect(literals[0].literalType).toBe('param');
       expect(literals[0].value).toBe('job');
     });
+
+    test('visitPromqlLiteral is called for a double param in a grouping', () => {
+      const query = PromQLParser.parse('sum by (??labels) (bytes_in)');
+      const literals: PromQLLiteral[] = [];
+
+      PromqlWalker.walk(query.root, {
+        visitPromqlLiteral: (node) => literals.push(node),
+      });
+
+      expect(literals).toHaveLength(1);
+      expect(literals[0].literalType).toBe('param');
+      expect(literals[0].value).toBe('labels');
+    });
   });
 
   describe('abort functionality with PromQL', () => {

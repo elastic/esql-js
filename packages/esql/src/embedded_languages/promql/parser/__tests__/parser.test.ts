@@ -291,6 +291,36 @@ describe('PromQL Parser', () => {
     });
   });
 
+  describe('label list parameters', () => {
+    it('parses a named double parameter in an aggregation grouping', () => {
+      const result = PromQLParser.parse('sum by (??labels) (http_requests_total)');
+
+      expect(result.errors).toHaveLength(0);
+
+      const func = result.root.expression as PromQLFunction;
+      const parameter = func.grouping?.args[0] as PromQLParamLiteral;
+      expect(parameter.literalType).toBe('param');
+      expect(parameter.paramType).toBe('named');
+      expect(parameter.paramKind).toBe('??');
+      expect(parameter.value).toBe('labels');
+      expect(parameter.text).toBe('??labels');
+    });
+
+    it('parses a positional double parameter in a vector-matching modifier', () => {
+      const result = PromQLParser.parse('http_requests_total / on(??1) errors_total');
+
+      expect(result.errors).toHaveLength(0);
+
+      const binary = result.root.expression as PromQLBinaryExpression;
+      const parameter = binary.modifier?.labels[0] as PromQLParamLiteral;
+      expect(parameter.literalType).toBe('param');
+      expect(parameter.paramType).toBe('positional');
+      expect(parameter.paramKind).toBe('??');
+      expect(parameter.value).toBe(1);
+      expect(parameter.text).toBe('??1');
+    });
+  });
+
   describe('error handling', () => {
     it('returns errors for invalid syntax', () => {
       const result = PromQLParser.parse('rate(');

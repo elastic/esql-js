@@ -10,6 +10,7 @@ import * as cst from '@elastic/esql-promql-grammar';
 import { getPosition } from '../../../parser/core/tokens';
 import { PromQLBuilder } from '../ast/builder';
 import type { AstNodeParserFields } from '../../../ast/builder/types';
+import type { ESQLParamKinds } from '../../../types';
 import type * as ast from '../types';
 import type { PromQLParser } from './parser';
 
@@ -251,12 +252,11 @@ export class PromQLCstToAstConverter {
     return node;
   }
 
-  private fromLabelList(ctx: cst.LabelListContext): ast.PromQLLabelName[] {
-    const labels: ast.PromQLLabelName[] = [];
-    const labelNameCtxs = ctx.labelName_list();
+  private fromLabelList(ctx: cst.LabelListContext): ast.PromQLLabelListItem[] {
+    const labels: ast.PromQLLabelListItem[] = [];
 
-    for (const labelNameCtx of labelNameCtxs) {
-      const label = this.fromLabelName(labelNameCtx);
+    for (const labelListItemCtx of ctx.labelListItem_list()) {
+      const label = this.fromLabelListItem(labelListItemCtx);
 
       if (label) {
         labels.push(label);
@@ -264,6 +264,22 @@ export class PromQLCstToAstConverter {
     }
 
     return labels;
+  }
+
+  private fromLabelListItem(ctx: cst.LabelListItemContext): ast.PromQLLabelListItem | undefined {
+    const labelNameCtx = ctx.labelName();
+
+    if (labelNameCtx) {
+      return this.fromLabelName(labelNameCtx);
+    }
+
+    const doubleParamToken = ctx.NAMED_OR_POSITIONAL_DOUBLE_PARAMS();
+
+    if (doubleParamToken) {
+      return this.fromNamedOrPositionalParamToken(doubleParamToken.symbol);
+    }
+
+    return undefined;
   }
 
   // ----------------------------------------------------------------- selector
@@ -820,12 +836,17 @@ export class PromQLCstToAstConverter {
 
   private fromNamedOrPositionalParamToken(token: antlr.Token): ast.PromQLParamLiteral {
     const text = token.text ?? '';
-    const paramValue = text.slice(1);
+    const paramKind: ESQLParamKinds = text.startsWith('??') ? '??' : '?';
+    const paramValue = text.slice(paramKind.length);
     const valueAsNumber = Number(paramValue);
     const isPositional = String(valueAsNumber) === paramValue;
     const value = isPositional ? valueAsNumber : paramValue;
 
-    return PromQLBuilder.expression.literal.param(value, this.createParserFieldsFromToken(token));
+    return PromQLBuilder.expression.literal.param(
+      value,
+      this.createParserFieldsFromToken(token),
+      paramKind
+    );
   }
 
   private unquoteString(text: string): string {

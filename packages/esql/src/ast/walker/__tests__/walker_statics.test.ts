@@ -53,6 +53,22 @@ describe('Walker static methods', () => {
       ]);
     });
 
+    test('can collect double params from PromQL label lists', () => {
+      const { root } = parse('PROMQL sum by (??labels) (bytes)');
+      const params = Walker.params(root);
+
+      expect(params).toMatchObject([
+        {
+          dialect: 'promql',
+          type: 'literal',
+          literalType: 'param',
+          paramKind: '??',
+          paramType: 'named',
+          value: 'labels',
+        },
+      ]);
+    });
+
     test('can collect all params from grouping functions', () => {
       const query =
         'ROW x=1, time=2024-07-10 | stats z = avg(x) by bucket(time, 20, ?_tstart,?_tend)';

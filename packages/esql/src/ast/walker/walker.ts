@@ -358,14 +358,22 @@ export class Walker {
     tree: WalkerAstNode,
     options?: WalkerOptions
   ): types.ESQLParamLiteral[] => {
-    return Walker.matchAll(
-      tree,
-      {
-        type: 'literal',
-        literalType: 'param',
-      },
-      options
-    ) as types.ESQLParamLiteral[];
+    const params: types.ESQLParamLiteral[] = [];
+    const collect = (node: types.ESQLLiteral | promql.PromQLLiteral): void => {
+      if (node.literalType === 'param') {
+        params.push(node);
+      }
+    };
+
+    // Params inside a PROMQL query, like `sum by (??field)`, are reported only
+    // by the PromQL visitors, hence both dialects need to be subscribed to.
+    Walker.walk(tree, {
+      ...options,
+      visitLiteral: collect,
+      promql: { ...options?.promql, visitPromqlLiteral: collect },
+    });
+
+    return params;
   };
 
   /**

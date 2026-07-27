@@ -299,7 +299,7 @@ export class PromQLWrappingPrettyPrinter {
     return this.decorateWithComments(node, doc);
   }
 
-  protected docLabelName(node: promql.PromQLLabelName): printer.Doc {
+  protected docLabelName(node: promql.PromQLLabelListItem): printer.Doc {
     switch (node.type) {
       case 'identifier':
         return this.docIdentifier(node);
