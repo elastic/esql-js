@@ -1,0 +1,2 @@
+@elastic/textmate-esql (TextMate grammar for ES|QL syntax highlighting).
+Copyright 2026 Elasticsearch B.V.
