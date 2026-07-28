@@ -86,6 +86,14 @@ export default defineConfig([
     },
   },
   {
+    // @elastic/textmate-esql is MIT-licensed (unlike the rest of this
+    // Elastic-2.0 monorepo), so its published source uses the MIT header.
+    files: ['packages/textmate-esql/src/**/*.{ts,tsx}'],
+    rules: {
+      'local-rules/require-license-header': ['error', { license: mitLicenseHeader }],
+    },
+  },
+  {
     // The elasticsearch-dsl packages are Apache-2.0-licensed (unlike the rest
     // of this Elastic-2.0 monorepo), so their published source uses the Apache
     // SPDX header.
