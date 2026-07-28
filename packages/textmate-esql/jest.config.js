@@ -12,4 +12,13 @@ export default {
   ...baseConfig,
   roots: ['<rootDir>/src'],
   transformIgnorePatterns: [],
+
+  // shiki is ESM-only (.mjs). transform it to CJS with ts-jest.
+  moduleFileExtensions: ['ts', 'tsx', 'mjs', 'js', 'json', 'node'],
+  transform: {
+    '^.+\\.(m?js|ts)$': [
+      'ts-jest',
+      { useESM: false, tsconfig: { module: 'commonjs', allowJs: true } },
+    ],
+  },
 };
