@@ -36,11 +36,13 @@
   },
   "repository": "https://github.com/elastic/esql-js.git",
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.build.json && node scripts/json-to-xml.mjs",
+    "build": "tsup && tsc -p tsconfig.build.json && node scripts/build-syntaxes.mjs",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
     "test": "jest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "@elastic/esql-definitions": "workspace:^"
+  },
   "devDependencies": {
     "@types/jest": "30.0.0",
     "jest": "30.4.2",
