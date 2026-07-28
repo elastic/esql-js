@@ -25,6 +25,8 @@ export default defineConfig([
     // Generated ES|QL definition modules — do not lint
     'packages/esql-definitions/src/generated/',
     'storybook-static/',
+    // Build artifacts — do not lint
+    'packages/*/scripts/',
     '*.js',
     '*.mjs',
   ]),

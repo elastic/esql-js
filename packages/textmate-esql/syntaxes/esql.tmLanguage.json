@@ -1,7 +1,9 @@
 {
   "name": "ES|QL",
   "scopeName": "source.esql",
-  "fileTypes": ["esql"],
+  "fileTypes": [
+    "esql"
+  ],
   "patterns": [
     {
       "include": "#comment"
