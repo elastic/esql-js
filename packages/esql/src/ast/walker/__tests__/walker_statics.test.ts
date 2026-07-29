@@ -69,6 +69,121 @@ describe('Walker static methods', () => {
       ]);
     });
 
+    test('can collect single named param from PromQL label matcher value', () => {
+      const { root } = parse('PROMQL metric{job=?job}');
+      const params = Walker.params(root);
+
+      expect(params).toMatchObject([
+        {
+          dialect: 'promql',
+          type: 'literal',
+          literalType: 'param',
+          paramKind: '?',
+          paramType: 'named',
+          value: 'job',
+        },
+      ]);
+    });
+
+    test('can collect positional param from PromQL label matcher value', () => {
+      const { root } = parse('PROMQL metric{job=?1}');
+      const params = Walker.params(root);
+
+      expect(params).toMatchObject([
+        {
+          dialect: 'promql',
+          type: 'literal',
+          literalType: 'param',
+          paramKind: '?',
+          paramType: 'positional',
+          value: 1,
+        },
+      ]);
+    });
+
+    test('can collect param from PROMQL command named arguments', () => {
+      const { root } = parse('PROMQL k=?v bytes_in{job="test"}');
+      const params = Walker.params(root);
+
+      expect(params).toMatchObject([
+        {
+          type: 'literal',
+          literalType: 'param',
+          paramType: 'named',
+          value: 'v',
+        },
+      ]);
+    });
+
+    test('collects params from both ES|QL and PromQL parts of a query', () => {
+      const { root } = parse('PROMQL step=?step sum by (??labels) (bytes) | WHERE x == ?other');
+      const params = Walker.params(root);
+
+      expect(params).toMatchObject([
+        {
+          type: 'literal',
+          literalType: 'param',
+          paramType: 'named',
+          value: 'step',
+        },
+        {
+          dialect: 'promql',
+          type: 'literal',
+          literalType: 'param',
+          paramKind: '??',
+          paramType: 'named',
+          value: 'labels',
+        },
+        {
+          type: 'literal',
+          literalType: 'param',
+          paramType: 'named',
+          value: 'other',
+        },
+      ]);
+    });
+
+    test('can collect params from nested PromQL expressions', () => {
+      const { root } = parse('PROMQL sum by (??labels) (rate(bytes{host=?host})) | LIMIT ?lim');
+      const params = Walker.params(root);
+
+      expect(params).toMatchObject([
+        {
+          dialect: 'promql',
+          paramKind: '??',
+          paramType: 'named',
+          value: 'labels',
+        },
+        {
+          dialect: 'promql',
+          paramKind: '?',
+          paramType: 'named',
+          value: 'host',
+        },
+        {
+          paramType: 'named',
+          value: 'lim',
+        },
+      ]);
+    });
+
+    test('does not clobber caller-supplied literal visitors', () => {
+      const { root } = parse('PROMQL step=?step sum by (??labels) (bytes)');
+      const esqlLiterals: unknown[] = [];
+      const promqlLiterals: unknown[] = [];
+
+      const params = Walker.params(root, {
+        visitLiteral: (node) => esqlLiterals.push(node),
+        promql: {
+          visitPromqlLiteral: (node) => promqlLiterals.push(node),
+        },
+      });
+
+      expect(params).toMatchObject([{ value: 'step' }, { value: 'labels' }]);
+      expect(esqlLiterals.length).toBeGreaterThanOrEqual(1);
+      expect(promqlLiterals.length).toBeGreaterThanOrEqual(1);
+    });
+
     test('can collect all params from grouping functions', () => {
       const query =
         'ROW x=1, time=2024-07-10 | stats z = avg(x) by bucket(time, 20, ?_tstart,?_tend)';
