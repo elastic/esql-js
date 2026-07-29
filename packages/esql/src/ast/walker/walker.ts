@@ -150,6 +150,20 @@ export type WalkerAstNode = types.ESQLAstNode | types.ESQLAstNode[];
 
 export type WalkerVisitorApi = Pick<Walker, 'abort' | 'skipChildren'>;
 
+export type WalkerDialect = 'esql' | 'promql';
+
+export interface WalkerFindFunctionOptions {
+  /**
+   * The set of dialects in which to search for functions. An ES|QL function
+   * `fn()` and a PromQL function `fn()` with the same name are unrelated,
+   * hence PromQL functions are matched only when `'promql'` is explicitly
+   * included.
+   *
+   * @default ['esql']
+   */
+  dialects?: readonly WalkerDialect[];
+}
+
 /**
  * Iterates over all nodes in the AST and calls the appropriate visitor
  * functions.
@@ -415,42 +429,81 @@ export class Walker {
   };
 
   /**
-   * Finds the first function that matches the predicate.
+   * Finds the first function that matches the predicate. By default only
+   * ES|QL functions are searched, pass `{dialects: ['esql', 'promql']}` to
+   * also match functions inside embedded PromQL expressions. PromQL operators
+   * (`+`, `unless`, ...) are `binary-expression` nodes, not functions, and are
+   * never matched.
    *
    * @param tree AST node from which to search for a function
    * @param predicateOrName Callback to determine if the function is found or
    *     a string with the function name.
+   * @param options Search options, e.g. the set of dialects to search in.
    * @returns The first function that matches the predicate
    */
-  public static readonly findFunction = (
+  public static findFunction(
     tree: WalkerAstNode,
     predicateOrName: ((node: types.ESQLFunction) => boolean) | string
-  ): types.ESQLFunction | undefined => {
-    let found: types.ESQLFunction | undefined;
+  ): types.ESQLFunction | undefined;
+  public static findFunction(
+    tree: WalkerAstNode,
+    predicateOrName: ((node: types.ESQLFunction | promql.PromQLFunction) => boolean) | string,
+    options?: WalkerFindFunctionOptions
+  ): types.ESQLFunction | promql.PromQLFunction | undefined;
+  public static findFunction(
+    tree: WalkerAstNode,
+    predicateOrName: ((node: types.ESQLFunction | promql.PromQLFunction) => boolean) | string,
+    options?: WalkerFindFunctionOptions
+  ): types.ESQLFunction | promql.PromQLFunction | undefined {
+    const dialects = options?.dialects ?? ['esql'];
+    let found: types.ESQLFunction | promql.PromQLFunction | undefined;
     const predicate =
       typeof predicateOrName === 'string'
-        ? (node: types.ESQLFunction) => node.name === predicateOrName
+        ? (node: types.ESQLFunction | promql.PromQLFunction) => node.name === predicateOrName
         : predicateOrName;
-    Walker.walk(tree, {
-      visitFunction: (func, parent, walker) => {
-        if (!found && predicate(func)) {
-          found = func;
+    const walkOptions: WalkerOptions = {};
+
+    if (dialects.includes('esql')) {
+      walkOptions.visitFunction = (node, parent, walker) => {
+        if (!found && predicate(node)) {
+          found = node;
           walker.abort();
         }
-      },
-    });
+      };
+    }
+
+    if (dialects.includes('promql')) {
+      walkOptions.promql = {
+        visitPromqlFunction: (node, parent, walker) => {
+          if (!found && predicate(node)) {
+            found = node;
+            walker.abort();
+          }
+        },
+      };
+    }
+
+    Walker.walk(tree, walkOptions);
+
     return found;
-  };
+  }
 
   /**
-   * Searches for at least one occurrence of a function by name.
+   * Searches for at least one occurrence of a function by name. By default
+   * only ES|QL functions are searched, pass `{dialects: ['esql', 'promql']}`
+   * to also match functions inside embedded PromQL expressions.
    *
    * @param tree AST subtree to search in.
    * @param name Function or expression name to search for.
+   * @param options Search options, e.g. the set of dialects to search in.
    * @returns True if the function or expression is found in the AST.
    */
-  public static readonly hasFunction = (tree: WalkerAstNode, name: string): boolean => {
-    return !!Walker.findFunction(tree, name);
+  public static readonly hasFunction = (
+    tree: WalkerAstNode,
+    name: string,
+    options?: WalkerFindFunctionOptions
+  ): boolean => {
+    return !!Walker.findFunction(tree, name, options);
   };
 
   /**

@@ -735,6 +735,43 @@ describe('Walker static methods', () => {
       expect(has1).toBe(false);
       expect(has2).toBe(true);
     });
+
+    test('by default does not match PromQL functions', () => {
+      const { root } = parse('PROMQL sum(rate(bytes[5m])) | STATS avg(x)');
+
+      expect(Walker.findFunction(root, 'rate')).toBe(undefined);
+      expect(Walker.findFunction(root, 'avg')).toMatchObject({ type: 'function', name: 'avg' });
+    });
+
+    test('matches PromQL functions when the "promql" dialect is included', () => {
+      const { root } = parse('PROMQL sum(rate(bytes[5m])) | STATS avg(x)');
+      const fn = Walker.findFunction(root, 'rate', { dialects: ['esql', 'promql'] });
+
+      expect(fn).toMatchObject({
+        dialect: 'promql',
+        type: 'function',
+        name: 'rate',
+      });
+    });
+
+    test('does not match ES|QL functions when only the "promql" dialect is selected', () => {
+      const { root } = parse('PROMQL sum(rate(bytes[5m])) | STATS avg(x)');
+
+      expect(Walker.findFunction(root, 'avg', { dialects: ['promql'] })).toBe(undefined);
+      expect(Walker.findFunction(root, 'sum', { dialects: ['promql'] })).toMatchObject({
+        dialect: 'promql',
+        name: 'sum',
+      });
+    });
+
+    test('can find a PromQL function by predicate', () => {
+      const { root } = parse('PROMQL sum(rate(bytes[5m]))');
+      const fn = Walker.findFunction(root, (node) => node.name.startsWith('ra'), {
+        dialects: ['esql', 'promql'],
+      });
+
+      expect(fn).toMatchObject({ dialect: 'promql', name: 'rate' });
+    });
   });
 
   describe('Walker.hasFunction()', () => {

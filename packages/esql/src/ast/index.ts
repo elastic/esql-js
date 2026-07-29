@@ -19,6 +19,8 @@ export {
   walk,
   type WalkerAstNode,
   type WalkerProperNode,
+  type WalkerDialect,
+  type WalkerFindFunctionOptions,
 } from './walker';
 export * as mutate from './mutate';
 export * from './visitor';
