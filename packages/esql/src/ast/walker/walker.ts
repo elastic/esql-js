@@ -311,7 +311,8 @@ export class Walker {
   /**
    * Replaces a single node in the AST with a new value. Replaces the first
    * node that matches the template with the new value. Replacement happens
-   * in-place, so the original AST is modified.
+   * in-place, so the original AST is modified. Also matches nodes inside
+   * embedded PromQL expressions. PromQL nodes carry `{dialect: 'promql'}`.
    *
    * For example, replace "?my_param" parameter with an inlined string literal:
    *
@@ -322,6 +323,10 @@ export class Walker {
    *  Builder.expression.literal.string('This is my string'));
    * ```
    *
+   * Replacement is a raw property overwrite: it is the caller's responsibility
+   * to provide a replacement node valid in the matched node's dialect (e.g.
+   * use `PromQLBuilder` nodes when replacing inside a PromQL expression).
+   *
    * @param tree AST node to search in.
    * @param matcher A function or template object to match against the node.
    * @param newValue The new value to replace the matched node.
@@ -329,14 +334,11 @@ export class Walker {
    */
   public static readonly replace = (
     tree: WalkerAstNode,
-    matcher: NodeMatchTemplate | ((node: types.ESQLProperNode) => boolean),
-    newValue: types.ESQLProperNode | ((node: types.ESQLProperNode) => types.ESQLProperNode)
-  ): types.ESQLProperNode | undefined => {
-    const predicate = typeof matcher === 'function' ? matcher : templateToPredicate(matcher);
-    // PromQL nodes are excluded until `replace` supports both dialects.
-    const node = Walker.find(tree, (n) => !isPromqlNode(n) && predicate(n)) as
-      | types.ESQLProperNode
-      | undefined;
+    matcher: NodeMatchTemplate | ((node: WalkerProperNode) => boolean),
+    newValue: WalkerProperNode | ((node: WalkerProperNode) => WalkerProperNode)
+  ): WalkerProperNode | undefined => {
+    const node =
+      typeof matcher === 'function' ? Walker.find(tree, matcher) : Walker.match(tree, matcher);
     if (!node) return;
     const replacement = typeof newValue === 'function' ? newValue(node) : newValue;
     replaceProperties(node, replacement);
@@ -354,15 +356,13 @@ export class Walker {
    */
   public static readonly replaceAll = (
     tree: WalkerAstNode,
-    matcher: NodeMatchTemplate | ((node: types.ESQLProperNode) => boolean),
-    newValue: types.ESQLProperNode | ((node: types.ESQLProperNode) => types.ESQLProperNode)
-  ): types.ESQLProperNode[] => {
-    const predicate = typeof matcher === 'function' ? matcher : templateToPredicate(matcher);
-    // PromQL nodes are excluded until `replaceAll` supports both dialects.
-    const nodes = Walker.findAll(
-      tree,
-      (n) => !isPromqlNode(n) && predicate(n)
-    ) as types.ESQLProperNode[];
+    matcher: NodeMatchTemplate | ((node: WalkerProperNode) => boolean),
+    newValue: WalkerProperNode | ((node: WalkerProperNode) => WalkerProperNode)
+  ): WalkerProperNode[] => {
+    const nodes =
+      typeof matcher === 'function'
+        ? Walker.findAll(tree, matcher)
+        : Walker.matchAll(tree, matcher);
     if (nodes.length === 0) return [];
     for (const node of nodes) {
       const replacement = typeof newValue === 'function' ? newValue(node) : newValue;

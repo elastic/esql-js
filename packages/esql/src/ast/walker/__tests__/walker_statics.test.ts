@@ -6,6 +6,7 @@
  */
 
 import { Builder } from '../../builder';
+import { PromQLBuilder } from '../../../embedded_languages/promql/ast/builder';
 import { parse } from '../../../parser';
 import { BasicPrettyPrinter } from '../../../pretty_print';
 import { EsqlQuery } from '../../../composer/query';
@@ -883,6 +884,22 @@ describe('Walker static methods', () => {
         value: 456,
       });
     });
+
+    test('can inline a param inside a PromQL expression', () => {
+      const { root } = parse('PROMQL rate(bytes{host=?host}[5m])');
+      const replaced = Walker.replace(
+        root,
+        { type: 'literal', literalType: 'param', value: 'host' },
+        PromQLBuilder.expression.literal.string('web-01')
+      );
+
+      expect(replaced).toMatchObject({
+        dialect: 'promql',
+        type: 'literal',
+        literalType: 'string',
+      });
+      expect(BasicPrettyPrinter.print(root)).toBe('PROMQL rate(bytes{host="web-01"}[5m])');
+    });
   });
 
   describe('Walker.replaceAll()', () => {
@@ -921,6 +938,23 @@ describe('Walker static methods', () => {
           value: 456,
         },
       ]);
+    });
+
+    test('can replace a param used in both dialects', () => {
+      const { root } = parse('PROMQL bytes{host=?x} | WHERE y == ?x');
+      const updatedNodes = Walker.replaceAll(
+        root,
+        { type: 'literal', literalType: 'param', value: 'x' },
+        (node) =>
+          'dialect' in node
+            ? PromQLBuilder.expression.literal.string('web-01')
+            : Builder.expression.literal.string('web-01')
+      );
+
+      expect(updatedNodes).toHaveLength(2);
+      expect(BasicPrettyPrinter.print(root)).toBe(
+        'PROMQL bytes{host="web-01"} | WHERE y == "web-01"'
+      );
     });
   });
 });
