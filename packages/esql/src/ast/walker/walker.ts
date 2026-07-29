@@ -365,12 +365,19 @@ export class Walker {
       }
     };
 
-    // Params inside a PROMQL query, like `sum by (??field)`, are reported only
-    // by the PromQL visitors, hence both dialects need to be subscribed to.
     Walker.walk(tree, {
       ...options,
-      visitLiteral: collect,
-      promql: { ...options?.promql, visitPromqlLiteral: collect },
+      visitLiteral: (node, parent, walker) => {
+        collect(node);
+        options?.visitLiteral?.(node, parent, walker);
+      },
+      promql: {
+        ...options?.promql,
+        visitPromqlLiteral: (node, parent, walker) => {
+          collect(node);
+          options?.promql?.visitPromqlLiteral?.(node, parent, walker);
+        },
+      },
     });
 
     return params;
