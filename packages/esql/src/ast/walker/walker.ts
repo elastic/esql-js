@@ -10,7 +10,9 @@ import { isPromqlNode, replaceProperties, templateToPredicate } from './helpers'
 import { PromqlWalker, type PromqlWalkerOptions } from '../../embedded_languages/promql/ast/walker';
 import type * as types from '../../types';
 import type * as promql from '../../embedded_languages/promql/types';
-import type { NodeMatchTemplate } from './helpers';
+import type { NodeMatchTemplate, WalkerProperNode } from './helpers';
+
+export type { WalkerProperNode } from './helpers';
 
 type Node = types.ESQLAstNode | types.ESQLAstNode[];
 
@@ -166,7 +168,8 @@ export class Walker {
   };
 
   /**
-   * Finds and returns the first node that matches the search criteria.
+   * Finds and returns the first node that matches the search criteria. Also
+   * searches inside embedded PromQL expressions. PromQL nodes carry `{dialect: 'promql'}`.
    *
    * @param tree AST node to start the search from.
    * @param predicate A function that returns true if the node matches the search criteria.
@@ -174,41 +177,64 @@ export class Walker {
    */
   public static readonly find = (
     tree: WalkerAstNode,
-    predicate: (node: types.ESQLProperNode) => boolean,
+    predicate: (node: WalkerProperNode) => boolean,
     options?: WalkerOptions
-  ): types.ESQLProperNode | undefined => {
-    let found: types.ESQLProperNode | undefined;
+  ): WalkerProperNode | undefined => {
+    let found: WalkerProperNode | undefined;
+    const check = (node: WalkerProperNode, abort: () => void): void => {
+      if (!found && predicate(node)) {
+        found = node;
+        abort();
+      }
+    };
     Walker.walk(tree, {
       ...options,
       visitAny: (node, parent, walker) => {
-        if (!found && predicate(node)) {
-          found = node;
-          walker.abort();
-        }
+        check(node, () => walker.abort());
+        options?.visitAny?.(node, parent, walker);
+      },
+      promql: {
+        ...options?.promql,
+        visitPromqlAny: (node, parent, walker) => {
+          check(node, () => walker.abort());
+          options?.promql?.visitPromqlAny?.(node, parent, walker);
+        },
       },
     });
     return found;
   };
 
   /**
-   * Finds and returns all nodes that match the search criteria.
+   * Finds and returns all nodes that match the search criteria. Also
+   * searches inside embedded PromQL expressions. PromQL nodes carry `{dialect: 'promql'}`.
    *
    * @param tree AST node to start the search from.
    * @param predicate A function that returns true if the node matches the search criteria.
-   * @returns All nodes that match the search criteria.
+   * @returns All nodes that match the search criteria, in source order.
    */
   public static readonly findAll = (
     tree: WalkerAstNode,
-    predicate: (node: types.ESQLProperNode) => boolean,
+    predicate: (node: WalkerProperNode) => boolean,
     options?: WalkerOptions
-  ): types.ESQLProperNode[] => {
-    const list: types.ESQLProperNode[] = [];
+  ): WalkerProperNode[] => {
+    const list: WalkerProperNode[] = [];
+    const collect = (node: WalkerProperNode): void => {
+      if (predicate(node)) {
+        list.push(node);
+      }
+    };
     Walker.walk(tree, {
       ...options,
-      visitAny: (node) => {
-        if (predicate(node)) {
-          list.push(node);
-        }
+      visitAny: (node, parent, walker) => {
+        collect(node);
+        options?.visitAny?.(node, parent, walker);
+      },
+      promql: {
+        ...options?.promql,
+        visitPromqlAny: (node, parent, walker) => {
+          collect(node);
+          options?.promql?.visitPromqlAny?.(node, parent, walker);
+        },
       },
     });
     return list;
@@ -260,7 +286,7 @@ export class Walker {
     tree: WalkerAstNode,
     template: NodeMatchTemplate,
     options?: WalkerOptions
-  ): types.ESQLProperNode | undefined => {
+  ): WalkerProperNode | undefined => {
     const predicate = templateToPredicate(template);
     return Walker.find(tree, predicate, options);
   };
@@ -277,7 +303,7 @@ export class Walker {
     tree: WalkerAstNode,
     template: NodeMatchTemplate,
     options?: WalkerOptions
-  ): types.ESQLProperNode[] => {
+  ): WalkerProperNode[] => {
     const predicate = templateToPredicate(template);
     return Walker.findAll(tree, predicate, options);
   };
@@ -306,8 +332,11 @@ export class Walker {
     matcher: NodeMatchTemplate | ((node: types.ESQLProperNode) => boolean),
     newValue: types.ESQLProperNode | ((node: types.ESQLProperNode) => types.ESQLProperNode)
   ): types.ESQLProperNode | undefined => {
-    const node =
-      typeof matcher === 'function' ? Walker.find(tree, matcher) : Walker.match(tree, matcher);
+    const predicate = typeof matcher === 'function' ? matcher : templateToPredicate(matcher);
+    // PromQL nodes are excluded until `replace` supports both dialects.
+    const node = Walker.find(tree, (n) => !isPromqlNode(n) && predicate(n)) as
+      | types.ESQLProperNode
+      | undefined;
     if (!node) return;
     const replacement = typeof newValue === 'function' ? newValue(node) : newValue;
     replaceProperties(node, replacement);
@@ -328,10 +357,12 @@ export class Walker {
     matcher: NodeMatchTemplate | ((node: types.ESQLProperNode) => boolean),
     newValue: types.ESQLProperNode | ((node: types.ESQLProperNode) => types.ESQLProperNode)
   ): types.ESQLProperNode[] => {
-    const nodes =
-      typeof matcher === 'function'
-        ? Walker.findAll(tree, matcher)
-        : Walker.matchAll(tree, matcher);
+    const predicate = typeof matcher === 'function' ? matcher : templateToPredicate(matcher);
+    // PromQL nodes are excluded until `replaceAll` supports both dialects.
+    const nodes = Walker.findAll(
+      tree,
+      (n) => !isPromqlNode(n) && predicate(n)
+    ) as types.ESQLProperNode[];
     if (nodes.length === 0) return [];
     for (const node of nodes) {
       const replacement = typeof newValue === 'function' ? newValue(node) : newValue;

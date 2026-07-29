@@ -398,6 +398,46 @@ describe('Walker static methods', () => {
         ],
       });
     });
+
+    test('can find a function inside a PromQL expression', () => {
+      const { root } = parse('PROMQL sum by (job) (rate(bytes{host="a"}[5m])) | LIMIT 10');
+      const fn = Walker.find(root, (node) => node.type === 'function' && node.name === 'rate');
+
+      expect(fn).toMatchObject({
+        dialect: 'promql',
+        type: 'function',
+        name: 'rate',
+      });
+    });
+
+    test('does not clobber caller-supplied any-node visitors', () => {
+      const { root } = parse('PROMQL sum(bytes) | LIMIT 10');
+      const esqlNodes: unknown[] = [];
+      const promqlNodes: unknown[] = [];
+
+      const found = Walker.find(root, (node) => node.type === 'selector', {
+        visitAny: (node) => esqlNodes.push(node),
+        promql: {
+          visitPromqlAny: (node) => promqlNodes.push(node),
+        },
+      });
+
+      expect(found).toMatchObject({ dialect: 'promql', type: 'selector' });
+      expect(esqlNodes.length).toBeGreaterThanOrEqual(1);
+      expect(promqlNodes.length).toBeGreaterThanOrEqual(1);
+    });
+
+    test('aborts traversal once a PromQL node matches', () => {
+      const { root } = parse('PROMQL sum(rate(bytes[5m])) | LIMIT 10');
+      const seen: string[] = [];
+      const found = Walker.find(root, (node) => {
+        seen.push(node.type);
+        return node.type === 'selector';
+      });
+
+      expect(found).toMatchObject({ dialect: 'promql', type: 'selector' });
+      expect(seen.filter((type) => type === 'command')).toHaveLength(1);
+    });
   });
 
   describe('Walker.findAll()', () => {
@@ -430,6 +470,34 @@ describe('Walker static methods', () => {
           ],
         },
       ]);
+    });
+
+    test('collects functions from both dialects in source order', () => {
+      const { root } = parse('PROMQL sum(rate(bytes[5m])) | STATS avg(x)');
+      const list = Walker.findAll(root, (node) => node.type === 'function');
+
+      expect(list).toMatchObject([
+        { dialect: 'promql', name: 'sum' },
+        { dialect: 'promql', name: 'rate' },
+        { name: 'avg' },
+      ]);
+    });
+
+    test('does not clobber caller-supplied any-node visitors', () => {
+      const { root } = parse('PROMQL sum(bytes) | LIMIT 10');
+      const esqlNodes: unknown[] = [];
+      const promqlNodes: unknown[] = [];
+
+      const list = Walker.findAll(root, (node) => node.type === 'function', {
+        visitAny: (node) => esqlNodes.push(node),
+        promql: {
+          visitPromqlAny: (node) => promqlNodes.push(node),
+        },
+      });
+
+      expect(list).toMatchObject([{ dialect: 'promql', name: 'sum' }]);
+      expect(esqlNodes.length).toBeGreaterThanOrEqual(1);
+      expect(promqlNodes.length).toBeGreaterThanOrEqual(1);
     });
   });
 
@@ -536,6 +604,17 @@ describe('Walker static methods', () => {
         name: 'b',
       });
     });
+
+    test('can match a PromQL node by template', () => {
+      const { root } = parse('PROMQL sum by (job) (rate(bytes{host="a"}[5m])) | LIMIT 10');
+      const selector = Walker.match(root, { type: 'selector' });
+
+      expect(selector).toMatchObject({
+        dialect: 'promql',
+        type: 'selector',
+        name: 'bytes',
+      });
+    });
   });
 
   describe('Walker.matchAll()', () => {
@@ -622,6 +701,26 @@ describe('Walker static methods', () => {
           name: 'agg',
         },
       ]);
+    });
+
+    test('collects literals from both dialects in source order', () => {
+      const { root } = parse('PROMQL step=1m sum by (job) (rate(bytes{host="a"}[5m])) | LIMIT 10');
+      const literals = Walker.matchAll(root, { type: 'literal' });
+
+      expect(literals).toMatchObject([
+        { literalType: 'keyword', value: '1m' },
+        { dialect: 'promql', literalType: 'string', value: '"a"' },
+        { dialect: 'promql', literalType: 'time', value: '5m' },
+        { literalType: 'integer', value: 10 },
+      ]);
+    });
+
+    test('returns identical results for ES|QL-only queries', () => {
+      const { root } = parse('FROM index | WHERE a > 1 | LIMIT 10');
+      const literals = Walker.matchAll(root, { type: 'literal' });
+
+      expect(literals.some((node) => 'dialect' in node)).toBe(false);
+      expect(literals).toMatchObject([{ value: 'index' }, { value: 1 }, { value: 10 }]);
     });
   });
 

@@ -22,6 +22,11 @@ import type {
   ESQLUnknownItem,
 } from '../../types';
 
+/**
+ * Any single proper AST node the walker can visit, regardless of dialect.
+ */
+export type WalkerProperNode = ESQLProperNode | PromQLAstNode;
+
 export type NodeMatchKeys =
   | keyof ESQLAstCommand
   | keyof ESQLAstQueryExpression
@@ -58,20 +63,21 @@ export type NodeMatchTemplate = {
  */
 export const templateToPredicate = (
   template: NodeMatchTemplate
-): ((node: ESQLProperNode) => boolean) => {
+): ((node: WalkerProperNode) => boolean) => {
   const keys = Object.keys(template) as Array<keyof ESQLProperNode>;
-  const predicate = (node: ESQLProperNode) => {
+  const predicate = (node: WalkerProperNode) => {
+    const record = node as unknown as Record<string, unknown>;
     for (const key of keys) {
       const matcher = template[key];
       if (matcher instanceof Array) {
-        if (!(matcher as unknown[]).includes(node[key])) {
+        if (!(matcher as unknown[]).includes(record[key])) {
           return false;
         }
       } else if (matcher instanceof RegExp) {
-        if (!matcher.test(String(node[key]))) {
+        if (!matcher.test(String(record[key]))) {
           return false;
         }
-      } else if (node[key] !== matcher) {
+      } else if (record[key] !== matcher) {
         return false;
       }
     }
