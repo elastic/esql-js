@@ -908,6 +908,48 @@ describe('Walker static methods', () => {
     });
   });
 
+  describe('Walker.visitComments()', () => {
+    test('visits ES|QL comments with their attachment', () => {
+      const { root } = parse(
+        `// top comment
+        FROM index | LIMIT 10 // trailing comment`,
+        { withFormatting: true }
+      );
+      const comments: string[] = [];
+
+      Walker.visitComments(root, (comment, node, attachment) => {
+        comments.push(`${node.type}/${attachment}:${comment.text.trim()}`);
+      });
+
+      expect(comments).toEqual([
+        'command/top:top comment',
+        'literal/rightSingleLine:trailing comment',
+      ]);
+    });
+
+    test('visits comments inside embedded PromQL expressions', () => {
+      const { root } = parse(
+        `PROMQL
+          # top comment
+          rate(bytes[5m]) # trailing comment
+        | LIMIT 10 // esql comment`,
+        { withFormatting: true }
+      );
+      const comments: string[] = [];
+
+      Walker.visitComments(root, (comment, node, attachment) => {
+        const dialect = 'dialect' in node ? node.dialect : 'esql';
+        comments.push(`${dialect}/${attachment}:${comment.text.trim()}`);
+      });
+
+      expect(comments).toEqual([
+        'promql/top:top comment',
+        'promql/rightSingleLine:trailing comment',
+        'esql/rightSingleLine:esql comment',
+      ]);
+    });
+  });
+
   describe('Walker.replace()', () => {
     test('can replace a node with another node', () => {
       const { ast } = EsqlQuery.fromSrc('FROM index | WHERE a == 123');

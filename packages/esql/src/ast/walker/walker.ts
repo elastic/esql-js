@@ -577,9 +577,10 @@ export class Walker {
   };
 
   /**
-   * Visits all comment nodes in the AST. Comments are part of the *hidden*
-   * channel and normally not part of the AST. To parse the comments, you
-   * need to run the parser with `withFormatting` option set to `true`.
+   * Visits all comment nodes in the AST, including comments inside embedded
+   * PromQL expressions. Comments are part of the *hidden* channel and
+   * normally not part of the AST. To parse the comments, you need to run the
+   * parser with `withFormatting` option set to `true`.
    *
    * @param tree AST node to search in.
    * @param callback Callback function that is called for each comment node.
@@ -590,51 +591,54 @@ export class Walker {
     tree: WalkerAstNode,
     callback: (
       comment: types.ESQLAstComment,
-      node: types.ESQLProperNode,
+      node: WalkerProperNode,
       attachment: keyof types.ESQLAstNodeFormatting
     ) => void
   ): void => {
+    const scanFormatting = (node: WalkerProperNode): void => {
+      const formatting = node.formatting;
+      if (!formatting) return;
+
+      if (formatting.top) {
+        for (const decoration of formatting.top) {
+          if (decoration.type === 'comment') {
+            callback(decoration, node, 'top');
+          }
+        }
+      }
+
+      if (formatting.left) {
+        for (const decoration of formatting.left) {
+          if (decoration.type === 'comment') {
+            callback(decoration, node, 'left');
+          }
+        }
+      }
+
+      if (formatting.right) {
+        for (const decoration of formatting.right) {
+          if (decoration.type === 'comment') {
+            callback(decoration, node, 'right');
+          }
+        }
+      }
+
+      if (formatting.rightSingleLine) {
+        callback(formatting.rightSingleLine, node, 'rightSingleLine');
+      }
+
+      if (formatting.bottom) {
+        for (const decoration of formatting.bottom) {
+          if (decoration.type === 'comment') {
+            callback(decoration, node, 'bottom');
+          }
+        }
+      }
+    };
+
     Walker.walk(tree, {
-      visitAny: (node) => {
-        const formatting = node.formatting;
-        if (!formatting) return;
-
-        if (formatting.top) {
-          for (const decoration of formatting.top) {
-            if (decoration.type === 'comment') {
-              callback(decoration, node, 'top');
-            }
-          }
-        }
-
-        if (formatting.left) {
-          for (const decoration of formatting.left) {
-            if (decoration.type === 'comment') {
-              callback(decoration, node, 'left');
-            }
-          }
-        }
-
-        if (formatting.right) {
-          for (const decoration of formatting.right) {
-            if (decoration.type === 'comment') {
-              callback(decoration, node, 'right');
-            }
-          }
-        }
-
-        if (formatting.rightSingleLine) {
-          callback(formatting.rightSingleLine, node, 'rightSingleLine');
-        }
-
-        if (formatting.bottom) {
-          for (const decoration of formatting.bottom) {
-            if (decoration.type === 'comment') {
-              callback(decoration, node, 'bottom');
-            }
-          }
-        }
-      },
+      visitAny: scanFormatting,
+      promql: { visitPromqlAny: scanFormatting },
     });
   };
 
