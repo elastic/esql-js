@@ -453,4 +453,63 @@ describe('Walker PromQL support', () => {
       expect(functions.length).toBe(1);
     });
   });
+
+  describe('skipChildren functionality with PromQL', () => {
+    test('skipChildren prevents traversal into the current node, siblings still visited', () => {
+      const query = EsqlQuery.fromSrc('PROMQL sum(bytes) + rate(reqs[5m])');
+      const selectors: string[] = [];
+
+      Walker.walk(query.ast, {
+        promql: {
+          visitPromqlFunction: (node, parent, walker) => {
+            if (node.name === 'sum') {
+              walker.skipChildren();
+            }
+          },
+          visitPromqlSelector: (node) => {
+            selectors.push(node.name);
+          },
+        },
+      });
+
+      expect(selectors).toEqual(['reqs']);
+    });
+
+    test('skipChildren in a leaf visitor does not leak to subsequent nodes', () => {
+      const query = EsqlQuery.fromSrc('PROMQL rate(bytes[5m])');
+      const visited: string[] = [];
+
+      Walker.walk(query.ast, {
+        promql: {
+          visitPromqlIdentifier: (node, parent, walker) => {
+            visited.push(`identifier:${node.name}`);
+            walker.skipChildren();
+          },
+          visitPromqlLiteral: (node) => {
+            visited.push(`literal:${node.value}`);
+          },
+        },
+      });
+
+      expect(visited).toEqual(['identifier:bytes', 'literal:5m']);
+    });
+
+    test('skipChildren on the PromQL query root skips the whole expression', () => {
+      const query = EsqlQuery.fromSrc('PROMQL rate(bytes[5m])');
+      const functions: string[] = [];
+
+      Walker.walk(query.ast, {
+        promql: {
+          visitPromqlQuery: (node, parent, walker) => {
+            walker.skipChildren();
+          },
+          visitPromqlFunction: (node) => {
+            functions.push(node.name);
+          },
+        },
+      });
+
+      expect(functions).toEqual([]);
+    });
+  });
 });
