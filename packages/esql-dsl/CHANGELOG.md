@@ -1,5 +1,16 @@
 # @elastic/elasticsearch-esql-dsl
 
+## 4.16.0
+
+### Minor Changes
+
+- [#200](https://github.com/elastic/esql-js/pull/200) [`5170acf`](https://github.com/elastic/esql-js/commit/5170acfa2bd2e06b639a44f15e9d18a11b078808) Thanks [@elastic-vault-github-plugin-prod](https://github.com/apps/elastic-vault-github-plugin-prod)! - the PromQL labelList rule now yields labelListItem nodes instead of labelName ones
+
+### Patch Changes
+
+- Updated dependencies [[`5170acf`](https://github.com/elastic/esql-js/commit/5170acfa2bd2e06b639a44f15e9d18a11b078808)]:
+  - @elastic/elasticsearch-query-builder@4.16.0
+
 ## 4.15.0
 
 ### Minor Changes
