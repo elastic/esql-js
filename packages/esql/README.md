@@ -114,6 +114,9 @@ const walker = new Walker({
 walker.walk(ast);
 ```
 
+The walker also traverses embedded PromQL expressions — see
+[PromQL support](./src/ast/walker/README.md#promql-support) in the walker docs.
+
 The [`visitor`](./src/ast/visitor/README.md) API provides a feature-rich way to traverse the ES|QL AST. It is more powerful than the Walker API, as it allows to traverse the AST in a more flexible way.
 Said that, it's also more complicated to use as it does not automatically traverse the entire tree, read its dedicated documentation to get insights on it.
 

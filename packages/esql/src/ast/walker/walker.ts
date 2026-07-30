@@ -118,7 +118,9 @@ export interface WalkerOptions {
   ) => void;
 
   /**
-   * Called for any node type that does not have a specific visitor.
+   * Called for any ES|QL node type that does not have a specific visitor.
+   * Does not fire for nodes of embedded PromQL expressions — subscribe
+   * `promql.visitPromqlAny` to observe those.
    *
    * @param node Any valid AST node.
    */
@@ -643,7 +645,9 @@ export class Walker {
   };
 
   /**
-   * Visits all nodes in the AST.
+   * Visits all ES|QL nodes in the AST. Does not visit nodes of embedded
+   * PromQL expressions — pass `options.promql.visitPromqlAny` to observe
+   * those, or use {@link Walker.findAll} for cross-dialect collection.
    *
    * @param tree AST node to walk.
    * @param visitAny Callback function to call for each node.

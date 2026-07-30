@@ -112,6 +112,23 @@ const walker = new Walker({
 });
 ```
 
+### Skipping children
+
+Calling `walker.skipChildren()` from within a visitor callback prevents the
+walker from descending into the children of the node currently being visited.
+The rest of the tree is still traversed.
+
+```ts
+const walker = new Walker({
+  visitFunction: (node, parent, walker) => {
+    if (node.name === 'bucket') {
+      // Do not descend into the arguments of BUCKET() calls.
+      walker.skipChildren();
+    }
+  },
+});
+```
+
 ## High-level API
 
 There are few high-level utility functions that are implemented on top of the
@@ -162,3 +179,71 @@ function or expression in the AST matches the predicate.
 
 The `Walker.visitComments()` method is used to visit all comments in the AST.
 You specify a callback that is called for each comment node.
+
+## PromQL support
+
+ES|QL queries can embed PromQL expressions (for example, through the `PROMQL`
+source command). The walker automatically descends into embedded PromQL
+subtrees, and the high-level statics listed above traverse them: search
+results may contain PromQL nodes. PromQL nodes carry a `dialect: 'promql'`
+property; ES|QL nodes have no `dialect` property. To keep only ES|QL nodes,
+filter on that discriminator:
+
+```ts
+const functions = Walker.findAll(root, (node) => node.type === 'function');
+const esqlOnly = functions.filter((node) => !('dialect' in node));
+```
+
+### Visiting PromQL nodes
+
+Low-level visitors for PromQL nodes are namespaced under the `promql` key of
+the walker options. `visitPromqlAny` is called for any PromQL node type that
+does not have a specific visitor — the same fallback semantics as `visitAny`
+has for ES|QL nodes.
+
+```ts
+Walker.walk(root, {
+  visitLiteral: (node) => {
+    // ES|QL literals.
+  },
+  promql: {
+    visitPromqlLiteral: (node) => {
+      // PromQL literals.
+    },
+    visitPromqlSelector: (node) => {
+      // PromQL selectors, e.g. `bytes{host="a"}`.
+    },
+  },
+});
+```
+
+Note that the top-level `visitAny` callback (and the `Walker.visitAny()`
+static) visit ES|QL nodes only — subscribe `promql.visitPromqlAny` to observe
+PromQL nodes, or use `Walker.findAll()`, which is cross-dialect.
+
+`abort()` and `skipChildren()` work from PromQL visitor callbacks the same way
+as from ES|QL ones.
+
+### Cross-dialect behavior of the statics
+
+- `Walker.params()` collects param literals from both dialects, in source
+  order — including PromQL params like `?host` in label matchers and
+  `??labels` in grouping label lists.
+- `Walker.find()`, `findAll()`, `match()`, `matchAll()`, `replace()`, and
+  `replaceAll()` match (and mutate) nodes of both dialects. Templates can use
+  PromQL node types and keys, e.g. `{type: 'selector'}` or
+  `{dialect: 'promql'}`. When replacing a PromQL node, provide a replacement
+  built with `PromQLBuilder`.
+- `Walker.parent()` and `parents()` resolve parents of PromQL nodes, and
+  ancestry crosses the dialect boundary: the parent of a PromQL root query
+  expression is the containing ES|QL node (e.g. the `PROMQL` command).
+- `Walker.visitComments()` reports comments inside PromQL expressions
+  (`# comment`) alongside ES|QL comments.
+- `Walker.findFunction()` and `hasFunction()` search ES|QL functions **only**
+  by default: an ES|QL `fn()` and a PromQL `fn()` with the same name are
+  unrelated functions. Opt into PromQL matching with the `dialects` option:
+
+  ```ts
+  Walker.hasFunction(root, 'rate'); // false — ES|QL has no rate()
+  Walker.hasFunction(root, 'rate', { dialects: ['esql', 'promql'] }); // true
+  ```
