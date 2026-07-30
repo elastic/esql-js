@@ -27,6 +27,8 @@ import type {
  */
 export type WalkerProperNode = ESQLProperNode | PromQLAstNode;
 
+type KeysOfUnion<T> = T extends unknown ? keyof T : never;
+
 export type NodeMatchKeys =
   | keyof ESQLAstCommand
   | keyof ESQLAstQueryExpression
@@ -39,13 +41,14 @@ export type NodeMatchKeys =
   | keyof ESQLIdentifier
   | keyof ESQLInlineCast
   | keyof ESQLOrderExpression
-  | keyof ESQLUnknownItem;
+  | keyof ESQLUnknownItem
+  | KeysOfUnion<PromQLAstNode>;
 
 export type NodeMatchTemplateKey<V> = V | V[] | RegExp;
 
 export type NodeMatchTemplate = {
-  [K in NodeMatchKeys]?: K extends keyof ESQLProperNode
-    ? NodeMatchTemplateKey<ESQLProperNode[K]>
+  [K in NodeMatchKeys]?: K extends keyof WalkerProperNode
+    ? NodeMatchTemplateKey<WalkerProperNode[K]>
     : NodeMatchTemplateKey<unknown>;
 };
 
@@ -64,7 +67,7 @@ export type NodeMatchTemplate = {
 export const templateToPredicate = (
   template: NodeMatchTemplate
 ): ((node: WalkerProperNode) => boolean) => {
-  const keys = Object.keys(template) as Array<keyof ESQLProperNode>;
+  const keys = Object.keys(template) as NodeMatchKeys[];
   const predicate = (node: WalkerProperNode) => {
     const record = node as unknown as Record<string, unknown>;
     for (const key of keys) {

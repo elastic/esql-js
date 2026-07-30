@@ -146,7 +146,11 @@ export interface WalkerOptions {
   skipHeader?: boolean;
 }
 
-export type WalkerAstNode = types.ESQLAstNode | types.ESQLAstNode[];
+/**
+ * Any input tree the walker can traverse: ES|QL AST node(s) or an embedded
+ * PromQL AST subtree.
+ */
+export type WalkerAstNode = types.ESQLAstNode | types.ESQLAstNode[] | promql.PromQLAstNode;
 
 export type WalkerVisitorApi = Pick<Walker, 'abort' | 'skipChildren'>;
 
@@ -172,10 +176,7 @@ export class Walker {
   /**
    * Walks the AST and calls the appropriate visitor functions.
    */
-  public static readonly walk = (
-    tree: WalkerAstNode | promql.PromQLAstNode,
-    options: WalkerOptions
-  ): Walker => {
+  public static readonly walk = (tree: WalkerAstNode, options: WalkerOptions): Walker => {
     const walker = new Walker(options);
     walker.walk(tree);
     return walker;
@@ -524,9 +525,9 @@ export class Walker {
    */
   public static readonly parent = (
     tree: WalkerAstNode,
-    child: types.ESQLProperNode
-  ): types.ESQLProperNode | undefined => {
-    let found: types.ESQLProperNode | undefined;
+    child: WalkerProperNode
+  ): WalkerProperNode | undefined => {
+    let found: WalkerProperNode | undefined;
     Walker.walk(tree, {
       visitAny: (node, parent, walker) => {
         if (node === child) {
@@ -551,9 +552,9 @@ export class Walker {
    */
   public static readonly parents = (
     tree: WalkerAstNode,
-    child: types.ESQLProperNode
-  ): types.ESQLProperNode[] => {
-    const ancestry: types.ESQLProperNode[] = [];
+    child: WalkerProperNode
+  ): WalkerProperNode[] => {
+    const ancestry: WalkerProperNode[] = [];
     while (true) {
       const parent = Walker.parent(tree, child);
       if (!parent) break;
@@ -660,7 +661,7 @@ export class Walker {
   }
 
   public walk(
-    tree: WalkerAstNode | promql.PromQLAstNode | undefined,
+    tree: WalkerAstNode | undefined,
     parent: types.ESQLProperNode | undefined = undefined
   ): void {
     if (this.aborted) return;
