@@ -28,6 +28,7 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "typecheck": "tsc --noEmit",
     "test": "jest"
   },
   "dependencies": {

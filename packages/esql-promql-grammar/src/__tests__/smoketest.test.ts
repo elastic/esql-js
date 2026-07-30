@@ -23,7 +23,7 @@ class TestErrorListener extends ErrorListener<unknown> {
     _line: number,
     _column: number,
     message: string,
-    _error: RecognitionException | null
+    _error: RecognitionException | undefined
   ): void {
     this.errors.push(message);
   }

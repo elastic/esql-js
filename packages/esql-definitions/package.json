@@ -118,6 +118,7 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "typecheck": "tsc --noEmit",
     "generate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate.ts",
     "test": "jest"
   },

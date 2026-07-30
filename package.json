@@ -10,6 +10,7 @@
   "scripts": {
     "build": "yarn workspaces foreach -At run build",
     "test": "yarn workspaces foreach -A run test",
+    "typecheck": "yarn workspaces foreach -A run typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",

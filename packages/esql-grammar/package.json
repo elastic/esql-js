@@ -28,6 +28,7 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "antlr4:deps": "brew bundle --file=../../.buildkite/scripts/antlr4_tools/brewfile",
     "build:antlr4": "yarn build:antlr4:lexer && yarn build:antlr4:parser && ../../.buildkite/scripts/postbuild.sh esql",
