@@ -520,6 +520,10 @@ export class Walker {
    * const grandParent = Walker.parent(ast, parent); // query expression
    * ```
    *
+   * Also resolves parents of nodes inside embedded PromQL expressions. The
+   * parent of a PromQL root query expression is the containing ES|QL node
+   * (e.g. the `PROMQL` command), so ancestry crosses the dialect boundary.
+   *
    * @param child The child node for which to find the parent.
    * @returns The parent node of the child, if found.
    */
@@ -534,6 +538,14 @@ export class Walker {
           found = parent;
           walker.abort();
         }
+      },
+      promql: {
+        visitPromqlAny: (node, parent, walker) => {
+          if (node === child) {
+            found = parent;
+            walker.abort();
+          }
+        },
       },
     });
     return found;

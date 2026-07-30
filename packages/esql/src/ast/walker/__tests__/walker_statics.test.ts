@@ -809,6 +809,29 @@ describe('Walker static methods', () => {
         type: 'query',
       });
     });
+
+    test('can find the parent of a PromQL node', () => {
+      const { root } = parse('PROMQL rate(bytes{host="a"}[5m])');
+      const selector = Walker.match(root, { type: 'selector' })!;
+      const parent = Walker.parent(root, selector);
+
+      expect(parent).toMatchObject({
+        dialect: 'promql',
+        type: 'function',
+        name: 'rate',
+      });
+    });
+
+    test('reports the PROMQL command as parent of the PromQL query root', () => {
+      const { root } = parse('PROMQL rate(bytes[5m])');
+      const promqlQuery = Walker.find(root, (node) => 'dialect' in node && node.type === 'query')!;
+      const parent = Walker.parent(root, promqlQuery);
+
+      expect(parent).toMatchObject({
+        type: 'command',
+        name: 'promql',
+      });
+    });
   });
 
   describe('Walker.parents()', () => {
@@ -865,6 +888,22 @@ describe('Walker static methods', () => {
         {
           type: 'query',
         },
+      ]);
+    });
+
+    test('ancestry of a PromQL node crosses the dialect boundary', () => {
+      const { root } = parse('PROMQL sum(rate(bytes{host="a"}[5m])) | LIMIT 10');
+      const label = Walker.match(root, { type: 'label' })!;
+      const ancestry = Walker.parents(root, label);
+
+      expect(ancestry).toMatchObject([
+        { dialect: 'promql', type: 'label-map' },
+        { dialect: 'promql', type: 'selector', name: 'bytes' },
+        { dialect: 'promql', type: 'function', name: 'rate' },
+        { dialect: 'promql', type: 'function', name: 'sum' },
+        { dialect: 'promql', type: 'query' },
+        { type: 'command', name: 'promql' },
+        { type: 'query' },
       ]);
     });
   });
