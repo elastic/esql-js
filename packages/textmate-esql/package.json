@@ -1,0 +1,54 @@
+{
+  "name": "@elastic/textmate-esql",
+  "version": "4.15.0",
+  "author": "Kibana ES|QL team",
+  "description": "TextMate grammar for ES|QL syntax highlighting",
+  "license": "MIT",
+  "sideEffects": false,
+  "main": "./lib/index.js",
+  "types": "./lib/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./lib/index.d.ts",
+      "import": "./lib/index.mjs",
+      "require": "./lib/index.js",
+      "default": "./lib/index.js"
+    }
+  },
+  "files": [
+    "NOTICE.txt",
+    "LICENSE.txt",
+    "lib",
+    "syntaxes"
+  ],
+  "keywords": [
+    "esql",
+    "textmate",
+    "tmLanguage",
+    "syntax",
+    "highlighting",
+    "es|ql",
+    "elastic"
+  ],
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "repository": "https://github.com/elastic/esql-js.git",
+  "scripts": {
+    "build": "tsup && tsc -p tsconfig.build.json && node scripts/build-syntaxes.mjs",
+    "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "test": "jest"
+  },
+  "dependencies": {
+    "@elastic/esql-definitions": "workspace:^"
+  },
+  "devDependencies": {
+    "@types/jest": "30.0.0",
+    "jest": "30.4.2",
+    "shiki": "4.3.1",
+    "ts-jest": "29.4.11",
+    "tsup": "8.5.1",
+    "typescript": "6.0.3"
+  }
+}

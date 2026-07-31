@@ -25,6 +25,8 @@ export default defineConfig([
     // Generated ES|QL definition modules — do not lint
     'packages/esql-definitions/src/generated/',
     'storybook-static/',
+    // Build artifacts — do not lint
+    'packages/*/scripts/',
     '*.js',
     '*.mjs',
   ]),
@@ -81,6 +83,14 @@ export default defineConfig([
     // @elastic/prismjs-esql is MIT-licensed (unlike the rest of this
     // Elastic-2.0 monorepo), so its published source uses the MIT header.
     files: ['packages/prismjs-esql/src/**/*.{ts,tsx}'],
+    rules: {
+      'local-rules/require-license-header': ['error', { license: mitLicenseHeader }],
+    },
+  },
+  {
+    // @elastic/textmate-esql is MIT-licensed (unlike the rest of this
+    // Elastic-2.0 monorepo), so its published source uses the MIT header.
+    files: ['packages/textmate-esql/src/**/*.{ts,tsx}'],
     rules: {
       'local-rules/require-license-header': ['error', { license: mitLicenseHeader }],
     },

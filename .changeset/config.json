@@ -12,6 +12,7 @@
       "@elastic/pretty-printer",
       "@elastic/monaco-esql",
       "@elastic/prismjs-esql",
+      "@elastic/textmate-esql",
       "@elastic/elasticsearch-query-builder",
       "@elastic/elasticsearch-esql-dsl"
     ]
