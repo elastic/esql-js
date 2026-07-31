@@ -40,11 +40,13 @@ Review this PR, then merge it when you are ready to release.
 
 When the version PR is merged, the Changesets action runs again on `main`. This time there are no pending changesets, so instead of opening a PR it publishes every package to NPM `yarn changeset:publish`.
 
-The `changeset:publish` script delegates to `yarn workspaces foreach --all --no-private --topological npm publish --access public`.
+The `changeset:publish` script delegates to `yarn workspaces foreach --all --no-private --topological npm publish --access public --tolerate-republish`, then runs `yarn changeset tag`. The Changesets action decides whether a publish happened by scanning the publish command's stdout for `New tag: <pkg>@<version>` lines — `yarn npm publish` does not print them, so without it the action reports `published: false` and silently skips tagging and releases.
 
 Each package declares `"publishConfig": { "provenance": true }` in its `package.json`. Changesets publishes via `yarn npm publish` under Yarn Berry, which reads that field and attaches [npm provenance](https://docs.npmjs.com/generating-provenance-statements) — linking the npm artifact to the specific GitHub Actions run that built it (verifiable via `npm audit signatures`). This requires `id-token: write` on the release job, which is already set.
 
-A GitHub Release is created automatically by the action for each published package.
+### 4. The GitHub Release
+
+The action's built-in releases are per package, so with every package sharing one version they would produce 11 releases and 11 tags per release — and no `v<version>` tag at all. `createGithubReleases` is therefore set to `false`, and the workflow's final step creates a single release with `gh release create --generate-notes`:
 
 ---
 
@@ -94,4 +96,11 @@ To check what would be published without actually publishing:
 ```bash
 yarn changeset status              # lists pending changesets and projected version bump
 yarn changeset publish --dry-run   # shows what npm publish commands would run
+```
+
+To preview the GitHub Release notes without creating anything:
+
+```bash
+gh api repos/elastic/esql-js/releases/generate-notes \
+  -f tag_name=v4.18.0 -f previous_tag_name=v4.17.0 --jq .body
 ```

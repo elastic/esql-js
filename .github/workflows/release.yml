@@ -49,13 +49,35 @@ jobs:
       - run: yarn build
 
       - name: Create Release Pull Request or Publish
+        id: changesets
         uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
         with:
           version: yarn changeset:version
           publish: yarn changeset:publish
           commit: 'chore: version packages'
           title: 'chore: version packages'
+          # All packages share one version (Changesets `fixed` group), so the
+          # built-in per-package releases would mean one release and one tag per
+          # package. The next step creates a single `v<version>` release instead.
+          createGithubReleases: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           # Yarn v4 reads YARN_NPM_AUTH_TOKEN as the npm registry auth token
           YARN_NPM_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
+      - name: Create GitHub Release
+        if: steps.changesets.outputs.published == 'true'
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          version=$(node -p "require('./packages/esql/package.json').version")
+
+          if gh release view "v$version" >/dev/null 2>&1; then
+            echo "Release v$version already exists — skipping."
+            exit 0
+          fi
+
+          flags=(--title "v$version" --target "$GITHUB_SHA" --generate-notes)
+          if [[ "$version" == *-* ]]; then flags+=(--prerelease); fi
+
+          gh release create "v$version" "${flags[@]}"
