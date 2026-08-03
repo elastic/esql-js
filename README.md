@@ -1,171 +1,131 @@
 <h1 align="center">
-  Elastic ES|QL JS
+  esql-js
 </h1>
 <p align="center">
   <a href="https://buildkite.com/elastic/esql-js-grammar-sync">
     <img alt="Grammar Sync" src="https://badge.buildkite.com/455a3e37b4061fc25a448cba264e622b6c71be8101cd7b74f3.svg?branch=main">
   </a>
-  <a href="https://www.npmjs.com/@elastic/esql"><img alt="NPM version" src="https://img.shields.io/npm/v/@elastic/esql.svg"></a>
+  <a href="https://www.npmjs.com/package/@elastic/esql">
+    <img alt="npm @elastic/esql" src="https://img.shields.io/npm/v/@elastic/esql.svg?label=%40elastic%2Fesql">
+  </a>
 </p>
 
-The purpose of this package is to provide comprehensive ES|QL functionality including low-level parsing,
-building, traversal, pretty-printing and manipulation features on top of a custom compact AST representation.
+A Yarn Workspaces monorepo providing ES|QL (Elasticsearch Query Language) tooling for JavaScript and TypeScript: parsing, AST manipulation, pretty-printing, query building, editor integrations, and syntax highlighting.
 
-## Installation
+## Packages
 
-<table>
-<tr>
-<th>npm</th>
-<th>yarn</th>
-<th>pnpm</th>
-</tr>
-<tr>
-<td>
+| Package | npm | Description |
+|---------|-----|-------------|
+| [`@elastic/esql`](packages/esql/) | [![npm](https://img.shields.io/npm/v/@elastic/esql.svg)](https://www.npmjs.com/package/@elastic/esql) | Core package — ES\|QL parser, AST builder, traversal, mutation, pretty-printing, and the `esql` composer tag |
+| [`@elastic/esql-types`](packages/esql-types/) | [![npm](https://img.shields.io/npm/v/@elastic/esql-types.svg)](https://www.npmjs.com/package/@elastic/esql-types) | Pure TypeScript type definitions for ES\|QL and PromQL ASTs; zero runtime code |
+| [`@elastic/esql-definitions`](packages/esql-definitions/) | [![npm](https://img.shields.io/npm/v/@elastic/esql-definitions.svg)](https://www.npmjs.com/package/@elastic/esql-definitions) | Language definitions synced from `elastic/elasticsearch`: commands, functions, operators, settings, and docs |
+| [`@elastic/elasticsearch-esql-dsl`](packages/esql-dsl/) | [![npm](https://img.shields.io/npm/v/@elastic/elasticsearch-esql-dsl.svg)](https://www.npmjs.com/package/@elastic/elasticsearch-esql-dsl) | Fluent, type-safe ES\|QL query builder — builds query strings from method chains |
+| [`@elastic/elasticsearch-query-builder`](packages/query-builder/) | [![npm](https://img.shields.io/npm/v/@elastic/elasticsearch-query-builder.svg)](https://www.npmjs.com/package/@elastic/elasticsearch-query-builder) | Shared query-building primitives: operator symbols, escaping helpers, base expression type |
+| [`@elastic/pretty-printer`](packages/pretty-printer/) | [![npm](https://img.shields.io/npm/v/@elastic/pretty-printer.svg)](https://www.npmjs.com/package/@elastic/pretty-printer) | Standalone Wadler-Lindig document algebra and layout engine; no ES\|QL knowledge |
+| [`@elastic/monaco-esql`](packages/monaco-esql/) | [![npm](https://img.shields.io/npm/v/@elastic/monaco-esql.svg)](https://www.npmjs.com/package/@elastic/monaco-esql) | Monaco Editor language support for ES\|QL (syntax highlighting via Monarch) |
+| [`@elastic/prismjs-esql`](packages/prismjs-esql/) | [![npm](https://img.shields.io/npm/v/@elastic/prismjs-esql.svg)](https://www.npmjs.com/package/@elastic/prismjs-esql) | Prism.js / refractor grammar for ES\|QL syntax highlighting |
+| `@elastic/esql-grammar` *(internal)* | — | Auto-generated ANTLR4 TypeScript artifacts for the ES\|QL grammar; not published |
+| `@elastic/esql-promql-grammar` *(internal)* | — | Auto-generated ANTLR4 TypeScript artifacts for the embedded PromQL grammar; not published |
+
+## Quick start
+
+The most commonly used package is `@elastic/esql`.
 
 ```bash
 npm install @elastic/esql
 ```
 
-</td>
-<td>
+Parse a query:
 
-```bash
-yarn add @elastic/esql
-```
-
-</td>
-<td>
-
-```bash
-pnpm add @elastic/esql
-```
-
-</td>
-</tr>
-</table>
-
-## Requirements
-
-- **Node.js** >= 18.0.0
-
-## Contents of the package
-
-### Creating an ES|QL AST
-This package offers 3 tools that allow creating an AST for a query.
-
-The [`parser`](./src/parser/README.md) allows to convert a query in text form into an AST.
-```js
+```ts
 import { Parser } from '@elastic/esql';
 
-const src = 'FROM index | WHERE col0 > 100';
-const { root, errors } = await Parser.parse(src);
+const { root, errors } = Parser.parse('FROM index | WHERE col > 100');
 ```
 
-The [`composer`](./src/composer/README.md) provides a high-level, secure, and developer-friendly way to build ES|QL queries, allowing to get both an AST or string representation of them.
+Build a parameterized query with the `esql` composer:
+
 ```ts
 import { esql } from '@elastic/esql';
 
-const param = 123; // Dynamic parameter, e.g. received from the UI.
-
-const query = esql`
-  FROM index
-    | WHERE @timestamp >= ${{ param }}
-    | SORT @timestamp DESC
-    | KEEP service.name, log.level`;
-
-query.pipe`LIMIT 10`;
+const query = esql`FROM index | WHERE @timestamp >= ${{ start }} | LIMIT ${{ limit }}`;
+console.log(query.toRequest());
+// { query: 'FROM index | WHERE @timestamp >= ?start | LIMIT ?limit', params: [...] }
 ```
 
-Use `.query` to append multiple piped commands at once:
+Build a query programmatically with the DSL:
 
 ```ts
-query.query`WHERE status == ${{ status }} | STATS count = COUNT(*) | LIMIT ${{ limit }}`;
-```
-Check also the [`synth`](src/composer/synth/README.md) API for building independent nodes.
+import { ESQL, E, f } from '@elastic/elasticsearch-esql-dsl';
 
+const query = ESQL.from('employees')
+  .where(E('still_hired').eq(true))
+  .stats({ avg_salary: f.avg('salary') })
+  .by('department')
+  .limit(10);
 
-The [`builder`](./src/ast/builder/README.md) is a low level API that allows to create AST nodes.
-```ts
-import { Builder } from '@elastic/esql';
-
-const limitCommandASTNode = Builder.command({
-    name: 'limit',
-    args: [Builder.expression.literal.integer(10)],
-});
+console.log(query.render());
 ```
 
-### Traversing an ES|QL AST
-This package exposes 2 ways of traversing an ES|QL AST.
+See [`packages/esql/`](packages/esql/) for the full `@elastic/esql` API reference.
 
-The [`walker`](./src/ast/walker/README.md) class is simpler to use, the developer can provide a set of callbacks which are called when the walker visits a specific type of node.
+## Development setup
 
-```ts
-import { Walker } from '@elastic/esql';
+**Prerequisites:** Node.js ≥ 18, Corepack.
 
-const walker = new Walker({
-  visitCommand: (node: ESQLCommand) => {
-    // Called for every command node.
-  },
-  visitFunction: (fn: ESQLFunction) => {
-    // Called every time a function expression is visited.
-  },
-});
-
-walker.walk(ast);
+```bash
+corepack enable          # once per machine
+yarn install             # install all workspace dependencies
+yarn build               # build all packages
+yarn test                # run all tests
+yarn lint                # ESLint
+yarn format:check        # Prettier
 ```
 
-The [`visitor`](./src/ast/visitor/README.md) API provides a feature-rich way to traverse the ES|QL AST. It is more powerful than the Walker API, as it allows to traverse the AST in a more flexible way.
-Said that, it's also more complicated to use as it does not automatically traverse the entire tree, read its dedicated documentation to get insights on it.
+To regenerate the ANTLR4 TypeScript artifacts after grammar file changes:
 
-```ts
-import { Visitor } from '@elastic/esql';
-
-new Visitor()
-  .on('visitExpression', (ctx) => console.log(ctx.node.type))
-  .on('visitCommand', (ctx) => [...ctx.visitArguments()])
-  .on('visitQuery', (ctx) => [...ctx.visitCommands()])
-  .visitQuery(root);
+```bash
+yarn build:antlr4
 ```
 
-### Modifying an ES|QL AST
-The [`mutate`](./src/ast/mutate/README.md) API provides methods to navigate and modify the AST.
+This requires the `antlr` CLI. On macOS:
 
-```ts
-import { Parser, mutate, BasicPrettyPrinter } from '@elastic/esql';
-
-const { root } = Parser.parse('FROM index METADATA _lang');
-
-// [ '_lang' ]
-console.log([...mutate.commands.from.metadata.list(root)]); 
-
-mutate.commands.from.metadata.upsert(root, '_id');
-
-// [ '_lang', '_id' ]
-console.log([...mutate.commands.from.metadata.list(root)]); 
-
-const src = BasicPrettyPrinter.print(root);
-
-// FROM index METADATA _lang, _id
-console.log(src); 
+```bash
+brew bundle --file=./.buildkite/scripts/antlr4_tools/brewfile
 ```
 
-### Pretty printing
-The [`pretty_print`](./src/pretty_print/README.md) API lets you format the AST to text.
+## Grammar sync
 
-```ts
-import { parse, WrappingPrettyPrinter } from '@elastic/esql';
+The ES|QL and PromQL grammars and language definitions are automatically synced from the `elastic/elasticsearch` repository by a Buildkite CI job (`.buildkite/scripts/esql_grammar_sync.sh`). The job copies updated grammar files, regenerates the ANTLR4 TypeScript artifacts, updates the definition trees, and opens a PR. **Do not edit any file under `packages/esql-grammar/src/`, `packages/esql-promql-grammar/src/`, or `packages/esql-definitions/src/generated/` by hand.**
 
-const src = 'FROM index | WHERE x > 100 | LIMIT 100';
-const { root } = parse(src, { withFormatting: true });
-const text = WrappingPrettyPrinter.print(root, { multiline: true });
+To run the same sync against a local Elasticsearch checkout:
 
-/**
-  FROM index
-  | WHERE x > 100
-  | LIMIT 100
-*/
-console.log(text);
+```bash
+yarn sync:grammars [path-to-elasticsearch]
 ```
 
-## Licence
-Licensed under [Elastic License 2.0](./LICENSE.txt).
+When a grammar sync adds new commands or grammar rules, a follow-up PR is needed to wire them into the AST layer; see the [`/grammar-sync-update`](.claude/CLAUDE.md) skill for the workflow.
+
+## Repository structure
+
+```
+packages/
+  esql/                   @elastic/esql — core package
+  esql-types/             @elastic/esql-types — AST TypeScript types
+  esql-definitions/       @elastic/esql-definitions — language definitions
+  esql-grammar/           @elastic/esql-grammar — generated ANTLR4 artifacts (internal)
+  esql-promql-grammar/    @elastic/esql-promql-grammar — generated PromQL ANTLR4 artifacts (internal)
+  esql-dsl/               @elastic/elasticsearch-esql-dsl — fluent query builder
+  query-builder/          @elastic/elasticsearch-query-builder — shared query primitives
+  pretty-printer/         @elastic/pretty-printer — Wadler-Lindig layout engine
+  monaco-esql/            @elastic/monaco-esql — Monaco editor integration
+  prismjs-esql/           @elastic/prismjs-esql — Prism.js / refractor grammar
+```
+
+## Licences
+
+| Packages | Licence |
+|----------|---------|
+| `@elastic/esql`, `@elastic/esql-types`, `@elastic/esql-definitions`, `@elastic/esql-grammar`, `@elastic/esql-promql-grammar`, `@elastic/pretty-printer` | [Elastic License 2.0](LICENSE) |
+| `@elastic/monaco-esql`, `@elastic/prismjs-esql` | MIT |
+| `@elastic/elasticsearch-esql-dsl`, `@elastic/elasticsearch-query-builder` | Apache 2.0 |

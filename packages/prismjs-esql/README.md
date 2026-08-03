@@ -1,32 +1,38 @@
-# Prism.js and `refractor` ES|QL grammar
+# `@elastic/prismjs-esql`
 
-This package contains the ES|QL grammar for Prism.js and `refractor`.
+ES|QL grammar for [Prism.js](https://prismjs.com/) and [refractor](https://github.com/wooorm/refractor).
 
-Usage:
+## Install
+
+```bash
+npm install @elastic/prismjs-esql
+```
+
+## Usage
+
+### With refractor
 
 ```js
-import {register} from 'refractor';
-import {esql} from '@elastic/prismjs-esql';
+import { register } from 'refractor';
+import { esql } from '@elastic/prismjs-esql';
 
-register(esql)
+register(esql);
+
+// Highlight a snippet
+const result = refractor.highlight('FROM index | WHERE x > 100', 'esql');
 ```
 
-## Development
+### With Prism.js
 
-This package is part of the [esql-js](https://github.com/elastic/esql-js)
-monorepo. From the repo root:
+```js
+import Prism from 'prismjs';
+import { esql } from '@elastic/prismjs-esql';
 
+Prism.languages.esql = esql.languages.esql;
+
+const html = Prism.highlight('FROM index | WHERE x > 100', Prism.languages.esql, 'esql');
 ```
-yarn test
-yarn lint
-yarn format:check
-yarn build
-```
 
-Releases are managed with changesets and published in lockstep with the other
-`esql-js` packages.
-
-## License
+## Licence
 
 MIT
-
