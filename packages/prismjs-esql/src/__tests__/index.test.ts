@@ -8,14 +8,15 @@
  */
 
 import { refractor } from 'refractor';
-import type { Syntax, RefractorRoot, RefractorElement } from 'refractor';
+import type { Syntax } from 'refractor';
+import type { Root, Element } from 'hast';
 import { esql } from '..';
 
 refractor.register(esql as Syntax);
 
 type Token = [text: string, type: string];
 
-const walk = (prefix: string, node: RefractorRoot | RefractorElement): Token[] => {
+const walk = (prefix: string, node: Root | Element): Token[] => {
   const tokens: Token[] = [];
 
   for (const child of node.children) {
@@ -38,7 +39,7 @@ const walk = (prefix: string, node: RefractorRoot | RefractorElement): Token[] =
 };
 
 const tokenize = (src: string): Token[] => {
-  const root: RefractorRoot = refractor.highlight(src, 'esql');
+  const root: Root = refractor.highlight(src, 'esql');
   const tokens: Token[] = walk('', root);
 
   return tokens;

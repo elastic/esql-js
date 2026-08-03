@@ -8,8 +8,10 @@
     "packages/*"
   ],
   "scripts": {
+    "check": "yarn install && yarn build && yarn typecheck && yarn lint && yarn format:check && yarn test",
     "build": "yarn workspaces foreach -At run build",
     "test": "yarn workspaces foreach -A run test",
+    "typecheck": "yarn workspaces foreach -A run typecheck",
     "lint": "eslint .",
     "lint:fix": "eslint . --fix",
     "format": "prettier --write .",
@@ -23,7 +25,7 @@
     "sync:grammars": "./.buildkite/scripts/grammar_sync_local.sh",
     "changeset": "changeset",
     "changeset:version": "changeset version",
-    "changeset:publish": "yarn workspaces foreach --all --no-private --topological npm publish --access public --tolerate-republish"
+    "changeset:publish": "yarn workspaces foreach --all --no-private --topological npm publish --access public --tolerate-republish && yarn changeset tag"
   },
   "devDependencies": {
     "@babel/core": "8.0.1",

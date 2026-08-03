@@ -142,6 +142,8 @@ walker.walk(root);
 
 Static helpers like `Walker.findAll()`, `Walker.params()`, and `Walker.replace()` cover the most common search-and-modify patterns without needing to instantiate a walker.
 
+The walker also traverses embedded PromQL expressions — see [PromQL support](./src/ast/walker/README.md#promql-support) in the walker docs.
+
 ### Visitor
 
 The [`Visitor`](./src/ast/visitor/README.md) provides a more powerful traversal model where you control which children to visit, and callbacks can pass typed values up and down the tree:

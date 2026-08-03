@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-grammar",
-  "version": "4.15.0",
+  "version": "4.17.0",
   "author": "Kibana ES|QL team",
   "description": "Auto-generated ANTLR4 TypeScript artifacts for the ES|QL grammar. Do not edit by hand.",
   "license": "Elastic-2.0",
@@ -28,6 +28,7 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "typecheck": "tsc --noEmit",
     "test": "jest",
     "antlr4:deps": "brew bundle --file=../../.buildkite/scripts/antlr4_tools/brewfile",
     "build:antlr4": "yarn build:antlr4:lexer && yarn build:antlr4:parser && ../../.buildkite/scripts/postbuild.sh esql",

@@ -16,4 +16,5 @@ steps:
       yarn lint
       yarn format:check
       yarn build
+      yarn typecheck
       yarn test

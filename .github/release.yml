@@ -1,0 +1,9 @@
+# Configures the notes GitHub generates for each release, which the Release
+# workflow requests via `gh release create --generate-notes`.
+changelog:
+  exclude:
+    authors:
+      # The "chore: version packages" PRs.
+      - github-actions
+      # Dependency bumps.
+      - elastic-renovate-prod

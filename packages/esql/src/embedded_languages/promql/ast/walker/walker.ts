@@ -27,11 +27,26 @@ export class PromqlWalker {
   };
 
   public aborted: boolean = false;
+  protected skippedChildren: boolean = false;
 
   constructor(protected readonly options: PromqlWalkerOptions) {}
 
   public abort(): void {
     this.aborted = true;
+  }
+
+  /**
+   * Skips the traversal of the current node's children. Called from within a
+   * visitor callback, affects only the node being visited.
+   */
+  public skipChildren(): void {
+    this.skippedChildren = true;
+  }
+
+  protected readAndResetSkippedChildren(): boolean {
+    const skipped = this.skippedChildren;
+    this.skippedChildren = false;
+    return skipped;
   }
 
   /**
@@ -129,6 +144,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlQuery ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (node.expression) {
       this.walk(node.expression, node);
@@ -139,6 +155,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlFunction ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
       this.walkList(node.args, node);
@@ -157,6 +174,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlSelector ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     // Walk children from the args array which contains all child nodes in order
     this.walkList(node.args, node);
@@ -169,6 +187,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlBinaryExpression ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
       this.walk(node.right, node);
@@ -192,6 +211,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlUnaryExpression ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     this.walk(node.arg, node);
   }
@@ -200,6 +220,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlSubquery ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
       if (node.evaluation) {
@@ -226,6 +247,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlParens ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (node.child) {
       this.walk(node.child, node);
@@ -236,18 +258,21 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlLiteral ?? options.visitPromqlAny)?.(node, parent, this);
+    this.readAndResetSkippedChildren();
   }
 
   public walkPromqlIdentifier(node: promql.PromQLIdentifier, parent: PromqlWalkerAstParent): void {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlIdentifier ?? options.visitPromqlAny)?.(node, parent, this);
+    this.readAndResetSkippedChildren();
   }
 
   public walkPromqlLabelMap(node: promql.PromQLLabelMap, parent: PromqlWalkerAstParent): void {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlLabelMap ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     this.walkList(node.args, node);
   }
@@ -256,6 +281,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlLabel ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
       if (node.value) {
@@ -274,6 +300,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlGrouping ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     this.walkList(node.args, node);
   }
@@ -282,6 +309,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlEvaluation ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
       if (node.at) {
@@ -304,6 +332,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlOffset ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     this.walk(node.duration, node);
   }
@@ -312,6 +341,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlAt ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     // Only walk if value is a PromQL node (not a string modifier like 'start()' or 'end()')
     if (typeof node.value !== 'string') {
@@ -323,6 +353,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlModifier ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
       if (node.groupModifier) {
@@ -344,6 +375,7 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlGroupModifier ?? options.visitPromqlAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
 
     this.walkList(node.labels, node);
   }
@@ -352,5 +384,6 @@ export class PromqlWalker {
     if (this.aborted) return;
     const { options } = this;
     (options.visitPromqlUnknown ?? options.visitPromqlAny)?.(node, parent, this);
+    this.readAndResetSkippedChildren();
   }
 }

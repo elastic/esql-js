@@ -26,6 +26,7 @@ import { SelectorContext } from "./promql_parser.js";
 import { SeriesMatcherContext } from "./promql_parser.js";
 import { ModifierContext } from "./promql_parser.js";
 import { LabelListContext } from "./promql_parser.js";
+import { LabelListItemContext } from "./promql_parser.js";
 import { LabelsContext } from "./promql_parser.js";
 import { LabelContext } from "./promql_parser.js";
 import { LabelValueContext } from "./promql_parser.js";
@@ -209,6 +210,16 @@ export default class promql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitLabelList?: (ctx: LabelListContext) => void;
+	/**
+	 * Enter a parse tree produced by `promql_parser.labelListItem`.
+	 * @param ctx the parse tree
+	 */
+	enterLabelListItem?: (ctx: LabelListItemContext) => void;
+	/**
+	 * Exit a parse tree produced by `promql_parser.labelListItem`.
+	 * @param ctx the parse tree
+	 */
+	exitLabelListItem?: (ctx: LabelListItemContext) => void;
 	/**
 	 * Enter a parse tree produced by `promql_parser.labels`.
 	 * @param ctx the parse tree

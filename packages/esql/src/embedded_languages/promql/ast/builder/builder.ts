@@ -6,6 +6,7 @@
  */
 
 import type { AstNodeParserFields } from '../../../../ast/builder/types';
+import type { ESQLParamKinds } from '../../../../types';
 import type {
   PromQLAstQueryExpression,
   PromQLFunction,
@@ -32,6 +33,7 @@ import type {
   PromQLBinaryOperator,
   PromQLLabelMatchOperator,
   PromQLLabelName,
+  PromQLLabelListItem,
   PromQLAstExpression,
   PromQLAtModifier,
 } from '../../types';
@@ -276,14 +278,15 @@ export namespace PromQLBuilder {
 
       export const param = (
         value: string | number,
-        fromParser?: Partial<AstNodeParserFields>
+        fromParser?: Partial<AstNodeParserFields>,
+        paramKind: ESQLParamKinds = '?'
       ): PromQLParamLiteral => {
         const isPositional = typeof value === 'number';
         return {
           dialect: 'promql',
           type: 'literal',
           literalType: 'param',
-          paramKind: '?',
+          paramKind,
           paramType: isPositional ? 'positional' : 'named',
           name: '',
           value,
@@ -337,7 +340,7 @@ export namespace PromQLBuilder {
 
   export const grouping = (
     kind: 'by' | 'without',
-    labels: PromQLLabelName[],
+    labels: PromQLLabelListItem[],
     fromParser?: Partial<AstNodeParserFields>
   ): PromQLGrouping => {
     return {
@@ -351,7 +354,7 @@ export namespace PromQLBuilder {
 
   export const modifier = (
     kind: 'on' | 'ignoring',
-    labels: PromQLLabelName[],
+    labels: PromQLLabelListItem[],
     groupModifier?: PromQLGroupModifier,
     fromParser?: Partial<AstNodeParserFields>
   ): PromQLModifier => {
@@ -367,7 +370,7 @@ export namespace PromQLBuilder {
 
   export const groupModifier = (
     kind: 'group_left' | 'group_right',
-    labels: PromQLLabelName[],
+    labels: PromQLLabelListItem[],
     fromParser?: Partial<AstNodeParserFields>
   ): PromQLGroupModifier => {
     return {

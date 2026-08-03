@@ -15,7 +15,7 @@ import type {
   PromQLIdentifier,
   PromQLLabel,
   PromQLLabelMap,
-  PromQLLabelName,
+  PromQLLabelListItem,
   PromQLLiteral,
   PromQLModifier,
   PromQLNumericLiteral,
@@ -217,7 +217,7 @@ export class PromQLBasicPrettyPrinter {
     return `${labelName}${node.operator}${value}`;
   }
 
-  protected printLabelName(node: PromQLLabelName): string {
+  protected printLabelName(node: PromQLLabelListItem): string {
     switch (node.type) {
       case 'identifier':
         return this.printIdentifier(node);

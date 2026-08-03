@@ -106,12 +106,14 @@ import mvInRangeDefinition from './mv_in_range';
 import mvIntersectionDefinition from './mv_intersection';
 import mvIntersectsDefinition from './mv_intersects';
 import mvLastDefinition from './mv_last';
+import mvLikeDefinition from './mv_like';
 import mvMaxDefinition from './mv_max';
 import mvMedianDefinition from './mv_median';
 import mvMedianAbsoluteDeviationDefinition from './mv_median_absolute_deviation';
 import mvMinDefinition from './mv_min';
 import mvPercentileDefinition from './mv_percentile';
 import mvPseriesWeightedSumDefinition from './mv_pseries_weighted_sum';
+import mvRlikeDefinition from './mv_rlike';
 import mvSliceDefinition from './mv_slice';
 import mvSortDefinition from './mv_sort';
 import mvSumDefinition from './mv_sum';
@@ -340,12 +342,14 @@ export const functionDefinitions: FunctionDefinition[] = [
   mvIntersectionDefinition,
   mvIntersectsDefinition,
   mvLastDefinition,
+  mvLikeDefinition,
   mvMaxDefinition,
   mvMedianDefinition,
   mvMedianAbsoluteDeviationDefinition,
   mvMinDefinition,
   mvPercentileDefinition,
   mvPseriesWeightedSumDefinition,
+  mvRlikeDefinition,
   mvSliceDefinition,
   mvSortDefinition,
   mvSumDefinition,

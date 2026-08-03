@@ -9,7 +9,7 @@ import type { ESQLProperNode } from '../../../../types';
 import type * as promql from '../../types';
 import type { PromqlWalker } from './walker';
 
-export type PromqlWalkerVisitorApi = Pick<PromqlWalker, 'abort'>;
+export type PromqlWalkerVisitorApi = Pick<PromqlWalker, 'abort' | 'skipChildren'>;
 export type PromqlWalkerAstNode = promql.PromQLAstNode;
 export type PromqlWalkerAstParent = ESQLProperNode | promql.PromQLAstNode | undefined;
 

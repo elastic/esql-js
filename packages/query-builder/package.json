@@ -1,6 +1,6 @@
 {
   "name": "@elastic/elasticsearch-query-builder",
-  "version": "4.15.0",
+  "version": "4.17.0",
   "author": "Elastic",
   "description": "Elasticsearch Query Builder for JavaScript/TypeScript",
   "license": "Apache-2.0",
@@ -35,6 +35,7 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "typecheck": "tsc --noEmit",
     "test": "jest"
   },
   "peerDependencies": {
