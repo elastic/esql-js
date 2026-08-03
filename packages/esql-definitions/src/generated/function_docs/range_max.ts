@@ -12,12 +12,12 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Returns the maximum (end) value of a date_range. For a date_range [x, y), it returns y.',
+  description: 'Returns the maximum (end) value of a range. For a range [x, y), it returns y.',
   examples: [
     'FROM decades\n| WHERE decade == 1900\n| EVAL max_bound = RANGE_MAX(date_range)\n| KEEP date_range, max_bound',
   ],
   params: {
-    range: 'Date range expression. If `null`, the function returns `null`.',
+    range: 'Range expression. If `null`, the function returns `null`.',
   },
 };
 

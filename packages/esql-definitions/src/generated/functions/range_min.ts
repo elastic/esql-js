@@ -12,7 +12,7 @@
 import type { FunctionDefinition } from '../../definition_types';
 
 /**
- * Returns the minimum (start) value of a date_range. For a date_range [x, y), it returns x.
+ * Returns the minimum (start) value of a range. For a range [x, y), it returns x.
  *
  * @example
  * FROM decades

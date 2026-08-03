@@ -12,7 +12,7 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Constructs a range from two boundary values. The first argument is the inclusive lower bound; the second is the exclusive upper bound, following the half-open `[from, to)` convention used for all range types in ES|QL. Currently accepts `datetime` arguments and returns a `date_range`.',
+  description: 'Constructs a range from two boundary values. The first argument is the inclusive lower bound; the second is the exclusive upper bound, following the half-open `[from, to)` convention used for all range types in ES|QL. Accepts `datetime` arguments and returns a `date_range`, or accepts `double` arguments and returns a `double_range`.',
   examples: [
     'ROW from_dt = TO_DATETIME("2000-01-01T00:00:00.000Z"), to_dt = TO_DATETIME("2010-01-01T00:00:00.000Z")\n| EVAL r = TO_RANGE(from_dt, to_dt)\n| KEEP r',
   ],

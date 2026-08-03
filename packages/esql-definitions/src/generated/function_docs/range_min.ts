@@ -12,12 +12,12 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Returns the minimum (start) value of a date_range. For a date_range [x, y), it returns x.',
+  description: 'Returns the minimum (start) value of a range. For a range [x, y), it returns x.',
   examples: [
     'FROM decades\n| WHERE decade == 1900\n| EVAL min_bound = RANGE_MIN(date_range)\n| KEEP date_range, min_bound',
   ],
   params: {
-    range: 'Date range expression. If `null`, the function returns `null`.',
+    range: 'Range expression. If `null`, the function returns `null`.',
   },
 };
 

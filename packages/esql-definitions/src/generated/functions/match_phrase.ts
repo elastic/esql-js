@@ -13,7 +13,7 @@ import type { FunctionDefinition } from '../../definition_types';
 
 /**
  * Use `MATCH_PHRASE` to perform a `match_phrase` on the
- * specified field.
+ * specified field or expression.
  * Using `MATCH_PHRASE` is equivalent to using the `match_phrase` query in the Elasticsearch Query DSL.
  *
  * @example
