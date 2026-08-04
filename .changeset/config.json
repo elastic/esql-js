@@ -15,7 +15,8 @@
       "@elastic/textmate-esql",
       "@elastic/elasticsearch-query-builder",
       "@elastic/elasticsearch-esql-dsl",
-      "@elastic/esql-traversal"
+      "@elastic/esql-traversal",
+      "@elastic/esql-parser"
     ]
   ],
   "linked": [],

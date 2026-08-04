@@ -943,6 +943,18 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@elastic/esql-parser@workspace:packages/esql-parser":
+  version: 0.0.0-use.local
+  resolution: "@elastic/esql-parser@workspace:packages/esql-parser"
+  dependencies:
+    "@types/jest": "npm:30.0.0"
+    jest: "npm:30.4.2"
+    ts-jest: "npm:29.4.11"
+    tsup: "npm:8.5.1"
+    typescript: "npm:6.0.3"
+  languageName: unknown
+  linkType: soft
+
 "@elastic/esql-promql-grammar@workspace:^, @elastic/esql-promql-grammar@workspace:packages/esql-promql-grammar":
   version: 0.0.0-use.local
   resolution: "@elastic/esql-promql-grammar@workspace:packages/esql-promql-grammar"
