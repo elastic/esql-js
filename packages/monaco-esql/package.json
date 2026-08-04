@@ -1,6 +1,6 @@
 {
   "name": "@elastic/monaco-esql",
-  "version": "4.14.0",
+  "version": "4.17.0",
   "author": "Kibana ES|QL team",
   "description": "Monaco Editor language support for ES|QL.",
   "license": "MIT",
@@ -34,6 +34,7 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "typecheck": "tsc --noEmit",
     "test": "jest"
   },
   "peerDependencies": {

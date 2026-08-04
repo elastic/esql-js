@@ -5,4 +5,12 @@
  * 2.0.
  */
 
-export { Walker, type WalkerOptions, walk, type WalkerAstNode } from './walker';
+export {
+  Walker,
+  type WalkerOptions,
+  walk,
+  type WalkerAstNode,
+  type WalkerProperNode,
+  type WalkerDialect,
+  type WalkerFindFunctionOptions,
+} from './walker';

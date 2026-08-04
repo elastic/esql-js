@@ -22,6 +22,13 @@ import type {
   ESQLUnknownItem,
 } from '../../types';
 
+/**
+ * Any single proper AST node the walker can visit, regardless of dialect.
+ */
+export type WalkerProperNode = ESQLProperNode | PromQLAstNode;
+
+type KeysOfUnion<T> = T extends unknown ? keyof T : never;
+
 export type NodeMatchKeys =
   | keyof ESQLAstCommand
   | keyof ESQLAstQueryExpression
@@ -34,13 +41,14 @@ export type NodeMatchKeys =
   | keyof ESQLIdentifier
   | keyof ESQLInlineCast
   | keyof ESQLOrderExpression
-  | keyof ESQLUnknownItem;
+  | keyof ESQLUnknownItem
+  | KeysOfUnion<PromQLAstNode>;
 
 export type NodeMatchTemplateKey<V> = V | V[] | RegExp;
 
 export type NodeMatchTemplate = {
-  [K in NodeMatchKeys]?: K extends keyof ESQLProperNode
-    ? NodeMatchTemplateKey<ESQLProperNode[K]>
+  [K in NodeMatchKeys]?: K extends keyof WalkerProperNode
+    ? NodeMatchTemplateKey<WalkerProperNode[K]>
     : NodeMatchTemplateKey<unknown>;
 };
 
@@ -58,20 +66,21 @@ export type NodeMatchTemplate = {
  */
 export const templateToPredicate = (
   template: NodeMatchTemplate
-): ((node: ESQLProperNode) => boolean) => {
-  const keys = Object.keys(template) as Array<keyof ESQLProperNode>;
-  const predicate = (node: ESQLProperNode) => {
+): ((node: WalkerProperNode) => boolean) => {
+  const keys = Object.keys(template) as NodeMatchKeys[];
+  const predicate = (node: WalkerProperNode) => {
+    const record = node as unknown as Record<string, unknown>;
     for (const key of keys) {
       const matcher = template[key];
       if (matcher instanceof Array) {
-        if (!(matcher as unknown[]).includes(node[key])) {
+        if (!(matcher as unknown[]).includes(record[key])) {
           return false;
         }
       } else if (matcher instanceof RegExp) {
-        if (!matcher.test(String(node[key]))) {
+        if (!matcher.test(String(record[key]))) {
           return false;
         }
-      } else if (node[key] !== matcher) {
+      } else if (record[key] !== matcher) {
         return false;
       }
     }

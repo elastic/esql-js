@@ -106,12 +106,14 @@ import mvInRangeDocs from './mv_in_range';
 import mvIntersectionDocs from './mv_intersection';
 import mvIntersectsDocs from './mv_intersects';
 import mvLastDocs from './mv_last';
+import mvLikeDocs from './mv_like';
 import mvMaxDocs from './mv_max';
 import mvMedianDocs from './mv_median';
 import mvMedianAbsoluteDeviationDocs from './mv_median_absolute_deviation';
 import mvMinDocs from './mv_min';
 import mvPercentileDocs from './mv_percentile';
 import mvPseriesWeightedSumDocs from './mv_pseries_weighted_sum';
+import mvRlikeDocs from './mv_rlike';
 import mvSliceDocs from './mv_slice';
 import mvSortDocs from './mv_sort';
 import mvSumDocs from './mv_sum';
@@ -340,12 +342,14 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   mv_intersection: mvIntersectionDocs,
   mv_intersects: mvIntersectsDocs,
   mv_last: mvLastDocs,
+  mv_like: mvLikeDocs,
   mv_max: mvMaxDocs,
   mv_median: mvMedianDocs,
   mv_median_absolute_deviation: mvMedianAbsoluteDeviationDocs,
   mv_min: mvMinDocs,
   mv_percentile: mvPercentileDocs,
   mv_pseries_weighted_sum: mvPseriesWeightedSumDocs,
+  mv_rlike: mvRlikeDocs,
   mv_slice: mvSliceDocs,
   mv_sort: mvSortDocs,
   mv_sum: mvSumDocs,

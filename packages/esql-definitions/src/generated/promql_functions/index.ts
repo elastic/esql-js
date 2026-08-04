@@ -77,6 +77,7 @@ import sumOverTimeDefinition from './sum_over_time';
 import tanDefinition from './tan';
 import tanhDefinition from './tanh';
 import timeDefinition from './time';
+import timestampDefinition from './timestamp';
 import topkDefinition from './topk';
 import vectorDefinition from './vector';
 import yearDefinition from './year';
@@ -149,6 +150,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   tanDefinition,
   tanhDefinition,
   timeDefinition,
+  timestampDefinition,
   topkDefinition,
   vectorDefinition,
   yearDefinition,

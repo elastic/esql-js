@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-definitions",
-  "version": "4.14.0",
+  "version": "4.17.0",
   "author": "Kibana ES|QL team",
   "description": "Shared definitions for the ES|QL language (commands, functions, operators).",
   "license": "Elastic-2.0",
@@ -118,6 +118,7 @@
   "scripts": {
     "build": "tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
+    "typecheck": "tsc --noEmit",
     "generate": "node --disable-warning=MODULE_TYPELESS_PACKAGE_JSON scripts/generate.ts",
     "test": "jest"
   },

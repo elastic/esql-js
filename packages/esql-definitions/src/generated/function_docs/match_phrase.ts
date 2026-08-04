@@ -12,13 +12,13 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Use `MATCH_PHRASE` to perform a `match_phrase` on the\nspecified field.\nUsing `MATCH_PHRASE` is equivalent to using the `match_phrase` query in the Elasticsearch Query DSL.',
+  description: 'Use `MATCH_PHRASE` to perform a `match_phrase` on the\nspecified field or expression.\nUsing `MATCH_PHRASE` is equivalent to using the `match_phrase` query in the Elasticsearch Query DSL.',
   examples: [
     'FROM books\n| WHERE MATCH_PHRASE(author, "William Faulkner")',
   ],
   params: {
-    field: 'Field that the query will target.',
-    query: 'Value to find in the provided field.',
+    field: 'Field or expression that the query will target.',
+    query: 'Value to find in the provided field or expression.',
     options: '(Optional) MatchPhrase additional options as <<esql-function-named-params,function named parameters>>. See [`match_phrase`](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-match-query-phrase) for more information.',
   },
 };
