@@ -16,7 +16,8 @@
       "@elastic/elasticsearch-query-builder",
       "@elastic/elasticsearch-esql-dsl",
       "@elastic/esql-traversal",
-      "@elastic/esql-parser"
+      "@elastic/esql-parser",
+      "@elastic/esql-builder"
     ]
   ],
   "linked": [],
