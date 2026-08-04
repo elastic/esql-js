@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export * from './leaf_printer';
+export { LeafPrinter } from './leaf_printer';
