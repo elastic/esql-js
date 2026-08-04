@@ -45,9 +45,18 @@ pnpm add @elastic/esql
 </tr>
 </table>
 
-## Requirements
+## Sub-module reference
 
-- **Node.js** >= 18.0.0
+| Module | Description |
+|--------|-------------|
+| [`src/parser/`](./src/parser/README.md) | `Parser` class — parse query strings to AST |
+| [`src/composer/`](./src/composer/README.md) | `esql` tagged-template query builder |
+| [`src/composer/synth/`](./src/composer/synth/README.md) | `synth` — synthesize AST nodes from template strings; PromQL node builders |
+| [`src/ast/builder/`](./src/ast/builder/README.md) | `Builder` — low-level AST node construction |
+| [`src/ast/walker/`](./src/ast/walker/README.md) | `Walker` — simple full-tree traversal |
+| [`src/ast/visitor/`](./src/ast/visitor/README.md) | `Visitor` — typed, controlled traversal with input/output passing |
+| [`src/ast/mutate/`](./src/ast/mutate/README.md) | `mutate` — named helpers for structural AST edits |
+| [`src/pretty_print/`](./src/pretty_print/README.md) | `BasicPrettyPrinter`, `WrappingPrettyPrinter` |
 
 ## Creating an ES|QL AST
 
@@ -231,19 +240,6 @@ esql.promql(esql.pql`sum(rate(metric[5m])) by (job)`)
 ```
 
 See the [`synth` README](./src/composer/synth/README.md) for `pql`, `pqlSel`, `pqlFunc`, and other PromQL node builders.
-
-## Sub-module reference
-
-| Module | Description |
-|--------|-------------|
-| [`src/parser/`](./src/parser/README.md) | `Parser` class — parse query strings to AST |
-| [`src/composer/`](./src/composer/README.md) | `esql` tagged-template query builder |
-| [`src/composer/synth/`](./src/composer/synth/README.md) | `synth` — synthesize AST nodes from template strings; PromQL node builders |
-| [`src/ast/builder/`](./src/ast/builder/README.md) | `Builder` — low-level AST node construction |
-| [`src/ast/walker/`](./src/ast/walker/README.md) | `Walker` — simple full-tree traversal |
-| [`src/ast/visitor/`](./src/ast/visitor/README.md) | `Visitor` — typed, controlled traversal with input/output passing |
-| [`src/ast/mutate/`](./src/ast/mutate/README.md) | `mutate` — named helpers for structural AST edits |
-| [`src/pretty_print/`](./src/pretty_print/README.md) | `BasicPrettyPrinter`, `WrappingPrettyPrinter` |
 
 ## Licence
 
