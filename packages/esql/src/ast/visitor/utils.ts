@@ -15,7 +15,7 @@ import type {
   ESQLCommand,
   ESQLProperNode,
   ESQLSingleAstItem,
-} from '../../types';
+} from '@elastic/esql-types';
 
 /**
  * Normalizes AST "item" list to only contain *single* items.
