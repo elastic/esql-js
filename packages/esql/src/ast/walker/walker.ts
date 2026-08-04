@@ -9,7 +9,6 @@ import { resolveItem } from '../visitor/utils';
 import { isPromqlNode, replaceProperties, templateToPredicate } from './helpers';
 import { PromqlWalker, type PromqlWalkerOptions } from '../../embedded_languages/promql/ast/walker';
 import type * as types from '@elastic/esql-types';
-import type * as promql from '../../embedded_languages/promql/types';
 import type { NodeMatchTemplate, WalkerProperNode } from './helpers';
 
 export type { WalkerProperNode } from './helpers';
@@ -152,7 +151,7 @@ export interface WalkerOptions {
  * Any input tree the walker can traverse: ES|QL AST node(s) or an embedded
  * PromQL AST subtree.
  */
-export type WalkerAstNode = types.ESQLAstNode | types.ESQLAstNode[] | promql.PromQLAstNode;
+export type WalkerAstNode = types.ESQLAstNode | types.ESQLAstNode[] | types.PromQLAstNode;
 
 export type WalkerVisitorApi = Pick<Walker, 'abort' | 'skipChildren'>;
 
@@ -407,7 +406,7 @@ export class Walker {
     options?: WalkerOptions
   ): types.ESQLParamLiteral[] => {
     const params: types.ESQLParamLiteral[] = [];
-    const collect = (node: types.ESQLLiteral | promql.PromQLLiteral): void => {
+    const collect = (node: types.ESQLLiteral | types.PromQLLiteral): void => {
       if (node.literalType === 'param') {
         params.push(node);
       }
@@ -450,19 +449,19 @@ export class Walker {
   ): types.ESQLFunction | undefined;
   public static findFunction(
     tree: WalkerAstNode,
-    predicateOrName: ((node: types.ESQLFunction | promql.PromQLFunction) => boolean) | string,
+    predicateOrName: ((node: types.ESQLFunction | types.PromQLFunction) => boolean) | string,
     options?: WalkerFindFunctionOptions
-  ): types.ESQLFunction | promql.PromQLFunction | undefined;
+  ): types.ESQLFunction | types.PromQLFunction | undefined;
   public static findFunction(
     tree: WalkerAstNode,
-    predicateOrName: ((node: types.ESQLFunction | promql.PromQLFunction) => boolean) | string,
+    predicateOrName: ((node: types.ESQLFunction | types.PromQLFunction) => boolean) | string,
     options?: WalkerFindFunctionOptions
-  ): types.ESQLFunction | promql.PromQLFunction | undefined {
+  ): types.ESQLFunction | types.PromQLFunction | undefined {
     const dialects = options?.dialects ?? ['esql'];
-    let found: types.ESQLFunction | promql.PromQLFunction | undefined;
+    let found: types.ESQLFunction | types.PromQLFunction | undefined;
     const predicate =
       typeof predicateOrName === 'string'
-        ? (node: types.ESQLFunction | promql.PromQLFunction) => node.name === predicateOrName
+        ? (node: types.ESQLFunction | types.PromQLFunction) => node.name === predicateOrName
         : predicateOrName;
     const walkOptions: WalkerOptions = {};
 
@@ -895,10 +894,7 @@ export class Walker {
   /**
    * Walk a PromQL AST node and dispatch to the appropriate walk method.
    */
-  public walkPromqlNode(
-    node: promql.PromQLAstNode,
-    parent: types.ESQLProperNode | undefined
-  ): void {
+  public walkPromqlNode(node: types.PromQLAstNode, parent: types.ESQLProperNode | undefined): void {
     if (this.aborted) return;
     if (!node) return;
 
