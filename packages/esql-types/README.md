@@ -1,8 +1,6 @@
 # `@elastic/esql-types`
 
-TypeScript type definitions for the ES|QL and PromQL ASTs.
-
-Pure type definitions — no runtime code, no dependencies.
+Shared TypeScript type definitions for the ES|QL and PromQL ASTs. Pure type definitions — no runtime code, no dependencies.
 
 ## Install
 
@@ -32,16 +30,8 @@ import type {
   ESQLInlineCast,
   ESQLOrderExpression,
 
-  // Lists
-  ESQLList,
+  // ... and more
 
-  // Params
-  ESQLParamLiteral,
-
-  // Utilities
-  ESQLProperNode,
-  ESQLAstNode,
-  ESQLLocation,
 } from '@elastic/esql-types';
 ```
 
@@ -64,14 +54,14 @@ import type {
 ESQLAstQueryExpression          root node — holds commands[]
   ESQLCommand                   a pipeline stage (FROM, WHERE, STATS, …)
     ESQLCommandOption           named sub-clause (e.g. BY in STATS … BY)
-      ESQLAstExpression         any expression in a command argument
-        ESQLFunction            function call, binary op, unary op
-        ESQLColumn              column reference (@timestamp, user.name)
-        ESQLLiteral             scalar literal (number, string, boolean, null)
-        ESQLSource              index source reference (logs-*, cluster:index)
-        ESQLList                list literal ([1, 2, 3])
-        ESQLInlineCast          inline cast (expr::type)
-        ESQLParamLiteral        parameter placeholder (?, ?name, ?1)
+    ESQLAstExpression           any expression in a command argument
+      ESQLFunction              function call, binary op, unary op
+      ESQLColumn                column reference (@timestamp, user.name)
+      ESQLLiteral               scalar literal (number, string, boolean, null)
+      ESQLSource                index source reference (logs-*, cluster:index)
+      ESQLList                  list literal ([1, 2, 3])
+      ESQLInlineCast            inline cast (expr::type)
+      ESQLParamLiteral          parameter placeholder (?, ?name, ?1)
   ESQLAstHeaderCommand          pre-query instructions (SET key = value)
 ```
 
