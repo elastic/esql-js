@@ -331,8 +331,9 @@ export default class esql_parser extends parser_config {
 	public static readonly literalNames: (string | null)[] = [ null, null, 
                                                             null, null, 
                                                             "'change_point'", 
-                                                            null, "'enrich'", 
-                                                            null, "'completion'", 
+                                                            "'dedup'", "'enrich'", 
+                                                            "'explain'", 
+                                                            "'completion'", 
                                                             "'dissect'", 
                                                             "'eval'", "'grok'", 
                                                             "'limit'", "'rerank'", 
@@ -347,12 +348,12 @@ export default class esql_parser extends parser_config {
                                                             "'ip_location'", 
                                                             "'from'", "'ts'", 
                                                             null, "'fork'", 
-                                                            "'fuse'", null, 
+                                                            "'fuse'", "'highlight'", 
                                                             "'inline'", 
                                                             "'inlinestats'", 
                                                             "'lookup'", 
-                                                            null, null, 
-                                                            null, null, 
+                                                            "'full'", "'left'", 
+                                                            "'right'", "'lookup_\uD83D\uDC14'", 
                                                             "'mmr'", "'mv_expand'", 
                                                             "'drop'", "'keep'", 
                                                             "'promql'", 
@@ -4585,7 +4586,7 @@ export default class esql_parser extends parser_config {
 				this.state = 883;
 				this.match(esql_parser.LIKE);
 				this.state = 884;
-				this.stringOrParameter();
+				this.primaryExpression(0);
 				}
 				break;
 			case 2:
@@ -4607,7 +4608,7 @@ export default class esql_parser extends parser_config {
 				this.state = 890;
 				this.match(esql_parser.RLIKE);
 				this.state = 891;
-				this.stringOrParameter();
+				this.primaryExpression(0);
 				}
 				break;
 			case 3:
@@ -7019,9 +7020,9 @@ export default class esql_parser extends parser_config {
 	872,10,5,0,0,872,873,5,85,0,0,873,875,3,172,86,6,874,868,1,0,0,0,874,871,
 	1,0,0,0,875,878,1,0,0,0,876,874,1,0,0,0,876,877,1,0,0,0,877,173,1,0,0,0,
 	878,876,1,0,0,0,879,881,3,178,89,0,880,882,5,81,0,0,881,880,1,0,0,0,881,
-	882,1,0,0,0,882,883,1,0,0,0,883,884,5,80,0,0,884,885,3,74,37,0,885,926,
+	882,1,0,0,0,882,883,1,0,0,0,883,884,5,80,0,0,884,885,3,182,91,0,885,926,
 	1,0,0,0,886,888,3,178,89,0,887,889,5,81,0,0,888,887,1,0,0,0,888,889,1,0,
-	0,0,889,890,1,0,0,0,890,891,5,87,0,0,891,892,3,74,37,0,892,926,1,0,0,0,
+	0,0,889,890,1,0,0,0,890,891,5,87,0,0,891,892,3,182,91,0,892,926,1,0,0,0,
 	893,895,3,178,89,0,894,896,5,81,0,0,895,894,1,0,0,0,895,896,1,0,0,0,896,
 	897,1,0,0,0,897,898,5,80,0,0,898,899,5,110,0,0,899,904,3,74,37,0,900,901,
 	5,72,0,0,901,903,3,74,37,0,902,900,1,0,0,0,903,906,1,0,0,0,904,902,1,0,
@@ -10402,8 +10403,8 @@ export class LikeExpressionContext extends RegexBooleanExpressionContext {
 	public LIKE(): TerminalNode {
 		return this.getToken(esql_parser.LIKE, 0);
 	}
-	public stringOrParameter(): StringOrParameterContext {
-		return this.getTypedRuleContext(StringOrParameterContext, 0) as StringOrParameterContext;
+	public primaryExpression(): PrimaryExpressionContext {
+		return this.getTypedRuleContext(PrimaryExpressionContext, 0) as PrimaryExpressionContext;
 	}
 	public NOT(): TerminalNode {
 		return this.getToken(esql_parser.NOT, 0);
@@ -10473,8 +10474,8 @@ export class RlikeExpressionContext extends RegexBooleanExpressionContext {
 	public RLIKE(): TerminalNode {
 		return this.getToken(esql_parser.RLIKE, 0);
 	}
-	public stringOrParameter(): StringOrParameterContext {
-		return this.getTypedRuleContext(StringOrParameterContext, 0) as StringOrParameterContext;
+	public primaryExpression(): PrimaryExpressionContext {
+		return this.getTypedRuleContext(PrimaryExpressionContext, 0) as PrimaryExpressionContext;
 	}
 	public NOT(): TerminalNode {
 		return this.getToken(esql_parser.NOT, 0);

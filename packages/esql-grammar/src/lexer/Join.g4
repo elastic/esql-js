@@ -10,9 +10,9 @@ lexer grammar Join;
 // JOIN-related commands
 //
 JOIN_LOOKUP : 'lookup'        -> pushMode(JOIN_MODE);
-DEV_JOIN_FULL :   {this.isDevVersion()}? 'full'          -> pushMode(JOIN_MODE);
-DEV_JOIN_LEFT :   {this.isDevVersion()}? 'left'          -> pushMode(JOIN_MODE);
-DEV_JOIN_RIGHT :  {this.isDevVersion()}? 'right'         -> pushMode(JOIN_MODE);
+DEV_JOIN_FULL :   'full'          -> pushMode(JOIN_MODE);
+DEV_JOIN_LEFT :   'left'          -> pushMode(JOIN_MODE);
+DEV_JOIN_RIGHT :  'right'         -> pushMode(JOIN_MODE);
 
 mode JOIN_MODE;
 JOIN_PIPE : PIPE -> type(PIPE), popMode;
