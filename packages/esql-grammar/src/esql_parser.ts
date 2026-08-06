@@ -386,7 +386,7 @@ export default class esql_parser extends parser_config {
                                                             "'+'", "'-'", 
                                                             "'*'", "'/'", 
                                                             "'%'", "'{'", 
-                                                            "'}'", null, 
+                                                            "'}'", "'->'", 
                                                             "'??'", null, 
                                                             null, null, 
                                                             "']'", null, 
