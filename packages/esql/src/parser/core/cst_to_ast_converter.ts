@@ -2903,9 +2903,7 @@ export class CstToAstConverter {
       return undefined;
     }
 
-    const right =
-      this.fromStringOrParameter(ctx.stringOrParameter()) ??
-      this.fromParserRuleToUnknown(ctx.stringOrParameter());
+    const right = this.fromPrimaryExpressionStrict(ctx.primaryExpression());
     const notCtx = ctx.NOT();
     const likeType = ctx instanceof cst.RlikeExpressionContext ? 'rlike' : 'like';
     const operator = `${notCtx ? 'not ' : ''}${likeType}` as ast.BinaryExpressionOperator;
