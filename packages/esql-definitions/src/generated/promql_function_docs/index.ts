@@ -20,6 +20,7 @@ import atanDocs from './atan';
 import atanhDocs from './atanh';
 import avgDocs from './avg';
 import avgOverTimeDocs from './avg_over_time';
+import bottomkDocs from './bottomk';
 import ceilDocs from './ceil';
 import clampDocs from './clamp';
 import clampMaxDocs from './clamp_max';
@@ -47,6 +48,7 @@ import ideltaDocs from './idelta';
 import increaseDocs from './increase';
 import irateDocs from './irate';
 import lastOverTimeDocs from './last_over_time';
+import limitkDocs from './limitk';
 import lnDocs from './ln';
 import log10Docs from './log10';
 import log2Docs from './log2';
@@ -93,6 +95,7 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   atanh: atanhDocs,
   avg: avgDocs,
   avg_over_time: avgOverTimeDocs,
+  bottomk: bottomkDocs,
   ceil: ceilDocs,
   clamp: clampDocs,
   clamp_max: clampMaxDocs,
@@ -120,6 +123,7 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   increase: increaseDocs,
   irate: irateDocs,
   last_over_time: lastOverTimeDocs,
+  limitk: limitkDocs,
   ln: lnDocs,
   log10: log10Docs,
   log2: log2Docs,

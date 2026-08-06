@@ -20,6 +20,7 @@ import atanDefinition from './atan';
 import atanhDefinition from './atanh';
 import avgDefinition from './avg';
 import avgOverTimeDefinition from './avg_over_time';
+import bottomkDefinition from './bottomk';
 import ceilDefinition from './ceil';
 import clampDefinition from './clamp';
 import clampMaxDefinition from './clamp_max';
@@ -47,6 +48,7 @@ import ideltaDefinition from './idelta';
 import increaseDefinition from './increase';
 import irateDefinition from './irate';
 import lastOverTimeDefinition from './last_over_time';
+import limitkDefinition from './limitk';
 import lnDefinition from './ln';
 import log10Definition from './log10';
 import log2Definition from './log2';
@@ -93,6 +95,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   atanhDefinition,
   avgDefinition,
   avgOverTimeDefinition,
+  bottomkDefinition,
   ceilDefinition,
   clampDefinition,
   clampMaxDefinition,
@@ -120,6 +123,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   increaseDefinition,
   irateDefinition,
   lastOverTimeDefinition,
+  limitkDefinition,
   lnDefinition,
   log10Definition,
   log2Definition,

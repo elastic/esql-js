@@ -15,7 +15,9 @@ import type { OperatorDefinition } from '../../definition_types';
  * Use `RLIKE` to filter data based on string patterns using
  * regular expressions. `RLIKE` usually acts on a field placed on
  * the left-hand side of the operator, but it can also act on a constant (literal)
- * expression. The right-hand side of the operator represents the pattern.
+ * expression. The right-hand side of the operator represents the pattern, which can
+ * be a string literal, a query parameter, or any constant expression such as a call
+ * to `CONCAT` or `TO_UPPER`.
  */
 const definition: OperatorDefinition = {
   operator: 'not rlike',
