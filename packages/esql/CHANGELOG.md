@@ -1,5 +1,21 @@
 # @elastic/esql
 
+## 4.18.0
+
+### Minor Changes
+
+- [#210](https://github.com/elastic/esql-js/pull/210) [`c313e76`](https://github.com/elastic/esql-js/commit/c313e7657afcd9b80dd10b87e798be732436b21c) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Update ES|QL gramamr and definitions; remove `isDevVersion()` automatically from grammars on ingestion
+
+### Patch Changes
+
+- [#207](https://github.com/elastic/esql-js/pull/207) [`bc85162`](https://github.com/elastic/esql-js/commit/bc851624a0849eceda113b3bfb1739cd3c279855) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Update package READMEs
+
+- Updated dependencies [[`bc85162`](https://github.com/elastic/esql-js/commit/bc851624a0849eceda113b3bfb1739cd3c279855), [`c313e76`](https://github.com/elastic/esql-js/commit/c313e7657afcd9b80dd10b87e798be732436b21c)]:
+  - @elastic/esql-types@4.18.0
+  - @elastic/esql-grammar@4.18.0
+  - @elastic/esql-promql-grammar@4.18.0
+  - @elastic/pretty-printer@4.18.0
+
 ## 4.17.0
 
 ### Minor Changes
