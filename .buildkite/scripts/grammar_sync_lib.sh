@@ -86,6 +86,8 @@ synchronize_parser_grammar () {
   # Replace the line containing "superClass" with "superClass=parser_config;"
   sedi -e 's/superClass.*$/superClass=parser_config;/' "$destination_file"
 
+  strip_dev_version_predicates "$destination_file" $(find "$destination_lib_dir" -name "*.g4")
+
   echo "Parser file copied and modified successfully."
 }
 
@@ -126,6 +128,8 @@ synchronize_promql_parser_grammar () {
 
   # Replace the line containing "superClass" with "superClass=parser_config;"
   sedi -e 's/superClass.*$/superClass=parser_config;/' "$destination_file"
+
+  strip_dev_version_predicates "$destination_file"
 
   echo "PromQL parser file copied and modified successfully."
 }
