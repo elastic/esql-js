@@ -9,10 +9,6 @@ export default class parser_config extends Parser {
     super(...args);
   }
 
-  isDevVersion() {
-    return true;
-  }
-
   hasMetricsCommand() {
     return true;
   }

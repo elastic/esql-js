@@ -10,10 +10,6 @@ export default class lexer_config extends Lexer {
     this._promqlDepth = 0;
   }
 
-  isDevVersion() {
-    return true;
-  }
-
   hasMetricsCommand() {
     return true;
   }
