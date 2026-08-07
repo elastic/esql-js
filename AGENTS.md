@@ -26,6 +26,12 @@ This is a Yarn Workspaces monorepo. Packages live under `packages/*`; the main o
 
 `packages/esql-dsl/` (`@elastic/elasticsearch-esql-dsl`) provides a fluent, type-safe ES|QL query builder that renders to query strings. Depends on `@elastic/elasticsearch-query-builder`.
 
+`packages/esql-traversal/` (`@elastic/esql-traversal`) provides ES|QL AST traversal utilities.
+
+`packages/esql-parser/` (`@elastic/esql-parser`) provides the ES|QL query parser.
+
+`packages/esql-ast/` (`@elastic/esql-ast`) provides the ES|QL AST builder.
+
 Unlike the rest of the repo, `@elastic/monaco-esql`, `@elastic/prismjs-esql`, and `@elastic/textmate-esql` are MIT-licensed (not Elastic-2.0): their `src/` files carry an MIT header instead of the Elastic one, scoped via overrides in `eslint.config.mjs`. Similarly, `@elastic/elasticsearch-query-builder` and `@elastic/elasticsearch-esql-dsl` (migrated from the `elasticsearch-dsl-js` repo) are Apache-2.0-licensed: their `src/` files carry an Apache SPDX header, scoped the same way.
 
 ### Key source areas

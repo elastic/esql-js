@@ -5,4 +5,7 @@
  * 2.0.
  */
 
-export { LeafPrinter } from '@elastic/esql-ast';
+import { baseConfig } from '../../jest.config.base.js';
+
+/** @type {import('jest').Config} */
+export default { ...baseConfig, roots: ['<rootDir>/src'], passWithNoTests: true };

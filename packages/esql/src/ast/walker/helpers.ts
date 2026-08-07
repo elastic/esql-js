@@ -5,8 +5,8 @@
  * 2.0.
  */
 
-import type { PromQLAstNode } from '../../embedded_languages/promql/types';
 import type {
+  PromQLAstNode,
   ESQLAstCommand,
   ESQLAstQueryExpression,
   ESQLColumn,
@@ -20,7 +20,7 @@ import type {
   ESQLProperNode,
   ESQLSource,
   ESQLUnknownItem,
-} from '../../types';
+} from '@elastic/esql-types';
 
 /**
  * Any single proper AST node the walker can visit, regardless of dialect.
