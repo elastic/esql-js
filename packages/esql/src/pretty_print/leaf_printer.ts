@@ -5,4 +5,4 @@
  * 2.0.
  */
 
-export { LeafPrinter } from '@elastic/esql-builder';
+export { LeafPrinter } from '@elastic/esql-ast';

@@ -1,4 +1,4 @@
-# `@elastic/esql-builder`
+# `@elastic/esql-ast`
 
 ES|QL AST builder.
 

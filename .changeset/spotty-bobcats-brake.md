@@ -1,5 +1,5 @@
 ---
-'@elastic/esql-builder': minor
+'@elastic/esql-ast': minor
 ---
 
-Create `@elastic/esql-builder` package
+Create `@elastic/esql-ast` package

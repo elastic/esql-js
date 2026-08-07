@@ -1,5 +1,5 @@
 {
-  "name": "@elastic/esql-builder",
+  "name": "@elastic/esql-ast",
   "version": "4.17.0",
   "author": "Kibana ES|QL team",
   "description": "ES|QL AST builder.",
