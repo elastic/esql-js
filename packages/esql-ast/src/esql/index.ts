@@ -5,4 +5,5 @@
  * 2.0.
  */
 
+export * from './is';
 export * from './leaf_printer';
