@@ -5,5 +5,4 @@
  * 2.0.
  */
 
-export * from './esql';
-export * from './promql';
+export const pi = 3.141592653589793;
