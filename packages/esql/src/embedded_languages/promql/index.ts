@@ -22,6 +22,3 @@ export { PromQLCstToAstConverter } from './parser/cst_to_ast_converter';
 
 // Pretty Printer
 export { PromQLBasicPrettyPrinter, type PromQLBasicPrettyPrinterOptions } from './pretty_print';
-
-// Type Guard
-export { isPromqlNode } from './ast/is';

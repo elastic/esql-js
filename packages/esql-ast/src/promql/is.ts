@@ -5,4 +5,8 @@
  * 2.0.
  */
 
-export * from './is';
+import { isProperNode } from '../esql/is';
+import type { PromQLAstNode } from '@elastic/esql-types';
+
+export const isPromqlNode = (node: unknown): node is PromQLAstNode =>
+  isProperNode(node) && 'dialect' in node && node.dialect === 'promql';

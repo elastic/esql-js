@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { isPromqlNode } from './is';
+import { isPromqlNode } from '@elastic/esql-ast';
 import type { PromQLAstNode } from '../types';
 
 export function* childrenOfPromqlNode(node: PromQLAstNode): Iterable<PromQLAstNode> {
