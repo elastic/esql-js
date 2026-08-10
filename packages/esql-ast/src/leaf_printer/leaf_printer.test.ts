@@ -10,7 +10,8 @@ import type {
   ESQLAstCommentMultiLine,
   ESQLColumn,
   ESQLIdentifier,
-  ESQLParamLiteral,
+  ESQLParam,
+  ESQLParamKinds,
   ESQLSource,
   ESQLStringLiteral,
 } from '@elastic/esql-types';
@@ -36,11 +37,19 @@ function strLit(valueUnquoted: string, unquoted?: boolean): ESQLStringLiteral {
 }
 
 function param(
-  paramType: string,
+  paramType: ESQLParam['paramType'],
   value: string | number,
-  paramKind: '?' | '??' = '?'
-): ESQLParamLiteral {
-  return { ...base, name: '', type: 'literal', literalType: 'param', paramKind, paramType, value };
+  paramKind: ESQLParamKinds = '?'
+): ESQLParam {
+  return {
+    ...base,
+    name: '',
+    type: 'literal',
+    literalType: 'param',
+    paramKind,
+    paramType,
+    value,
+  } as ESQLParam;
 }
 
 describe('LeafPrinter', () => {

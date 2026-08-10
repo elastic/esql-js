@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { ESQLProperNode, ESQLAstBaseItem } from '../../types';
+import type { ESQLProperNode, ESQLAstBaseItem } from '@elastic/esql-types';
 
 /**
  * Node fields which are available only when the node is minted by the parser.
