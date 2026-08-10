@@ -353,7 +353,7 @@ export default class esql_parser extends parser_config {
                                                             "'inlinestats'", 
                                                             "'lookup'", 
                                                             "'full'", "'left'", 
-                                                            "'right'", "'lookup_\uD83D\uDC14'", 
+                                                            "'right'", "'lookup_\uD83Dí°”'", 
                                                             "'mmr'", "'mv_expand'", 
                                                             "'drop'", "'keep'", 
                                                             "'promql'", 

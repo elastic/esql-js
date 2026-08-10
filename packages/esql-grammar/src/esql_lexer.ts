@@ -249,7 +249,7 @@ export default class esql_lexer extends lexer_config {
                                                             "'inlinestats'", 
                                                             "'lookup'", 
                                                             "'full'", "'left'", 
-                                                            "'right'", "'lookup_\uD83D\uDC14'", 
+                                                            "'right'", "'lookup_\uD83Dí°”'", 
                                                             "'mmr'", "'mv_expand'", 
                                                             "'drop'", "'keep'", 
                                                             "'promql'", 
