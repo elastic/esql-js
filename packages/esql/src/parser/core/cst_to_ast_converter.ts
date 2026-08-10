@@ -3706,12 +3706,20 @@ export class CstToAstConverter {
     let valueUnquoted = isTripleQuoted ? quotedString.slice(3, -3) : quotedString.slice(1, -1);
 
     if (!isTripleQuoted) {
-      valueUnquoted = valueUnquoted
-        .replace(/\\"/g, '"')
-        .replace(/\\r/g, '\r')
-        .replace(/\\n/g, '\n')
-        .replace(/\\t/g, '\t')
-        .replace(/\\\\/g, '\\');
+      valueUnquoted = valueUnquoted.replace(/\\([tnr"\\])/g, (_, c: string) => {
+        switch (c) {
+          case 't':
+            return '\t';
+          case 'n':
+            return '\n';
+          case 'r':
+            return '\r';
+          case '"':
+            return '"';
+          default:
+            return '\\';
+        }
+      });
     }
 
     return Builder.expression.literal.string(
