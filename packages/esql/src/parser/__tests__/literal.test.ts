@@ -228,7 +228,6 @@ describe('literal expression', () => {
           expect(reprint(src)).toBe(src);
         });
 
-        // it('a\\\\new.cs (backslash + n)', () => {
         it(String.raw`a\\new.cs (backslash + n)`, () => {
           const src = String.raw`FROM a | WHERE x == "a\\new.cs"`;
 

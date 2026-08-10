@@ -3716,8 +3716,10 @@ export class CstToAstConverter {
             return '\r';
           case '"':
             return '"';
-          default:
+          case '\\':
             return '\\';
+          default:
+            return c;
         }
       });
     }
