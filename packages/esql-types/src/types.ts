@@ -92,11 +92,18 @@ export interface ESQLLocation {
   max: number;
 }
 
-export interface ESQLAstBaseItem<Name = string> {
-  name: Name;
+/**
+ * Node fields which are available only when the node is minted by the parser.
+ * When creating nodes manually, these fields are not available.
+ */
+export interface AstNodeParserFields {
   text: string;
   location: ESQLLocation;
   incomplete: boolean;
+}
+
+export interface ESQLAstBaseItem<Name = string> extends AstNodeParserFields {
+  name: Name;
   formatting?: ESQLAstNodeFormatting;
 }
 

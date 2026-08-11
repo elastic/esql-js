@@ -5,9 +5,9 @@
  * 2.0.
  */
 
-import type { AstNodeParserFields } from '../../../../ast/builder/types';
-import type { ESQLParamKinds } from '../../../../types';
 import type {
+  ESQLParamKinds,
+  AstNodeParserFields,
   PromQLAstQueryExpression,
   PromQLFunction,
   PromQLSelector,

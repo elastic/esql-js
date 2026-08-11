@@ -5,13 +5,9 @@
  * 2.0.
  */
 
-import type { ESQLProperNode, ESQLAstBaseItem } from '@elastic/esql-types';
+import type { ESQLProperNode, AstNodeParserFields } from '@elastic/esql-types';
 
-/**
- * Node fields which are available only when the node is minted by the parser.
- * When creating nodes manually, these fields are not available.
- */
-export type AstNodeParserFields = Pick<ESQLAstBaseItem, 'text' | 'location' | 'incomplete'>;
+export { AstNodeParserFields };
 
 /**
  * The node *template* transforms ES|QL AST nodes into a permissive shape, with
