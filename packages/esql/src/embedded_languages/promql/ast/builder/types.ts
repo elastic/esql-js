@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type { PromQLAstNode } from '../../types';
+import type { PromQLAstNode } from '@elastic/esql-types';
 
 /**
  * The node *template* transforms PromQL AST nodes into a permissive shape, with

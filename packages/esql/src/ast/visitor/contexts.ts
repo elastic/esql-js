@@ -55,7 +55,7 @@ import type {
 } from './types';
 import { Builder } from '../builder';
 import { isProperNode } from '../is';
-import { PromQLAstQueryExpression } from '../../embedded_languages';
+import { PromQLAstQueryExpression } from '@elastic/esql-types';
 
 export class VisitorContext<
   Methods extends VisitorMethods = VisitorMethods,

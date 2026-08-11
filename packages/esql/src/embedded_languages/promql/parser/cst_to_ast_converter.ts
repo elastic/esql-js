@@ -11,7 +11,7 @@ import { getPosition } from '../../../parser/core/tokens';
 import { PromQLBuilder } from '../ast/builder';
 import type { AstNodeParserFields } from '../../../ast/builder/types';
 import type { ESQLParamKinds } from '../../../types';
-import type * as ast from '../types';
+import type * as ast from '@elastic/esql-types';
 import type { PromQLParser } from './parser';
 
 // TODO: Handle `SubqueryResolutionContext`, `NonReservedContext`

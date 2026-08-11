@@ -6,8 +6,7 @@
  */
 
 import type { ParseOptions } from '../../parser';
-import type { ESQLAstExpression, ESQLProperNode } from '../../types';
-import type { PromQLAstExpression } from '../../embedded_languages/promql/types';
+import type { ESQLAstExpression, ESQLProperNode, PromQLAstExpression } from '@elastic/esql-types';
 import type { SynthLiteralFragment } from './synth_literal_fragment';
 import type { SynthNode } from './synth_node';
 

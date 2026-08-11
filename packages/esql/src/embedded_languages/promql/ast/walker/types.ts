@@ -6,7 +6,7 @@
  */
 
 import type { ESQLProperNode } from '../../../../types';
-import type * as promql from '../../types';
+import type * as promql from '@elastic/esql-types';
 import type { PromqlWalker } from './walker';
 
 export type PromqlWalkerVisitorApi = Pick<PromqlWalker, 'abort' | 'skipChildren'>;

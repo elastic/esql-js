@@ -25,7 +25,7 @@ import type {
   PromQLAt,
   PromQLModifier,
   PromQLGroupModifier,
-} from '../../../types';
+} from '@elastic/esql-types';
 
 describe('Walker PromQL support', () => {
   describe('basic PromQL traversal', () => {

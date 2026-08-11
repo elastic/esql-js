@@ -16,7 +16,7 @@ import type {
   PromQLStringLiteral,
   PromQLSubquery,
   PromQLUnaryExpression,
-} from '../../types';
+} from '@elastic/esql-types';
 import { PromQLParser } from '../parser';
 
 describe('PromQL Parser', () => {

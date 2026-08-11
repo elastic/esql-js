@@ -7,7 +7,7 @@
 
 import * as printer from '@elastic/pretty-printer';
 import { layout } from '@elastic/pretty-printer';
-import type * as promql from '../types';
+import type * as promql from '@elastic/esql-types';
 
 export interface PromQLWrappingPrettyPrinterOptions {
   /**

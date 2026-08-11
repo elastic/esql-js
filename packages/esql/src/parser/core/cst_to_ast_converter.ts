@@ -18,7 +18,7 @@ import { type ArithmeticUnaryContext } from '@elastic/esql-grammar';
 import { PromQLParser } from '../../embedded_languages/promql/parser/parser';
 import type { AstNodeTemplate } from '../../ast/builder';
 import type { Parser } from './parser';
-import type { PromQLAstQueryExpression } from '../../embedded_languages/promql/types';
+import type { PromQLAstQueryExpression } from '@elastic/esql-types';
 
 const textExistsAndIsValid = (text: string | undefined): text is string =>
   !!(text && !/<missing /.test(text));

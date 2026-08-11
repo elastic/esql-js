@@ -7,7 +7,7 @@
 
 import { PromQLParser } from '../../../parser/parser';
 import { PromqlWalker } from '../walker';
-import type { PromQLIdentifier } from '../../../types';
+import type { PromQLIdentifier } from '@elastic/esql-types';
 
 describe('PromQL walker traversal order', () => {
   describe('selector args', () => {

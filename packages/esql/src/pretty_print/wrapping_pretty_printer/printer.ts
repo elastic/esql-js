@@ -52,7 +52,7 @@ import {
 import { getPrettyPrintStats } from '../helpers';
 import { LeafPrinter } from '../leaf_printer';
 import { PromQLWrappingPrettyPrinter } from '../../embedded_languages/promql/pretty_print';
-import type { PromQLAstQueryExpression } from '../../embedded_languages/promql/types';
+import type { PromQLAstQueryExpression } from '@elastic/esql-types';
 import { singleItems, resolveItem } from '../../ast/visitor/utils';
 import {
   BinaryExpressionGroup,

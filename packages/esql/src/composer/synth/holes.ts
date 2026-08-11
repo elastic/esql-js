@@ -16,7 +16,7 @@ import type {
   SynthQualifiedColumnShorthand,
   SynthTemplateHole,
 } from './types';
-import type { PromQLAstExpression } from '../../embedded_languages/promql/types';
+import type { PromQLAstExpression } from '@elastic/esql-types';
 
 class UnexpectedSynthHoleError extends Error {
   constructor(hole: unknown) {

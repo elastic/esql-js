@@ -8,7 +8,7 @@
 import { PromQLBuilder } from '../../ast/builder';
 import { PromQLParser } from '../../parser';
 import { PromQLBasicPrettyPrinter } from '../basic_pretty_printer';
-import type { PromQLAstExpression } from '../../types';
+import type { PromQLAstExpression } from '@elastic/esql-types';
 
 /**
  * Helper: build a synthetic binary expression AST node (no PromQLParens wrapper).

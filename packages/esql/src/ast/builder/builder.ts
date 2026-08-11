@@ -51,10 +51,7 @@ import type {
   ESQLAstPromqlCommandQuery,
 } from '../../types';
 import type { AstNodeParserFields, AstNodeTemplate, PartialFields } from './types';
-import type {
-  PromQLAstQueryExpression,
-  PromQLAstExpression,
-} from '../../embedded_languages/promql/types';
+import type { PromQLAstQueryExpression, PromQLAstExpression } from '@elastic/esql-types';
 import { PromQLBuilder } from '../../embedded_languages/promql/ast/builder';
 
 export namespace Builder {

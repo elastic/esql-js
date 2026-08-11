@@ -7,7 +7,7 @@
 
 import { isPromqlNode } from '@elastic/esql-ast';
 import { childrenOfPromqlNode } from '../../embedded_languages/promql/ast/traversal';
-import type { PromQLAstNode } from '../../embedded_languages/promql/types';
+import type { PromQLAstNode } from '@elastic/esql-types';
 import type {
   ESQLAstExpression,
   ESQLAstHeaderCommand,

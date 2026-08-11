@@ -29,7 +29,7 @@ import type {
   PromQLEvaluation,
   PromQLOffset,
   PromQLAt,
-} from '../types';
+} from '@elastic/esql-types';
 import {
   PromQLPrecedenceGroup,
   promqlBinaryPrecedenceGroup,

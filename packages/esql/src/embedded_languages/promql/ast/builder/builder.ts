@@ -36,7 +36,7 @@ import type {
   PromQLLabelListItem,
   PromQLAstExpression,
   PromQLAtModifier,
-} from '../../types';
+} from '@elastic/esql-types';
 import type { PromQLAstNodeTemplate } from './types';
 
 /* eslint-disable @typescript-eslint/no-namespace */

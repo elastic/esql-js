@@ -34,7 +34,7 @@ import type {
   ESQLSource,
 } from '../../types';
 import type * as types from './types';
-import { PromQLAstQueryExpression } from '../../embedded_languages';
+import type { PromQLAstQueryExpression } from '@elastic/esql-types';
 
 export type SharedData = Record<string, unknown>;
 

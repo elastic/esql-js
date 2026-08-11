@@ -23,7 +23,7 @@ import type {
   PromQLSubquery,
   PromQLTimeValue,
   PromQLUnaryExpression,
-} from '../../embedded_languages/promql/types';
+} from '@elastic/esql-types';
 import { SynthNode } from './synth_node';
 
 /**

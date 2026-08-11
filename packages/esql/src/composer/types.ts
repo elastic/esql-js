@@ -7,10 +7,7 @@
 
 import type * as synth from './synth';
 import type { ESQLAstCommand, ESQLCommand, ESQLOrderExpression, ESQLSource } from '../types';
-import type {
-  PromQLAstExpression,
-  PromQLAstQueryExpression,
-} from '../embedded_languages/promql/types';
+import type { PromQLAstExpression, PromQLAstQueryExpression } from '@elastic/esql-types';
 import type { ComposerQuery } from './composer_query';
 import type { ParameterHole, DoubleParameterHole } from './parameter_hole';
 

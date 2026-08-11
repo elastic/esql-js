@@ -9,7 +9,7 @@ import { CharStreams, CommonTokenStream } from 'antlr4';
 import { PromqlLexer as PromQLLexer } from '@elastic/esql-promql-grammar';
 import { attachPromQLDecorations, collectPromQLDecorations } from '../decorations';
 import { PromQLParser } from '../parser';
-import type { PromQLFunction, PromQLSelector } from '../../types';
+import type { PromQLFunction, PromQLSelector } from '@elastic/esql-types';
 
 /**
  * Helper: lex the source text and fill the token stream so that

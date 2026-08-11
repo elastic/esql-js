@@ -5,9 +5,6 @@
  * 2.0.
  */
 
-// Types
-export type * from './types';
-
 // Builder
 export { PromQLBuilder } from './ast/builder';
 export type { PromQLAstNodeTemplate } from './ast/builder/types';

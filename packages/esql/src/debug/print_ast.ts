@@ -9,7 +9,7 @@ import { printTree } from 'tree-dump';
 import { childrenOfAnyNode } from '../ast/visitor/utils';
 import { isParamLiteral } from '../ast';
 import type { ESQLProperNode } from '../types';
-import type { PromQLAstNode } from '../embedded_languages/promql/types';
+import type { PromQLAstNode } from '@elastic/esql-types';
 
 /**
  * Options for printing an AST.

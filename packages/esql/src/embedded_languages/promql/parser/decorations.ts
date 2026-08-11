@@ -8,8 +8,12 @@
 import { type CommonTokenStream } from 'antlr4';
 import { Builder } from '../../../ast/builder';
 import { findNodeAtOrAfter, findNodeAtOrBefore } from '../ast/find_node';
-import type { ESQLAstCommentSingleLine, ESQLAstNodeFormatting } from '../../../types';
-import type { PromQLAstNode, PromQLAstQueryExpression } from '../types';
+import type {
+  ESQLAstCommentSingleLine,
+  ESQLAstNodeFormatting,
+  PromQLAstNode,
+  PromQLAstQueryExpression,
+} from '@elastic/esql-types';
 
 /**
  * ANTLR hidden channel number. Comments and whitespace are placed on this

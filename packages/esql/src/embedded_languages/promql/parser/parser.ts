@@ -14,7 +14,7 @@ import { PromQLErrorListener } from './promql_error_listener';
 import { PromQLCstToAstConverter } from './cst_to_ast_converter';
 import { PromQLBuilder } from '../ast/builder';
 import { attachPromQLDecorations, collectPromQLDecorations } from './decorations';
-import type { PromQLAstQueryExpression, PromQLParseResult } from '../types';
+import type { PromQLAstQueryExpression, PromQLParseResult } from '@elastic/esql-types';
 import type { EditorError } from '../../../types';
 
 export interface PromQLParseOptions {

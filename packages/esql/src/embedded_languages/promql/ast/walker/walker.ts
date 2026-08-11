@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import type * as promql from '../../types';
+import type * as promql from '@elastic/esql-types';
 import type { PromqlWalkerAstNode, PromqlWalkerAstParent, PromqlWalkerOptions } from './types';
 
 /**

@@ -7,7 +7,7 @@
 
 import { PromQLParser } from '../parser';
 import { printAst } from '../../../../debug';
-import type { PromQLFunction, PromQLSelector } from '../../types';
+import type { PromQLFunction, PromQLSelector } from '@elastic/esql-types';
 
 describe('PromQL "function" node parsing', () => {
   const parseFunction = (query: string): PromQLFunction => {

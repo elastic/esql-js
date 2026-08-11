@@ -11,8 +11,7 @@ import { BasicPrettyPrinter } from '../../pretty_print';
 import { printAst, type PrintAstOptions } from '../../debug';
 import { PromQLBasicPrettyPrinter } from '../../embedded_languages/promql/pretty_print/basic_pretty_printer';
 import { isPromqlNode } from '../../ast/walker/helpers';
-import { PromQLAstNode } from '../../embedded_languages';
-import type { ESQLProperNode } from '../../types';
+import type { ESQLProperNode, PromQLAstNode } from '@elastic/esql-types';
 
 /**
  * This is used as a prototype of AST nodes created by the synth methods.
