@@ -1,5 +1,11 @@
 # @elastic/esql-types
 
+## 4.18.0
+
+### Patch Changes
+
+- [#207](https://github.com/elastic/esql-js/pull/207) [`bc85162`](https://github.com/elastic/esql-js/commit/bc851624a0849eceda113b3bfb1739cd3c279855) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Update package READMEs
+
 ## 4.17.0
 
 ## 4.16.0
