@@ -48,6 +48,7 @@
     "@elastic/esql-ast": "workspace:^",
     "@elastic/esql-grammar": "workspace:^",
     "@elastic/esql-promql-grammar": "workspace:^",
+    "@elastic/esql-traversal": "workspace:^",
     "@elastic/esql-types": "workspace:^",
     "@elastic/pretty-printer": "workspace:^",
     "antlr4": "4.13.2",

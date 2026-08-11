@@ -5,8 +5,8 @@
  * 2.0.
  */
 
+import { childrenOfPromqlNode } from '@elastic/esql-traversal';
 import type { PromQLAstNode, PromQLAstQueryExpression } from '@elastic/esql-types';
-import { childrenOfPromqlNode } from './traversal';
 
 /**
  * Extra fool-proofing to make sure the nodes are always sorted by their location.
