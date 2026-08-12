@@ -20,7 +20,7 @@ import {
   optionNames,
   sortModifierNames,
 } from '@elastic/esql-definitions/keywords';
-import { temporalUnits } from '@elastic/esql-definitions/temporalUnits';
+import { temporalUnits } from '@elastic/esql-definitions/time';
 
 // Sort alternations longest-first so shorter alternatives don't shadow longer ones.
 const byLengthDesc = (a: string, b: string) => b.length - a.length;

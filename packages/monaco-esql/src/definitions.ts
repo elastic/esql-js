@@ -22,7 +22,7 @@ import {
   namedUnaryOperatorNames,
 } from '@elastic/esql-definitions/keywords';
 
-export { temporalUnits, type TemporalUnit } from '@elastic/esql-definitions/temporalUnits';
+export { temporalUnits, type TemporalUnit } from '@elastic/esql-definitions/time';
 
 const byLengthDesc = (a: string, b: string) => b.length - a.length;
 

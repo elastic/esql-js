@@ -32,7 +32,7 @@ export default defineConfig({
     'src/commandNames.ts',
     'src/functionNames.ts',
     'src/keywords.ts',
-    'src/temporalUnits.ts',
+    'src/time.ts',
     ...generatedEntries,
   ],
   format: ['cjs', 'esm'],
