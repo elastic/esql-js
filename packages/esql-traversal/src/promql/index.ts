@@ -7,3 +7,4 @@
 
 export * from './traversal';
 export * from './walker';
+export * from './find_node';
