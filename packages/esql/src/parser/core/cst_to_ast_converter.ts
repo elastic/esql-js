@@ -2426,6 +2426,25 @@ export class CstToAstConverter {
   private fromHighlightCommand(ctx: cst.HighlightCommandContext): ast.ESQLAstHighlightCommand {
     const command = this.createCommand<'highlight', ast.ESQLAstHighlightCommand>('highlight', ctx);
 
+    if (ctx.ASSIGN()) {
+      if (ctx._prefix && !ctx._prefix.exception) {
+        const prefixLiteral = this.toStringLiteral(ctx._prefix);
+        const keyword = this.toColumn(ctx._prefixKeyword);
+        const assignment = this.toFunction(
+          ctx.ASSIGN().getText(),
+          ctx,
+          undefined,
+          'binary-expression'
+        ) as ast.ESQLBinaryExpression;
+        assignment.args.push(keyword, prefixLiteral);
+        assignment.location = this.extendLocationToArgs(assignment);
+        command.prefix = prefixLiteral;
+        command.args.push(assignment);
+      } else {
+        command.incomplete = true;
+      }
+    }
+
     const queryExprCtx = ctx._queryExpression;
     if (queryExprCtx && !queryExprCtx.exception) {
       const queryExpr = this.fromBooleanExpression(queryExprCtx);

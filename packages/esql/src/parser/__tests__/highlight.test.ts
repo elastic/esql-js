@@ -213,4 +213,93 @@ describe('HIGHLIGHT', () => {
 
     expect(BasicPrettyPrinter.query(ast)).toBe(src);
   });
+
+  describe('prefix clause', () => {
+    it('leaves prefix undefined when no prefix clause is present', () => {
+      const src = 'FROM logs | HIGHLIGHT "fox" ON content';
+      const { ast } = EsqlQuery.fromSrc(src);
+      const cmd = getHighlight(ast);
+
+      expect(cmd.prefix).toBeUndefined();
+    });
+
+    it('parses prefix = "hl_"', () => {
+      const src = 'FROM logs | HIGHLIGHT prefix = "hl_" "fox" ON content';
+      const { ast, errors } = EsqlQuery.fromSrc(src);
+      const cmd = getHighlight(ast);
+
+      expect(errors).toHaveLength(0);
+      expect(cmd.prefix).toMatchObject({ type: 'literal', valueUnquoted: 'hl_' });
+    });
+
+    it('parses empty prefix (prefix = "")', () => {
+      const src = 'FROM logs | HIGHLIGHT prefix = "" "fox" ON content';
+      const { ast, errors } = EsqlQuery.fromSrc(src);
+      const cmd = getHighlight(ast);
+
+      expect(errors).toHaveLength(0);
+      expect(cmd.prefix).toMatchObject({ type: 'literal', valueUnquoted: '' });
+    });
+
+    it('parses whitespace prefix (prefix = "hl ")', () => {
+      const src = 'FROM logs | HIGHLIGHT prefix = "hl " "fox" ON content';
+      const { ast, errors } = EsqlQuery.fromSrc(src);
+      const cmd = getHighlight(ast);
+
+      expect(errors).toHaveLength(0);
+      expect(cmd.prefix).toMatchObject({ type: 'literal', valueUnquoted: 'hl ' });
+    });
+
+    it('records prefix even when the keyword is not "prefix" (semantic check left to consumers)', () => {
+      const src = 'FROM logs | HIGHLIGHT foo = "hl_" "fox" ON content';
+      const { ast } = EsqlQuery.fromSrc(src);
+      const cmd = getHighlight(ast);
+
+      // The JS parser is lenient — it records whatever identifier appeared.
+      // ES|QL servers will reject non-"prefix" keywords; consumers must validate.
+      expect(cmd.prefix).toMatchObject({ type: 'literal', valueUnquoted: 'hl_' });
+    });
+
+    it('puts the prefix assignment as args[0], before the query expression', () => {
+      const src = 'FROM logs | HIGHLIGHT prefix = "hl_" "fox" ON content';
+      const { ast } = EsqlQuery.fromSrc(src);
+      const cmd = getHighlight(ast);
+
+      expect(getArgs(cmd)).toMatchObject([
+        {
+          type: 'function',
+          subtype: 'binary-expression',
+          name: '=',
+          args: [
+            { type: 'column', name: 'prefix' },
+            { type: 'literal', valueUnquoted: 'hl_' },
+          ],
+        },
+        { type: 'literal', valueUnquoted: 'fox' },
+        { type: 'option', name: 'on', args: [{ type: 'column', name: 'content' }] },
+      ]);
+    });
+
+    it('marks incomplete when ASSIGN is present but prefix string is missing', () => {
+      const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT prefix =');
+      const cmd = getHighlight(ast);
+
+      expect(cmd.incomplete).toBe(true);
+      expect(cmd.prefix).toBeUndefined();
+    });
+
+    it('round-trips prefix = "hl_" through the pretty-printer', () => {
+      const src = 'FROM logs | HIGHLIGHT prefix = "hl_" "fox" ON content';
+      const { ast } = EsqlQuery.fromSrc(src);
+
+      expect(BasicPrettyPrinter.query(ast)).toBe(src);
+    });
+
+    it('round-trips empty prefix through the pretty-printer', () => {
+      const src = 'FROM logs | HIGHLIGHT prefix = "" "fox" ON content';
+      const { ast } = EsqlQuery.fromSrc(src);
+
+      expect(BasicPrettyPrinter.query(ast)).toBe(src);
+    });
+  });
 });
