@@ -98,11 +98,11 @@
       "require": "./lib/keywords.js",
       "default": "./lib/keywords.js"
     },
-    "./temporalUnits": {
-      "types": "./lib/temporalUnits.d.ts",
-      "import": "./lib/temporalUnits.mjs",
-      "require": "./lib/temporalUnits.js",
-      "default": "./lib/temporalUnits.js"
+    "./time": {
+      "types": "./lib/time.d.ts",
+      "import": "./lib/time.mjs",
+      "require": "./lib/time.js",
+      "default": "./lib/time.js"
     }
   },
   "files": [
