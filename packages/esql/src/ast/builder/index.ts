@@ -5,5 +5,5 @@
  * 2.0.
  */
 
-export type * from './types';
-export { Builder } from './builder';
+export type { AstNodeParserFields, AstNodeTemplate, PartialFields } from '@elastic/esql-ast';
+export { Builder } from '@elastic/esql-ast';

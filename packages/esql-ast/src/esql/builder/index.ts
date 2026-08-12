@@ -5,6 +5,5 @@
  * 2.0.
  */
 
-export * from './is';
-export * from './leaf_printer';
-export * from './builder';
+export type * from './types';
+export { Builder } from './builder';

@@ -7,8 +7,10 @@
 
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { isStringLiteral, LeafPrinter } from '@elastic/esql-ast';
-import { TIME_DURATION_UNITS } from '../../parser';
+import { isStringLiteral } from '../is';
+import { LeafPrinter } from '../leaf_printer';
+import { TIME_DURATION_UNITS } from '@elastic/esql-definitions/time';
+import { PromQLBuilder } from '../../promql/builder';
 import type {
   ESQLAstComment,
   ESQLAstCommentMultiLine,
@@ -48,10 +50,10 @@ import type {
   ESQLAstSetHeaderCommand,
   ESQLAstPromqlCommand,
   ESQLAstPromqlCommandQuery,
+  PromQLAstQueryExpression,
+  PromQLAstExpression,
 } from '@elastic/esql-types';
 import type { AstNodeParserFields, AstNodeTemplate, PartialFields } from './types';
-import type { PromQLAstQueryExpression, PromQLAstExpression } from '@elastic/esql-types';
-import { PromQLBuilder } from '@elastic/esql-ast';
 
 export namespace Builder {
   /**

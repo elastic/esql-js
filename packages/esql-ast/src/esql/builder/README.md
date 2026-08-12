@@ -18,7 +18,7 @@ used as it permits to skip the metadata.
 #### Construct a `literal` expression node:
 
 ```ts
-import { Builder } from '@elastic/esql';
+import { Builder } from '@elastic/esql-ast';
 
 const node = Builder.expression.literal.numeric({ value: 42, literalType: 'integer' });
 ```
@@ -40,7 +40,7 @@ Returns:
 #### Construct a `LIMIT` command with a `literal` argument:
 
 ```ts 
-import { Builder } from '@elastic/esql';
+import { Builder } from '@elastic/esql-ast';
 const node = Builder.command({
   name: 'limit',
   args: [Builder.expression.literal.integer(10)],
