@@ -8,6 +8,7 @@
 export * from '@elastic/esql-types';
 export * from '@elastic/esql-ast';
 export * from '@elastic/esql-traversal';
+export * from '@elastic/esql-definitions/time';
 
 export * from './parser';
 export * from './ast';
