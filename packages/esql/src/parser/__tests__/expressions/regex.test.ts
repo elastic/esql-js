@@ -401,7 +401,7 @@ describe('regular expressions', () => {
       });
     });
 
-    it('LIKE list - single item', () => {
+    it('LIKE with parenthesized pattern', () => {
       const text = 'ROW name LIKE ("single")';
       const { root, errors } = Parser.parse(text);
       const expression = root.commands[0].args[0];
@@ -416,15 +416,9 @@ describe('regular expressions', () => {
             name: 'name',
           },
           {
-            type: 'list',
-            subtype: 'tuple',
-            values: [
-              {
-                type: 'literal',
-                literalType: 'keyword',
-                valueUnquoted: 'single',
-              },
-            ],
+            type: 'literal',
+            literalType: 'keyword',
+            valueUnquoted: 'single',
           },
         ],
       });

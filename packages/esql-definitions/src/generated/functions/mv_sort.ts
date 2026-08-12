@@ -29,6 +29,17 @@ const definition: FunctionDefinition = {
           type: 'boolean',
           optional: false,
         },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'boolean',
+          optional: false,
+        },
         {
           name: 'order',
           type: 'keyword',
@@ -44,6 +55,17 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
     },
     {
       params: [
@@ -75,6 +97,17 @@ const definition: FunctionDefinition = {
           type: 'date_nanos',
           optional: false,
         },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
         {
           name: 'order',
           type: 'keyword',
@@ -90,6 +123,17 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
     },
     {
       params: [
@@ -121,6 +165,17 @@ const definition: FunctionDefinition = {
           type: 'integer',
           optional: false,
         },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
         {
           name: 'order',
           type: 'keyword',
@@ -136,6 +191,17 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'ip',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'ip',
     },
     {
       params: [
@@ -167,6 +233,17 @@ const definition: FunctionDefinition = {
           type: 'keyword',
           optional: false,
         },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'keyword',
+          optional: false,
+        },
         {
           name: 'order',
           type: 'keyword',
@@ -182,6 +259,17 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
     },
     {
       params: [
@@ -213,6 +301,17 @@ const definition: FunctionDefinition = {
           type: 'text',
           optional: false,
         },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'text',
+          optional: false,
+        },
         {
           name: 'order',
           type: 'keyword',
@@ -228,6 +327,51 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'unsigned_long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'unsigned_long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'unsigned_long',
+          optional: false,
+        },
+        {
+          name: 'order',
+          type: 'keyword',
+          optional: true,
+          hint: {
+            kind: 'constant',
+            allowedValues: [
+              'asc',
+              'desc',
+            ],
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'unsigned_long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'version',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'version',
     },
     {
       params: [

@@ -47,7 +47,7 @@ sourceCommand
     | timeSeriesCommand
     | promqlCommand
     // in development
-    | {this.isDevVersion()}? explainCommand
+    | explainCommand
     | {EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled()}? externalCommand
     ;
 
@@ -81,9 +81,9 @@ processingCommand
     | ipLocationCommand
     | mmrCommand
     // in development
-    | {this.isDevVersion()}? lookupCommand
-    | {this.isDevVersion()}? dedupCommand
-    | {this.isDevVersion()}? highlightCommand
+    | lookupCommand
+    | dedupCommand
+    | highlightCommand
     ;
 
 whereCommand
@@ -180,7 +180,7 @@ aggField
     ;
 
 qualifiedName
-    : {this.isDevVersion()}? OPENING_BRACKET qualifier=UNQUOTED_IDENTIFIER? CLOSING_BRACKET DOT OPENING_BRACKET name=fieldName CLOSING_BRACKET
+    : OPENING_BRACKET qualifier=UNQUOTED_IDENTIFIER? CLOSING_BRACKET DOT OPENING_BRACKET name=fieldName CLOSING_BRACKET
     | name=fieldName
     ;
 
@@ -189,7 +189,7 @@ fieldName
     ;
 
 qualifiedNamePattern
-    : {this.isDevVersion()}? OPENING_BRACKET qualifier=ID_PATTERN? CLOSING_BRACKET DOT OPENING_BRACKET name=fieldNamePattern CLOSING_BRACKET
+    : OPENING_BRACKET qualifier=ID_PATTERN? CLOSING_BRACKET DOT OPENING_BRACKET name=fieldNamePattern CLOSING_BRACKET
     | name=fieldNamePattern
     ;
 

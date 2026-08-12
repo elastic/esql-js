@@ -2907,9 +2907,7 @@ export class CstToAstConverter {
       return undefined;
     }
 
-    const right =
-      this.fromStringOrParameter(ctx.stringOrParameter()) ??
-      this.fromParserRuleToUnknown(ctx.stringOrParameter());
+    const right = this.fromPrimaryExpressionStrict(ctx.primaryExpression());
     const notCtx = ctx.NOT();
     const likeType = ctx instanceof cst.RlikeExpressionContext ? 'rlike' : 'like';
     const operator = `${notCtx ? 'not ' : ''}${likeType}` as ast.BinaryExpressionOperator;
@@ -3712,12 +3710,22 @@ export class CstToAstConverter {
     let valueUnquoted = isTripleQuoted ? quotedString.slice(3, -3) : quotedString.slice(1, -1);
 
     if (!isTripleQuoted) {
-      valueUnquoted = valueUnquoted
-        .replace(/\\"/g, '"')
-        .replace(/\\r/g, '\r')
-        .replace(/\\n/g, '\n')
-        .replace(/\\t/g, '\t')
-        .replace(/\\\\/g, '\\');
+      valueUnquoted = valueUnquoted.replace(/\\([tnr"\\])/g, (_, c: string) => {
+        switch (c) {
+          case 't':
+            return '\t';
+          case 'n':
+            return '\n';
+          case 'r':
+            return '\r';
+          case '"':
+            return '"';
+          case '\\':
+            return '\\';
+          default:
+            return c;
+        }
+      });
     }
 
     return Builder.expression.literal.string(
