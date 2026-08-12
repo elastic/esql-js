@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { PromQLBuilder } from '../../ast/builder';
+import { PromQLBuilder } from '@elastic/esql-ast';
 import { PromQLBasicPrettyPrinter } from '../basic_pretty_printer';
 
 describe('synthetic AST (Builder-constructed)', () => {

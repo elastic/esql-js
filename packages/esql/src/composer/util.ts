@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { isBooleanLiteral, isCommand } from '../ast/is';
+import { isBooleanLiteral, isCommand } from '@elastic/esql-ast';
 import { Builder } from '../ast/builder';
 import { ParameterHole, DoubleParameterHole } from './parameter_hole';
 import { Walker } from '../ast/walker';

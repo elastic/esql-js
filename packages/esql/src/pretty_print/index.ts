@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-export { LeafPrinter } from './leaf_printer';
+export { LeafPrinter } from '@elastic/esql-ast';
 
 export {
   BasicPrettyPrinter,

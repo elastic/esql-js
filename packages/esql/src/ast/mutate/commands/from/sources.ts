@@ -11,7 +11,7 @@ import { Visitor } from '../../../visitor';
 import * as generic from '../../generic';
 import * as util from '../../util';
 import type { Predicate } from '../../types';
-import { isSubQuery } from '../../../is';
+import { isSubQuery } from '@elastic/esql-ast';
 
 export const list = (
   ast: ESQLAstQueryExpression | ESQLCommand<'from'>

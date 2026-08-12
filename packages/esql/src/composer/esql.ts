@@ -23,7 +23,7 @@ import type {
   PromqlStarterOpts,
 } from './types';
 import type { ESQLSource } from '../types';
-import { isSource } from '../ast/is';
+import { isSource } from '@elastic/esql-ast';
 
 const esqlTag = ((
   templateOrQueryOrParamValues: TemplateStringsArray | Record<string, unknown> | string,

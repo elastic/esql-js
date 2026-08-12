@@ -8,6 +8,4 @@
 import { Walker } from './walker';
 import type { ESQLProperNode } from '../types';
 
-export * from '@elastic/esql-ast';
-
 export const isParametrized = (node: ESQLProperNode): boolean => Walker.params(node).length > 0;

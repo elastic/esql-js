@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { isAssignment } from '../../ast';
+import { isAssignment } from '@elastic/esql-ast';
 import type {
   ESQLAstExpression,
   ESQLBinaryExpression,

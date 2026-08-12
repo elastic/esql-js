@@ -6,3 +6,4 @@
  */
 
 export * from './is';
+export * from './builder';

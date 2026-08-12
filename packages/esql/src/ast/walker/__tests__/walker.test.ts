@@ -27,7 +27,7 @@ import type {
   ESQLStringLiteral,
 } from '../../../types';
 import { walk, Walker } from '../walker';
-import { isAssignment } from '../..';
+import { isAssignment } from '@elastic/esql-ast';
 
 describe('structurally can walk all nodes', () => {
   test('can walk all functions', () => {

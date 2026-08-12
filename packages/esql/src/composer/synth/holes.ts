@@ -8,7 +8,7 @@
 import { Builder } from '../../ast/builder';
 import { BasicPrettyPrinter, LeafPrinter } from '../../pretty_print';
 import { PromQLBasicPrettyPrinter } from '../../embedded_languages/promql/pretty_print';
-import { isProperNode } from '../../ast/is';
+import { isProperNode } from '@elastic/esql-ast';
 import { SynthNode } from './synth_node';
 import { SynthLiteralFragment } from './synth_literal_fragment';
 import type {

@@ -7,7 +7,7 @@
 
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { isStringLiteral } from '../is';
+import { isStringLiteral } from '@elastic/esql-ast';
 import { TIME_DURATION_UNITS } from '../../parser';
 import { LeafPrinter } from '../../pretty_print';
 import type {
@@ -49,10 +49,10 @@ import type {
   ESQLAstSetHeaderCommand,
   ESQLAstPromqlCommand,
   ESQLAstPromqlCommandQuery,
-} from '../../types';
+} from '@elastic/esql-types';
 import type { AstNodeParserFields, AstNodeTemplate, PartialFields } from './types';
 import type { PromQLAstQueryExpression, PromQLAstExpression } from '@elastic/esql-types';
-import { PromQLBuilder } from '../../embedded_languages/promql/ast/builder';
+import { PromQLBuilder } from '@elastic/esql-ast';
 
 export namespace Builder {
   /**

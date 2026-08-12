@@ -42,7 +42,7 @@ import type {
   ESQLSource,
   ESQLAstItem,
   ESQLAstExpression,
-} from '../../types';
+} from '@elastic/esql-types';
 import type { BasicPrettyPrinterOptions } from '../basic_pretty_printer';
 import {
   commandOptionsWithEqualsSeparator,
@@ -50,7 +50,7 @@ import {
   commandsWithSpecialCommaRules,
 } from '../constants';
 import { getPrettyPrintStats } from '../helpers';
-import { LeafPrinter } from '../leaf_printer';
+import { LeafPrinter } from '@elastic/esql-ast';
 import { PromQLWrappingPrettyPrinter } from '../../embedded_languages/promql/pretty_print';
 import type { PromQLAstQueryExpression } from '@elastic/esql-types';
 import { singleItems, resolveItem } from '../../ast/visitor/utils';
@@ -70,7 +70,7 @@ import {
   isParens,
   isProperNode,
   isQuery,
-} from '../../ast/is';
+} from '@elastic/esql-ast';
 import { commentListToDoc, commentToDoc, decorateWithComments } from './doc_helpers';
 
 export interface WrappingPrettyPrinterOptions extends BasicPrettyPrinterOptions {

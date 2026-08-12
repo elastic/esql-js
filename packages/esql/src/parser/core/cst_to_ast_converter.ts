@@ -8,7 +8,7 @@
 import type * as antlr from 'antlr4';
 import * as cst from '@elastic/esql-grammar';
 import type * as ast from '../../types';
-import { isCommand, isStringLiteral } from '../../ast/is';
+import { isCommand, isStringLiteral } from '@elastic/esql-ast';
 import { LeafPrinter } from '../../pretty_print';
 import { getPosition } from './tokens';
 import { nonNullable, unescapeColumn } from './helpers';

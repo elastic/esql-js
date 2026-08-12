@@ -9,7 +9,7 @@ import { EsqlQuery } from '../../../composer/query';
 import * as fixtures from '../../../__tests__/fixtures';
 import { Walker } from '../walker';
 import type { ESQLAstExpression, ESQLProperNode } from '../../../types';
-import { isProperNode } from '../../is';
+import { isProperNode } from '@elastic/esql-ast';
 
 interface JsonWalkerOptions {
   visitObject?: (node: Record<string, unknown>) => void;

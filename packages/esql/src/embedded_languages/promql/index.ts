@@ -5,10 +5,6 @@
  * 2.0.
  */
 
-// Builder
-export { PromQLBuilder } from './ast/builder';
-export type { PromQLAstNodeTemplate } from './ast/builder/types';
-
 // Walker
 export { PromqlWalker, type PromqlWalkerOptions } from './ast/walker';
 

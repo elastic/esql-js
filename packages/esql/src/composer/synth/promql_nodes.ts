@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { PromQLBuilder } from '../../embedded_languages/promql/ast/builder';
+import { PromQLBuilder } from '@elastic/esql-ast';
 import type {
   PromQLAstExpression,
   PromQLAt,

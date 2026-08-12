@@ -7,7 +7,7 @@
 
 import { parse } from '..';
 import type { ESQLAstQueryExpression, ESQLParens } from '../../types';
-import { isParens, isSubQuery } from '../../ast/is';
+import { isParens, isSubQuery } from '@elastic/esql-ast';
 
 describe('FROM', () => {
   describe('correctly formatted', () => {

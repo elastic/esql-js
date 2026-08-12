@@ -15,7 +15,8 @@ import {
   isParamLiteral,
   isParens,
   isProperNode,
-} from '../ast/is';
+  LeafPrinter,
+} from '@elastic/esql-ast';
 import { PromQLBasicPrettyPrinter } from '../embedded_languages/promql/pretty_print';
 import {
   BinaryExpressionGroup,
@@ -30,7 +31,6 @@ import {
   commandsWithNoCommaArgSeparator,
   commandsWithSpecialCommaRules,
 } from './constants';
-import { LeafPrinter } from './leaf_printer';
 import type {
   ESQLAstBaseItem,
   ESQLAstCommand,
@@ -38,7 +38,7 @@ import type {
   ESQLAstQueryExpression,
   ESQLMap,
   ESQLProperNode,
-} from '../types';
+} from '@elastic/esql-types';
 
 export interface BasicPrettyPrinterOptions {
   /**

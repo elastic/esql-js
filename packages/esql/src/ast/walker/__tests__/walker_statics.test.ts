@@ -6,7 +6,7 @@
  */
 
 import { Builder } from '../../builder';
-import { PromQLBuilder } from '../../../embedded_languages/promql/ast/builder';
+import { PromQLBuilder } from '@elastic/esql-ast';
 import { parse } from '../../../parser';
 import { BasicPrettyPrinter } from '../../../pretty_print';
 import { EsqlQuery } from '../../../composer/query';

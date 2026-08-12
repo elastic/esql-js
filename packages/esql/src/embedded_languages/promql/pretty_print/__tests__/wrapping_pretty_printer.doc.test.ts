@@ -6,7 +6,7 @@
  */
 
 import { doc, print } from '../wrapping_pretty_printer';
-import { PromQLBuilder } from '../../ast/builder';
+import { PromQLBuilder } from '@elastic/esql-ast';
 import { dump } from '@elastic/pretty-printer';
 
 describe('"unknown" nodes', () => {

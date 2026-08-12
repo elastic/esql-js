@@ -42,7 +42,7 @@ import {
   isIntegerLiteral,
   isProperNode,
   isStringLiteral,
-} from '../ast/is';
+} from '@elastic/esql-ast';
 import { replaceProperties } from '../ast/walker/helpers';
 import { resolveItem } from '../ast/visitor/utils';
 import { printAst } from '../debug';

@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { isBinaryExpression, isUnaryExpression } from './is';
+import { isBinaryExpression, isUnaryExpression } from '@elastic/esql-ast';
 import type { ESQLAstNode } from '../types';
 
 /**

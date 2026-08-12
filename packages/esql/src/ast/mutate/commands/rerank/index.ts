@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { isStringLiteral } from '../../../is';
+import { isStringLiteral } from '@elastic/esql-ast';
 import { Builder } from '../../../builder';
 import type {
   ESQLAstQueryExpression,

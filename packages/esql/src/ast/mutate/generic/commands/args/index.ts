@@ -5,13 +5,13 @@
  * 2.0.
  */
 
-import { isOptionNode, isSubQuery } from '../../../../is';
+import { isOptionNode, isSubQuery } from '@elastic/esql-ast';
 import type {
   ESQLAstQueryExpression,
   ESQLCommand,
   ESQLProperNode,
   ESQLSingleAstItem,
-} from '../../../../../types';
+} from '@elastic/esql-types';
 import { Visitor } from '../../../../visitor';
 
 export const insert = (
