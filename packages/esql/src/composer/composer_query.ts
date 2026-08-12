@@ -11,7 +11,19 @@ import type { BasicPrettyPrinterOptions, WrappingPrettyPrinterOptions } from '..
 import { BasicPrettyPrinter, WrappingPrettyPrinter } from '../pretty_print';
 import { SOURCE_COMMANDS } from '../parser';
 import { composerQuerySymbol, processTemplateHoles, validateParamName } from './util';
-import { Builder } from '../ast/builder';
+import {
+  Builder,
+  isBinaryExpression,
+  isBooleanLiteral,
+  isColumn,
+  isDoubleLiteral,
+  isFunctionExpression,
+  isHeaderCommand,
+  isIdentifier,
+  isIntegerLiteral,
+  isProperNode,
+  isStringLiteral,
+} from '@elastic/esql-ast';
 import type {
   ESQLAstExpression,
   ESQLAstHeaderCommand,
@@ -31,18 +43,6 @@ import type {
   QueryCommandTagParametrized,
 } from './types';
 import { Walker, replaceProperties } from '@elastic/esql-traversal';
-import {
-  isBinaryExpression,
-  isBooleanLiteral,
-  isColumn,
-  isDoubleLiteral,
-  isFunctionExpression,
-  isHeaderCommand,
-  isIdentifier,
-  isIntegerLiteral,
-  isProperNode,
-  isStringLiteral,
-} from '@elastic/esql-ast';
 import { resolveItem } from '../ast/visitor/utils';
 import { printAst } from '../debug';
 

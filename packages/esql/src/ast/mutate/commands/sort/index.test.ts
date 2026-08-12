@@ -8,7 +8,7 @@
 import { parse } from '../../../../parser';
 import * as commands from '..';
 import { BasicPrettyPrinter } from '../../../../pretty_print';
-import { Builder } from '../../../builder';
+import { Builder } from '@elastic/esql-ast';
 
 describe('commands.sort', () => {
   describe('.listCommands()', () => {

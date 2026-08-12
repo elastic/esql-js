@@ -5,7 +5,20 @@
  * 2.0.
  */
 
-import { isPromqlNode } from '@elastic/esql-ast';
+import {
+  isPromqlNode,
+  LeafPrinter,
+  isBinaryExpression,
+  isColumn,
+  isDoubleLiteral,
+  isIdentifier,
+  isIntegerLiteral,
+  isLiteral,
+  isParamLiteral,
+  isParens,
+  isProperNode,
+  isQuery,
+} from '@elastic/esql-ast';
 import {
   align,
   conditionalGroup,
@@ -50,7 +63,6 @@ import {
   commandsWithSpecialCommaRules,
 } from '../constants';
 import { getPrettyPrintStats } from '../helpers';
-import { LeafPrinter } from '@elastic/esql-ast';
 import { PromQLWrappingPrettyPrinter } from '../../embedded_languages/promql/pretty_print';
 import type { PromQLAstQueryExpression } from '@elastic/esql-types';
 import { singleItems, resolveItem } from '../../ast/visitor/utils';
@@ -59,18 +71,6 @@ import {
   binaryExpressionGroup,
   unaryExpressionGroup,
 } from '../../ast/grouping';
-import {
-  isBinaryExpression,
-  isColumn,
-  isDoubleLiteral,
-  isIdentifier,
-  isIntegerLiteral,
-  isLiteral,
-  isParamLiteral,
-  isParens,
-  isProperNode,
-  isQuery,
-} from '@elastic/esql-ast';
 import { commentListToDoc, commentToDoc, decorateWithComments } from './doc_helpers';
 
 export interface WrappingPrettyPrinterOptions extends BasicPrettyPrinterOptions {

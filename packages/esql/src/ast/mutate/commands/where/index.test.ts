@@ -7,7 +7,7 @@
 
 import * as commands from '..';
 import { EsqlQuery } from '../../../../composer/query';
-import { Builder } from '../../../builder';
+import { Builder } from '@elastic/esql-ast';
 
 describe('commands.where', () => {
   describe('.list()', () => {

@@ -9,7 +9,14 @@ import { CharStreams, type Token } from 'antlr4';
 import { CommonTokenStream, type CharStream } from 'antlr4';
 import { ESQLErrorListener } from './esql_error_listener';
 import { attachDecorations, collectDecorations } from './decorations';
-import { Builder } from '../../ast/builder';
+import {
+  Builder,
+  isFunctionExpression,
+  isProperNode,
+  isQuery,
+  isMap,
+  isCommand,
+} from '@elastic/esql-ast';
 import { CstToAstConverter } from './cst_to_ast_converter';
 import { EsqlLexer as ESQLLexer, EsqlParser as ESQLParser } from '@elastic/esql-grammar';
 import type {
@@ -22,7 +29,6 @@ import type {
   ESQLProperNode,
   EditorError,
 } from '../../types';
-import { isFunctionExpression, isProperNode, isQuery, isMap, isCommand } from '@elastic/esql-ast';
 import { singleItems } from '../../ast/visitor/utils';
 import { DEFAULT_CHANNEL, SOURCE_COMMANDS } from './constants';
 import type { EsqlParsingTarget } from './types';

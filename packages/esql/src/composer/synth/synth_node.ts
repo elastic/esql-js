@@ -6,8 +6,7 @@
  */
 
 import { Walker } from '@elastic/esql-traversal';
-import { isPromqlNode } from '@elastic/esql-ast';
-import { Builder } from '../../ast/builder';
+import { isPromqlNode, Builder } from '@elastic/esql-ast';
 import { BasicPrettyPrinter } from '../../pretty_print';
 import { printAst, type PrintAstOptions } from '../../debug';
 import { PromQLBasicPrettyPrinter } from '../../embedded_languages/promql/pretty_print/basic_pretty_printer';

@@ -21,7 +21,7 @@ import type {
   VisitorMethods,
 } from './types';
 import type { ESQLAstQueryExpression, ESQLCommand, ESQLProperNode } from '../../types';
-import { Builder } from '../builder';
+import { Builder } from '@elastic/esql-ast';
 
 export interface VisitorOptions<
   Methods extends VisitorMethods = VisitorMethods,

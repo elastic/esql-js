@@ -6,7 +6,7 @@
  */
 
 import * as synth from '..';
-import { Builder } from '../../../ast/builder';
+import { Builder } from '@elastic/esql-ast';
 import { BasicPrettyPrinter } from '../../../pretty_print';
 import { query } from '../query';
 

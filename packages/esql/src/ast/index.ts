@@ -11,6 +11,5 @@ export * from './location';
 export * from './grouping';
 
 // AST manipulation tools
-export { Builder, type AstNodeParserFields, type AstNodeTemplate } from './builder';
 export * as mutate from './mutate';
 export * from './visitor';

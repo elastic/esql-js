@@ -6,7 +6,7 @@
  */
 
 import { type CommonTokenStream } from 'antlr4';
-import { Builder } from '../../../ast/builder';
+import { Builder } from '@elastic/esql-ast';
 import { findNodeAtOrAfter, findNodeAtOrBefore } from '@elastic/esql-traversal';
 import type {
   ESQLAstCommentSingleLine,

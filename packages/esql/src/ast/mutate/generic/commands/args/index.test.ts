@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Builder } from '../../../../builder';
+import { Builder } from '@elastic/esql-ast';
 import { parse } from '../../../../../parser';
 import { BasicPrettyPrinter } from '../../../../../pretty_print';
 import * as generic from '../..';

@@ -53,8 +53,7 @@ import type {
   VisitorMethods,
   VisitorOutput,
 } from './types';
-import { Builder } from '../builder';
-import { isProperNode } from '@elastic/esql-ast';
+import { Builder, isProperNode } from '@elastic/esql-ast';
 import { PromQLAstQueryExpression } from '@elastic/esql-types';
 
 export class VisitorContext<

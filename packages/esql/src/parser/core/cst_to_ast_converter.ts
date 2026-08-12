@@ -8,14 +8,19 @@
 import type * as antlr from 'antlr4';
 import * as cst from '@elastic/esql-grammar';
 import type * as ast from '../../types';
-import { isCommand, isStringLiteral, LeafPrinter } from '@elastic/esql-ast';
+import {
+  isCommand,
+  isStringLiteral,
+  LeafPrinter,
+  Builder,
+  type AstNodeParserFields,
+  type AstNodeTemplate,
+} from '@elastic/esql-ast';
 import { getPosition } from './tokens';
 import { nonNullable, unescapeColumn } from './helpers';
 import { firstItem, lastItem, resolveItem, singleItems } from '../../ast/visitor/utils';
-import { type AstNodeParserFields, Builder } from '../../ast/builder';
 import { type ArithmeticUnaryContext } from '@elastic/esql-grammar';
 import { PromQLParser } from '../../embedded_languages/promql/parser/parser';
-import type { AstNodeTemplate } from '../../ast/builder';
 import type { Parser } from './parser';
 import type { PromQLAstQueryExpression } from '@elastic/esql-types';
 

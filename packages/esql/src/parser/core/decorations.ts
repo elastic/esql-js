@@ -13,7 +13,7 @@
 
 import type { Token } from 'antlr4';
 import { type CommonTokenStream } from 'antlr4';
-import { Builder } from '../../ast/builder';
+import { Builder } from '@elastic/esql-ast';
 import { Visitor } from '../../ast/visitor';
 import type {
   ESQLAstComment,

@@ -5,10 +5,9 @@
  * 2.0.
  */
 
-import { Builder } from '../../ast/builder';
+import { Builder, isProperNode, LeafPrinter } from '@elastic/esql-ast';
 import { BasicPrettyPrinter } from '../../pretty_print';
 import { PromQLBasicPrettyPrinter } from '../../embedded_languages/promql/pretty_print';
-import { isProperNode, LeafPrinter } from '@elastic/esql-ast';
 import { SynthNode } from './synth_node';
 import { SynthLiteralFragment } from './synth_literal_fragment';
 import type {

@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Builder } from '../../../../builder';
+import { Builder } from '@elastic/esql-ast';
 import type {
   ESQLAstItem,
   ESQLAstQueryExpression,

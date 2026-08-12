@@ -5,8 +5,7 @@
  * 2.0.
  */
 
-import { isStringLiteral } from '@elastic/esql-ast';
-import { Builder } from '../../../builder';
+import { isStringLiteral, Builder } from '@elastic/esql-ast';
 import type {
   ESQLAstQueryExpression,
   ESQLAstRerankCommand,

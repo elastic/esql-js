@@ -8,7 +8,7 @@
 import { BasicPrettyPrinter } from '../../../../pretty_print';
 import * as mutate from '../..';
 import { EsqlQuery } from '../../../../composer/query';
-import { Builder } from '../../../builder';
+import { Builder } from '@elastic/esql-ast';
 import type { ESQLFunction } from '../../../../types';
 
 describe('scenarios', () => {

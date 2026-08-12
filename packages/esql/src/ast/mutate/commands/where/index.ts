@@ -6,8 +6,7 @@
  */
 
 import { Walker } from '@elastic/esql-traversal';
-import { LeafPrinter } from '@elastic/esql-ast';
-import { Builder } from '../../../builder';
+import { LeafPrinter, Builder } from '@elastic/esql-ast';
 import type {
   ESQLAstQueryExpression,
   ESQLColumn,

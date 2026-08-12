@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Builder } from '../../../ast/builder';
+import { Builder } from '@elastic/esql-ast';
 import { BasicPrettyPrinter } from '../../../pretty_print';
 import * as synth from '..';
 import { SynthNode } from '../synth_node';

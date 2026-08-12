@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Builder } from '../../ast/builder';
+import { Builder } from '@elastic/esql-ast';
 import type { ESQLLiteral } from '../../types';
 import { ComposerQuery } from '../composer_query';
 import { esql, e } from '../esql';
