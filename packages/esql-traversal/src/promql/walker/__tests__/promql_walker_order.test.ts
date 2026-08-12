@@ -5,17 +5,41 @@
  * 2.0.
  */
 
-import { PromQLParser } from '../../../parser/parser';
 import { PromqlWalker } from '../walker';
-import type { PromQLIdentifier } from '@elastic/esql-types';
+import {
+  binary,
+  func,
+  grouping,
+  groupModifier,
+  id,
+  label,
+  labelMap,
+  modifier,
+  query,
+  sel,
+  str,
+  time,
+} from './helpers';
+import type { PromQLIdentifier, PromQLSelector } from '@elastic/esql-types';
 
 describe('PromQL walker traversal order', () => {
   describe('selector args', () => {
+    // metric{a="1", b="2", c="3"}
+    const tree = () =>
+      query(
+        sel('metric', {
+          labelMap: labelMap([
+            label('a', '=', str('1')),
+            label('b', '=', str('2')),
+            label('c', '=', str('3')),
+          ]),
+        })
+      );
+
     test('by default walks in "forward" order', () => {
-      const query = PromQLParser.parse('metric{a="1", b="2", c="3"}');
       const identifiers: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlIdentifier: (node) => identifiers.push(node.name),
       });
 
@@ -24,10 +48,9 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('can explicitly specify "forward" order', () => {
-      const query = PromQLParser.parse('metric{a="1", b="2", c="3"}');
       const identifiers: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlIdentifier: (node) => identifiers.push(node.name),
         order: 'forward',
       });
@@ -36,10 +59,9 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('can walk in "backward" order', () => {
-      const query = PromQLParser.parse('metric{a="1", b="2", c="3"}');
       const identifiers: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlIdentifier: (node) => identifiers.push(node.name),
         order: 'backward',
       });
@@ -49,11 +71,14 @@ describe('PromQL walker traversal order', () => {
   });
 
   describe('function arguments', () => {
+    // label_join(metric, "dst", ",", "a", "b")
+    const tree = () =>
+      query(func('label_join', [sel('metric'), str('dst'), str(','), str('a'), str('b')]));
+
     test('in "forward" order', () => {
-      const query = PromQLParser.parse('label_join(metric, "dst", ",", "a", "b")');
       const literals: Array<string | number> = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlLiteral: (node) => {
           if (node.literalType === 'string' || node.literalType === 'integer') {
             literals.push(node.value as string | number);
@@ -66,10 +91,9 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('in "backward" order', () => {
-      const query = PromQLParser.parse('label_join(metric, "dst", ",", "a", "b")');
       const literals: Array<string | number> = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlLiteral: (node) => {
           if (node.literalType === 'string' || node.literalType === 'integer') {
             literals.push(node.value as string | number);
@@ -83,20 +107,21 @@ describe('PromQL walker traversal order', () => {
   });
 
   describe('binary expression operands', () => {
+    const collectMetricNames = (selectors: string[]) => (node: PromQLSelector) => {
+      // Get metric name from args
+      const metricId = node.args.find((arg) => arg.type === 'identifier') as
+        | PromQLIdentifier
+        | undefined;
+      if (metricId) {
+        selectors.push(metricId.name);
+      }
+    };
+
     test('in "forward" order', () => {
-      const query = PromQLParser.parse('a + b');
       const selectors: string[] = [];
 
-      PromqlWalker.walk(query.root, {
-        visitPromqlSelector: (node) => {
-          // Get metric name from args
-          const metricId = node.args.find((arg) => arg.type === 'identifier') as
-            | PromQLIdentifier
-            | undefined;
-          if (metricId) {
-            selectors.push(metricId.name);
-          }
-        },
+      PromqlWalker.walk(query(binary('+', sel('a'), sel('b'))), {
+        visitPromqlSelector: collectMetricNames(selectors),
         order: 'forward',
       });
 
@@ -104,71 +129,59 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('in "backward" order', () => {
-      const query = PromQLParser.parse('a + b');
       const selectors: string[] = [];
 
-      PromqlWalker.walk(query.root, {
-        visitPromqlSelector: (node) => {
-          const metricId = node.args.find((arg) => arg.type === 'identifier') as
-            | PromQLIdentifier
-            | undefined;
-          if (metricId) {
-            selectors.push(metricId.name);
-          }
-        },
+      PromqlWalker.walk(query(binary('+', sel('a'), sel('b'))), {
+        visitPromqlSelector: collectMetricNames(selectors),
         order: 'backward',
       });
 
       expect(selectors).toStrictEqual(['b', 'a']);
     });
 
+    // Mirrors `a + b * c`, which parses as `a + (b * c)` by precedence.
+    const nested = () => query(binary('+', sel('a'), binary('*', sel('b'), sel('c'))));
+
     test('complex binary expression in "forward" order', () => {
-      const query = PromQLParser.parse('a + b * c');
       const selectors: string[] = [];
 
-      PromqlWalker.walk(query.root, {
-        visitPromqlSelector: (node) => {
-          const metricId = node.args.find((arg) => arg.type === 'identifier') as
-            | PromQLIdentifier
-            | undefined;
-          if (metricId) {
-            selectors.push(metricId.name);
-          }
-        },
+      PromqlWalker.walk(nested(), {
+        visitPromqlSelector: collectMetricNames(selectors),
         order: 'forward',
       });
 
-      // Due to precedence: a + (b * c), so visits a, then b, then c
       expect(selectors).toStrictEqual(['a', 'b', 'c']);
     });
 
     test('complex binary expression in "backward" order', () => {
-      const query = PromQLParser.parse('a + b * c');
       const selectors: string[] = [];
 
-      PromqlWalker.walk(query.root, {
-        visitPromqlSelector: (node) => {
-          const metricId = node.args.find((arg) => arg.type === 'identifier') as
-            | PromQLIdentifier
-            | undefined;
-          if (metricId) {
-            selectors.push(metricId.name);
-          }
-        },
+      PromqlWalker.walk(nested(), {
+        visitPromqlSelector: collectMetricNames(selectors),
         order: 'backward',
       });
 
-      // Due to precedence: a + (b * c), backward visits c, then b, then a
       expect(selectors).toStrictEqual(['c', 'b', 'a']);
     });
   });
 
   describe('label map labels', () => {
+    // metric{x="1", y="2", z="3"}
+    const tree = () =>
+      query(
+        sel('metric', {
+          labelMap: labelMap([
+            label('x', '=', str('1')),
+            label('y', '=', str('2')),
+            label('z', '=', str('3')),
+          ]),
+        })
+      );
+
     test('in "forward" order', () => {
-      const query = PromQLParser.parse('metric{x="1", y="2", z="3"}');
       const labelNames: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlLabel: (node) => {
           if (node.labelName.type === 'identifier') {
             labelNames.push(node.labelName.name);
@@ -181,10 +194,9 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('in "backward" order', () => {
-      const query = PromQLParser.parse('metric{x="1", y="2", z="3"}');
       const labelNames: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlLabel: (node) => {
           if (node.labelName.type === 'identifier') {
             labelNames.push(node.labelName.name);
@@ -198,11 +210,14 @@ describe('PromQL walker traversal order', () => {
   });
 
   describe('grouping labels', () => {
+    // sum by (a, b, c) (metric)
+    const tree = () =>
+      query(func('sum', [sel('metric')], grouping('by', [id('a'), id('b'), id('c')]), 'before'));
+
     test('in "forward" order', () => {
-      const query = PromQLParser.parse('sum by (a, b, c) (metric)');
       const identifiers: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlGrouping: () => {
           // Skip the grouping node itself, we want its children
         },
@@ -219,10 +234,9 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('in "backward" order', () => {
-      const query = PromQLParser.parse('sum by (a, b, c) (metric)');
       const identifiers: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlGrouping: () => {
           // Skip the grouping node itself, we want its children
         },
@@ -239,11 +253,14 @@ describe('PromQL walker traversal order', () => {
   });
 
   describe('label key-value pairs', () => {
+    // metric{job="api"}
+    const tree = () =>
+      query(sel('metric', { labelMap: labelMap([label('job', '=', str('api'))]) }));
+
     test('in "forward" order walks key before value', () => {
-      const query = PromQLParser.parse('metric{job="api"}');
       const nodes: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlIdentifier: (node) => nodes.push(`id:${node.name}`),
         visitPromqlLiteral: (node) => {
           if (node.literalType === 'string') {
@@ -258,10 +275,9 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('in "backward" order walks value before key', () => {
-      const query = PromQLParser.parse('metric{job="api"}');
       const nodes: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlIdentifier: (node) => nodes.push(`id:${node.name}`),
         visitPromqlLiteral: (node) => {
           if (node.literalType === 'string') {
@@ -277,11 +293,14 @@ describe('PromQL walker traversal order', () => {
   });
 
   describe('nested functions', () => {
+    // sum(rate(metric[5m]))
+    const tree = () =>
+      query(func('sum', [func('rate', [sel('metric', { duration: time('5m') })])]));
+
     test('in "forward" order', () => {
-      const query = PromQLParser.parse('sum(rate(metric[5m]))');
       const functions: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlFunction: (node) => functions.push(node.name),
         order: 'forward',
       });
@@ -290,10 +309,9 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('in "backward" order', () => {
-      const query = PromQLParser.parse('sum(rate(metric[5m]))');
       const functions: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlFunction: (node) => functions.push(node.name),
         order: 'backward',
       });
@@ -305,11 +323,13 @@ describe('PromQL walker traversal order', () => {
   });
 
   describe('function with grouping', () => {
+    // sum by (job) (metric)
+    const tree = () => query(func('sum', [sel('metric')], grouping('by', [id('job')]), 'before'));
+
     test('in "forward" order walks grouping before args', () => {
-      const query = PromQLParser.parse('sum by (job) (metric)');
       const nodeTypes: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlGrouping: () => nodeTypes.push('grouping'),
         visitPromqlSelector: () => nodeTypes.push('selector'),
         order: 'forward',
@@ -319,10 +339,9 @@ describe('PromQL walker traversal order', () => {
     });
 
     test('in "backward" order walks args before grouping', () => {
-      const query = PromQLParser.parse('sum by (job) (metric)');
       const nodeTypes: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree(), {
         visitPromqlGrouping: () => nodeTypes.push('grouping'),
         visitPromqlSelector: () => nodeTypes.push('selector'),
         order: 'backward',
@@ -334,10 +353,15 @@ describe('PromQL walker traversal order', () => {
 
   describe('modifier with group modifier', () => {
     test('in "forward" order walks labels before group_modifier', () => {
-      const query = PromQLParser.parse('a + on(job) group_left(instance) b');
+      // a + on(job) group_left(instance) b
+      const tree = query(
+        binary('+', sel('a'), sel('b'), {
+          modifier: modifier('on', [id('job')], groupModifier('group_left', [id('instance')])),
+        })
+      );
       const nodeTypes: string[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(tree, {
         visitPromqlModifier: () => nodeTypes.push('modifier'),
         visitPromqlGroupModifier: () => nodeTypes.push('group-modifier'),
         visitPromqlIdentifier: (node, parent) => {
@@ -349,8 +373,7 @@ describe('PromQL walker traversal order', () => {
       });
 
       // modifier is visited, then its labels (job), then group_modifier
-      expect(nodeTypes).toContain('modifier');
-      expect(nodeTypes).toContain('group-modifier');
+      expect(nodeTypes).toStrictEqual(['modifier', 'label:job', 'group-modifier']);
     });
   });
 });

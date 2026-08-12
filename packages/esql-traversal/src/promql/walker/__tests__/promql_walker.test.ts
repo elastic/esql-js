@@ -5,8 +5,29 @@
  * 2.0.
  */
 
-import { PromQLParser } from '../../../parser/parser';
 import { PromqlWalker } from '../walker';
+import {
+  at,
+  binary,
+  evaluation,
+  func,
+  grouping,
+  groupModifier,
+  id,
+  int,
+  label,
+  labelMap,
+  modifier,
+  offset,
+  param,
+  parens,
+  query,
+  sel,
+  str,
+  subquery,
+  time,
+  unary,
+} from './helpers';
 import type {
   PromQLAstNode,
   PromQLFunction,
@@ -30,10 +51,10 @@ import type {
 describe('Walker PromQL support', () => {
   describe('basic PromQL traversal', () => {
     test('can walk a simple PromQL selector', () => {
-      const query = PromQLParser.parse('bytes_in');
+      const root = query(sel('bytes_in'));
       const promqlNodes: PromQLAstNode[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlAny: (node) => {
           promqlNodes.push(node);
         },
@@ -47,10 +68,10 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk PromQL selector with metric identifier', () => {
-      const query = PromQLParser.parse('http_requests_total');
+      const root = query(sel('http_requests_total'));
       const identifiers: PromQLIdentifier[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlIdentifier: (node) => {
           identifiers.push(node);
         },
@@ -61,14 +82,17 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk PromQL selector with labels', () => {
-      const query = PromQLParser.parse('bytes_in{job="prometheus"}');
+      // bytes_in{job="prometheus"}
+      const root = query(
+        sel('bytes_in', { labelMap: labelMap([label('job', '=', str('prometheus'))]) })
+      );
       const selectors: PromQLSelector[] = [];
       const labelMaps: PromQLLabelMap[] = [];
       const labels: PromQLLabel[] = [];
       const identifiers: PromQLIdentifier[] = [];
       const literals: PromQLLiteral[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlSelector: (node) => selectors.push(node),
         visitPromqlLabelMap: (node) => labelMaps.push(node),
         visitPromqlLabel: (node) => labels.push(node),
@@ -87,11 +111,12 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL function traversal', () => {
     test('can walk PromQL function call', () => {
-      const query = PromQLParser.parse('rate(http_requests_total[5m])');
+      // rate(http_requests_total[5m])
+      const root = query(func('rate', [sel('http_requests_total', { duration: time('5m') })]));
       const functions: PromQLFunction[] = [];
       const selectors: PromQLSelector[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlFunction: (node) => functions.push(node),
         visitPromqlSelector: (node) => selectors.push(node),
       });
@@ -102,10 +127,13 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk nested PromQL functions', () => {
-      const query = PromQLParser.parse('sum(rate(http_requests_total[5m]))');
+      // sum(rate(http_requests_total[5m]))
+      const root = query(
+        func('sum', [func('rate', [sel('http_requests_total', { duration: time('5m') })])])
+      );
       const functions: PromQLFunction[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlFunction: (node) => functions.push(node),
       });
 
@@ -114,11 +142,19 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk aggregation function with grouping', () => {
-      const query = PromQLParser.parse('sum by (job) (rate(http_requests_total[5m]))');
+      // sum by (job) (rate(http_requests_total[5m]))
+      const root = query(
+        func(
+          'sum',
+          [func('rate', [sel('http_requests_total', { duration: time('5m') })])],
+          grouping('by', [id('job')]),
+          'before'
+        )
+      );
       const functions: PromQLFunction[] = [];
       const groupings: PromQLGrouping[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlFunction: (node) => functions.push(node),
         visitPromqlGrouping: (node) => groupings.push(node),
       });
@@ -131,11 +167,11 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL binary expression traversal', () => {
     test('can walk PromQL binary expression', () => {
-      const query = PromQLParser.parse('a + b');
+      const root = query(binary('+', sel('a'), sel('b')));
       const binaryExpressions: PromQLBinaryExpression[] = [];
       const selectors: PromQLSelector[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlBinaryExpression: (node) => binaryExpressions.push(node),
         visitPromqlSelector: (node) => selectors.push(node),
       });
@@ -146,25 +182,29 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk complex PromQL binary expression', () => {
-      const query = PromQLParser.parse('(a + b) * c');
+      // (a + b) * c
+      const root = query(binary('*', parens(binary('+', sel('a'), sel('b'))), sel('c')));
       const binaryExpressions: PromQLBinaryExpression[] = [];
-      const parens: PromQLParens[] = [];
+      const parenNodes: PromQLParens[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlBinaryExpression: (node) => binaryExpressions.push(node),
-        visitPromqlParens: (node) => parens.push(node),
+        visitPromqlParens: (node) => parenNodes.push(node),
       });
 
       expect(binaryExpressions.length).toBe(2);
-      expect(parens.length).toBe(1);
+      expect(parenNodes.length).toBe(1);
     });
 
     test('can walk binary expression with vector matching modifier', () => {
-      const query = PromQLParser.parse('a + on(job) b');
+      // a + on(job) b
+      const root = query(
+        binary('+', sel('a'), sel('b'), { modifier: modifier('on', [id('job')]) })
+      );
       const binaryExpressions: PromQLBinaryExpression[] = [];
       const modifiers: PromQLModifier[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlBinaryExpression: (node) => binaryExpressions.push(node),
         visitPromqlModifier: (node) => modifiers.push(node),
       });
@@ -175,11 +215,16 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk binary expression with group modifier', () => {
-      const query = PromQLParser.parse('a + on(job) group_left(instance) b');
+      // a + on(job) group_left(instance) b
+      const root = query(
+        binary('+', sel('a'), sel('b'), {
+          modifier: modifier('on', [id('job')], groupModifier('group_left', [id('instance')])),
+        })
+      );
       const modifiers: PromQLModifier[] = [];
       const groupModifiers: PromQLGroupModifier[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlModifier: (node) => modifiers.push(node),
         visitPromqlGroupModifier: (node) => groupModifiers.push(node),
       });
@@ -192,10 +237,10 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL unary expression traversal', () => {
     test('can walk PromQL unary expression', () => {
-      const query = PromQLParser.parse('-http_requests_total');
+      const root = query(unary('-', sel('http_requests_total')));
       const unaryExpressions: PromQLUnaryExpression[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlUnaryExpression: (node) => unaryExpressions.push(node),
       });
 
@@ -206,10 +251,17 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL subquery traversal', () => {
     test('can walk PromQL subquery', () => {
-      const query = PromQLParser.parse('rate(http_requests_total[5m])[30m:1m]');
+      // rate(http_requests_total[5m])[30m:1m]
+      const root = query(
+        subquery(
+          func('rate', [sel('http_requests_total', { duration: time('5m') })]),
+          time('30m'),
+          time('1m')
+        )
+      );
       const subqueries: PromQLSubquery[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlSubquery: (node) => subqueries.push(node),
       });
 
@@ -220,11 +272,14 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL evaluation modifiers traversal', () => {
     test('can walk PromQL offset modifier', () => {
-      const query = PromQLParser.parse('http_requests_total offset 5m');
+      // http_requests_total offset 5m
+      const root = query(
+        sel('http_requests_total', { evaluation: evaluation(offset(time('5m'))) })
+      );
       const evaluations: PromQLEvaluation[] = [];
       const offsets: PromQLOffset[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlEvaluation: (node) => evaluations.push(node),
         visitPromqlOffset: (node) => offsets.push(node),
       });
@@ -234,11 +289,16 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk PromQL @ modifier', () => {
-      const query = PromQLParser.parse('http_requests_total @ 1609459200');
+      // http_requests_total @ 1609459200
+      const root = query(
+        sel('http_requests_total', {
+          evaluation: evaluation(undefined, at(time('1609459200'))),
+        })
+      );
       const evaluations: PromQLEvaluation[] = [];
       const atModifiers: PromQLAt[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlEvaluation: (node) => evaluations.push(node),
         visitPromqlAt: (node) => atModifiers.push(node),
       });
@@ -250,10 +310,10 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL literal traversal', () => {
     test('can walk numeric literal', () => {
-      const query = PromQLParser.parse('42');
+      const root = query(int(42));
       const literals: PromQLLiteral[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlLiteral: (node) => literals.push(node),
       });
 
@@ -263,10 +323,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk time literal in selector', () => {
-      const query = PromQLParser.parse('http_requests_total[5m]');
+      // http_requests_total[5m]
+      const root = query(sel('http_requests_total', { duration: time('5m') }));
       const literals: PromQLLiteral[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlLiteral: (node) => literals.push(node),
       });
 
@@ -275,24 +336,12 @@ describe('Walker PromQL support', () => {
     });
   });
 
-  describe('combined ES|QL and PromQL traversal', () => {
-    test('can walk PromQL query wrapped in ES|QL parens', () => {
-      const query = PromQLParser.parse('bytes_in');
+  describe('PromQL parens traversal', () => {
+    test('can walk a PromQL query wrapped in parens', () => {
+      const root = query(parens(sel('bytes_in')));
       const promqlSelectors: PromQLSelector[] = [];
 
-      PromqlWalker.walk(query.root, {
-        visitPromqlSelector: (node) => promqlSelectors.push(node),
-      });
-
-      // The parens in this case is an ES|QL parens wrapping the PromQL query
-      expect(promqlSelectors.length).toBe(1);
-    });
-
-    test('can walk named PromQL query', () => {
-      const query = PromQLParser.parse('bytes_in');
-      const promqlSelectors: PromQLSelector[] = [];
-
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlSelector: (node) => promqlSelectors.push(node),
       });
 
@@ -302,10 +351,18 @@ describe('Walker PromQL support', () => {
 
   describe('visitPromqlAny fallback', () => {
     test('visitPromqlAny is called for all PromQL node types', () => {
-      const query = PromQLParser.parse('rate(http_requests_total{job="api"}[5m])');
+      // rate(http_requests_total{job="api"}[5m])
+      const root = query(
+        func('rate', [
+          sel('http_requests_total', {
+            labelMap: labelMap([label('job', '=', str('api'))]),
+            duration: time('5m'),
+          }),
+        ])
+      );
       const allNodes: PromQLAstNode[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlAny: (node) => allNodes.push(node),
       });
 
@@ -323,11 +380,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('specific visitor takes precedence over visitPromqlAny', () => {
-      const query = PromQLParser.parse('http_requests_total');
+      const root = query(sel('http_requests_total'));
       const anyNodes: PromQLAstNode[] = [];
       const selectors: PromQLSelector[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlAny: (node) => anyNodes.push(node),
         visitPromqlSelector: (node) => selectors.push(node),
       });
@@ -340,10 +397,13 @@ describe('Walker PromQL support', () => {
 
   describe('label param literal traversal', () => {
     test('visitPromqlLiteral is called for a named param label value', () => {
-      const query = PromQLParser.parse('bytes_in{job=?job}');
+      // bytes_in{job=?job}
+      const root = query(
+        sel('bytes_in', { labelMap: labelMap([label('job', '=', param('job'))]) })
+      );
       const literals: PromQLLiteral[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlLiteral: (node) => literals.push(node),
       });
 
@@ -353,10 +413,13 @@ describe('Walker PromQL support', () => {
     });
 
     test('visitPromqlLiteral is called for a double param in a grouping', () => {
-      const query = PromQLParser.parse('sum by (??labels) (bytes_in)');
+      // sum by (??labels) (bytes_in)
+      const root = query(
+        func('sum', [sel('bytes_in')], grouping('by', [param('labels', undefined, '??')]), 'before')
+      );
       const literals: PromQLLiteral[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlLiteral: (node) => literals.push(node),
       });
 
@@ -368,10 +431,13 @@ describe('Walker PromQL support', () => {
 
   describe('abort functionality with PromQL', () => {
     test('can abort PromQL traversal', () => {
-      const query = PromQLParser.parse('rate(sum(http_requests_total[5m]))');
+      // rate(sum(http_requests_total[5m]))
+      const root = query(
+        func('rate', [func('sum', [sel('http_requests_total', { duration: time('5m') })])])
+      );
       const functions: PromQLFunction[] = [];
 
-      PromqlWalker.walk(query.root, {
+      PromqlWalker.walk(root, {
         visitPromqlFunction: (node, parent, walker) => {
           functions.push(node);
           if (functions.length === 1) {
