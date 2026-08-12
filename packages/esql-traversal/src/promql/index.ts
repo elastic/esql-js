@@ -6,3 +6,4 @@
  */
 
 export * from './traversal';
+export * from './walker';

@@ -5,9 +5,6 @@
  * 2.0.
  */
 
-// Walker
-export { PromqlWalker, type PromqlWalkerOptions } from './ast/walker';
-
 // Parser
 export { PromQLParser, type PromQLParseOptions } from './parser';
 export { PromQLErrorListener } from './parser/promql_error_listener';

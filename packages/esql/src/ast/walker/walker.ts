@@ -7,7 +7,7 @@
 
 import { resolveItem } from '../visitor/utils';
 import { isPromqlNode, replaceProperties, templateToPredicate } from './helpers';
-import { PromqlWalker, type PromqlWalkerOptions } from '../../embedded_languages/promql/ast/walker';
+import { PromqlWalker, type PromqlWalkerOptions } from '@elastic/esql-traversal';
 import type * as types from '@elastic/esql-types';
 import type { NodeMatchTemplate, WalkerProperNode } from './helpers';
 
