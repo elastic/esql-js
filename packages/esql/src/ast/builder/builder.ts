@@ -7,9 +7,8 @@
 
 /* eslint-disable @typescript-eslint/no-namespace */
 
-import { isStringLiteral } from '@elastic/esql-ast';
+import { isStringLiteral, LeafPrinter } from '@elastic/esql-ast';
 import { TIME_DURATION_UNITS } from '../../parser';
-import { LeafPrinter } from '../../pretty_print';
 import type {
   ESQLAstComment,
   ESQLAstCommentMultiLine,

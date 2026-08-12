@@ -6,7 +6,7 @@
  */
 
 import { Walker } from '../../../walker';
-import { LeafPrinter } from '../../../../pretty_print';
+import { LeafPrinter } from '@elastic/esql-ast';
 import { Builder } from '../../../builder';
 import type {
   ESQLAstQueryExpression,
