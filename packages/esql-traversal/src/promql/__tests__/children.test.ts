@@ -16,7 +16,7 @@ import type {
   PromQLStringLiteral,
   PromQLTimeValue,
 } from '@elastic/esql-types';
-import { childrenOfPromqlNode } from './traversal';
+import { childrenOfPromqlNode } from '../children';
 
 const base = {
   dialect: 'promql' as const,

@@ -5,6 +5,6 @@
  * 2.0.
  */
 
-export * from './traversal';
+export * from './children';
 export * from './walker';
 export * from './find_node';

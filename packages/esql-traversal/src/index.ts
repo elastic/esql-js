@@ -6,3 +6,4 @@
  */
 
 export * from './promql';
+export * from './esql';

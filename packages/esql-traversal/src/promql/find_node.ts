@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { childrenOfPromqlNode } from './traversal';
+import { childrenOfPromqlNode } from './children';
 import type { PromQLAstNode, PromQLAstQueryExpression } from '@elastic/esql-types';
 
 /**

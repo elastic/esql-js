@@ -6,7 +6,7 @@
  */
 
 import { parse } from '../../../parser';
-import type { ESQLAstForkCommand } from '../../../types';
+import type { ESQLAstForkCommand } from '@elastic/esql-types';
 import { CommandVisitorContext, WhereCommandVisitorContext } from '../contexts';
 import { Visitor } from '../visitor';
 
