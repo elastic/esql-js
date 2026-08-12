@@ -30,7 +30,7 @@ import type {
   QueryCommandTag,
   QueryCommandTagParametrized,
 } from './types';
-import { Walker } from '../ast/walker';
+import { Walker, replaceProperties } from '@elastic/esql-traversal';
 import {
   isBinaryExpression,
   isBooleanLiteral,
@@ -43,7 +43,6 @@ import {
   isProperNode,
   isStringLiteral,
 } from '@elastic/esql-ast';
-import { replaceProperties } from '../ast/walker/helpers';
 import { resolveItem } from '../ast/visitor/utils';
 import { printAst } from '../debug';
 

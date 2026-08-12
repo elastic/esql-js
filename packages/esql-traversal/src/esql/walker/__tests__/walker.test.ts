@@ -5,10 +5,9 @@
  * 2.0.
  */
 
-import { parse } from '../../../parser';
-import { Parser } from '../../../parser';
-import { EsqlQuery } from '../../../composer/query';
+import { Builder, isAssignment } from '@elastic/esql-ast';
 import type {
+  ESQLAstItem,
   ESQLColumn,
   ESQLCommand,
   ESQLCommandOption,
@@ -25,13 +24,688 @@ import type {
   ESQLAstHeaderCommand,
   ESQLSingleAstItem,
   ESQLStringLiteral,
-} from '../../../types';
+} from '@elastic/esql-types';
 import { walk, Walker } from '../walker';
-import { isAssignment } from '@elastic/esql-ast';
+
+const { expression: expr } = Builder;
+
+/**
+ * The parser does not mint an `operator` identifier node for binary expressions
+ * (except for the `=` inside header commands and the `WHERE` operator of the
+ * `STATS` command), so `Builder.expression.func.node` is used here instead of
+ * `Builder.expression.func.binary`, which would synthesize one.
+ */
+const binary = (name: string, args: ESQLAstItem[]): ESQLFunction =>
+  expr.func.node({ name, subtype: 'binary-expression', args });
+
+const unary = (name: string, arg: ESQLAstItem): ESQLFunction =>
+  expr.func.node({ name, subtype: 'unary-expression', args: [arg] });
+
+const unknown = (): ESQLUnknownItem => ({
+  ...Builder.parserFields({ incomplete: true }),
+  type: 'unknown',
+  name: 'unknown',
+});
+
+/** `TS index | EVAL a(b(c(foo)))` */
+const tsEvalNestedCalls = () =>
+  expr.query([
+    Builder.command({ name: 'ts', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'eval',
+      args: [
+        expr.func.call('a', [expr.func.call('b', [expr.func.call('c', [expr.column('foo')])])]),
+      ],
+    }),
+  ]);
+
+/** `TS source | STATS var0 = bucket(bytes, 1 hour)` */
+const tsStatsBucket = () =>
+  expr.query([
+    Builder.command({ name: 'ts', args: [expr.source.index('source')] }),
+    Builder.command({
+      name: 'stats',
+      args: [
+        binary('=', [
+          expr.column('var0'),
+          expr.func.call('bucket', [expr.column('bytes'), expr.literal.timespan(1, 'hour')]),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `FROM index` */
+const fromIndex = () =>
+  expr.query([Builder.command({ name: 'from', args: [expr.source.index('index')] })]);
+
+/** `FROM index | STATS a = 123 | WHERE 123 | LIMIT 10` */
+const fromStatsWhereLimit = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'stats',
+      args: [binary('=', [expr.column('a'), expr.literal.integer(123)])],
+    }),
+    Builder.command({ name: 'where', args: [expr.literal.integer(123)] }),
+    Builder.command({ name: 'limit', args: [expr.literal.integer(10)] }),
+  ]);
+
+/** `FROM index | WHERE field IN (FROM sub_index | KEEP sub_field)` */
+const fromWhereInSubquery = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'where',
+      args: [
+        binary('in', [
+          expr.column('field'),
+          expr.parens(
+            expr.query([
+              Builder.command({ name: 'from', args: [expr.source.index('sub_index')] }),
+              Builder.command({ name: 'keep', args: [expr.column('sub_field')] }),
+            ])
+          ),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `FROM index | LEFT JOIN a ON c, d` */
+const fromLeftJoin = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'join',
+      commandType: 'left',
+      args: [
+        expr.source.index('a'),
+        Builder.option({ name: 'on', args: [expr.column('c'), expr.column('d')] }),
+      ],
+    }),
+  ]);
+
+/** `FROM index | SAMPLE 0.25` */
+const fromSample = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({ name: 'sample', args: [expr.literal.decimal(0.25)] }),
+  ]);
+
+/** `FROM index | SORT field` */
+const fromSortField = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({ name: 'sort', args: [expr.column('field')] }),
+  ]);
+
+/** `FROM index | SORT field DESC, another_field ASC` */
+const fromSortFieldDescAsc = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'sort',
+      args: [
+        expr.order(expr.column('field'), { order: 'DESC', nulls: '' }),
+        expr.order(expr.column('another_field'), { order: 'ASC', nulls: '' }),
+      ],
+    }),
+  ]);
+
+/** `FROM index | SORT field DESC NULLS FIRST, another_field ASC NULLS LAST` */
+const fromSortFieldWithNulls = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'sort',
+      args: [
+        expr.order(expr.column('field'), { order: 'DESC', nulls: 'NULLS FIRST' }),
+        expr.order(expr.column('another_field'), { order: 'ASC', nulls: 'NULLS LAST' }),
+      ],
+    }),
+  ]);
+
+/** `FROM index METADATA _index` */
+const fromIndexMetadata = () =>
+  expr.query([
+    Builder.command({
+      name: 'from',
+      args: [
+        expr.source.index('index'),
+        Builder.option({ name: 'metadata', args: [expr.column('_index')] }),
+      ],
+    }),
+  ]);
+
+/** `ROW f(0, {"a": 0})` */
+const rowMap = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        expr.func.call('f', [
+          expr.literal.integer(0),
+          expr.map(
+            {
+              entries: [
+                expr.entry('a', expr.literal.integer(0), { location: { min: 10, max: 15 } }),
+              ],
+            },
+            { location: { min: 9, max: 16 } }
+          ),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `ROW f(0, {"a": {"b": 0}})` */
+const rowNestedMap = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        expr.func.call('f', [
+          expr.literal.integer(0),
+          expr.map(
+            {
+              entries: [
+                expr.entry(
+                  'a',
+                  expr.map(
+                    {
+                      entries: [
+                        expr.entry('b', expr.literal.integer(0), {
+                          location: { min: 16, max: 21 },
+                        }),
+                      ],
+                    },
+                    { location: { min: 15, max: 22 } }
+                  ),
+                  { location: { min: 10, max: 22 } }
+                ),
+              ],
+            },
+            { location: { min: 9, max: 23 } }
+          ),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `ROW f(0, {"a":0, "foo" : /* 1 *\/ "bar"})` */
+const rowMapWithComment = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        expr.func.call('f', [
+          expr.literal.integer(0),
+          expr.map(
+            {
+              entries: [
+                expr.entry('a', expr.literal.integer(0), { location: { min: 10, max: 14 } }),
+                expr.entry('foo', expr.literal.string('bar'), { location: { min: 17, max: 37 } }),
+              ],
+            },
+            { location: { min: 9, max: 38 } }
+          ),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `FROM a:b` */
+const fromPrefixedSource = () =>
+  expr.query([Builder.command({ name: 'from', args: [expr.source.index('b', 'a')] })]);
+
+/** `TS index, index2, index3, index4` */
+const tsFourSources = () =>
+  expr.query([
+    Builder.command({
+      name: 'ts',
+      args: ['index', 'index2', 'index3', 'index4'].map((name) => expr.source.index(name)),
+    }),
+  ]);
+
+/** `FROM index | STATS a = 123 WHERE c == d` */
+const fromStatsWhereBinary = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'stats',
+      args: [
+        expr.where([
+          binary('=', [expr.column('a'), expr.literal.integer(123)]),
+          binary('==', [expr.column('c'), expr.column('d')]),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `ROW x = 1` */
+const rowAssignment = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [binary('=', [expr.column('x'), expr.literal.integer(1)])],
+    }),
+  ]);
+
+/** `FROM index | STATS a = 123, b = 456` */
+const fromStatsTwoAssignments = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'stats',
+      args: [
+        binary('=', [expr.column('a'), expr.literal.integer(123)]),
+        binary('=', [expr.column('b'), expr.literal.integer(456)]),
+      ],
+    }),
+  ]);
+
+/** `FROM index | KEEP [index].[a]` */
+const fromKeepQualifiedColumn = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({ name: 'keep', args: [expr.column('a', 'index')] }),
+  ]);
+
+/** `FROM a | STATS fn(1), agg(true)` */
+const fromStatsTwoCalls = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('a')] }),
+    Builder.command({
+      name: 'stats',
+      args: [
+        expr.func.call('fn', [expr.literal.integer(1)]),
+        expr.func.call('agg', [expr.literal.boolean(true)]),
+      ],
+    }),
+  ]);
+
+/** `FROM index | STATS a = 123, b = "foo", c = true AND false, d = 1 day, e = 4 seconds` */
+const fromStatsAllLiterals = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'stats',
+      args: [
+        binary('=', [expr.column('a'), expr.literal.integer(123)]),
+        binary('=', [expr.column('b'), expr.literal.string('foo')]),
+        binary('=', [
+          expr.column('c'),
+          binary('and', [expr.literal.boolean(true), expr.literal.boolean(false)]),
+        ]),
+        binary('=', [expr.column('d'), expr.literal.timespan(1, 'day')]),
+        binary('=', [expr.column('e'), expr.literal.timespan(4, 'seconds')]),
+      ],
+    }),
+  ]);
+
+/** `FROM index | STATS f(1, "2", g(true) + false, h(j(k(3.14))))` */
+const fromStatsNestedCallLiterals = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'stats',
+      args: [
+        expr.func.call('f', [
+          expr.literal.integer(1),
+          expr.literal.string('2'),
+          binary('+', [
+            expr.func.call('g', [expr.literal.boolean(true)]),
+            expr.literal.boolean(false),
+          ]),
+          expr.func.call('h', [
+            expr.func.call('j', [expr.func.call('k', [expr.literal.decimal(3.14)])]),
+          ]),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `ROW x = [1, 2]` */
+const rowNumericList = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        binary('=', [
+          expr.column('x'),
+          expr.list.literal({ values: [expr.literal.integer(1), expr.literal.integer(2)] }),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `ROW x = [1, 2] + [3.3]` */
+const rowNumericListSum = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        binary('=', [
+          expr.column('x'),
+          binary('+', [
+            expr.list.literal({ values: [expr.literal.integer(1), expr.literal.integer(2)] }),
+            expr.list.literal({ values: [expr.literal.decimal(3.3)] }),
+          ]),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `ROW x = [true, false]` */
+const rowBooleanList = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        binary('=', [
+          expr.column('x'),
+          expr.list.literal({
+            values: [expr.literal.boolean(true), expr.literal.boolean(false)],
+          }),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `ROW x = [false, false], b([true, true, true])` */
+const rowBooleanLists = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        binary('=', [
+          expr.column('x'),
+          expr.list.literal({
+            values: [expr.literal.boolean(false), expr.literal.boolean(false)],
+          }),
+        ]),
+        expr.func.call('b', [
+          expr.list.literal({
+            values: [
+              expr.literal.boolean(true),
+              expr.literal.boolean(true),
+              expr.literal.boolean(true),
+            ],
+          }),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `ROW x = ["a", "b"], b(["c", "d", "e"])` */
+const rowStringLists = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        binary('=', [
+          expr.column('x'),
+          expr.list.literal({
+            values: [expr.literal.string('a'), expr.literal.string('b')],
+          }),
+        ]),
+        expr.func.call('b', [
+          expr.list.literal({
+            values: [expr.literal.string('c'), expr.literal.string('d'), expr.literal.string('e')],
+          }),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `FROM index | STATS a = 123::integer` */
+const fromStatsInlineCast = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'stats',
+      args: [
+        binary('=', [
+          expr.column('a'),
+          expr.inlineCast({ castType: 'integer', value: expr.literal.integer(123) }),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `FROM index | WHERE 123 == add(1 + fn(NOT -(a.b.c)::INTEGER /* comment *\/))` */
+const fromWhereDeepInlineCast = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+    Builder.command({
+      name: 'where',
+      args: [
+        binary('==', [
+          expr.literal.integer(123),
+          expr.func.call('add', [
+            binary('+', [
+              expr.literal.integer(1),
+              expr.func.call('fn', [
+                unary('not', [
+                  binary('*', [
+                    expr.literal.integer(-1),
+                    expr.inlineCast({
+                      castType: 'integer',
+                      value: expr.column(['a', 'b', 'c']),
+                    }),
+                  ]),
+                ]),
+              ]),
+            ]),
+          ]),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `FROM a | WHERE a IN ()` and `FROM a | WHERE a IN (` */
+const fromWhereInIncomplete = () =>
+  expr.query([
+    Builder.command({ name: 'from', args: [expr.source.index('a')] }),
+    Builder.command({ name: 'where', args: [unknown()] }),
+  ]);
+
+/** `ROW a(1), b(2)` */
+const rowTwoCalls = () =>
+  expr.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        expr.func.call('a', [expr.literal.integer(1)]),
+        expr.func.call('b', [expr.literal.integer(2)]),
+      ],
+    }),
+  ]);
+
+/** `FROM a, b` */
+const fromTwoSources = () =>
+  expr.query([
+    Builder.command({
+      name: 'from',
+      args: [expr.source.index('a'), expr.source.index('b')],
+    }),
+  ]);
+
+/** `ROW a | LIMIT 10` */
+const rowColumnLimit = () =>
+  expr.query([
+    Builder.command({ name: 'row', args: [expr.column('a')] }),
+    Builder.command({ name: 'limit', args: [expr.literal.integer(10)] }),
+  ]);
+
+/** `SET timeout = "30s"; FROM index` */
+const setTimeoutFromIndex = () =>
+  expr.query([Builder.command({ name: 'from', args: [expr.source.index('index')] })], undefined, [
+    Builder.header.command.set([
+      expr.func.binary('=', [Builder.identifier('timeout'), expr.literal.string('30s')]),
+    ]),
+  ]);
+
+/** `SET complex_setting = "value"; FROM index` */
+const setComplexSettingFromIndex = () =>
+  expr.query([Builder.command({ name: 'from', args: [expr.source.index('index')] })], undefined, [
+    Builder.header.command.set([
+      expr.func.binary('=', [Builder.identifier('complex_setting'), expr.literal.string('value')]),
+    ]),
+  ]);
+
+/** `SET a = 1; SET b = 2; FROM index` */
+const setABFromIndex = () =>
+  expr.query([Builder.command({ name: 'from', args: [expr.source.index('index')] })], undefined, [
+    Builder.header.command.set([
+      expr.func.binary('=', [Builder.identifier('a'), expr.literal.integer(1)]),
+    ]),
+    Builder.header.command.set([
+      expr.func.binary('=', [Builder.identifier('b'), expr.literal.integer(2)]),
+    ]),
+  ]);
+
+/** `SET a = 1; FROM index` */
+const setAFromIndex = () =>
+  expr.query([Builder.command({ name: 'from', args: [expr.source.index('index')] })], undefined, [
+    Builder.header.command.set([
+      expr.func.binary('=', [Builder.identifier('a'), expr.literal.integer(1)]),
+    ]),
+  ]);
+
+/** `SET a = 1; SET b = 2; SET c = 3; FROM index` */
+const setABCFromIndex = () =>
+  expr.query(
+    [Builder.command({ name: 'from', args: [expr.source.index('index')] })],
+    undefined,
+    [1, 2, 3].map((value, i) =>
+      Builder.header.command.set([
+        expr.func.binary('=', [
+          Builder.identifier(['a', 'b', 'c'][i]),
+          expr.literal.integer(value),
+        ]),
+      ])
+    )
+  );
+
+/** `SET a = 1; SET b = "value"; SET c = true; FROM index` */
+const setMixedFromIndex = () =>
+  expr.query([Builder.command({ name: 'from', args: [expr.source.index('index')] })], undefined, [
+    Builder.header.command.set([
+      expr.func.binary('=', [Builder.identifier('a'), expr.literal.integer(1)]),
+    ]),
+    Builder.header.command.set([
+      expr.func.binary('=', [Builder.identifier('b'), expr.literal.string('value')]),
+    ]),
+    Builder.header.command.set([
+      expr.func.binary('=', [Builder.identifier('c'), expr.literal.boolean(true)]),
+    ]),
+  ]);
+
+/** `SET a = 1; SET b = 2; FROM index | LIMIT 10` */
+const setABFromIndexLimit = () =>
+  expr.query(
+    [
+      Builder.command({ name: 'from', args: [expr.source.index('index')] }),
+      Builder.command({ name: 'limit', args: [expr.literal.integer(10)] }),
+    ],
+    undefined,
+    [
+      Builder.header.command.set([
+        expr.func.binary('=', [Builder.identifier('a'), expr.literal.integer(1)]),
+      ]),
+      Builder.header.command.set([
+        expr.func.binary('=', [Builder.identifier('b'), expr.literal.integer(2)]),
+      ]),
+    ]
+  );
+
+/**
+ * ```
+ * FROM index1,
+ *      (FROM index2
+ *       | WHERE a > 10
+ *       | EVAL b = a * 2
+ *       | STATS cnt = COUNT(*) BY c
+ *       | SORT cnt desc
+ *       | LIMIT 10),
+ *      index3,
+ *      (FROM index4 | STATS count(*))
+ * | WHERE d > 10
+ * | STATS max = max(*) BY e
+ * | SORT max desc
+ * ```
+ */
+const fromWithSubqueries = () =>
+  expr.query([
+    Builder.command({
+      name: 'from',
+      args: [
+        expr.source.index('index1'),
+        expr.parens(
+          expr.query([
+            Builder.command({ name: 'from', args: [expr.source.index('index2')] }),
+            Builder.command({
+              name: 'where',
+              args: [binary('>', [expr.column('a'), expr.literal.integer(10)])],
+            }),
+            Builder.command({
+              name: 'eval',
+              args: [
+                binary('=', [
+                  expr.column('b'),
+                  binary('*', [expr.column('a'), expr.literal.integer(2)]),
+                ]),
+              ],
+            }),
+            Builder.command({
+              name: 'stats',
+              args: [
+                binary('=', [
+                  expr.column('cnt'),
+                  expr.func.call(Builder.identifier('COUNT'), [expr.column('*')]),
+                ]),
+                Builder.option({ name: 'by', args: [expr.column('c')] }),
+              ],
+            }),
+            Builder.command({
+              name: 'sort',
+              args: [expr.order(expr.column('cnt'), { order: 'DESC', nulls: '' })],
+            }),
+            Builder.command({ name: 'limit', args: [expr.literal.integer(10)] }),
+          ])
+        ),
+        expr.source.index('index3'),
+        expr.parens(
+          expr.query([
+            Builder.command({ name: 'from', args: [expr.source.index('index4')] }),
+            Builder.command({
+              name: 'stats',
+              args: [expr.func.call('count', [expr.column('*')])],
+            }),
+          ])
+        ),
+      ],
+    }),
+    Builder.command({
+      name: 'where',
+      args: [binary('>', [expr.column('d'), expr.literal.integer(10)])],
+    }),
+    Builder.command({
+      name: 'stats',
+      args: [
+        binary('=', [expr.column('max'), expr.func.call('max', [expr.column('*')])]),
+        Builder.option({ name: 'by', args: [expr.column('e')] }),
+      ],
+    }),
+    Builder.command({
+      name: 'sort',
+      args: [expr.order(expr.column('max'), { order: 'DESC', nulls: '' })],
+    }),
+  ]);
 
 describe('structurally can walk all nodes', () => {
   test('can walk all functions', () => {
-    const { root } = parse('TS index | EVAL a(b(c(foo)))');
+    const root = tsEvalNestedCalls();
     const functions: string[] = [];
 
     walk(root, {
@@ -42,8 +716,7 @@ describe('structurally can walk all nodes', () => {
   });
 
   test('can find assignment expression', () => {
-    const query = 'TS source | STATS var0 = bucket(bytes, 1 hour)';
-    const { root } = parse(query);
+    const root = tsStatsBucket();
     const functions: ESQLFunction[] = [];
 
     Walker.walk(root, {
@@ -62,7 +735,7 @@ describe('structurally can walk all nodes', () => {
 
   describe('commands', () => {
     test('can visit a single source command', () => {
-      const { ast } = parse('FROM index');
+      const ast = fromIndex().commands;
       const commands: ESQLCommand[] = [];
 
       walk(ast, {
@@ -73,7 +746,7 @@ describe('structurally can walk all nodes', () => {
     });
 
     test('can visit all commands', () => {
-      const { ast } = parse('FROM index | STATS a = 123 | WHERE 123 | LIMIT 10');
+      const ast = fromStatsWhereLimit().commands;
       const commands: ESQLCommand[] = [];
 
       walk(ast, {
@@ -89,7 +762,7 @@ describe('structurally can walk all nodes', () => {
     });
 
     test('can visit commands inside an IN subquery', () => {
-      const { ast } = parse('FROM index | WHERE field IN (FROM sub_index | KEEP sub_field)');
+      const ast = fromWhereInSubquery().commands;
       const commands: ESQLCommand[] = [];
 
       walk(ast, {
@@ -100,7 +773,7 @@ describe('structurally can walk all nodes', () => {
     });
 
     test('can traverse JOIN command', () => {
-      const { ast } = parse('FROM index | LEFT JOIN a ON c, d');
+      const ast = fromLeftJoin().commands;
       const commands: ESQLCommand[] = [];
       const sources: ESQLSource[] = [];
       const identifiers: ESQLIdentifier[] = [];
@@ -120,7 +793,7 @@ describe('structurally can walk all nodes', () => {
     });
 
     test('can traverse SAMPLE command', () => {
-      const { root } = Parser.parse('FROM index | SAMPLE 0.25');
+      const root = fromSample();
       const commands: ESQLCommand[] = [];
       const literals: ESQLLiteral[] = [];
 
@@ -136,7 +809,7 @@ describe('structurally can walk all nodes', () => {
     });
 
     test('"visitAny" can capture command nodes', () => {
-      const { ast } = parse('FROM index | STATS a = 123 | WHERE 123 | LIMIT 10');
+      const ast = fromStatsWhereLimit().commands;
       const commands: ESQLCommand[] = [];
 
       walk(ast, {
@@ -155,7 +828,7 @@ describe('structurally can walk all nodes', () => {
 
     describe('SORT command', () => {
       test('can visit a SORT field', () => {
-        const { ast } = EsqlQuery.fromSrc('FROM index | SORT field');
+        const ast = fromSortField();
         const nodes: ESQLColumn[] = [];
 
         walk(ast, {
@@ -171,7 +844,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('can visit a SORT field with DESC order', () => {
-        const { ast } = EsqlQuery.fromSrc('FROM index | SORT field DESC, another_field ASC');
+        const ast = fromSortFieldDescAsc();
         const nodes: ESQLColumn[] = [];
 
         walk(ast, {
@@ -191,9 +864,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('can visit a SORT command "order" node', () => {
-        const { ast } = EsqlQuery.fromSrc(
-          'FROM index | SORT field DESC NULLS FIRST, another_field ASC NULLS LAST'
-        );
+        const ast = fromSortFieldWithNulls();
         const nodes: ESQLOrderExpression[] = [];
 
         walk(ast, {
@@ -217,7 +888,7 @@ describe('structurally can walk all nodes', () => {
 
     describe('command options', () => {
       test('can visit command options', () => {
-        const { ast } = parse('FROM index METADATA _index');
+        const ast = fromIndexMetadata().commands;
         const options: ESQLCommandOption[] = [];
 
         walk(ast, {
@@ -229,7 +900,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('"visitAny" can capture an options node', () => {
-        const { ast } = parse('FROM index METADATA _index');
+        const ast = fromIndexMetadata().commands;
         const options: ESQLCommandOption[] = [];
 
         walk(ast, {
@@ -248,7 +919,7 @@ describe('structurally can walk all nodes', () => {
     describe('maps', () => {
       test('can visit a "map" expression', () => {
         const src = 'ROW f(0, {"a": 0})';
-        const { ast } = parse(src);
+        const ast = rowMap().commands;
         const nodes: ESQLMap[] = [];
 
         walk(ast, {
@@ -265,7 +936,7 @@ describe('structurally can walk all nodes', () => {
 
       test('can nested "map" expression', () => {
         const src = 'ROW f(0, {"a": {"b": 0}})';
-        const { ast } = parse(src);
+        const ast = rowNestedMap().commands;
         const nodes: ESQLMap[] = [];
 
         walk(ast, {
@@ -281,7 +952,7 @@ describe('structurally can walk all nodes', () => {
 
       test('can visit a "map-entry" expression', () => {
         const src = 'ROW f(0, {"a":0, "foo" : /* 1 */ "bar"})';
-        const { ast } = parse(src);
+        const ast = rowMapWithComment().commands;
         const nodes: ESQLMapEntry[] = [];
 
         walk(ast, {
@@ -305,8 +976,7 @@ describe('structurally can walk all nodes', () => {
 
     describe('sources', () => {
       test('can visit "source" components', () => {
-        const src = 'FROM a:b';
-        const { ast } = parse(src);
+        const ast = fromPrefixedSource().commands;
         const nodes: ESQLLiteral[] = [];
 
         walk(ast, {
@@ -326,7 +996,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('iterates through a single source', () => {
-        const { ast } = parse('FROM index');
+        const ast = fromIndex().commands;
         const sources: ESQLSource[] = [];
 
         walk(ast, {
@@ -338,7 +1008,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('"visitAny" can capture a source node', () => {
-        const { ast } = parse('FROM index');
+        const ast = fromIndex().commands;
         const sources: ESQLSource[] = [];
 
         walk(ast, {
@@ -352,7 +1022,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('iterates through all sources', () => {
-        const { ast } = parse('TS index, index2, index3, index4');
+        const ast = tsFourSources().commands;
         const sources: ESQLSource[] = [];
 
         walk(ast, {
@@ -369,8 +1039,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('can walk through "WHERE" binary expression', () => {
-        const query = 'FROM index | STATS a = 123 WHERE c == d';
-        const { root } = parse(query);
+        const root = fromStatsWhereBinary();
         const expressions: ESQLFunction[] = [];
 
         walk(root, {
@@ -402,8 +1071,7 @@ describe('structurally can walk all nodes', () => {
 
     describe('columns', () => {
       test('can walk through a single column', () => {
-        const query = 'ROW x = 1';
-        const { ast } = parse(query);
+        const ast = rowAssignment().commands;
         const columns: ESQLColumn[] = [];
 
         walk(ast, {
@@ -419,8 +1087,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('"visitAny" can capture a column', () => {
-        const query = 'ROW x = 1';
-        const { ast } = parse(query);
+        const ast = rowAssignment().commands;
         const columns: ESQLColumn[] = [];
 
         walk(ast, {
@@ -438,8 +1105,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('can walk through multiple columns', () => {
-        const query = 'FROM index | STATS a = 123, b = 456';
-        const { ast } = parse(query);
+        const ast = fromStatsTwoAssignments().commands;
         const columns: ESQLColumn[] = [];
 
         walk(ast, {
@@ -459,8 +1125,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('can walk thtough columns with qualified names', () => {
-        const query = 'FROM index | KEEP [index].[a]';
-        const { ast } = parse(query);
+        const ast = fromKeepQualifiedColumn().commands;
         const columns: ESQLColumn[] = [];
         walk(ast, {
           visitColumn: (node) => columns.push(node),
@@ -477,8 +1142,7 @@ describe('structurally can walk all nodes', () => {
 
     describe('functions', () => {
       test('can walk through functions', () => {
-        const query = 'FROM a | STATS fn(1), agg(true)';
-        const { ast } = parse(query);
+        const ast = fromStatsTwoCalls().commands;
         const nodes: ESQLFunction[] = [];
 
         walk(ast, {
@@ -498,8 +1162,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('"visitAny" can capture function nodes', () => {
-        const query = 'FROM a | STATS fn(1), agg(true)';
-        const { ast } = parse(query);
+        const ast = fromStatsTwoCalls().commands;
         const nodes: ESQLFunction[] = [];
 
         walk(ast, {
@@ -523,8 +1186,7 @@ describe('structurally can walk all nodes', () => {
 
     describe('literals', () => {
       test('can walk a single literal', () => {
-        const query = 'ROW x = 1';
-        const { ast } = parse(query);
+        const ast = rowAssignment().commands;
         const columns: ESQLLiteral[] = [];
 
         walk(ast, {
@@ -540,9 +1202,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('can walk through all literals', () => {
-        const query =
-          'FROM index | STATS a = 123, b = "foo", c = true AND false, d = 1 day, e = 4 seconds';
-        const { ast } = parse(query);
+        const ast = fromStatsAllLiterals().commands;
         const columns: ESQLLiteral[] = [];
 
         walk(ast, {
@@ -591,8 +1251,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('can walk through literals inside functions', () => {
-        const query = 'FROM index | STATS f(1, "2", g(true) + false, h(j(k(3.14))))';
-        const { ast } = parse(query);
+        const ast = fromStatsNestedCallLiterals().commands;
         const columns: ESQLLiteral[] = [];
 
         walk(ast, {
@@ -637,8 +1296,7 @@ describe('structurally can walk all nodes', () => {
     describe('list literals', () => {
       describe('numeric', () => {
         test('can walk a single numeric list literal', () => {
-          const query = 'ROW x = [1, 2]';
-          const { ast } = parse(query);
+          const ast = rowNumericList().commands;
           const lists: ESQLList[] = [];
 
           walk(ast, {
@@ -665,8 +1323,7 @@ describe('structurally can walk all nodes', () => {
         });
 
         test('"visitAny" can capture a list literal', () => {
-          const query = 'ROW x = [1, 2]';
-          const { ast } = parse(query);
+          const ast = rowNumericList().commands;
           const lists: ESQLList[] = [];
 
           walk(ast, {
@@ -679,8 +1336,7 @@ describe('structurally can walk all nodes', () => {
         });
 
         test('can walk plain literals inside list literal', () => {
-          const query = 'ROW x = [1, 2] + [3.3]';
-          const { ast } = parse(query);
+          const ast = rowNumericListSum().commands;
           const lists: ESQLList[] = [];
           const literals: ESQLLiteral[] = [];
 
@@ -738,8 +1394,7 @@ describe('structurally can walk all nodes', () => {
 
       describe('boolean', () => {
         test('can walk a single numeric list literal', () => {
-          const query = 'ROW x = [true, false]';
-          const { ast } = parse(query);
+          const ast = rowBooleanList().commands;
           const lists: ESQLList[] = [];
 
           walk(ast, {
@@ -766,8 +1421,7 @@ describe('structurally can walk all nodes', () => {
         });
 
         test('can walk plain literals inside list literal', () => {
-          const query = 'ROW x = [false, false], b([true, true, true])';
-          const { ast } = parse(query);
+          const ast = rowBooleanLists().commands;
           const lists: ESQLList[] = [];
           const literals: ESQLLiteral[] = [];
 
@@ -816,8 +1470,7 @@ describe('structurally can walk all nodes', () => {
 
       describe('string', () => {
         test('can walk string literals', () => {
-          const query = 'ROW x = ["a", "b"], b(["c", "d", "e"])';
-          const { ast } = parse(query);
+          const ast = rowStringLists().commands;
           const lists: ESQLList[] = [];
           const literals: ESQLLiteral[] = [];
 
@@ -867,8 +1520,7 @@ describe('structurally can walk all nodes', () => {
 
     describe('cast expression', () => {
       test('can visit cast expression', () => {
-        const query = 'FROM index | STATS a = 123::integer';
-        const { ast } = parse(query);
+        const ast = fromStatsInlineCast().commands;
 
         const casts: ESQLInlineCast[] = [];
 
@@ -890,8 +1542,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('can visit a column inside a deeply nested inline cast', () => {
-        const query = 'FROM index | WHERE 123 == add(1 + fn(NOT -(a.b.c)::INTEGER /* comment */))';
-        const { root } = parse(query);
+        const root = fromWhereDeepInlineCast();
 
         const columns: ESQLColumn[] = [];
 
@@ -908,8 +1559,7 @@ describe('structurally can walk all nodes', () => {
       });
 
       test('"visitAny" can capture cast expression', () => {
-        const query = 'FROM index | STATS a = 123::integer';
-        const { ast } = parse(query);
+        const ast = fromStatsInlineCast().commands;
         const casts: ESQLInlineCast[] = [];
 
         walk(ast, {
@@ -935,7 +1585,7 @@ describe('structurally can walk all nodes', () => {
 
   describe('unknown nodes', () => {
     test('can iterate through "unknown" nodes', () => {
-      const { ast } = parse('FROM index');
+      const ast = fromIndex().commands;
       let source: ESQLSource | undefined;
 
       walk(ast, {
@@ -960,7 +1610,7 @@ describe('structurally can walk all nodes', () => {
     test.each(['FROM a | WHERE a IN ()', 'FROM a | WHERE a IN ('])(
       'visits incomplete IN expressions as unknown nodes: %s',
       (src) => {
-        const { ast } = parse(src);
+        const ast = fromWhereInIncomplete().commands;
         const functions: ESQLFunction[] = [];
         const unknowns: ESQLUnknownItem[] = [];
 
@@ -982,7 +1632,7 @@ describe('structurally can walk all nodes', () => {
 
   describe('returns parent nodes', () => {
     test('function arguments', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW a(1), b(2)');
+      const ast = rowTwoCalls();
       const tuples: Array<[value: number, function: string]> = [];
 
       walk(ast, {
@@ -999,7 +1649,7 @@ describe('structurally can walk all nodes', () => {
   });
 
   test('source parent command', () => {
-    const { ast } = EsqlQuery.fromSrc('FROM a, b');
+    const ast = fromTwoSources();
     const tuples: Array<[index: string, command: string]> = [];
 
     walk(ast, {
@@ -1015,7 +1665,7 @@ describe('structurally can walk all nodes', () => {
   });
 
   test('column parent', () => {
-    const { ast } = EsqlQuery.fromSrc('ROW a | LIMIT 10');
+    const ast = rowColumnLimit();
     const tuples: Array<[index: string, command: string]> = [];
 
     walk(ast, {
@@ -1032,7 +1682,7 @@ describe('structurally can walk all nodes', () => {
 describe('header commands', () => {
   describe('visitHeaderCommand', () => {
     test('can visit a single SET header command', () => {
-      const { root } = parse('SET timeout = "30s"; FROM index');
+      const root = setTimeoutFromIndex();
       const headerCommands: ESQLAstHeaderCommand[] = [];
 
       walk(root, {
@@ -1047,7 +1697,7 @@ describe('header commands', () => {
     });
 
     test('can visit multiple SET header commands', () => {
-      const { root } = parse('SET a = 1; SET b = 2; SET c = 3; FROM index');
+      const root = setABCFromIndex();
       const headerCommands: ESQLAstHeaderCommand[] = [];
 
       walk(root, {
@@ -1059,7 +1709,7 @@ describe('header commands', () => {
     });
 
     test('"visitAny" can capture header command nodes', () => {
-      const { root } = parse('SET timeout = "30s"; FROM index');
+      const root = setTimeoutFromIndex();
       const headerCommands: ESQLAstHeaderCommand[] = [];
 
       walk(root, {
@@ -1076,7 +1726,7 @@ describe('header commands', () => {
     });
 
     test('header commands are visited before regular commands', () => {
-      const { root } = parse('SET a = 1; SET b = 2; FROM index | LIMIT 10');
+      const root = setABFromIndexLimit();
       const visitOrder: string[] = [];
 
       walk(root, {
@@ -1095,7 +1745,7 @@ describe('header commands', () => {
 
   describe('header command arguments', () => {
     test('can visit arguments in a SET command', () => {
-      const { root } = parse('SET timeout = "30s"; FROM index');
+      const root = setTimeoutFromIndex();
       const identifiers: ESQLIdentifier[] = [];
       const literals: ESQLLiteral[] = [];
       const functions: ESQLFunction[] = [];
@@ -1121,7 +1771,7 @@ describe('header commands', () => {
     });
 
     test('can visit arguments in multiple SET commands', () => {
-      const { root } = parse('SET a = 1; SET b = "value"; SET c = true; FROM index');
+      const root = setMixedFromIndex();
       const identifiers: ESQLIdentifier[] = [];
       const literals: ESQLLiteral[] = [];
 
@@ -1144,7 +1794,7 @@ describe('header commands', () => {
     });
 
     test('assignment expressions in header commands are visited as functions', () => {
-      const { root } = parse('SET timeout = "30s"; FROM index');
+      const root = setTimeoutFromIndex();
       const functions: ESQLFunction[] = [];
 
       walk(root, {
@@ -1168,7 +1818,7 @@ describe('header commands', () => {
     });
 
     test('can traverse nested expressions in header command args', () => {
-      const { root } = parse('SET complex_setting = "value"; FROM index');
+      const root = setComplexSettingFromIndex();
       let headerCommand: ESQLAstHeaderCommand | undefined;
       const allNodeTypes = new Set<string>();
 
@@ -1191,7 +1841,7 @@ describe('header commands', () => {
 
   describe('Walker.match with header commands', () => {
     test('can match header commands by type', () => {
-      const { root } = parse('SET a = 1; SET b = 2; FROM index');
+      const root = setABFromIndex();
       const headerCommand = Walker.match(root, { type: 'header-command' });
 
       expect(headerCommand).toMatchObject({
@@ -1201,7 +1851,7 @@ describe('header commands', () => {
     });
 
     test('can match header commands by name', () => {
-      const { root } = parse('SET timeout = "30s"; FROM index');
+      const root = setTimeoutFromIndex();
       const setCommand = Walker.match(root, { type: 'header-command', name: 'set' });
 
       expect(setCommand).toMatchObject({
@@ -1211,7 +1861,7 @@ describe('header commands', () => {
     });
 
     test('can match all header commands', () => {
-      const { root } = parse('SET a = 1; SET b = 2; SET c = 3; FROM index');
+      const root = setABCFromIndex();
       const headerCommands = Walker.matchAll(root, { type: 'header-command' });
 
       expect(headerCommands.length).toBe(3);
@@ -1221,7 +1871,7 @@ describe('header commands', () => {
 
   describe('Walker.parent with header commands', () => {
     test('can find parent of header command', () => {
-      const { root } = parse('SET a = 1; FROM index');
+      const root = setAFromIndex();
       const headerCommand = Walker.match(root, { type: 'header-command' });
       const parent = Walker.parent(root, headerCommand!);
 
@@ -1231,7 +1881,7 @@ describe('header commands', () => {
     });
 
     test('can find parent of identifier in header command', () => {
-      const { root } = parse('SET timeout = "30s"; FROM index');
+      const root = setTimeoutFromIndex();
       const identifier = Walker.match(root, { type: 'identifier', name: 'timeout' });
       const parent = Walker.parent(root, identifier!);
 
@@ -1245,7 +1895,7 @@ describe('header commands', () => {
 
   describe('backward traversal order with header commands', () => {
     test('walks header commands in backward order', () => {
-      const { root } = parse('SET a = 1; SET b = 2; SET c = 3; FROM index');
+      const root = setABCFromIndex();
       const headerOrder: string[] = [];
 
       walk(root, {
@@ -1264,7 +1914,7 @@ describe('header commands', () => {
 
   describe('skipHeader option', () => {
     test('skips header commands when skipHeader is true', () => {
-      const { root } = parse('SET a = 1; SET b = 2; FROM index | LIMIT 10');
+      const root = setABFromIndexLimit();
       const headerCommands: ESQLAstHeaderCommand[] = [];
       const regularCommands: ESQLCommand[] = [];
 
@@ -1280,7 +1930,7 @@ describe('header commands', () => {
     });
 
     test('processes header commands when skipHeader is false', () => {
-      const { root } = parse('SET a = 1; SET b = 2; FROM index | LIMIT 10');
+      const root = setABFromIndexLimit();
       const headerCommands: ESQLAstHeaderCommand[] = [];
       const regularCommands: ESQLCommand[] = [];
 
@@ -1299,21 +1949,7 @@ describe('header commands', () => {
 
   describe('parens (subquery)', () => {
     test('can visit complex subqueries with processing', () => {
-      const src = `
-        FROM index1,
-             (FROM index2
-              | WHERE a > 10
-              | EVAL b = a * 2
-              | STATS cnt = COUNT(*) BY c
-              | SORT cnt desc
-              | LIMIT 10),
-             index3,
-             (FROM index4 | STATS count(*))
-        | WHERE d > 10
-        | STATS max = max(*) BY e
-        | SORT max desc
-      `;
-      const { ast } = parse(src);
+      const ast = fromWithSubqueries().commands;
       let parensCount = 0;
       const sources: string[] = [];
 

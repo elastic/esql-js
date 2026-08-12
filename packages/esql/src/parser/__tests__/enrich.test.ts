@@ -7,7 +7,7 @@
 
 import { parse } from '..';
 import type { ESQLCommand, ESQLSource } from '../../types';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 
 describe('ENRICH', () => {
   describe('correctly formatted', () => {

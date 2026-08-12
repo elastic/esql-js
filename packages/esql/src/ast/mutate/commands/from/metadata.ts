@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Walker } from '../../../walker';
+import { Walker } from '@elastic/esql-traversal';
 import type {
   ESQLAstQueryExpression,
   ESQLColumn,

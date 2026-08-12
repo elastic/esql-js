@@ -5,14 +5,127 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../../composer/query';
-import type { ESQLCommand, ESQLIdentifier, ESQLLiteral, ESQLStringLiteral } from '../../../types';
+import { Builder } from '@elastic/esql-ast';
+import type {
+  ESQLCommand,
+  ESQLIdentifier,
+  ESQLLiteral,
+  ESQLStringLiteral,
+} from '@elastic/esql-types';
 import { walk, Walker } from '../walker';
+
+const { expression: expr } = Builder;
+
+/** `FROM a, b, c` */
+const fromSources = () =>
+  Builder.expression.query([
+    Builder.command({
+      name: 'from',
+      args: ['a', 'b', 'c'].map((name) => expr.source.index(name)),
+    }),
+  ]);
+
+/** `FROM index METADATA a, b, c` */
+const fromWithMetadata = () =>
+  Builder.expression.query([
+    Builder.command({
+      name: 'from',
+      args: [
+        expr.source.index('index'),
+        Builder.option({
+          name: 'metadata',
+          args: ['a', 'b', 'c'].map((name) => expr.column(name)),
+        }),
+      ],
+    }),
+  ]);
+
+/** `ROW a = [1, 2, 3]` */
+const rowList = () =>
+  Builder.expression.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        expr.func.node({
+          name: '=',
+          subtype: 'binary-expression',
+          args: [
+            expr.column('a'),
+            expr.list.literal({
+              values: [1, 2, 3].map((value) => expr.literal.integer(value)),
+            }),
+          ],
+        }),
+      ],
+    }),
+  ]);
+
+/** `ROW a.b.c = 123` */
+const rowNestedColumn = () =>
+  Builder.expression.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        expr.func.node({
+          name: '=',
+          subtype: 'binary-expression',
+          args: [expr.column(['a', 'b', 'c']), expr.literal.integer(123)],
+        }),
+      ],
+    }),
+  ]);
+
+/** `ROW avg(1, 2)` */
+const rowCall = () =>
+  Builder.expression.query([
+    Builder.command({
+      name: 'row',
+      args: [expr.func.call('avg', [expr.literal.integer(1), expr.literal.integer(2)])],
+    }),
+  ]);
+
+/** `ROW avg(1, {"a": "b", "c": "d"})` */
+const rowCallWithMap = () =>
+  Builder.expression.query([
+    Builder.command({
+      name: 'row',
+      args: [
+        expr.func.call('avg', [
+          expr.literal.integer(1),
+          expr.map({
+            entries: [
+              expr.entry('a', expr.literal.string('b')),
+              expr.entry('c', expr.literal.string('d')),
+            ],
+          }),
+        ]),
+      ],
+    }),
+  ]);
+
+/** `FROM a | LIMIT 1` */
+const fromLimit = () =>
+  Builder.expression.query([
+    Builder.command({ name: 'from', args: [expr.source.index('a')] }),
+    Builder.command({ name: 'limit', args: [expr.literal.integer(1)] }),
+  ]);
+
+/** `FROM a:b` */
+const fromSourceWithPrefix = () =>
+  Builder.expression.query([
+    Builder.command({ name: 'from', args: [expr.source.index('b', 'a')] }),
+  ]);
+
+/** `FROM a::b` */
+const fromSourceWithSelector = () =>
+  Builder.expression.query([
+    Builder.command({ name: 'from', args: [expr.source.index('a', undefined, 'b')] }),
+  ]);
 
 describe('traversal order', () => {
   describe('command arguments', () => {
     test('by default walks in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a, b, c');
+      const ast = fromSources();
       const sources: string[] = [];
 
       walk(ast, {
@@ -23,7 +136,7 @@ describe('traversal order', () => {
     });
 
     test('can explicitly specify "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a, b, c');
+      const ast = fromSources();
       const sources: string[] = [];
 
       walk(ast, {
@@ -35,7 +148,7 @@ describe('traversal order', () => {
     });
 
     test('can walk sources in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a, b, c');
+      const ast = fromSources();
       const sources: string[] = [];
 
       walk(ast, {
@@ -49,7 +162,7 @@ describe('traversal order', () => {
 
   describe('array of expressions', () => {
     test('by default walks in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a, b, c');
+      const ast = fromSources();
       const sources: string[] = [];
       const walker = new Walker({
         visitSource: (src) => sources.push(src.name),
@@ -61,7 +174,7 @@ describe('traversal order', () => {
     });
 
     test('can explicitly specify "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a, b, c');
+      const ast = fromSources();
       const sources: string[] = [];
       const walker = new Walker({
         visitSource: (src) => sources.push(src.name),
@@ -74,7 +187,7 @@ describe('traversal order', () => {
     });
 
     test('can walk sources in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a, b, c');
+      const ast = fromSources();
       const sources: string[] = [];
       const walker = new Walker({
         visitSource: (src) => sources.push(src.name),
@@ -89,7 +202,7 @@ describe('traversal order', () => {
 
   describe('option arguments', () => {
     test('by default walks in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM index METADATA a, b, c');
+      const ast = fromWithMetadata();
       const sources: string[] = [];
 
       walk(ast, {
@@ -100,7 +213,7 @@ describe('traversal order', () => {
     });
 
     test('can explicitly specify "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM index METADATA a, b, c');
+      const ast = fromWithMetadata();
       const sources: string[] = [];
 
       walk(ast, {
@@ -112,7 +225,7 @@ describe('traversal order', () => {
     });
 
     test('can walk fields in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM index METADATA a, b, c');
+      const ast = fromWithMetadata();
       const sources: string[] = [];
 
       walk(ast, {
@@ -126,14 +239,14 @@ describe('traversal order', () => {
 
   describe('list elements', () => {
     test('by default walks in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW a = [1, 2, 3]');
+      const ast = rowList();
       const numbers = Walker.matchAll(ast, { type: 'literal' }) as ESQLLiteral[];
 
       expect(numbers.map((n) => n.value)).toStrictEqual([1, 2, 3]);
     });
 
     test('in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW a = [1, 2, 3]');
+      const ast = rowList();
       const numbers = Walker.matchAll(
         ast,
         { type: 'literal' },
@@ -146,14 +259,14 @@ describe('traversal order', () => {
 
   describe('column fields', () => {
     test('in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW a.b.c = 123');
+      const ast = rowNestedColumn();
       const numbers = Walker.matchAll(ast, { type: 'identifier' }) as ESQLIdentifier[];
 
       expect(numbers.map((n) => n.name)).toStrictEqual(['a', 'b', 'c']);
     });
 
     test('in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW a.b.c = 123');
+      const ast = rowNestedColumn();
       const numbers = Walker.matchAll(
         ast,
         { type: 'identifier' },
@@ -166,14 +279,14 @@ describe('traversal order', () => {
 
   describe('function arguments', () => {
     test('in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW avg(1, 2)');
+      const ast = rowCall();
       const numbers = Walker.matchAll(ast, { type: 'literal' }) as ESQLLiteral[];
 
       expect(numbers.map((n) => n.value)).toStrictEqual([1, 2]);
     });
 
     test('in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW avg(1, 2)');
+      const ast = rowCall();
       const numbers = Walker.matchAll(
         ast,
         { type: 'literal' },
@@ -186,7 +299,7 @@ describe('traversal order', () => {
 
   describe('map entries', () => {
     test('in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW avg(1, {"a": "b", "c": "d"})');
+      const ast = rowCallWithMap();
       const numbers = Walker.matchAll(ast, {
         type: 'literal',
         literalType: 'keyword',
@@ -196,7 +309,7 @@ describe('traversal order', () => {
     });
 
     test('in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('ROW avg(1, {"a": "b", "c": "d"})');
+      const ast = rowCallWithMap();
       const numbers = Walker.matchAll(
         ast,
         {
@@ -212,7 +325,7 @@ describe('traversal order', () => {
 
   describe('commands', () => {
     test('in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a | LIMIT 1');
+      const ast = fromLimit();
       const numbers = Walker.matchAll(
         ast,
         {
@@ -225,7 +338,7 @@ describe('traversal order', () => {
     });
 
     test('in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a | LIMIT 1');
+      const ast = fromLimit();
       const numbers = Walker.matchAll(
         ast,
         {
@@ -240,7 +353,7 @@ describe('traversal order', () => {
 
   describe('source components', () => {
     test('in "forward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a:b');
+      const ast = fromSourceWithPrefix();
       const numbers = Walker.matchAll(
         ast,
         { type: 'literal' },
@@ -251,7 +364,7 @@ describe('traversal order', () => {
     });
 
     test('in "forward" order (selector)', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a::b');
+      const ast = fromSourceWithSelector();
       const numbers = Walker.matchAll(
         ast,
         { type: 'literal' },
@@ -262,7 +375,7 @@ describe('traversal order', () => {
     });
 
     test('in "backward" order', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a:b');
+      const ast = fromSourceWithPrefix();
       const numbers = Walker.matchAll(
         ast,
         { type: 'literal' },
@@ -273,7 +386,7 @@ describe('traversal order', () => {
     });
 
     test('in "backward" order (selector)', () => {
-      const { ast } = EsqlQuery.fromSrc('FROM a::b');
+      const ast = fromSourceWithSelector();
       const numbers = Walker.matchAll(
         ast,
         { type: 'literal' },

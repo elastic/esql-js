@@ -6,7 +6,7 @@
  */
 
 import { EsqlQuery } from '../../composer/query';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 import type { ESQLAstQueryExpression, ESQLAstUriPartsCommand, ESQLFunction } from '../../types';
 
 describe('URI_PARTS', () => {

@@ -8,7 +8,7 @@
 import { isBooleanLiteral, isCommand } from '@elastic/esql-ast';
 import { Builder } from '../ast/builder';
 import { ParameterHole, DoubleParameterHole } from './parameter_hole';
-import { Walker } from '../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 import { SynthLiteralFragment } from './synth/synth_literal_fragment';
 import type { ESQLCommand, ESQLNamedParamLiteral } from '../types';
 import type { ComposerQuery } from './composer_query';

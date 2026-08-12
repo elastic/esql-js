@@ -920,6 +920,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@elastic/esql-ast@workspace:packages/esql-ast"
   dependencies:
+    "@elastic/esql-definitions": "workspace:^"
     "@elastic/esql-grammar": "workspace:^"
     "@elastic/esql-promql-grammar": "workspace:^"
     "@elastic/esql-types": "workspace:^"

@@ -7,7 +7,7 @@
 
 import { EsqlQuery } from '../../composer/query';
 import type { ESQLCommandOption } from '../../types';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 
 describe('CHANGE_POINT command', () => {
   describe('correctly formatted', () => {

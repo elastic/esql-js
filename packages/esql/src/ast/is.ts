@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { Walker } from './walker';
+import { Walker } from '@elastic/esql-traversal';
 import type { ESQLProperNode } from '../types';
 
 export const isParametrized = (node: ESQLProperNode): boolean => Walker.params(node).length > 0;

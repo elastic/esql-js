@@ -6,7 +6,7 @@
  */
 
 import { Parser } from '../../parser';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 import type { ESQLFunction, ESQLMap } from '../../types';
 import type {
   BasicPrettyPrinterMultilineOptions,

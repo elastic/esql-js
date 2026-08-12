@@ -7,7 +7,7 @@
 
 import { Parser, parse } from '..';
 import { EsqlQuery } from '../../composer/query';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 
 describe('function AST nodes', () => {
   describe('"variadic-call"', () => {

@@ -8,7 +8,7 @@
 import { EsqlQuery } from '../../composer/query';
 import * as fixtures from '../../__tests__/fixtures';
 import type { ESQLProperNode } from '../../types';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 
 /**
  * Asserts that a node has all {@link AstNodeParserFields} defined.

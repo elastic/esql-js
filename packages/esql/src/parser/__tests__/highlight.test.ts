@@ -6,7 +6,7 @@
  */
 
 import { EsqlQuery } from '../../composer/query';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 import { BasicPrettyPrinter } from '../../pretty_print';
 import type {
   ESQLAstHighlightCommand,

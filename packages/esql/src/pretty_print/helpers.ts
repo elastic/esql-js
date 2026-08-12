@@ -6,7 +6,7 @@
  */
 
 import type { ESQLAstBaseItem } from '../types';
-import { Walker, type WalkerAstNode } from '../ast/walker';
+import { Walker, type WalkerAstNode } from '@elastic/esql-traversal';
 
 export interface QueryPrettyPrintStats {
   /**

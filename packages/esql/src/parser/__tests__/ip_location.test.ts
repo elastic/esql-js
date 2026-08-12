@@ -6,7 +6,7 @@
  */
 
 import { EsqlQuery } from '../../composer/query';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 import type { ESQLAstIpLocationCommand, ESQLAstQueryExpression } from '../../types';
 
 describe('IP_LOCATION', () => {

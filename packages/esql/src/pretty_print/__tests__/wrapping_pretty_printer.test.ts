@@ -7,7 +7,7 @@
 
 import { Parser } from '../../parser';
 import type { ESQLMap } from '../../types';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 import type { WrappingPrettyPrinterOptions } from '../wrapping_pretty_printer';
 import { WrappingPrettyPrinter } from '../wrapping_pretty_printer';
 

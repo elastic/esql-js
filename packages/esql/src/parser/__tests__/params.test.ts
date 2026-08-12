@@ -6,7 +6,7 @@
  */
 
 import { parse } from '..';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 
 describe('single ? param', () => {
   /**

@@ -8,7 +8,7 @@
 import { parse } from '..';
 import { EsqlQuery } from '../../composer/query';
 import type { ESQLAstItem, ESQLAstRerankCommand, ESQLCommandOption, ESQLMap } from '../../types';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 
 describe('Comments', () => {
   describe('can attach "top" comment(s)', () => {

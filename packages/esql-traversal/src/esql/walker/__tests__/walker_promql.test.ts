@@ -5,9 +5,15 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../../composer/query';
-import { Walker } from '../walker';
+import { Builder, PromQLBuilder } from '@elastic/esql-ast';
 import type {
+  ESQLAstExpression,
+  ESQLAstPromqlCommand,
+  ESQLAstPromqlCommandQuery,
+  ESQLAstQueryExpression,
+  ESQLCommand,
+  ESQLMap,
+  PromQLAstExpression,
   PromQLAstNode,
   PromQLAstQueryExpression,
   PromQLFunction,
@@ -15,9 +21,12 @@ import type {
   PromQLBinaryExpression,
   PromQLLabelMap,
   PromQLLabel,
+  PromQLLabelMatchOperator,
+  PromQLLabelValue,
   PromQLIdentifier,
   PromQLLiteral,
   PromQLGrouping,
+  PromQLStringLiteral,
   PromQLSubquery,
   PromQLParens,
   PromQLUnaryExpression,
@@ -27,15 +36,238 @@ import type {
   PromQLModifier,
   PromQLGroupModifier,
 } from '@elastic/esql-types';
-import type { ESQLCommand } from '../../../types';
+import { Walker } from '../walker';
+
+const { expression: expr } = PromQLBuilder;
+
+const id = PromQLBuilder.identifier;
+const time = expr.literal.time;
+const str = (value: string): PromQLStringLiteral => expr.literal.string(value, `"${value}"`);
+const sel = (
+  metric: string,
+  options: {
+    labelMap?: PromQLLabelMap;
+    duration?: PromQLAstExpression;
+    evaluation?: PromQLEvaluation;
+  } = {}
+): PromQLSelector => expr.selector.node({ metric: id(metric), ...options });
+const label = (
+  name: string,
+  operator: PromQLLabelMatchOperator,
+  value?: PromQLLabelValue
+): PromQLLabel => PromQLBuilder.label(id(name), operator, value);
+
+/** Wraps an ES|QL `PROMQL` command query into a single-command ES|QL query. */
+const promqlCommand = (
+  query: ESQLAstPromqlCommandQuery,
+  params?: ESQLMap
+): ESQLAstQueryExpression => {
+  const command: ESQLAstPromqlCommand = {
+    ...Builder.parserFields(),
+    name: 'promql',
+    type: 'command',
+    args: (params ? [params, query] : [query]) as ESQLAstPromqlCommand['args'],
+    ...(params ? { params } : {}),
+    query,
+  };
+
+  return Builder.expression.query([command]);
+};
+
+/** `PROMQL <expression>` */
+const promql = (expression: PromQLAstExpression, params?: ESQLMap): ESQLAstQueryExpression =>
+  promqlCommand(expr.query(expression), params);
+
+/** `PROMQL ( <expression> )`, where the parens are ES|QL parens. */
+const promqlInParens = (expression: PromQLAstExpression): ESQLAstQueryExpression =>
+  promqlCommand(Builder.expression.parens(expr.query(expression) as unknown as ESQLAstExpression));
+
+/** `PROMQL <name> = ( <expression> )` */
+const promqlNamed = (name: string, expression: PromQLAstExpression): ESQLAstQueryExpression =>
+  promqlCommand(
+    Builder.expression.func.binary(
+      '=',
+      [
+        Builder.identifier({ name }),
+        Builder.expression.parens(expr.query(expression) as unknown as ESQLAstExpression),
+      ],
+      {}
+    )
+  );
+
+/** `PROMQL bytes_in` */
+const bytesIn = () => promql(sel('bytes_in'));
+
+/** `PROMQL http_requests_total` */
+const httpRequestsTotal = () => promql(sel('http_requests_total'));
+
+/** `PROMQL bytes_in{job="prometheus"}` */
+const bytesInJobPrometheus = () =>
+  promql(
+    sel('bytes_in', {
+      labelMap: PromQLBuilder.labelMap([label('job', '=', str('prometheus'))]),
+    })
+  );
+
+/** `PROMQL rate(http_requests_total[5m])` */
+const rateHttpRequests = () =>
+  promql(expr.func.call('rate', [sel('http_requests_total', { duration: time('5m') })]));
+
+/** `PROMQL sum(rate(http_requests_total[5m]))` */
+const sumRateHttpRequests = () =>
+  promql(
+    expr.func.call('sum', [
+      expr.func.call('rate', [sel('http_requests_total', { duration: time('5m') })]),
+    ])
+  );
+
+/** `PROMQL sum by (job) (rate(http_requests_total[5m]))` */
+const sumByJobRateHttpRequests = () =>
+  promql(
+    expr.func.call(
+      'sum',
+      [expr.func.call('rate', [sel('http_requests_total', { duration: time('5m') })])],
+      PromQLBuilder.grouping('by', [id('job')]),
+      'before'
+    )
+  );
+
+/** `PROMQL a + b` */
+const aPlusB = () => promql(expr.binary('+', sel('a'), sel('b')));
+
+/** `PROMQL (a + b) * c` */
+const aPlusBTimesC = () =>
+  promql(expr.binary('*', expr.parens(expr.binary('+', sel('a'), sel('b'))), sel('c')));
+
+/** `PROMQL a + on(job) b` */
+const aPlusOnJobB = () =>
+  promql(
+    expr.binary('+', sel('a'), sel('b'), {
+      bool: false,
+      modifier: PromQLBuilder.modifier('on', [id('job')]),
+    })
+  );
+
+/** `PROMQL a + on(job) group_left(instance) b` */
+const aPlusOnJobGroupLeftInstanceB = () =>
+  promql(
+    expr.binary('+', sel('a'), sel('b'), {
+      bool: false,
+      modifier: PromQLBuilder.modifier(
+        'on',
+        [id('job')],
+        PromQLBuilder.groupModifier('group_left', [id('instance')])
+      ),
+    })
+  );
+
+/** `PROMQL -http_requests_total` */
+const negatedHttpRequests = () => promql(expr.unary('-', sel('http_requests_total')));
+
+/** `PROMQL rate(http_requests_total[5m])[30m:1m]` */
+const rateHttpRequestsSubquery = () =>
+  promql(
+    expr.subquery(
+      expr.func.call('rate', [sel('http_requests_total', { duration: time('5m') })]),
+      time('30m'),
+      time('1m')
+    )
+  );
+
+/** `PROMQL http_requests_total offset 5m` */
+const httpRequestsOffset = () =>
+  promql(
+    sel('http_requests_total', {
+      evaluation: PromQLBuilder.evaluation(PromQLBuilder.offset(time('5m'))),
+    })
+  );
+
+/** `PROMQL http_requests_total @ 1609459200` */
+const httpRequestsAt = () =>
+  promql(
+    sel('http_requests_total', {
+      evaluation: PromQLBuilder.evaluation(undefined, PromQLBuilder.at(time('1609459200'))),
+    })
+  );
+
+/** `PROMQL 42` */
+const numericLiteral = () => promql(expr.literal.integer(42));
+
+/** `PROMQL http_requests_total[5m]` */
+const httpRequestsRange = () => promql(sel('http_requests_total', { duration: time('5m') }));
+
+/** `PROMQL bytes_in{job="test"}` */
+const bytesInJobTest = () =>
+  promql(sel('bytes_in', { labelMap: PromQLBuilder.labelMap([label('job', '=', str('test'))]) }));
+
+/** `PROMQL (bytes_in)` */
+const bytesInEsqlParens = () => promqlInParens(sel('bytes_in'));
+
+/** `PROMQL name = (bytes_in)` */
+const namedBytesIn = () => promqlNamed('name', sel('bytes_in'));
+
+/** `PROMQL k=v bytes_in{job="test"}` */
+const bytesInWithParams = () =>
+  promql(
+    sel('bytes_in', { labelMap: PromQLBuilder.labelMap([label('job', '=', str('test'))]) }),
+    Builder.expression.map({
+      entries: [
+        Builder.expression.entry(
+          Builder.identifier({ name: 'k' }),
+          Builder.expression.literal.string('v', { unquoted: true })
+        ),
+      ],
+      representation: 'assignment',
+    })
+  );
+
+/** `PROMQL rate(http_requests_total{job="api"}[5m])` */
+const rateHttpRequestsJobApi = () =>
+  promql(
+    expr.func.call('rate', [
+      sel('http_requests_total', {
+        labelMap: PromQLBuilder.labelMap([label('job', '=', str('api'))]),
+        duration: time('5m'),
+      }),
+    ])
+  );
+
+/** `PROMQL bytes_in{job=?job}` */
+const bytesInJobParam = () =>
+  promql(
+    sel('bytes_in', {
+      labelMap: PromQLBuilder.labelMap([label('job', '=', expr.literal.param('job'))]),
+    })
+  );
+
+/** `PROMQL rate(sum(http_requests_total[5m]))` */
+const rateSumHttpRequests = () =>
+  promql(
+    expr.func.call('rate', [
+      expr.func.call('sum', [sel('http_requests_total', { duration: time('5m') })]),
+    ])
+  );
+
+/** `PROMQL sum(bytes) + rate(reqs[5m])` */
+const sumBytesPlusRateReqs = () =>
+  promql(
+    expr.binary(
+      '+',
+      expr.func.call('sum', [sel('bytes')]),
+      expr.func.call('rate', [sel('reqs', { duration: time('5m') })])
+    )
+  );
+
+/** `PROMQL rate(bytes[5m])` */
+const rateBytes = () => promql(expr.func.call('rate', [sel('bytes', { duration: time('5m') })]));
 
 describe('Walker PromQL support', () => {
   describe('basic PromQL traversal', () => {
     test('can walk a simple PromQL selector', () => {
-      const query = EsqlQuery.fromSrc('PROMQL bytes_in');
+      const ast = bytesIn();
       const promqlNodes: PromQLAstNode[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlAny: (node) => {
             promqlNodes.push(node);
@@ -51,10 +283,10 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk PromQL selector with metric identifier', () => {
-      const query = EsqlQuery.fromSrc('PROMQL http_requests_total');
+      const ast = httpRequestsTotal();
       const identifiers: PromQLIdentifier[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlIdentifier: (node) => {
             identifiers.push(node);
@@ -67,14 +299,14 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk PromQL selector with labels', () => {
-      const query = EsqlQuery.fromSrc('PROMQL bytes_in{job="prometheus"}');
+      const ast = bytesInJobPrometheus();
       const selectors: PromQLSelector[] = [];
       const labelMaps: PromQLLabelMap[] = [];
       const labels: PromQLLabel[] = [];
       const identifiers: PromQLIdentifier[] = [];
       const literals: PromQLLiteral[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlSelector: (node) => selectors.push(node),
           visitPromqlLabelMap: (node) => labelMaps.push(node),
@@ -95,11 +327,11 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL function traversal', () => {
     test('can walk PromQL function call', () => {
-      const query = EsqlQuery.fromSrc('PROMQL rate(http_requests_total[5m])');
+      const ast = rateHttpRequests();
       const functions: PromQLFunction[] = [];
       const selectors: PromQLSelector[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlFunction: (node) => functions.push(node),
           visitPromqlSelector: (node) => selectors.push(node),
@@ -113,10 +345,10 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk nested PromQL functions', () => {
-      const query = EsqlQuery.fromSrc('PROMQL sum(rate(http_requests_total[5m]))');
+      const ast = sumRateHttpRequests();
       const functions: PromQLFunction[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlFunction: (node) => functions.push(node),
         },
@@ -127,11 +359,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk aggregation function with grouping', () => {
-      const query = EsqlQuery.fromSrc('PROMQL sum by (job) (rate(http_requests_total[5m]))');
+      const ast = sumByJobRateHttpRequests();
       const functions: PromQLFunction[] = [];
       const groupings: PromQLGrouping[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlFunction: (node) => functions.push(node),
           visitPromqlGrouping: (node) => groupings.push(node),
@@ -146,11 +378,11 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL binary expression traversal', () => {
     test('can walk PromQL binary expression', () => {
-      const query = EsqlQuery.fromSrc('PROMQL a + b');
+      const ast = aPlusB();
       const binaryExpressions: PromQLBinaryExpression[] = [];
       const selectors: PromQLSelector[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlBinaryExpression: (node) => binaryExpressions.push(node),
           visitPromqlSelector: (node) => selectors.push(node),
@@ -163,11 +395,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk complex PromQL binary expression', () => {
-      const query = EsqlQuery.fromSrc('PROMQL (a + b) * c');
+      const ast = aPlusBTimesC();
       const binaryExpressions: PromQLBinaryExpression[] = [];
       const parens: PromQLParens[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlBinaryExpression: (node) => binaryExpressions.push(node),
           visitPromqlParens: (node) => parens.push(node),
@@ -179,11 +411,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk binary expression with vector matching modifier', () => {
-      const query = EsqlQuery.fromSrc('PROMQL a + on(job) b');
+      const ast = aPlusOnJobB();
       const binaryExpressions: PromQLBinaryExpression[] = [];
       const modifiers: PromQLModifier[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlBinaryExpression: (node) => binaryExpressions.push(node),
           visitPromqlModifier: (node) => modifiers.push(node),
@@ -196,11 +428,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk binary expression with group modifier', () => {
-      const query = EsqlQuery.fromSrc('PROMQL a + on(job) group_left(instance) b');
+      const ast = aPlusOnJobGroupLeftInstanceB();
       const modifiers: PromQLModifier[] = [];
       const groupModifiers: PromQLGroupModifier[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlModifier: (node) => modifiers.push(node),
           visitPromqlGroupModifier: (node) => groupModifiers.push(node),
@@ -215,10 +447,10 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL unary expression traversal', () => {
     test('can walk PromQL unary expression', () => {
-      const query = EsqlQuery.fromSrc('PROMQL -http_requests_total');
+      const ast = negatedHttpRequests();
       const unaryExpressions: PromQLUnaryExpression[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlUnaryExpression: (node) => unaryExpressions.push(node),
         },
@@ -231,10 +463,10 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL subquery traversal', () => {
     test('can walk PromQL subquery', () => {
-      const query = EsqlQuery.fromSrc('PROMQL rate(http_requests_total[5m])[30m:1m]');
+      const ast = rateHttpRequestsSubquery();
       const subqueries: PromQLSubquery[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlSubquery: (node) => subqueries.push(node),
         },
@@ -247,11 +479,11 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL evaluation modifiers traversal', () => {
     test('can walk PromQL offset modifier', () => {
-      const query = EsqlQuery.fromSrc('PROMQL http_requests_total offset 5m');
+      const ast = httpRequestsOffset();
       const evaluations: PromQLEvaluation[] = [];
       const offsets: PromQLOffset[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlEvaluation: (node) => evaluations.push(node),
           visitPromqlOffset: (node) => offsets.push(node),
@@ -263,11 +495,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk PromQL @ modifier', () => {
-      const query = EsqlQuery.fromSrc('PROMQL http_requests_total @ 1609459200');
+      const ast = httpRequestsAt();
       const evaluations: PromQLEvaluation[] = [];
       const atModifiers: PromQLAt[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlEvaluation: (node) => evaluations.push(node),
           visitPromqlAt: (node) => atModifiers.push(node),
@@ -281,10 +513,10 @@ describe('Walker PromQL support', () => {
 
   describe('PromQL literal traversal', () => {
     test('can walk numeric literal', () => {
-      const query = EsqlQuery.fromSrc('PROMQL 42');
+      const ast = numericLiteral();
       const literals: PromQLLiteral[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlLiteral: (node) => literals.push(node),
         },
@@ -296,10 +528,10 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk time literal in selector', () => {
-      const query = EsqlQuery.fromSrc('PROMQL http_requests_total[5m]');
+      const ast = httpRequestsRange();
       const literals: PromQLLiteral[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlLiteral: (node) => literals.push(node),
         },
@@ -312,12 +544,12 @@ describe('Walker PromQL support', () => {
 
   describe('combined ES|QL and PromQL traversal', () => {
     test('can walk both ES|QL and PromQL nodes', () => {
-      const query = EsqlQuery.fromSrc('PROMQL bytes_in{job="test"}');
+      const ast = bytesInJobTest();
       const commands: ESQLCommand[] = [];
       const promqlQueries: PromQLAstQueryExpression[] = [];
       const promqlSelectors: PromQLSelector[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         visitCommand: (node) => commands.push(node),
         promql: {
           visitPromqlQuery: (node) => promqlQueries.push(node),
@@ -332,10 +564,10 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk PromQL query wrapped in ES|QL parens', () => {
-      const query = EsqlQuery.fromSrc('PROMQL (bytes_in)');
+      const ast = bytesInEsqlParens();
       const promqlSelectors: PromQLSelector[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlSelector: (node) => promqlSelectors.push(node),
         },
@@ -346,10 +578,10 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk named PromQL query', () => {
-      const query = EsqlQuery.fromSrc('PROMQL name = (bytes_in)');
+      const ast = namedBytesIn();
       const promqlSelectors: PromQLSelector[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlSelector: (node) => promqlSelectors.push(node),
         },
@@ -359,11 +591,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('can walk PromQL query with params', () => {
-      const query = EsqlQuery.fromSrc('PROMQL k=v bytes_in{job="test"}');
+      const ast = bytesInWithParams();
       const commands: ESQLCommand[] = [];
       const promqlSelectors: PromQLSelector[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         visitCommand: (node) => commands.push(node),
         promql: {
           visitPromqlSelector: (node) => promqlSelectors.push(node),
@@ -377,10 +609,10 @@ describe('Walker PromQL support', () => {
 
   describe('visitPromqlAny fallback', () => {
     test('visitPromqlAny is called for all PromQL node types', () => {
-      const query = EsqlQuery.fromSrc('PROMQL rate(http_requests_total{job="api"}[5m])');
+      const ast = rateHttpRequestsJobApi();
       const allNodes: PromQLAstNode[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlAny: (node) => allNodes.push(node),
         },
@@ -400,11 +632,11 @@ describe('Walker PromQL support', () => {
     });
 
     test('specific visitor takes precedence over visitPromqlAny', () => {
-      const query = EsqlQuery.fromSrc('PROMQL http_requests_total');
+      const ast = httpRequestsTotal();
       const anyNodes: PromQLAstNode[] = [];
       const selectors: PromQLSelector[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlAny: (node) => anyNodes.push(node),
           visitPromqlSelector: (node) => selectors.push(node),
@@ -419,10 +651,10 @@ describe('Walker PromQL support', () => {
 
   describe('label param literal traversal', () => {
     test('visitPromqlLiteral is called for a named param label value via Walker', () => {
-      const query = EsqlQuery.fromSrc('PROMQL bytes_in{job=?job}');
+      const ast = bytesInJobParam();
       const literals: PromQLLiteral[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlLiteral: (node) => literals.push(node),
         },
@@ -436,10 +668,10 @@ describe('Walker PromQL support', () => {
 
   describe('abort functionality with PromQL', () => {
     test('can abort PromQL traversal', () => {
-      const query = EsqlQuery.fromSrc('PROMQL rate(sum(http_requests_total[5m]))');
+      const ast = rateSumHttpRequests();
       const functions: PromQLFunction[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlFunction: (node, parent, walker) => {
             functions.push(node);
@@ -456,10 +688,10 @@ describe('Walker PromQL support', () => {
 
   describe('skipChildren functionality with PromQL', () => {
     test('skipChildren prevents traversal into the current node, siblings still visited', () => {
-      const query = EsqlQuery.fromSrc('PROMQL sum(bytes) + rate(reqs[5m])');
+      const ast = sumBytesPlusRateReqs();
       const selectors: string[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlFunction: (node, parent, walker) => {
             if (node.name === 'sum') {
@@ -476,10 +708,10 @@ describe('Walker PromQL support', () => {
     });
 
     test('skipChildren in a leaf visitor does not leak to subsequent nodes', () => {
-      const query = EsqlQuery.fromSrc('PROMQL rate(bytes[5m])');
+      const ast = rateBytes();
       const visited: string[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlIdentifier: (node, parent, walker) => {
             visited.push(`identifier:${node.name}`);
@@ -495,10 +727,10 @@ describe('Walker PromQL support', () => {
     });
 
     test('skipChildren on the PromQL query root skips the whole expression', () => {
-      const query = EsqlQuery.fromSrc('PROMQL rate(bytes[5m])');
+      const ast = rateBytes();
       const functions: string[] = [];
 
-      Walker.walk(query.ast, {
+      Walker.walk(ast, {
         promql: {
           visitPromqlQuery: (node, parent, walker) => {
             walker.skipChildren();

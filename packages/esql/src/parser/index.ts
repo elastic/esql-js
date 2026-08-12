@@ -8,12 +8,6 @@
 // Main parser API
 export { parse, Parser, type ParseOptions, type ParseResult } from './core/parser';
 
-export {
-  TIME_SPAN_UNITS,
-  TIME_DURATION_UNITS,
-  HEADER_COMMANDS,
-  SOURCE_COMMANDS,
-  DATE_PERIOD_UNITS,
-} from './core/constants';
+export { HEADER_COMMANDS, SOURCE_COMMANDS } from './core/constants';
 
 export { ESQLErrorListener } from './core/esql_error_listener';

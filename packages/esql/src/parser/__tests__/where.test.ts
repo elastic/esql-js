@@ -8,7 +8,7 @@
 import { parse } from '..';
 import { EsqlQuery } from '../../composer/query';
 import type { ESQLColumn, ESQLCommand, ESQLFunction, ESQLInlineCast } from '../../types';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 import { BasicPrettyPrinter } from '../../pretty_print';
 
 describe('WHERE', () => {

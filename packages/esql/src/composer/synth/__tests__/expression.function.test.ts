@@ -7,7 +7,7 @@
 
 import { BasicPrettyPrinter } from '../../../pretty_print';
 import type { ESQLProperNode } from '../../../types';
-import { Walker } from '../../../ast/walker/walker';
+import { Walker } from '@elastic/esql-traversal';
 import { exp } from '../expression';
 
 test('can generate integer literal', () => {

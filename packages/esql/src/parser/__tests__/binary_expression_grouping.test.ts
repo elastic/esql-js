@@ -8,7 +8,7 @@
 import { EsqlQuery } from '../../composer/query';
 import type { ESQLAstItem, ESQLAstQueryExpression, ESQLProperNode } from '../../types';
 import { singleItems } from '../../ast/visitor/utils';
-import { Walker } from '../../ast/walker';
+import { Walker } from '@elastic/esql-traversal';
 
 const removeParserFields = (tree: ESQLAstQueryExpression): void => {
   Walker.walk(tree, {

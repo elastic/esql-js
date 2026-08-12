@@ -14,3 +14,4 @@ export {
   type WalkerDialect,
   type WalkerFindFunctionOptions,
 } from './walker';
+export { replaceProperties } from './helpers';

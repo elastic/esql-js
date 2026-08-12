@@ -7,3 +7,4 @@
 
 export * from './utils';
 export * from './children';
+export * from './walker';
