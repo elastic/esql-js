@@ -1,5 +1,11 @@
 # @elastic/esql-types
 
+## 4.19.0
+
+### Patch Changes
+
+- [#216](https://github.com/elastic/esql-js/pull/216) [`8771d0c`](https://github.com/elastic/esql-js/commit/8771d0c408d6f943f30bb7b9b608130aac78cbf9) Thanks [@momovdg](https://github.com/momovdg)! - Add prefix support to HIGHLIGHT command AST: parse the optional `prefix = "..."` clause into `ESQLAstHighlightCommand.prefix` and expose the binary-expression assignment in `args`.
+
 ## 4.18.0
 
 ### Patch Changes
