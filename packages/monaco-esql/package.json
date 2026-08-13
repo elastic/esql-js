@@ -1,6 +1,6 @@
 {
   "name": "@elastic/monaco-esql",
-  "version": "4.19.1",
+  "version": "4.19.2",
   "author": "Kibana ES|QL team",
   "description": "Monaco Editor language support for ES|QL.",
   "license": "MIT",

@@ -1,5 +1,20 @@
 # @elastic/esql
 
+## 4.19.2
+
+### Patch Changes
+
+- [#220](https://github.com/elastic/esql-js/pull/220) [`aecd57f`](https://github.com/elastic/esql-js/commit/aecd57ffd315bcd9958988ad4376bb0d443e2850) Thanks [@bartoval](https://github.com/bartoval)! - fix postfix operand parenthesization in ES|QL pretty printers
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.19.2
+  - @elastic/esql-definitions@4.19.2
+  - @elastic/esql-grammar@4.19.2
+  - @elastic/esql-promql-grammar@4.19.2
+  - @elastic/pretty-printer@4.19.2
+  - @elastic/esql-traversal@4.19.2
+  - @elastic/esql-ast@4.19.2
+
 ## 4.19.1
 
 ### Patch Changes
