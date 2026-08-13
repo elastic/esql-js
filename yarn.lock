@@ -1015,6 +1015,7 @@ __metadata:
   resolution: "@elastic/esql@workspace:packages/esql"
   dependencies:
     "@elastic/esql-ast": "workspace:^"
+    "@elastic/esql-definitions": "workspace:^"
     "@elastic/esql-grammar": "workspace:^"
     "@elastic/esql-promql-grammar": "workspace:^"
     "@elastic/esql-traversal": "workspace:^"

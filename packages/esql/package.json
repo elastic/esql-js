@@ -46,6 +46,7 @@
   },
   "dependencies": {
     "@elastic/esql-ast": "workspace:^",
+    "@elastic/esql-definitions": "workspace:^",
     "@elastic/esql-grammar": "workspace:^",
     "@elastic/esql-promql-grammar": "workspace:^",
     "@elastic/esql-traversal": "workspace:^",
