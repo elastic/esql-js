@@ -1,5 +1,12 @@
 # @elastic/elasticsearch-esql-dsl
 
+## 4.19.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/elasticsearch-query-builder@4.19.1
+
 ## 4.19.0
 
 ### Patch Changes

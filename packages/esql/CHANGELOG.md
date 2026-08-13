@@ -1,5 +1,20 @@
 # @elastic/esql
 
+## 4.19.1
+
+### Patch Changes
+
+- [#218](https://github.com/elastic/esql-js/pull/218) [`a8558f8`](https://github.com/elastic/esql-js/commit/a8558f8e676ee5894c494831b6a7356a65541306) Thanks [@momovdg](https://github.com/momovdg)! - Fix broken type re-export of `DATE_PERIOD_UNITS`, `TIME_DURATION_UNITS`, and `TIME_SPAN_UNITS`: add `@elastic/esql-definitions` as an explicit dependency so the `./time` subpath resolves to the correct version in consumers that have an older version hoisted.
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.19.1
+  - @elastic/esql-definitions@4.19.1
+  - @elastic/esql-grammar@4.19.1
+  - @elastic/esql-promql-grammar@4.19.1
+  - @elastic/pretty-printer@4.19.1
+  - @elastic/esql-traversal@4.19.1
+  - @elastic/esql-ast@4.19.1
+
 ## 4.19.0
 
 ### Patch Changes

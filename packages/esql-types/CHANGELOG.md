@@ -1,5 +1,7 @@
 # @elastic/esql-types
 
+## 4.19.1
+
 ## 4.19.0
 
 ### Patch Changes
