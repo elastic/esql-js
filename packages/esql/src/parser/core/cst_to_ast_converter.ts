@@ -2564,7 +2564,7 @@ export class CstToAstConverter {
    * @todo Make it return a single value, not an array.
    */
   private visitValueExpression(ctx: cst.ValueExpressionContext) {
-    if (!textExistsAndIsValid(ctx.getText())) {
+    if (!ctx.getText()) {
       return [];
     }
 
@@ -2920,7 +2920,9 @@ export class CstToAstConverter {
   private toRegexBinaryExpression(
     ctx: cst.LikeExpressionContext | cst.RlikeExpressionContext
   ): ast.ESQLBinaryExpression | undefined {
-    const left = this.visitValueExpression(ctx.valueExpression());
+    const left = resolveItem(this.visitValueExpression(ctx.valueExpression()) ?? []) as
+      | ast.ESQLAstExpression
+      | undefined;
 
     if (!left) {
       return undefined;
@@ -2940,10 +2942,7 @@ export class CstToAstConverter {
       operatorNode.text = `not${operatorNode.text}`;
     }
 
-    const args: [ast.ESQLAstExpression, ast.ESQLAstExpression] = [
-      left as ast.ESQLAstExpression,
-      right,
-    ];
+    const args: [ast.ESQLAstExpression, ast.ESQLAstExpression] = [left, right];
 
     return this.toBinaryExpression(operator, ctx, args, {
       operator: operatorNode,
@@ -2953,7 +2952,9 @@ export class CstToAstConverter {
   private toRegexListExpression(
     ctx: cst.LikeListExpressionContext | cst.RlikeListExpressionContext
   ): ast.ESQLBinaryExpression | undefined {
-    const left = this.visitValueExpression(ctx.valueExpression());
+    const left = resolveItem(this.visitValueExpression(ctx.valueExpression()) ?? []) as
+      | ast.ESQLAstExpression
+      | undefined;
 
     if (!left) {
       return undefined;
@@ -2987,7 +2988,7 @@ export class CstToAstConverter {
       }
     );
 
-    const args: [ast.ESQLAstExpression, ast.ESQLList] = [left as ast.ESQLAstExpression, list];
+    const args: [ast.ESQLAstExpression, ast.ESQLList] = [left, list];
 
     return this.toBinaryExpression(operator, ctx, args, {
       operator: operatorNode,

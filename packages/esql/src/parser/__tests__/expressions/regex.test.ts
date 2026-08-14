@@ -490,6 +490,84 @@ describe('regular expressions', () => {
         valueUnquoted: 'test"quote',
       });
     });
+
+    it('LIKE with left operand string containing "<missing "', () => {
+      const text = 'FROM a | WHERE "<missing value>" LIKE "x*"';
+      const { root, errors } = Parser.parse(text);
+      const expression = root.commands[1].args[0];
+
+      expect(errors.length).toBe(0);
+      expect(expression).toMatchObject({
+        type: 'function',
+        name: 'like',
+        args: [
+          { type: 'literal', literalType: 'keyword', valueUnquoted: '<missing value>' },
+          { type: 'literal', literalType: 'keyword', valueUnquoted: 'x*' },
+        ],
+      });
+    });
+
+    it('RLIKE with left operand string containing "<missing "', () => {
+      const text = 'FROM a | WHERE "<missing value>" RLIKE "x.*"';
+      const { root, errors } = Parser.parse(text);
+      const expression = root.commands[1].args[0];
+
+      expect(errors.length).toBe(0);
+      expect(expression).toMatchObject({
+        type: 'function',
+        name: 'rlike',
+        args: [
+          { type: 'literal', literalType: 'keyword', valueUnquoted: '<missing value>' },
+          { type: 'literal', literalType: 'keyword', valueUnquoted: 'x.*' },
+        ],
+      });
+    });
+
+    it('LIKE list with left operand string containing "<missing "', () => {
+      const text = 'FROM a | WHERE "<missing value>" LIKE ("x*", "y*")';
+      const { root, errors } = Parser.parse(text);
+      const expression = root.commands[1].args[0];
+
+      expect(errors.length).toBe(0);
+      expect(expression).toMatchObject({
+        type: 'function',
+        name: 'like',
+        args: [
+          { type: 'literal', literalType: 'keyword', valueUnquoted: '<missing value>' },
+          {
+            type: 'list',
+            subtype: 'tuple',
+            values: [
+              { type: 'literal', valueUnquoted: 'x*' },
+              { type: 'literal', valueUnquoted: 'y*' },
+            ],
+          },
+        ],
+      });
+    });
+
+    it('RLIKE list with left operand string containing "<missing "', () => {
+      const text = 'FROM a | WHERE "<missing value>" RLIKE ("x.*", "y.*")';
+      const { root, errors } = Parser.parse(text);
+      const expression = root.commands[1].args[0];
+
+      expect(errors.length).toBe(0);
+      expect(expression).toMatchObject({
+        type: 'function',
+        name: 'rlike',
+        args: [
+          { type: 'literal', literalType: 'keyword', valueUnquoted: '<missing value>' },
+          {
+            type: 'list',
+            subtype: 'tuple',
+            values: [
+              { type: 'literal', valueUnquoted: 'x.*' },
+              { type: 'literal', valueUnquoted: 'y.*' },
+            ],
+          },
+        ],
+      });
+    });
   });
 
   describe('parameters', () => {
