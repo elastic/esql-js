@@ -13,6 +13,7 @@
       "@elastic/monaco-esql",
       "@elastic/prismjs-esql",
       "@elastic/textmate-esql",
+      "@elastic/highlightjs-esql",
       "@elastic/elasticsearch-query-builder",
       "@elastic/elasticsearch-esql-dsl",
       "@elastic/esql-traversal",
