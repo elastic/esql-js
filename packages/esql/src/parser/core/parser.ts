@@ -236,13 +236,23 @@ export class Parser {
     src: string,
     options?: ParseOptions
   ): ParseResult<ESQLAstExpression> => {
-    const firstChar = src.trimStart()[0];
+    const lexer = new ESQLLexer(CharStreams.fromString(src));
+    lexer.pushMode(ESQLLexer.EXPRESSION_MODE);
+    let firstToken: Token | undefined;
+    while (true) {
+      const token = lexer.nextToken();
+      if (token.type === ESQLLexer.EOF) break;
+      if (token.channel === DEFAULT_CHANNEL) {
+        firstToken = token;
+        break;
+      }
+    }
 
-    if (!firstChar) {
+    if (!firstToken) {
       throw new Error('Cannot parse empty command');
     }
 
-    if (firstChar === '{') {
+    if (firstToken.type === ESQLLexer.LEFT_BRACES) {
       return Parser.parseMap(src, options);
     }
 
