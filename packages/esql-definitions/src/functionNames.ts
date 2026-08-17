@@ -201,6 +201,7 @@ export const functionNames = [
   'TO_DEGREES',
   'TO_DENSE_VECTOR',
   'TO_DOUBLE',
+  'TO_DOUBLE_RANGE',
   'TO_EXPONENTIAL_HISTOGRAM',
   'TO_GAUGE',
   'TO_GEOHASH',
