@@ -41,6 +41,7 @@ import firstOverTimeDefinition from './first_over_time';
 import floorDefinition from './floor';
 import histogramAvgDefinition from './histogram_avg';
 import histogramCountDefinition from './histogram_count';
+import histogramFractionDefinition from './histogram_fraction';
 import histogramQuantileDefinition from './histogram_quantile';
 import histogramSumDefinition from './histogram_sum';
 import hourDefinition from './hour';
@@ -116,6 +117,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   floorDefinition,
   histogramAvgDefinition,
   histogramCountDefinition,
+  histogramFractionDefinition,
   histogramQuantileDefinition,
   histogramSumDefinition,
   hourDefinition,

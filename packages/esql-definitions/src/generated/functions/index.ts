@@ -205,6 +205,7 @@ import toDatetimeDefinition from './to_datetime';
 import toDegreesDefinition from './to_degrees';
 import toDenseVectorDefinition from './to_dense_vector';
 import toDoubleDefinition from './to_double';
+import toDoubleRangeDefinition from './to_double_range';
 import toExponentialHistogramDefinition from './to_exponential_histogram';
 import toGaugeDefinition from './to_gauge';
 import toGeohashDefinition from './to_geohash';
@@ -441,6 +442,7 @@ export const functionDefinitions: FunctionDefinition[] = [
   toDegreesDefinition,
   toDenseVectorDefinition,
   toDoubleDefinition,
+  toDoubleRangeDefinition,
   toExponentialHistogramDefinition,
   toGaugeDefinition,
   toGeohashDefinition,

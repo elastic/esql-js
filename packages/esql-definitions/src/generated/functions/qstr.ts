@@ -32,6 +32,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -49,6 +52,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'text',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',

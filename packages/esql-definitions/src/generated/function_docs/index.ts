@@ -205,6 +205,7 @@ import toDatetimeDocs from './to_datetime';
 import toDegreesDocs from './to_degrees';
 import toDenseVectorDocs from './to_dense_vector';
 import toDoubleDocs from './to_double';
+import toDoubleRangeDocs from './to_double_range';
 import toExponentialHistogramDocs from './to_exponential_histogram';
 import toGaugeDocs from './to_gauge';
 import toGeohashDocs from './to_geohash';
@@ -441,6 +442,7 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   to_degrees: toDegreesDocs,
   to_dense_vector: toDenseVectorDocs,
   to_double: toDoubleDocs,
+  to_double_range: toDoubleRangeDocs,
   to_exponential_histogram: toExponentialHistogramDocs,
   to_gauge: toGaugeDocs,
   to_geohash: toGeohashDocs,

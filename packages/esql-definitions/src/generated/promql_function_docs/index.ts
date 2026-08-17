@@ -41,6 +41,7 @@ import firstOverTimeDocs from './first_over_time';
 import floorDocs from './floor';
 import histogramAvgDocs from './histogram_avg';
 import histogramCountDocs from './histogram_count';
+import histogramFractionDocs from './histogram_fraction';
 import histogramQuantileDocs from './histogram_quantile';
 import histogramSumDocs from './histogram_sum';
 import hourDocs from './hour';
@@ -116,6 +117,7 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   floor: floorDocs,
   histogram_avg: histogramAvgDocs,
   histogram_count: histogramCountDocs,
+  histogram_fraction: histogramFractionDocs,
   histogram_quantile: histogramQuantileDocs,
   histogram_sum: histogramSumDocs,
   hour: hourDocs,
