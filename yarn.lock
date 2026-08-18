@@ -1036,6 +1036,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@elastic/highlightjs-esql@workspace:packages/highlightjs-esql"
   dependencies:
+    "@elastic/esql-definitions": "workspace:^"
     "@types/jest": "npm:30.0.0"
     highlight.js: "npm:11.12.0"
     jest: "npm:30.4.2"

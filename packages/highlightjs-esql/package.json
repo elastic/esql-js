@@ -39,6 +39,9 @@
     "typecheck": "tsc --noEmit",
     "test": "jest"
   },
+  "dependencies": {
+    "@elastic/esql-definitions": "workspace:^"
+  },
   "devDependencies": {
     "@types/jest": "30.0.0",
     "highlight.js": "11.12.0",

@@ -34,6 +34,7 @@ export default defineConfig([
     sourcemap: false,
     splitting: false,
     target: 'es2022',
+    noExternal: [/^@elastic\//],
     outExtension: () => ({ js: '.js' }),
   },
   {
@@ -45,6 +46,7 @@ export default defineConfig([
     sourcemap: false,
     splitting: false,
     target: 'es2022',
+    noExternal: [/^@elastic\//],
     outExtension: () => ({ js: '.js' }),
   },
 ]);
