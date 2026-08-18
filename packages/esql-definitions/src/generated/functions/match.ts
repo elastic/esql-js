@@ -39,6 +39,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'boolean',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -61,6 +64,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -83,6 +89,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'date',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -105,6 +114,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -127,6 +139,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'date_nanos',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -149,6 +164,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -171,6 +189,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'double',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -193,6 +214,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'integer',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -215,6 +239,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -237,6 +264,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'long',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -259,6 +289,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'double',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -281,6 +314,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'integer',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -303,6 +339,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -325,6 +364,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'long',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -347,6 +389,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'ip',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -369,6 +414,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -391,6 +439,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -413,6 +464,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'double',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -435,6 +489,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'integer',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -457,6 +514,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -479,6 +539,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'long',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -501,6 +564,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -523,6 +589,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'double',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -545,6 +614,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'integer',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -567,6 +639,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -589,6 +664,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'long',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -611,6 +689,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'unsigned_long',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -633,6 +714,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'keyword',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',
@@ -655,6 +739,9 @@ const definition: FunctionDefinition = {
           name: 'query',
           type: 'version',
           optional: false,
+          hint: {
+            kind: 'constant',
+          },
         },
         {
           name: 'options',

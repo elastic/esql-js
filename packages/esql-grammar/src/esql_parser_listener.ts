@@ -106,6 +106,7 @@ import { MmrQueryVectorExpressionContext } from "./esql_parser.js";
 import { MatchExpressionContext } from "./esql_parser.js";
 import { LogicalNotContext } from "./esql_parser.js";
 import { BooleanDefaultContext } from "./esql_parser.js";
+import { LogicalInMultiColumnSubqueryContext } from "./esql_parser.js";
 import { IsNullContext } from "./esql_parser.js";
 import { LogicalInSubqueryContext } from "./esql_parser.js";
 import { RegexExpressionContext } from "./esql_parser.js";
@@ -1141,6 +1142,18 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitBooleanDefault?: (ctx: BooleanDefaultContext) => void;
+	/**
+	 * Enter a parse tree produced by the `logicalInMultiColumnSubquery`
+	 * labeled alternative in `esql_parser.booleanExpression`.
+	 * @param ctx the parse tree
+	 */
+	enterLogicalInMultiColumnSubquery?: (ctx: LogicalInMultiColumnSubqueryContext) => void;
+	/**
+	 * Exit a parse tree produced by the `logicalInMultiColumnSubquery`
+	 * labeled alternative in `esql_parser.booleanExpression`.
+	 * @param ctx the parse tree
+	 */
+	exitLogicalInMultiColumnSubquery?: (ctx: LogicalInMultiColumnSubqueryContext) => void;
 	/**
 	 * Enter a parse tree produced by the `isNull`
 	 * labeled alternative in `esql_parser.booleanExpression`.

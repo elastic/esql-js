@@ -28,7 +28,7 @@ export default class esql_lexer extends lexer_config {
 	public static readonly MULTILINE_COMMENT = 2;
 	public static readonly WS = 3;
 	public static readonly CHANGE_POINT = 4;
-	public static readonly DEV_DEDUP = 5;
+	public static readonly DEDUP = 5;
 	public static readonly ENRICH = 6;
 	public static readonly DEV_EXPLAIN = 7;
 	public static readonly COMPLETION = 8;
@@ -323,8 +323,8 @@ export default class esql_lexer extends lexer_config {
 	public static readonly symbolicNames: (string | null)[] = [ null, "LINE_COMMENT", 
                                                              "MULTILINE_COMMENT", 
                                                              "WS", "CHANGE_POINT", 
-                                                             "DEV_DEDUP", 
-                                                             "ENRICH", "DEV_EXPLAIN", 
+                                                             "DEDUP", "ENRICH", 
+                                                             "DEV_EXPLAIN", 
                                                              "COMPLETION", 
                                                              "DISSECT", 
                                                              "EVAL", "GROK", 
@@ -469,9 +469,9 @@ export default class esql_lexer extends lexer_config {
                                                 "SHOW_MODE", ];
 
 	public static readonly ruleNames: string[] = [
-		"LINE_COMMENT", "MULTILINE_COMMENT", "WS", "CHANGE_POINT", "DEV_DEDUP", 
-		"ENRICH", "DEV_EXPLAIN", "COMPLETION", "DISSECT", "EVAL", "GROK", "LIMIT", 
-		"RERANK", "ROW", "SAMPLE", "SORT", "STATS", "WHERE", "URI_PARTS", "METRICS_INFO", 
+		"LINE_COMMENT", "MULTILINE_COMMENT", "WS", "CHANGE_POINT", "DEDUP", "ENRICH", 
+		"DEV_EXPLAIN", "COMPLETION", "DISSECT", "EVAL", "GROK", "LIMIT", "RERANK", 
+		"ROW", "SAMPLE", "SORT", "STATS", "WHERE", "URI_PARTS", "METRICS_INFO", 
 		"REGISTERED_DOMAIN", "TS_INFO", "USER_AGENT", "TS_COLLAPSE", "IP_LOCATION", 
 		"FROM", "TS", "DEV_EXTERNAL", "FORK", "FUSE", "DEV_HIGHLIGHT", "INLINE", 
 		"INLINESTATS", "IN_EXPRESSION_INIT", "JOIN_LOOKUP", "DEV_JOIN_FULL", "DEV_JOIN_LEFT", 
