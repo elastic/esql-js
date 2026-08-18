@@ -1,0 +1,45 @@
+// This is a comment
+EXPLAIN [ FROM index ]
+  | FROM index, cluster:index, `another_index` METADATA _id, _index
+  | ROW num = 123, another_field = "value", arr = [1, 2, 3]
+  /* This is a multiline
+     comment */
+  | SHOW INFO
+  | FORK (WHERE "adsf" | LIMIT 123) (LIMIT 123)
+    (WHERE asdf = ?asdf | LIMIT 123)
+  | RRF
+  | RERANK rerank_score = "curl" ON message, url WITH {"inference_id": "reranker"}
+  | METRICS index_pattern, logs-* BY date, ip
+  | EVAL kb = bytes / 1024 * -1.23e456 + ?param, foo = "bar"
+  | WHERE process.name == "curl.exe" AND ?42 == 123 OR ?
+  | WHERE event_duration > /* very big number */ 5000000
+  | WHERE message LIKE "Connected*"
+  | KEEP kb, destination.address, date, ip, email, num
+  // The ten is
+  // very sensible number
+  | LIMIT 10
+  | STATS bytes = (SUM(destination.bytes, true) BY coord.?asdf.lat)::INTEGER
+  | SORT @timestamp DESC
+  | SORT kb, date ASC NULLS FIRST, ip DESC NULLS LAST
+  | DROP date, ip
+  | TS
+  | RENAME field AS another_field, another_field AS field
+  | RENAME unique_queries AS `Unique Queries`
+  /**
+   * Description
+   * @description This is a description
+   * @color #0077ff
+   */
+  | DISSECT field """%{date} - %{msg} - %{ip}"""
+  | GROK dns.question.name "%{DATA}\\.%{GREEDYDATA:dns.question:string}"
+  | ENRICH languages_policy ON a WITH name = language_name, more
+  | MV_EXPAND column
+  | INLINESTATS count = COUNT(ROUND(AVG(
+      MV_AVG(department.salary_change)), 10))
+    BY languages
+  | LOOKUP index-pa* ON another_index
+  | JOIN join_index ON join_index.field = index.field
+  | COMPLETION "prompt" WITH `openai-completion` AS result
+  | LEFT JOIN join_index ON TRUE
+  | RIGHT JOIN join_index ON field1, field2, field3
+  | LOOKUP JOIN join_index AS x ON x.foo = bar

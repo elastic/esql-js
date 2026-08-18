@@ -1,0 +1,50 @@
+// Jest Snapshot v1, https://jestjs.io/docs/snapshot-testing
+
+exports[`highlights the default markup fixture 1`] = `
+"<span class="hljs-comment">// This is a comment</span>
+<span class="hljs-keyword">EXPLAIN</span> <span class="hljs-punctuation">[</span> <span class="hljs-keyword">FROM</span> index <span class="hljs-punctuation">]</span>
+  | <span class="hljs-keyword">FROM</span> index<span class="hljs-punctuation">,</span> cluster:index<span class="hljs-punctuation">,</span> \`another_index\` <span class="hljs-keyword">METADATA</span> _id<span class="hljs-punctuation">,</span> _index
+  | <span class="hljs-keyword">ROW</span> num = <span class="hljs-number">123</span><span class="hljs-punctuation">,</span> another_field = <span class="hljs-string">&quot;value&quot;</span><span class="hljs-punctuation">,</span> arr = <span class="hljs-punctuation">[</span><span class="hljs-number">1</span><span class="hljs-punctuation">,</span> <span class="hljs-number">2</span><span class="hljs-punctuation">,</span> <span class="hljs-number">3</span><span class="hljs-punctuation">]</span>
+  <span class="hljs-comment">/* This is a multiline
+     comment */</span>
+  | <span class="hljs-keyword">SHOW</span> <span class="hljs-keyword">INFO</span>
+  | <span class="hljs-keyword">FORK</span> <span class="hljs-punctuation">(</span><span class="hljs-keyword">WHERE</span> <span class="hljs-string">&quot;adsf&quot;</span> | <span class="hljs-keyword">LIMIT</span> <span class="hljs-number">123</span><span class="hljs-punctuation">)</span> <span class="hljs-punctuation">(</span><span class="hljs-keyword">LIMIT</span> <span class="hljs-number">123</span><span class="hljs-punctuation">)</span>
+    <span class="hljs-punctuation">(</span><span class="hljs-keyword">WHERE</span> asdf = <span class="hljs-variable">?asdf</span> | <span class="hljs-keyword">LIMIT</span> <span class="hljs-number">123</span><span class="hljs-punctuation">)</span>
+  | RRF
+  | <span class="hljs-keyword">RERANK</span> rerank_score = <span class="hljs-string">&quot;curl&quot;</span> <span class="hljs-keyword">ON</span> message<span class="hljs-punctuation">,</span> url <span class="hljs-keyword">WITH</span> <span class="hljs-punctuation">{</span><span class="hljs-string">&quot;inference_id&quot;</span>: <span class="hljs-string">&quot;reranker&quot;</span><span class="hljs-punctuation">}</span>
+  | <span class="hljs-keyword">METRICS</span> index_pattern<span class="hljs-punctuation">,</span> logs-* <span class="hljs-keyword">BY</span> date<span class="hljs-punctuation">,</span> ip
+  | <span class="hljs-keyword">EVAL</span> kb = bytes / <span class="hljs-number">1024</span> * <span class="hljs-number">-1.23e456</span> + <span class="hljs-variable">?param</span><span class="hljs-punctuation">,</span> foo = <span class="hljs-string">&quot;bar&quot;</span>
+  | <span class="hljs-keyword">WHERE</span> process.name == <span class="hljs-string">&quot;curl.exe&quot;</span> <span class="hljs-built_in">AND</span> <span class="hljs-variable">?42</span> == <span class="hljs-number">123</span> <span class="hljs-built_in">OR</span> <span class="hljs-variable">?</span>
+  | <span class="hljs-keyword">WHERE</span> event_duration &gt; <span class="hljs-comment">/* very big number */</span> <span class="hljs-number">5000000</span>
+  | <span class="hljs-keyword">WHERE</span> message <span class="hljs-built_in">LIKE</span> <span class="hljs-string">&quot;Connected*&quot;</span>
+  | <span class="hljs-keyword">KEEP</span> kb<span class="hljs-punctuation">,</span> destination.address<span class="hljs-punctuation">,</span> date<span class="hljs-punctuation">,</span> ip<span class="hljs-punctuation">,</span> email<span class="hljs-punctuation">,</span> num
+  <span class="hljs-comment">// The ten is</span>
+  <span class="hljs-comment">// very sensible number</span>
+  | <span class="hljs-keyword">LIMIT</span> <span class="hljs-number">10</span>
+  | <span class="hljs-keyword">STATS</span> bytes = <span class="hljs-punctuation">(</span><span class="hljs-function"><span class="hljs-keyword">SUM</span>(</span>destination.bytes<span class="hljs-punctuation">,</span> <span class="hljs-literal">true</span><span class="hljs-punctuation">)</span> <span class="hljs-keyword">BY</span> coord.<span class="hljs-variable">?asdf</span>.lat<span class="hljs-punctuation">)</span><span class="hljs-type">::INTEGER</span>
+  | <span class="hljs-keyword">SORT</span> @timestamp <span class="hljs-built_in">DESC</span>
+  | <span class="hljs-keyword">SORT</span> kb<span class="hljs-punctuation">,</span> date <span class="hljs-built_in">ASC</span> <span class="hljs-built_in">NULLS</span> <span class="hljs-built_in">FIRST</span><span class="hljs-punctuation">,</span> ip <span class="hljs-built_in">DESC</span> <span class="hljs-built_in">NULLS</span> <span class="hljs-built_in">LAST</span>
+  | <span class="hljs-keyword">DROP</span> date<span class="hljs-punctuation">,</span> ip
+  | <span class="hljs-keyword">TS</span>
+  | <span class="hljs-keyword">RENAME</span> field <span class="hljs-built_in">AS</span> another_field<span class="hljs-punctuation">,</span> another_field <span class="hljs-built_in">AS</span> field
+  | <span class="hljs-keyword">RENAME</span> unique_queries <span class="hljs-built_in">AS</span> \`Unique Queries\`
+  <span class="hljs-comment">/**
+   * Description
+   * <span class="hljs-doctag">@description</span> This is a description
+   * <span class="hljs-doctag">@color</span> #0077ff
+   */</span>
+  | <span class="hljs-keyword">DISSECT</span> field <span class="hljs-string">&quot;&quot;</span><span class="hljs-string">&quot;%{date} - %{msg} - %{ip}&quot;</span><span class="hljs-string">&quot;&quot;</span>
+  | <span class="hljs-keyword">GROK</span> dns.question.name <span class="hljs-string">&quot;%{DATA}\\\\.%{GREEDYDATA:dns.question:string}&quot;</span>
+  | <span class="hljs-keyword">ENRICH</span> languages_policy <span class="hljs-keyword">ON</span> a <span class="hljs-keyword">WITH</span> name = language_name<span class="hljs-punctuation">,</span> more
+  | <span class="hljs-keyword">MV_EXPAND</span> column
+  | <span class="hljs-keyword">INLINESTATS</span> count = <span class="hljs-function"><span class="hljs-keyword">COUNT</span>(</span><span class="hljs-function"><span class="hljs-keyword">ROUND</span>(</span><span class="hljs-function"><span class="hljs-keyword">AVG</span>(</span>
+      <span class="hljs-function"><span class="hljs-keyword">MV_AVG</span>(</span>department.salary_change<span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">,</span> <span class="hljs-number">10</span><span class="hljs-punctuation">)</span><span class="hljs-punctuation">)</span>
+    <span class="hljs-keyword">BY</span> languages
+  | <span class="hljs-keyword">LOOKUP</span> index-pa* <span class="hljs-keyword">ON</span> another_index
+  | <span class="hljs-keyword">JOIN</span> join_index <span class="hljs-keyword">ON</span> join_index.field = index.field
+  | <span class="hljs-keyword">COMPLETION</span> <span class="hljs-string">&quot;prompt&quot;</span> <span class="hljs-keyword">WITH</span> \`openai-<span class="hljs-keyword">completion</span>\` <span class="hljs-built_in">AS</span> result
+  | <span class="hljs-keyword">LEFT</span> <span class="hljs-keyword">JOIN</span> join_index <span class="hljs-keyword">ON</span> <span class="hljs-literal">TRUE</span>
+  | <span class="hljs-keyword">RIGHT</span> <span class="hljs-keyword">JOIN</span> join_index <span class="hljs-keyword">ON</span> field1<span class="hljs-punctuation">,</span> field2<span class="hljs-punctuation">,</span> field3
+  | <span class="hljs-keyword">LOOKUP</span> <span class="hljs-keyword">JOIN</span> join_index <span class="hljs-built_in">AS</span> x <span class="hljs-keyword">ON</span> x.foo = bar
+"
+`;
