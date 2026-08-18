@@ -34,7 +34,7 @@
   },
   "repository": "https://github.com/elastic/esql-js.git",
   "scripts": {
-    "build": "tsup && tsc -p tsconfig.build.json",
+    "build": "node -e \"fs.rmSync('lib', { recursive: true, force: true })\" && tsup && tsc -p tsconfig.build.json",
     "build:watch": "tsup --watch --onSuccess \"tsc -p tsconfig.build.json\"",
     "typecheck": "tsc --noEmit",
     "test": "jest"
