@@ -6,11 +6,28 @@
 
 ## Usage
 
+ESM:
+
 ```javascript
 import hljs from 'highlight.js/lib/core';
 import esql from '@elastic/highlightjs-esql';
 
 hljs.registerLanguage('esql', esql);
+```
+
+CommonJS:
+
+```javascript
+const hljs = require('highlight.js/lib/core');
+const { esql } = require('@elastic/highlightjs-esql');
+
+hljs.registerLanguage('esql', esql);
+```
+
+Then highlight:
+
+```javascript
+const { value } = hljs.highlight('FROM index | LIMIT 10', { language: 'esql' });
 ```
 
 ## License

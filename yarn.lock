@@ -1037,6 +1037,7 @@ __metadata:
   resolution: "@elastic/highlightjs-esql@workspace:packages/highlightjs-esql"
   dependencies:
     "@types/jest": "npm:30.0.0"
+    highlight.js: "npm:11.12.0"
     jest: "npm:30.4.2"
     ts-jest: "npm:29.4.11"
     tsup: "npm:8.5.1"
@@ -5536,6 +5537,13 @@ __metadata:
     property-information: "npm:^7.0.0"
     space-separated-tokens: "npm:^2.0.0"
   checksum: 10c0/18dc8064e5c3a7a2ae862978e626b97a254e1c8a67ee9d0c9f06d373bba155ed805fc5b5ce21b990fb7bc174624889e5e1ce1cade264f1b1d58b48f994bc85ce
+  languageName: node
+  linkType: hard
+
+"highlight.js@npm:11.12.0":
+  version: 11.12.0
+  resolution: "highlight.js@npm:11.12.0"
+  checksum: 10c0/c62ebfad125b541790412374a15ae1ca15a45fdfac0fae2b5c96b6a10dc8d5d15380adf748584fb08cfeb4db2b3a749a170e2afd0b640e9fad86445b1c435777
   languageName: node
   linkType: hard
 
