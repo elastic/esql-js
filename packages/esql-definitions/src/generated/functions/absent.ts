@@ -135,6 +135,17 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'exponential_histogram',
           optional: false,
         },

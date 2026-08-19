@@ -12,7 +12,7 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Converts an input value to a `date_range` value.\nA string will be parsed as a date range in the format `start..end`, where start and end are dates in ISO format. The range is half-open `[start, end)`.',
+  description: 'Converts an input value to a `date_range` value.\nStrings are parsed as a date range in the format `start..end`, where `start` and `end` are dates in ISO format. The range is half-open `[start, end)`.',
   examples: [
     'ROW str = "2020-01-01T00:00:00.000Z..2021-01-01T00:00:00.000Z"\n| EVAL range = TO_DATE_RANGE(str)',
   ],

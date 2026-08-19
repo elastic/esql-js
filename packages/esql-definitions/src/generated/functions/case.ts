@@ -394,6 +394,43 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'trueValue',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: true,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'condition',
+          type: 'boolean',
+          optional: false,
+        },
+        {
+          name: 'trueValue',
+          type: 'double_range',
+          optional: false,
+        },
+        {
+          name: 'elseValue',
+          type: 'double_range',
+          optional: true,
+        },
+      ],
+      variadic: true,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'condition',
+          type: 'boolean',
+          optional: false,
+        },
+        {
+          name: 'trueValue',
           type: 'exponential_histogram',
           optional: false,
         },

@@ -216,6 +216,22 @@ const definition: OperatorDefinition = {
       params: [
         {
           name: 'lhs',
+          type: 'double_range',
+          optional: false,
+        },
+        {
+          name: 'rhs',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'lhs',
           type: 'exponential_histogram',
           optional: false,
         },

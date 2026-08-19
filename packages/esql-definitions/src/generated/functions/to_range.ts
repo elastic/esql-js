@@ -39,6 +39,22 @@ const definition: FunctionDefinition = {
       variadic: false,
       returnType: 'date_range',
     },
+    {
+      params: [
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'double',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
   ],
   preview: true,
   snapshotOnly: false,

@@ -13,7 +13,7 @@ import type { FunctionDefinition } from '../../definition_types';
 
 /**
  * Converts an input value to a `double_range` value.
- * A string will be parsed as a double range in the format `start..end`, where start and end are double-precision floating-point numbers. The range is half-open `[start, end)`.
+ * Strings are parsed as a double range in the format `start..end`, where `start` and `end` are double-precision floating-point numbers. The range is half-open `[start, end)`.
  *
  * @example
  * ROW str = "1.5..2.5"
@@ -22,9 +22,43 @@ import type { FunctionDefinition } from '../../definition_types';
 const definition: FunctionDefinition = {
   type: 'scalar',
   name: 'to_double_range',
-  signatures: [],
+  signatures: [
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+  ],
   preview: true,
-  snapshotOnly: true,
+  snapshotOnly: false,
 };
 
 export default definition;

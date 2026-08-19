@@ -12,10 +12,13 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Converts an input value to a `double_range` value.\nA string will be parsed as a double range in the format `start..end`, where start and end are double-precision floating-point numbers. The range is half-open `[start, end)`.',
+  description: 'Converts an input value to a `double_range` value.\nStrings are parsed as a double range in the format `start..end`, where `start` and `end` are double-precision floating-point numbers. The range is half-open `[start, end)`.',
   examples: [
     'ROW str = "1.5..2.5"\n| EVAL range = TO_DOUBLE_RANGE(str)',
   ],
+  params: {
+    field: 'Input value. The input can be a single- or multi-valued column or an expression.',
+  },
 };
 
 export default docs;
