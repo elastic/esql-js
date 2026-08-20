@@ -6,9 +6,10 @@
  */
 
 import { Token } from 'antlr4';
+import { headerCommandNames, sourceCommandNames } from '@elastic/esql-definitions/commandNames';
 
 export const DEFAULT_CHANNEL: number = +Token.DEFAULT_CHANNEL;
 export const HIDDEN_CHANNEL: number = +Token.HIDDEN_CHANNEL;
 
-export const HEADER_COMMANDS = new Set<string>(['SET']);
-export const SOURCE_COMMANDS = new Set<string>(['FROM', 'ROW', 'SHOW', 'TS', 'EXPLAIN', 'PROMQL']);
+export const HEADER_COMMANDS = new Set<string>(headerCommandNames);
+export const SOURCE_COMMANDS = new Set<string>(sourceCommandNames);
