@@ -1,5 +1,24 @@
 # @elastic/esql
 
+## 4.20.0
+
+### Minor Changes
+
+- [#227](https://github.com/elastic/esql-js/pull/227) [`29f77cd`](https://github.com/elastic/esql-js/commit/29f77cd0ec7b334ba2526ab7e6cf1673057f415f) Thanks [@bartoval](https://github.com/bartoval)! - grammar update and misc
+
+### Patch Changes
+
+- [#222](https://github.com/elastic/esql-js/pull/222) [`989f24e`](https://github.com/elastic/esql-js/commit/989f24ee4efd372445db78dbf24751fef3566e8e) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Correct LIKE and RLIKE ES|QL expression parsing
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.20.0
+  - @elastic/esql-definitions@4.20.0
+  - @elastic/esql-grammar@4.20.0
+  - @elastic/esql-promql-grammar@4.20.0
+  - @elastic/pretty-printer@4.20.0
+  - @elastic/esql-traversal@4.20.0
+  - @elastic/esql-ast@4.20.0
+
 ## 4.19.2
 
 ### Patch Changes
