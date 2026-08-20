@@ -6,8 +6,8 @@
  */
 
 import * as antlr4 from 'antlr4';
-import { getPosition } from '@elastic/esql-parser';
-import type { EditorError } from '../../../types';
+import { getPosition } from '../tokens';
+import type { EditorError } from '@elastic/esql-types';
 
 /**
  * Error listener for PromQL parsing that collects syntax errors.

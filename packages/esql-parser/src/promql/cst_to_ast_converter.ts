@@ -7,10 +7,9 @@
 
 import type * as antlr from 'antlr4';
 import * as cst from '@elastic/esql-promql-grammar';
-import { getPosition } from '@elastic/esql-parser';
+import { getPosition } from '../tokens';
 import { PromQLBuilder } from '@elastic/esql-ast';
-import type { AstNodeParserFields } from '@elastic/esql-types';
-import type { ESQLParamKinds } from '../../../types';
+import type { AstNodeParserFields, ESQLParamKinds } from '@elastic/esql-types';
 import type * as ast from '@elastic/esql-types';
 import type { PromQLParser } from './parser';
 

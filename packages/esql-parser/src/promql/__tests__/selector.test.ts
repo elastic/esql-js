@@ -6,7 +6,7 @@
  */
 
 import { PromQLParser } from '../parser';
-import { printAst } from '../../../../debug';
+import { printAst } from '@elastic/esql-traversal';
 import type { PromQLSelector } from '@elastic/esql-types';
 
 describe('PromQL "selector" node parsing', () => {

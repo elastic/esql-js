@@ -32,7 +32,10 @@
     "test": "jest"
   },
   "dependencies": {
+    "@elastic/esql-ast": "workspace:^",
     "@elastic/esql-definitions": "workspace:^",
+    "@elastic/esql-promql-grammar": "workspace:^",
+    "@elastic/esql-traversal": "workspace:^",
     "@elastic/esql-types": "workspace:^",
     "antlr4": "4.13.2",
     "tslib": "2.8.1"
