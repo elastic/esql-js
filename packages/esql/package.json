@@ -48,6 +48,7 @@
     "@elastic/esql-ast": "workspace:^",
     "@elastic/esql-definitions": "workspace:^",
     "@elastic/esql-grammar": "workspace:^",
+    "@elastic/esql-parser": "workspace:^",
     "@elastic/esql-promql-grammar": "workspace:^",
     "@elastic/esql-traversal": "workspace:^",
     "@elastic/esql-types": "workspace:^",

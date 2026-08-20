@@ -6,7 +6,7 @@
  */
 
 import * as antlr4 from 'antlr4';
-import { getPosition } from './tokens';
+import { getPosition } from '@elastic/esql-parser';
 import {
   TOKEN_RECOGNITION_ERROR_PREFIX,
   isUnquotedIdentifierError,

@@ -16,7 +16,7 @@ import {
   type AstNodeParserFields,
   type AstNodeTemplate,
 } from '@elastic/esql-ast';
-import { getPosition } from './tokens';
+import { getPosition } from '@elastic/esql-parser';
 import { nonNullable, unescapeColumn } from './helpers';
 import { firstItem, lastItem, resolveItem, singleItems } from '../../ast/visitor/utils';
 import { type ArithmeticUnaryContext } from '@elastic/esql-grammar';

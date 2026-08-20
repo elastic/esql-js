@@ -6,7 +6,7 @@
  */
 
 import * as antlr4 from 'antlr4';
-import { getPosition } from '../../../parser/core/tokens';
+import { getPosition } from '@elastic/esql-parser';
 import type { EditorError } from '../../../types';
 
 /**
