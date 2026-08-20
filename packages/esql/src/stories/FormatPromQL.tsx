@@ -6,7 +6,7 @@
  */
 
 import React from 'react';
-import { PromQLParser } from '../embedded_languages/promql/parser';
+import { PromQLParser } from '@elastic/esql-parser';
 import {
   PromQLWrappingPrettyPrinter,
   type PromQLWrappingPrettyPrinterOptions,

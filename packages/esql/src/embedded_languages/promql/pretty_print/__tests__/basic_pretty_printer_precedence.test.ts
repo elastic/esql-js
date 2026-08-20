@@ -6,7 +6,7 @@
  */
 
 import { PromQLBuilder } from '@elastic/esql-ast';
-import { PromQLParser } from '../../parser';
+import { PromQLParser } from '@elastic/esql-parser';
 import { PromQLBasicPrettyPrinter } from '../basic_pretty_printer';
 import type { PromQLAstExpression } from '@elastic/esql-types';
 

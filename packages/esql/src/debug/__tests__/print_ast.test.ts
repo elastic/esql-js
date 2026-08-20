@@ -6,7 +6,7 @@
  */
 
 import { Parser } from '../../parser';
-import { printAst } from '../print_ast';
+import { printAst } from '@elastic/esql-traversal';
 
 test('can print a basic "FROM index" query AST', () => {
   const { root } = Parser.parse('FROM index');

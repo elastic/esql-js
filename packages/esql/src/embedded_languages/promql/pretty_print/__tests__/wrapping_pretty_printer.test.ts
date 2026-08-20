@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-import { PromQLParser } from '../../parser';
+import { PromQLParser } from '@elastic/esql-parser';
 import {
   PromQLWrappingPrettyPrinter,
   type PromQLWrappingPrettyPrinterOptions,

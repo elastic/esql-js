@@ -6,7 +6,7 @@
  */
 
 import type { ParseOptions } from '../../parser';
-import { PromQLParser } from '../../embedded_languages/promql/parser';
+import { PromQLParser } from '@elastic/esql-parser';
 import type { PromQLAstQueryExpression } from '@elastic/esql-types';
 import { createTag } from './tag';
 import type { SynthGenerator } from './types';
