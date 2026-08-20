@@ -6,7 +6,7 @@
  */
 
 import { EsqlQuery } from '../../../composer/query';
-import { Visitor } from '../visitor';
+import { Visitor } from '@elastic/esql-traversal';
 
 test('"visitCommand" captures all non-captured commands', () => {
   const { ast } = EsqlQuery.fromSrc(`

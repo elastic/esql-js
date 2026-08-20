@@ -6,7 +6,7 @@
  */
 
 import type { SharedData } from './global_visitor_context';
-import type * as ast from '../../types';
+import type * as ast from '@elastic/esql-types';
 import type * as contexts from './contexts';
 
 /**

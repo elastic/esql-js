@@ -6,7 +6,7 @@
  */
 
 import { parse } from '../../../parser';
-import { Visitor } from '../visitor';
+import { Visitor } from '@elastic/esql-traversal';
 
 test('"visitExpression" captures all non-captured expressions', () => {
   const { ast } = parse(`

@@ -20,7 +20,7 @@ import type {
   UndefinedToVoid,
   VisitorMethods,
 } from './types';
-import type { ESQLAstQueryExpression, ESQLCommand, ESQLProperNode } from '../../types';
+import type { ESQLAstQueryExpression, ESQLCommand, ESQLProperNode } from '@elastic/esql-types';
 import { Builder } from '@elastic/esql-ast';
 
 export interface VisitorOptions<
@@ -358,7 +358,7 @@ export class Visitor<
    * @returns The output of the visitor.
    */
   public visitHeaderCommand(
-    node: import('../../types').ESQLAstHeaderCommand,
+    node: import('@elastic/esql-types').ESQLAstHeaderCommand,
     input: UndefinedToVoid<Parameters<NonNullable<Methods['visitHeaderCommand']>>[1]>
   ) {
     this.ctx.assertMethodExists('visitHeaderCommand');

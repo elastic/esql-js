@@ -32,9 +32,9 @@ import type {
   ESQLOrderExpression,
   ESQLParens,
   ESQLSource,
-} from '../../types';
+  PromQLAstQueryExpression,
+} from '@elastic/esql-types';
 import type * as types from './types';
-import type { PromQLAstQueryExpression } from '@elastic/esql-types';
 
 export type SharedData = Record<string, unknown>;
 

@@ -7,8 +7,11 @@
 
 import { parse } from '../../../parser';
 import type { ESQLAstForkCommand } from '@elastic/esql-types';
-import { CommandVisitorContext, WhereCommandVisitorContext } from '../contexts';
-import { Visitor } from '../visitor';
+import {
+  CommandVisitorContext,
+  WhereCommandVisitorContext,
+  Visitor,
+} from '@elastic/esql-traversal';
 
 test('can collect all command names in type safe way', () => {
   const visitor = new Visitor()

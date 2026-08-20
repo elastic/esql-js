@@ -10,7 +10,8 @@
 
 import type { SharedData } from './global_visitor_context';
 import { type GlobalVisitorContext } from './global_visitor_context';
-import { children, firstItem, singleItems } from './utils';
+import { children } from '../children';
+import { firstItem, singleItems } from '../utils';
 import type {
   ESQLAstChangePointCommand,
   ESQLAstCommand,
@@ -41,7 +42,8 @@ import type {
   ESQLOrderExpression,
   ESQLParens,
   ESQLSource,
-} from '../../types';
+  PromQLAstQueryExpression,
+} from '@elastic/esql-types';
 import type {
   CommandVisitorInput,
   ESQLAstExpressionNode,
@@ -54,7 +56,6 @@ import type {
   VisitorOutput,
 } from './types';
 import { Builder, isProperNode } from '@elastic/esql-ast';
-import { PromQLAstQueryExpression } from '@elastic/esql-types';
 
 export class VisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
