@@ -34,6 +34,7 @@
   "dependencies": {
     "@elastic/esql-ast": "workspace:^",
     "@elastic/esql-types": "workspace:^",
+    "tree-dump": "1.1.0",
     "tslib": "2.8.1"
   },
   "devDependencies": {

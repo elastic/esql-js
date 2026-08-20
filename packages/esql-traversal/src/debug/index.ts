@@ -5,6 +5,4 @@
  * 2.0.
  */
 
-export * from './promql';
-export * from './esql';
-export * from './debug';
+export { printAst, type PrintAstOptions } from './print_ast';
