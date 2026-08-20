@@ -12,7 +12,7 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Returns true if the two arguments overlap. The relation is symmetric — argument order does not matter. Supports any combination of `date` and `date_range`. When both arguments are `date`, this is equivalent to `a == b`.',
+  description: 'Returns true if the two arguments overlap. The relation is symmetric — argument order does not matter. Supports all combinations of ranges and corresponding scalar types. When both arguments are scalar values, this is equivalent to `a == b`.',
   examples: [
     'FROM employees\n| WHERE RANGE_INTERSECTS(hire_date, TO_DATE_RANGE("1985-02-01..1985-03-01"))\n| KEEP emp_no, hire_date\n| SORT emp_no',
   ],

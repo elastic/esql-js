@@ -149,6 +149,22 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'first',
+          type: 'double_range',
+          optional: false,
+        },
+        {
+          name: 'rest',
+          type: 'double_range',
+          optional: true,
+        },
+      ],
+      variadic: true,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'first',
           type: 'exponential_histogram',
           optional: false,
         },

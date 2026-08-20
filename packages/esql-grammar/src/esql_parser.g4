@@ -394,7 +394,7 @@ lookupCommand
     ;
 
 dedupCommand
-    : DEV_DEDUP
+    : DEDUP
     ;
 
 highlightCommand

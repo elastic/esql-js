@@ -56,6 +56,38 @@ const definition: FunctionDefinition = {
       variadic: false,
       returnType: 'boolean',
     },
+    {
+      params: [
+        {
+          name: 'left',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'right',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'left',
+          type: 'double_range',
+          optional: false,
+        },
+        {
+          name: 'right',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
   ],
   preview: true,
   snapshotOnly: false,

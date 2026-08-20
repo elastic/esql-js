@@ -637,6 +637,39 @@ describe('function AST nodes', () => {
           ],
         });
       });
+
+      it('IN multi-column subquery', () => {
+        const query = 'FROM a | WHERE (b, c) IN (FROM d | KEEP e, f)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            {
+              type: 'list',
+              subtype: 'tuple',
+              values: [
+                { type: 'column', name: 'b' },
+                { type: 'column', name: 'c' },
+              ],
+            },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'from' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
     });
   });
 });

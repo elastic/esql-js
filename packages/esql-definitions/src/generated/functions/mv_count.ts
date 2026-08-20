@@ -103,6 +103,17 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'flattened',
           optional: false,
         },

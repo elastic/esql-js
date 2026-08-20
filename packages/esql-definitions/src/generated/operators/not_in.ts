@@ -102,6 +102,22 @@ const definition: OperatorDefinition = {
       params: [
         {
           name: 'field',
+          type: 'double_range',
+          optional: false,
+        },
+        {
+          name: 'inlist',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: true,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'geo_point',
           optional: false,
         },

@@ -2564,7 +2564,7 @@ export class CstToAstConverter {
    * @todo Make it return a single value, not an array.
    */
   private visitValueExpression(ctx: cst.ValueExpressionContext) {
-    if (!textExistsAndIsValid(ctx.getText())) {
+    if (!ctx.getText()) {
       return [];
     }
 
@@ -2803,6 +2803,10 @@ export class CstToAstConverter {
       return this.fromLogicalIn(ctx);
     }
 
+    if (ctx instanceof cst.LogicalInMultiColumnSubqueryContext) {
+      return this.fromLogicalInMultiColumnSubquery(ctx);
+    }
+
     if (ctx instanceof cst.LogicalInSubqueryContext) {
       return this.fromLogicalInSubquery(ctx);
     }
@@ -2874,6 +2878,15 @@ export class CstToAstConverter {
     return this.toLogicalInFunction(ctx, left, right, ctx.stop?.stop ?? right.location.max);
   }
 
+  private fromLogicalInMultiColumnSubquery(
+    ctx: cst.LogicalInMultiColumnSubqueryContext
+  ): ast.ESQLAstExpression {
+    const left = this.toTuple(ctx.valueExpression_list(), ctx.LP(), ctx.RP());
+    const right = this.fromSubquery(ctx.subquery());
+
+    return this.toLogicalInFunction(ctx, left, right, ctx.stop?.stop ?? right.location.max);
+  }
+
   private fromLogicalInLeft(leftCtx: cst.ValueExpressionContext): ast.ESQLAstExpression {
     return resolveItem(
       this.visitValueExpression(leftCtx) ?? this.fromParserRuleToUnknown(leftCtx)
@@ -2881,7 +2894,10 @@ export class CstToAstConverter {
   }
 
   private toLogicalInFunction(
-    ctx: cst.LogicalInContext | cst.LogicalInSubqueryContext,
+    ctx:
+      | cst.LogicalInContext
+      | cst.LogicalInSubqueryContext
+      | cst.LogicalInMultiColumnSubqueryContext,
     left: ast.ESQLAstExpression,
     right: ast.ESQLAstExpression,
     max: number
@@ -2920,7 +2936,9 @@ export class CstToAstConverter {
   private toRegexBinaryExpression(
     ctx: cst.LikeExpressionContext | cst.RlikeExpressionContext
   ): ast.ESQLBinaryExpression | undefined {
-    const left = this.visitValueExpression(ctx.valueExpression());
+    const left = resolveItem(this.visitValueExpression(ctx.valueExpression()) ?? []) as
+      | ast.ESQLAstExpression
+      | undefined;
 
     if (!left) {
       return undefined;
@@ -2940,10 +2958,7 @@ export class CstToAstConverter {
       operatorNode.text = `not${operatorNode.text}`;
     }
 
-    const args: [ast.ESQLAstExpression, ast.ESQLAstExpression] = [
-      left as ast.ESQLAstExpression,
-      right,
-    ];
+    const args: [ast.ESQLAstExpression, ast.ESQLAstExpression] = [left, right];
 
     return this.toBinaryExpression(operator, ctx, args, {
       operator: operatorNode,
@@ -2953,7 +2968,9 @@ export class CstToAstConverter {
   private toRegexListExpression(
     ctx: cst.LikeListExpressionContext | cst.RlikeListExpressionContext
   ): ast.ESQLBinaryExpression | undefined {
-    const left = this.visitValueExpression(ctx.valueExpression());
+    const left = resolveItem(this.visitValueExpression(ctx.valueExpression()) ?? []) as
+      | ast.ESQLAstExpression
+      | undefined;
 
     if (!left) {
       return undefined;
@@ -2987,7 +3004,7 @@ export class CstToAstConverter {
       }
     );
 
-    const args: [ast.ESQLAstExpression, ast.ESQLList] = [left as ast.ESQLAstExpression, list];
+    const args: [ast.ESQLAstExpression, ast.ESQLList] = [left, list];
 
     return this.toBinaryExpression(operator, ctx, args, {
       operator: operatorNode,
