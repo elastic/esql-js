@@ -5,9 +5,12 @@
  * 2.0.
  */
 
-// Main parser API
-export { parse, Parser, type ParseOptions, type ParseResult } from './core/parser';
-
-export { HEADER_COMMANDS, SOURCE_COMMANDS } from './core/constants';
-
-export { ESQLErrorListener } from './core/esql_error_listener';
+export {
+  parse,
+  Parser,
+  type ParseOptions,
+  type ParseResult,
+  ESQLErrorListener,
+  HEADER_COMMANDS,
+  SOURCE_COMMANDS,
+} from '@elastic/esql-parser';

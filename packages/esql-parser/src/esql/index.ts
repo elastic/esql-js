@@ -5,7 +5,5 @@
  * 2.0.
  */
 
-export * from './constants';
-export * from './tokens';
-export * from './esql';
-export * from './promql';
+export { parse, Parser, type ParseOptions, type ParseResult } from './parser';
+export { ESQLErrorListener } from './esql_error_listener';

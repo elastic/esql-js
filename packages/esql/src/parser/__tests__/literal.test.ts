@@ -7,7 +7,7 @@
 
 import { parse, Parser } from '..';
 import { BasicPrettyPrinter } from '../../pretty_print';
-import type { ESQLLiteral, ESQLStringLiteral } from '../../types';
+import type { ESQLLiteral, ESQLStringLiteral } from '@elastic/esql-types';
 
 describe('literal expression', () => {
   it('NULL', () => {

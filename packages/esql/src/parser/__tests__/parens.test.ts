@@ -6,7 +6,7 @@
  */
 
 import { Parser } from '..';
-import type { ESQLParens } from '../../types';
+import type { ESQLParens } from '@elastic/esql-types';
 import { BasicPrettyPrinter } from '../../pretty_print';
 
 const parse = (src: string) => Parser.parse(src, { withParens: true }).root;

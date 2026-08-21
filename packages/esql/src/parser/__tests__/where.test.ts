@@ -7,7 +7,7 @@
 
 import { parse } from '..';
 import { EsqlQuery } from '../../composer/query';
-import type { ESQLColumn, ESQLCommand, ESQLFunction, ESQLInlineCast } from '../../types';
+import type { ESQLColumn, ESQLCommand, ESQLFunction, ESQLInlineCast } from '@elastic/esql-types';
 import { Walker } from '@elastic/esql-traversal';
 import { BasicPrettyPrinter } from '../../pretty_print';
 

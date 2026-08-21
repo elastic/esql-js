@@ -12,7 +12,7 @@ import type {
   ESQLAstHighlightCommand,
   ESQLAstQueryExpression,
   ESQLSingleAstItem,
-} from '../../types';
+} from '@elastic/esql-types';
 
 describe('HIGHLIGHT', () => {
   const getHighlight = (ast: ESQLAstQueryExpression): ESQLAstHighlightCommand =>
