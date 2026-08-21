@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-ast",
-  "version": "4.20.0",
+  "version": "4.21.0",
   "author": "Kibana ES|QL team",
   "description": "ES|QL AST builder.",
   "license": "Elastic-2.0",
