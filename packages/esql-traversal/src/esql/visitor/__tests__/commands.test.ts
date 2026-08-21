@@ -5,15 +5,11 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../../composer/query';
-import { Visitor } from '@elastic/esql-traversal';
+import * as fixtures from './fixtures_commands';
+import { Visitor } from '../index';
 
 test('"visitCommand" captures all non-captured commands', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | STATS 1, "str", [true], a = b BY field
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsLimit().commands;
   const visitor = new Visitor()
     .on('visitStatsCommand', (ctx) => {
       return '<STATS>';
@@ -30,12 +26,7 @@ test('"visitCommand" captures all non-captured commands', () => {
 });
 
 test('can visit JOIN command', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | STATS 1, "str", [true], a = b BY field
-      | RIGHT JOIN abc ON xyz
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsJoinLimit().commands;
   const visitor = new Visitor()
     .on('visitJoinCommand', (ctx) => {
       return `JOIN[type = ${ctx.node.commandType}]`;
@@ -52,12 +43,7 @@ test('can visit JOIN command', () => {
 });
 
 test('can visit JOIN command arguments', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | STATS 1, "str", [true], a = b BY field
-      | RIGHT JOIN abc ON xyz
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsJoinLimit().commands;
   const visitor = new Visitor()
     .on('visitFunctionCallExpression', (ctx) => {
       if (ctx.node.subtype === 'binary-expression') {
@@ -84,12 +70,7 @@ test('can visit JOIN command arguments', () => {
 });
 
 test('can visit JOIN ON option', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | STATS 1, "str", [true], a = b BY field
-      | RIGHT JOIN abc ON xyz
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsJoinLimit().commands;
   const visitor = new Visitor()
     .on('visitColumnExpression', (ctx) => {
       return ctx.node.name;
@@ -115,12 +96,7 @@ test('can visit JOIN ON option', () => {
 });
 
 test('can visit CHANGE_POINT command', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM k8s
-      | STATS count=COUNT() BY @timestamp=BUCKET(@timestamp, 1 MINUTE)
-      | CHANGE_POINT count ON @timestamp AS type, pvalue
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromChangePoint().commands;
   const visitor = new Visitor()
     .on('visitExpression', (ctx) => {
       return null;
@@ -140,10 +116,7 @@ test('can visit CHANGE_POINT command', () => {
 });
 
 test('can visit REGISTERED_DOMAIN command', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | REGISTERED_DOMAIN parts = host
-  `);
+  const ast = fixtures.fromRegisteredDomain().commands;
   const visitor = new Visitor()
     .on('visitExpression', () => {
       return null;
@@ -163,10 +136,7 @@ test('can visit REGISTERED_DOMAIN command', () => {
 });
 
 test('can visit IP_LOCATION command', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | IP_LOCATION geo = client_ip
-  `);
+  const ast = fixtures.fromIpLocation().commands;
   const visitor = new Visitor()
     .on('visitExpression', () => {
       return null;
@@ -186,11 +156,7 @@ test('can visit IP_LOCATION command', () => {
 });
 
 test('can visit RERANK command', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM movies
-      | RERANK "star wars" ON title=X(title, 2), description=X(description, 1.5) WITH {"inferenceId":"rerankerInferenceId", "scoreColumn":"rerank_score"}
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromRerankLimit().commands;
 
   const visitor = new Visitor()
     .on('visitLiteralExpression', (ctx) => {
@@ -253,10 +219,7 @@ test('can visit RERANK command', () => {
 });
 
 test('can visit COMPLETION command', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | COMPLETION "test" WITH inferenceId
-  `);
+  const ast = fixtures.fromCompletion().commands;
   const visitor = new Visitor()
     .on('visitExpression', (ctx) => {
       return null;
@@ -276,10 +239,7 @@ test('can visit COMPLETION command', () => {
 });
 
 test('can visit URI_PARTS command', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-FROM index
-| URI_PARTS parts = url
-`);
+  const ast = fixtures.fromUriParts().commands;
   const visitor = new Visitor()
     .on('visitExpression', (ctx) => {
       return null;
@@ -299,10 +259,7 @@ FROM index
 });
 
 test('can visit MMR command', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM movies
-      | MMR [0.5, 0.4, 0.3, 0.2]::dense_vector ON genre LIMIT 10 WITH { "lambda": 0.5 }
-  `);
+  const ast = fixtures.fromMmr().commands;
   const visitor = new Visitor()
     .on('visitLiteralExpression', (ctx) => {
       return ctx.node.value;
@@ -351,20 +308,7 @@ test('can visit MMR command', () => {
 });
 
 test('can visit FROM command with complex subqueries', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index1,
-         (FROM index2
-          | WHERE a > 10
-          | EVAL b = a * 2
-          | STATS cnt = COUNT(*) BY c
-          | SORT cnt desc
-          | LIMIT 10),
-         index3,
-         (FROM index4 | STATS count(*))
-    | WHERE d > 10
-    | STATS max = max(*) BY e
-    | SORT max desc
-  `);
+  const ast = fixtures.fromSubqueries().commands;
   const visitor = new Visitor()
     .on('visitParensExpression', () => {
       return 'SUBQUERY';
@@ -387,11 +331,7 @@ test('can visit FROM command with complex subqueries', () => {
 });
 
 test('can visit DEDUP command via specific visitor', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | DEDUP
-      | LIMIT 10
-  `);
+  const ast = fixtures.fromDedupLimit().commands;
   const visitor = new Visitor()
     .on('visitDedupCommand', () => {
       return 'DEDUP';
@@ -408,10 +348,7 @@ test('can visit DEDUP command via specific visitor', () => {
 });
 
 test('"visitCommand" captures DEDUP when visitDedupCommand is not registered', () => {
-  const { ast } = EsqlQuery.fromSrc(`
-    FROM index
-      | DEDUP
-  `);
+  const ast = fixtures.fromDedup().commands;
   const visitor = new Visitor()
     .on('visitCommand', (ctx) => {
       return ctx.name();

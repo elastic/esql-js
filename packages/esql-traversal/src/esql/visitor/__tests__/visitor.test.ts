@@ -5,13 +5,9 @@
  * 2.0.
  */
 
-import { parse } from '../../../parser';
+import * as fixtures from './fixtures_visitor';
 import type { ESQLAstForkCommand } from '@elastic/esql-types';
-import {
-  CommandVisitorContext,
-  WhereCommandVisitorContext,
-  Visitor,
-} from '@elastic/esql-traversal';
+import { CommandVisitorContext, WhereCommandVisitorContext, Visitor } from '../index';
 
 test('can collect all command names in type safe way', () => {
   const visitor = new Visitor()
@@ -26,7 +22,7 @@ test('can collect all command names in type safe way', () => {
       return cmds;
     });
 
-  const { ast } = parse('FROM index | LIMIT 123');
+  const ast = fixtures.fromLimit().commands;
   const res = visitor.visitQuery(ast);
 
   expect(res).toEqual(['from', 'limit']);
@@ -45,14 +41,14 @@ test('can pass inputs to visitors', () => {
       return cmds;
     });
 
-  const { ast } = parse('FROM index | LIMIT 123');
+  const ast = fixtures.fromLimit().commands;
   const res = visitor.visitQuery(ast);
 
   expect(res).toEqual(['pfx:from', 'pfx:limit']);
 });
 
 test('a query can have a parent fork command', () => {
-  const { ast } = parse('FROM index | FORK (WHERE 1) (WHERE 2)');
+  const ast = fixtures.fromFork().commands;
 
   let parentCount = 0;
   new Visitor()
@@ -78,7 +74,7 @@ test('a query can have a parent fork command', () => {
 });
 
 test('can specify specific visitors for commands', () => {
-  const { ast } = parse('FROM index | SORT asfd | WHERE 1 | ENRICH adsf | LIMIT 123');
+  const ast = fixtures.fromSortWhereEnrichLimit().commands;
   const res = new Visitor()
     .on('visitWhereCommand', () => 'where')
     .on('visitSortCommand', () => 'sort')
@@ -91,7 +87,7 @@ test('can specify specific visitors for commands', () => {
 });
 
 test('a command can access parent query node', () => {
-  const { root } = parse('FROM index | SORT asfd | WHERE 1 | ENRICH adsf | LIMIT 123');
+  const root = fixtures.fromSortWhereEnrichLimit();
   new Visitor()
     .on('visitWhereCommand', (ctx) => {
       if (ctx.parent!.node !== root) {
@@ -108,7 +104,7 @@ test('a command can access parent query node', () => {
 });
 
 test('specific commands receive specific visitor contexts', () => {
-  const { root } = parse('FROM index | SORT asfd | WHERE 1 | ENRICH adsf | LIMIT 123');
+  const root = fixtures.fromSortWhereEnrichLimit();
 
   new Visitor()
     .on('visitWhereCommand', (ctx) => {
@@ -142,7 +138,7 @@ test('specific commands receive specific visitor contexts', () => {
 
 describe('header commands', () => {
   test('can visit header commands', () => {
-    const { root } = parse('SET timeout = "30s"; FROM index | LIMIT 10');
+    const root = fixtures.setTimeoutFromLimit();
     const headerNames: string[] = [];
 
     new Visitor()
@@ -160,7 +156,7 @@ describe('header commands', () => {
   });
 
   test('can visit multiple header commands', () => {
-    const { root } = parse('SET a = 1; SET b = 2; SET c = 3; FROM index');
+    const root = fixtures.setThreeFrom();
     const headerNames: string[] = [];
 
     new Visitor()
@@ -178,7 +174,7 @@ describe('header commands', () => {
   });
 
   test('can visit header command arguments', () => {
-    const { root } = parse('SET timeout = "30s"; FROM index');
+    const root = fixtures.setTimeoutFrom();
     const identifiers: string[] = [];
     const literals: string[] = [];
 
@@ -219,7 +215,7 @@ describe('header commands', () => {
   });
 
   test('header commands are visited before regular commands', () => {
-    const { root } = parse('SET a = 1; FROM index | LIMIT 10');
+    const root = fixtures.setOneFromLimit();
     const visitOrder: string[] = [];
 
     new Visitor()
@@ -243,7 +239,7 @@ describe('header commands', () => {
   });
 
   test('can iterate through header commands', () => {
-    const { root } = parse('SET a = 1; SET b = 2; FROM index');
+    const root = fixtures.setTwoFrom();
     const headerCommandCount = [
       ...new Visitor().on('visitQuery', (ctx) => ctx.headerCommands()).visitQuery(root),
     ].length;
@@ -252,7 +248,7 @@ describe('header commands', () => {
   });
 
   test('header command context has correct parent', () => {
-    const { root } = parse('SET timeout = "30s"; FROM index');
+    const root = fixtures.setTimeoutFrom();
 
     new Visitor()
       .on('visitHeaderCommand', (ctx) => {
@@ -269,7 +265,7 @@ describe('header commands', () => {
   });
 
   test('can visit header command directly', () => {
-    const { root } = parse('SET timeout = "30s"; FROM index');
+    const root = fixtures.setTimeoutFrom();
     const headerCommand = root.header![0];
 
     const result = new Visitor()
@@ -282,7 +278,7 @@ describe('header commands', () => {
   });
 
   test('header commands with various value types', () => {
-    const { root } = parse('SET a = 1; SET b = "value"; SET c = true; FROM index');
+    const root = fixtures.setMixedFrom();
     const literals: (string | number | boolean)[] = [];
 
     new Visitor()
@@ -316,7 +312,7 @@ describe('header commands', () => {
   });
 
   test('can return values from header command visitor', () => {
-    const { root } = parse('SET a = 1; SET b = 2; FROM index');
+    const root = fixtures.setTwoFrom();
 
     const results = new Visitor()
       .on('visitHeaderCommand', (ctx) => {

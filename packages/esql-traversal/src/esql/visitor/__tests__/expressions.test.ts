@@ -5,15 +5,11 @@
  * 2.0.
  */
 
-import { parse } from '../../../parser';
-import { Visitor } from '@elastic/esql-traversal';
+import { Visitor } from '../index';
+import * as fixtures from './fixtures_expressions';
 
 test('"visitExpression" captures all non-captured expressions', () => {
-  const { ast } = parse(`
-    FROM index
-      | STATS 1, "str", [true], a = b BY field
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsMixedByLimit().commands;
   const visitor = new Visitor()
     .on('visitExpression', (ctx) => {
       return '<EXPRESSION>';
@@ -34,11 +30,7 @@ test('"visitExpression" captures all non-captured expressions', () => {
 
 test('can terminate walk early, does not visit all literals', () => {
   const numbers: number[] = [];
-  const { ast } = parse(`
-    FROM index
-      | STATS 0, 1, 2, 3
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsNumbersLimit().commands;
   const result = new Visitor()
     .on('visitExpression', (ctx) => {
       return 0;
@@ -60,9 +52,7 @@ test('can terminate walk early, does not visit all literals', () => {
 });
 
 test('"visitColumnExpression" takes over all column visits', () => {
-  const { ast } = parse(`
-    FROM index | STATS a
-  `);
+  const ast = fixtures.fromStatsColumn().commands;
   const visitor = new Visitor()
     .on('visitColumnExpression', (ctx) => {
       return '<COLUMN>';
@@ -83,11 +73,7 @@ test('"visitColumnExpression" takes over all column visits', () => {
 });
 
 test('"visitSourceExpression" takes over all source visits', () => {
-  const { ast } = parse(`
-    FROM index
-      | STATS 1, "str", [true], a = b BY field
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsMixedByLimit().commands;
   const visitor = new Visitor()
     .on('visitSourceExpression', (ctx) => {
       return '<SOURCE>';
@@ -108,11 +94,7 @@ test('"visitSourceExpression" takes over all source visits', () => {
 });
 
 test('"visitFunctionCallExpression" takes over all literal visits', () => {
-  const { ast } = parse(`
-    FROM index
-      | STATS 1, "str", [true], a = b BY field
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsMixedByLimit().commands;
   const visitor = new Visitor()
     .on('visitFunctionCallExpression', (ctx) => {
       return '<FUNCTION>';
@@ -133,9 +115,7 @@ test('"visitFunctionCallExpression" takes over all literal visits', () => {
 });
 
 test('"visitMapExpression" takes over expression visiting', () => {
-  const { ast } = parse(`
-    ROW fn(1, {"a": 2})
-  `);
+  const ast = fixtures.rowFnWithMap().commands;
   const visitor = new Visitor()
     .on('visitMapExpression', (ctx) => {
       return '<MAP>';
@@ -159,9 +139,7 @@ test('"visitMapExpression" takes over expression visiting', () => {
 });
 
 test('"visitMapEntryExpression" takes over expression visiting', () => {
-  const { ast } = parse(`
-    ROW fn(1, {"a": 2, "b": "3"})
-  `);
+  const ast = fixtures.rowFnWithTwoEntryMap().commands;
   const visitor = new Visitor()
     .on('visitMapEntryExpression', (ctx) => {
       return '<ENTRY>';
@@ -188,11 +166,7 @@ test('"visitMapEntryExpression" takes over expression visiting', () => {
 });
 
 test('"visitLiteral" takes over all literal visits', () => {
-  const { ast } = parse(`
-    FROM index
-      | STATS 1, "str", [true], a = b BY field
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsMixedByLimit().commands;
   const visitor = new Visitor()
     .on('visitLiteralExpression', (ctx) => {
       return '<LITERAL>';
@@ -213,11 +187,7 @@ test('"visitLiteral" takes over all literal visits', () => {
 });
 
 test('"visitExpression" does visit WHERE clause args', () => {
-  const { ast } = parse(`
-    FROM index
-      | STATS 1 WHERE 2
-      | LIMIT 123
-  `);
+  const ast = fixtures.fromStatsWhereLimit().commands;
   const visitor = new Visitor()
     .on('visitLiteralExpression', (ctx) => {
       return '<LITERAL>';
@@ -241,10 +211,7 @@ test('"visitExpression" does visit WHERE clause args', () => {
 });
 
 test('"visitExpression" does visit identifier nodes', () => {
-  const { ast } = parse(`
-    FROM index
-      | RIGHT JOIN a ON c
-  `);
+  const ast = fixtures.fromRightJoin().commands;
   const expressions: string[] = [];
   new Visitor()
     .on('visitExpression', (ctx) => {
@@ -263,20 +230,7 @@ test('"visitExpression" does visit identifier nodes', () => {
 });
 
 test('"visitParensExpression" can traverse complex subqueries with processing', () => {
-  const { ast } = parse(`
-    FROM index1,
-         (FROM index2
-          | WHERE a > 10
-          | EVAL b = a * 2
-          | STATS cnt = COUNT(*) BY c
-          | SORT cnt desc
-          | LIMIT 10),
-         index3,
-         (FROM index4 | STATS count(*))
-    | WHERE d > 10
-    | STATS max = max(*) BY e
-    | SORT max desc
-  `);
+  const ast = fixtures.fromSubqueriesWhereStatsSort().commands;
   const visitor = new Visitor()
     .on('visitParensExpression', (ctx) => {
       const child = ctx.visitChild(undefined);
