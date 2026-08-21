@@ -7,7 +7,7 @@
 
 import { Builder, isSubQuery } from '@elastic/esql-ast';
 import type { ESQLAstQueryExpression, ESQLCommand, ESQLSource } from '../../../../types';
-import { Visitor } from '../../../visitor';
+import { Visitor } from '@elastic/esql-traversal';
 import * as generic from '../../generic';
 import * as util from '../../util';
 import type { Predicate } from '../../types';

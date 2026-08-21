@@ -6,7 +6,7 @@
  */
 
 import type { ESQLAstQueryExpression, ESQLCommand } from '../../../../types';
-import { Visitor } from '../../../visitor';
+import { Visitor } from '@elastic/esql-traversal';
 import type { Predicate } from '../../types';
 
 export * as args from './args';

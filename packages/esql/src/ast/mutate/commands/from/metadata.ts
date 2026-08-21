@@ -5,14 +5,13 @@
  * 2.0.
  */
 
-import { Walker } from '@elastic/esql-traversal';
+import { Walker, Visitor } from '@elastic/esql-traversal';
 import type {
   ESQLAstQueryExpression,
   ESQLColumn,
   ESQLCommand,
   ESQLCommandOption,
 } from '../../../../types';
-import { Visitor } from '../../../visitor';
 import { cmpArr, findByPredicate } from '../../util';
 import * as generic from '../../generic';
 import { Builder } from '@elastic/esql-ast';

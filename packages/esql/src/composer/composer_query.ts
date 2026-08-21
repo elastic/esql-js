@@ -42,8 +42,7 @@ import type {
   QueryCommandTag,
   QueryCommandTagParametrized,
 } from './types';
-import { Walker, replaceProperties } from '@elastic/esql-traversal';
-import { resolveItem } from '../ast/visitor/utils';
+import { Walker, replaceProperties, resolveItem } from '@elastic/esql-traversal';
 import { printAst } from '../debug';
 
 export class ComposerQuery {
