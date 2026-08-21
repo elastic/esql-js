@@ -28,8 +28,8 @@ import type {
   PromQLSelector,
 } from '@elastic/esql-types';
 import { Walker } from '../walker';
+import { expr, unary } from '../../../__tests__/builders';
 
-const { expression: expr } = Builder;
 const { expression: pexpr } = PromQLBuilder;
 
 /**
@@ -38,9 +38,6 @@ const { expression: pexpr } = PromQLBuilder;
  */
 const binary = (name: string, left: ESQLAstItem, right: ESQLAstItem): ESQLFunction =>
   expr.func.node({ name, subtype: 'binary-expression', args: [left, right] });
-
-const unary = (name: string, arg: ESQLAstItem): ESQLFunction =>
-  expr.func.node({ name, subtype: 'unary-expression', args: [arg] });
 
 const promqlCommand = (query: PromQLAstQueryExpression, params?: ESQLMap): ESQLAstPromqlCommand => {
   const command = Builder.command({ name: 'promql' }) as ESQLAstPromqlCommand;

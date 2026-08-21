@@ -26,8 +26,7 @@ import type {
   ESQLStringLiteral,
 } from '@elastic/esql-types';
 import { walk, Walker } from '../walker';
-
-const { expression: expr } = Builder;
+import { expr, unary, unknown } from '../../../__tests__/builders';
 
 /**
  * The parser does not mint an `operator` identifier node for binary expressions
@@ -37,15 +36,6 @@ const { expression: expr } = Builder;
  */
 const binary = (name: string, args: ESQLAstItem[]): ESQLFunction =>
   expr.func.node({ name, subtype: 'binary-expression', args });
-
-const unary = (name: string, arg: ESQLAstItem): ESQLFunction =>
-  expr.func.node({ name, subtype: 'unary-expression', args: [arg] });
-
-const unknown = (): ESQLUnknownItem => ({
-  ...Builder.parserFields({ incomplete: true }),
-  type: 'unknown',
-  name: 'unknown',
-});
 
 /** `TS index | EVAL a(b(c(foo)))` */
 const tsEvalNestedCalls = () =>
