@@ -13,17 +13,7 @@ import type {
   ESQLStringLiteral,
 } from '@elastic/esql-types';
 import { walk, Walker } from '../walker';
-
-const { expression: expr } = Builder;
-
-/** `FROM a, b, c` */
-const fromSources = () =>
-  Builder.expression.query([
-    Builder.command({
-      name: 'from',
-      args: ['a', 'b', 'c'].map((name) => expr.source.index(name)),
-    }),
-  ]);
+import { expr, fromSources } from '../../../__tests__/builders';
 
 /** `FROM index METADATA a, b, c` */
 const fromWithMetadata = () =>

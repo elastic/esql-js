@@ -21,12 +21,9 @@ import type {
   PromQLBinaryExpression,
   PromQLLabelMap,
   PromQLLabel,
-  PromQLLabelMatchOperator,
-  PromQLLabelValue,
   PromQLIdentifier,
   PromQLLiteral,
   PromQLGrouping,
-  PromQLStringLiteral,
   PromQLSubquery,
   PromQLParens,
   PromQLUnaryExpression,
@@ -37,25 +34,7 @@ import type {
   PromQLGroupModifier,
 } from '@elastic/esql-types';
 import { Walker } from '../walker';
-
-const { expression: expr } = PromQLBuilder;
-
-const id = PromQLBuilder.identifier;
-const time = expr.literal.time;
-const str = (value: string): PromQLStringLiteral => expr.literal.string(value, `"${value}"`);
-const sel = (
-  metric: string,
-  options: {
-    labelMap?: PromQLLabelMap;
-    duration?: PromQLAstExpression;
-    evaluation?: PromQLEvaluation;
-  } = {}
-): PromQLSelector => expr.selector.node({ metric: id(metric), ...options });
-const label = (
-  name: string,
-  operator: PromQLLabelMatchOperator,
-  value?: PromQLLabelValue
-): PromQLLabel => PromQLBuilder.label(id(name), operator, value);
+import { promqlExpr as expr, id, label, sel, str, time } from '../../../__tests__/builders';
 
 /** Wraps an ES|QL `PROMQL` command query into a single-command ES|QL query. */
 const promqlCommand = (

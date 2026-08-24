@@ -15,7 +15,7 @@
 import { parse } from '../../../parser';
 import { BasicPrettyPrinter } from '../../../pretty_print';
 import type { ESQLAstItem, ESQLAstQueryExpression } from '@elastic/esql-types';
-import { Visitor } from '../visitor';
+import { Visitor } from '@elastic/esql-traversal';
 
 test('change LIMIT from 24 to 42', () => {
   const { root } = parse(`

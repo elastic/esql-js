@@ -84,6 +84,7 @@ processingCommand
     | lookupCommand
     | dedupCommand
     | highlightCommand
+    | denseVectorCommand
     ;
 
 whereCommand
@@ -436,4 +437,8 @@ mmrCommand
 mmrQueryVectorParams
     : parameter                           # mmrQueryVectorParameter
     | primaryExpression                   # mmrQueryVectorExpression
+    ;
+
+denseVectorCommand
+    : DEV_DENSE_VECTOR qualifiedNames commandNamedParameters
     ;

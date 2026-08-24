@@ -7,3 +7,4 @@
 
 export * from './promql';
 export * from './esql';
+export * from './debug';

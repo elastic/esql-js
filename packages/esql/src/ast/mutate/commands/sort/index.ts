@@ -12,7 +12,7 @@ import type {
   ESQLCommand,
   ESQLOrderExpression,
 } from '../../../../types';
-import { Visitor } from '../../../visitor';
+import { Visitor } from '@elastic/esql-traversal';
 import type { Predicate } from '../../types';
 import * as util from '../../util';
 import * as generic from '../../generic';

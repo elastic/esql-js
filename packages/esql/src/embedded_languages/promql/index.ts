@@ -6,9 +6,12 @@
  */
 
 // Parser
-export { PromQLParser, type PromQLParseOptions } from './parser';
-export { PromQLErrorListener } from './parser/promql_error_listener';
-export { PromQLCstToAstConverter } from './parser/cst_to_ast_converter';
+export {
+  PromQLParser,
+  type PromQLParseOptions,
+  PromQLErrorListener,
+  PromQLCstToAstConverter,
+} from '@elastic/esql-parser';
 
 // Pretty Printer
 export { PromQLBasicPrettyPrinter, type PromQLBasicPrettyPrinterOptions } from './pretty_print';

@@ -1,0 +1,784 @@
+/*
+ * Copyright Elasticsearch B.V. and/or licensed to Elasticsearch B.V. under one
+ * or more contributor license agreements. Licensed under the Elastic License
+ * 2.0; you may not use this file except in compliance with the Elastic License
+ * 2.0.
+ */
+
+import { Parser, parse } from '..';
+import { EsqlQuery } from './query';
+import { Walker } from '@elastic/esql-traversal';
+
+describe('function AST nodes', () => {
+  describe('"variadic-call"', () => {
+    it('function call with a single argument', () => {
+      const query = 'ROW fn(1)';
+      const { ast, errors } = parse(query);
+
+      expect(errors.length).toBe(0);
+      expect(ast).toMatchObject([
+        {
+          type: 'command',
+          name: 'row',
+          args: [
+            {
+              type: 'function',
+              name: 'fn',
+              args: [
+                {
+                  type: 'literal',
+                  value: 1,
+                },
+              ],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('function call with multiple argument', () => {
+      const query = 'ROW fn(1, 2, 3)';
+      const { ast, errors } = parse(query);
+
+      expect(errors.length).toBe(0);
+      expect(ast).toMatchObject([
+        {
+          type: 'command',
+          name: 'row',
+          args: [
+            {
+              type: 'function',
+              name: 'fn',
+              args: [
+                {
+                  type: 'literal',
+                  value: 1,
+                },
+                {
+                  type: 'literal',
+                  value: 2,
+                },
+                {
+                  type: 'literal',
+                  value: 3,
+                },
+              ],
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('parses out function name as identifier node', () => {
+      const query = 'ROW fn(1, 2, 3)';
+      const { ast, errors } = parse(query);
+
+      expect(errors.length).toBe(0);
+      expect(ast).toMatchObject([
+        {
+          type: 'command',
+          name: 'row',
+          args: [
+            {
+              type: 'function',
+              name: 'fn',
+              operator: {
+                type: 'identifier',
+                name: 'fn',
+              },
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('parses out function name as named param', () => {
+      const query = 'ROW ?insert_here(1, 2, 3)';
+      const { ast, errors } = parse(query);
+
+      expect(errors.length).toBe(0);
+      expect(ast).toMatchObject([
+        {
+          type: 'command',
+          name: 'row',
+          args: [
+            {
+              type: 'function',
+              name: '?insert_here',
+              operator: {
+                type: 'literal',
+                literalType: 'param',
+                paramType: 'named',
+                value: 'insert_here',
+              },
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('parses out function name as unnamed param', () => {
+      const query = 'ROW ?(1, 2, 3)';
+      const { ast, errors } = parse(query);
+
+      expect(errors.length).toBe(0);
+      expect(ast).toMatchObject([
+        {
+          type: 'command',
+          name: 'row',
+          args: [
+            {
+              type: 'function',
+              name: '?',
+              operator: {
+                type: 'literal',
+                literalType: 'param',
+                paramType: 'unnamed',
+              },
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('parses out function name as positional param', () => {
+      const query = 'ROW ?30035(1, 2, 3)';
+      const { ast, errors } = parse(query);
+
+      expect(errors.length).toBe(0);
+      expect(ast).toMatchObject([
+        {
+          type: 'command',
+          name: 'row',
+          args: [
+            {
+              type: 'function',
+              name: '?30035',
+              operator: {
+                type: 'literal',
+                literalType: 'param',
+                paramType: 'positional',
+                value: 30035,
+              },
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('parses out function name "LAST" static name', () => {
+      const query = 'ROW LAST(1, 2, 3)';
+      const { root, errors } = Parser.parse(query);
+
+      expect(errors.length).toBe(0);
+
+      expect(root.commands).toMatchObject([
+        {
+          type: 'command',
+          name: 'row',
+          args: [
+            {
+              type: 'function',
+              name: 'last',
+              operator: {
+                type: 'identifier',
+                name: 'last',
+              },
+            },
+          ],
+        },
+      ]);
+    });
+
+    it('parses out function name "FIRST" static name', () => {
+      const query = 'ROW First(1, 2, 3)';
+      const { root, errors } = Parser.parse(query);
+
+      expect(errors.length).toBe(0);
+
+      expect(root.commands).toMatchObject([
+        {
+          type: 'command',
+          name: 'row',
+          args: [
+            {
+              type: 'function',
+              name: 'first',
+              operator: {
+                type: 'identifier',
+                name: 'first',
+              },
+            },
+          ],
+        },
+      ]);
+    });
+  });
+
+  describe('"unary-expression"', () => {
+    it('logical NOT', () => {
+      const query = 'FROM a | STATS NOT b';
+      const { ast, errors } = parse(query);
+      const fn = Walker.findFunction(ast, ({ name }) => name === 'not');
+
+      expect(errors.length).toBe(0);
+      expect(fn).toMatchObject({
+        type: 'function',
+        subtype: 'unary-expression',
+        name: 'not',
+        args: [expect.any(Object)],
+      });
+    });
+
+    // Currently arithmetic unary expressions, like "-x", are transformed to
+    // binary expressions: "-1 * x". Enable this test once unary expressions
+    // are supported.
+    it.skip('arithmetic', () => {
+      const query = 'FROM a | STATS -a';
+      const { ast, errors } = parse(query);
+      const fn = Walker.findFunction(ast, ({ name }) => name === '*');
+
+      expect(errors.length).toBe(0);
+      expect(fn).toMatchObject({
+        type: 'function',
+        subtype: 'unary-expression',
+        name: '-',
+        args: [expect.any(Object)],
+      });
+    });
+  });
+
+  describe('"postfix-unary-expression"', () => {
+    it('IS [NOT] NULL', () => {
+      const query = 'FROM a | STATS a IS NOT NULL';
+      const { ast, errors } = parse(query);
+      const fn = Walker.findFunction(ast, ({ name }) => name === 'is not null');
+
+      expect(errors.length).toBe(0);
+      expect(fn).toMatchObject({
+        type: 'function',
+        subtype: 'postfix-unary-expression',
+        name: 'is not null',
+        args: [expect.any(Object)],
+      });
+    });
+  });
+
+  describe('"binary-expression"', () => {
+    it('arithmetic and logical operations', () => {
+      const ops = ['+', '-', '*', '/', '%', 'and', 'or', '>', '>=', '<', '<=', '==', '!='];
+
+      for (const op of ops) {
+        const query = `ROW 1 ${op} 2`;
+        const { ast, errors } = parse(query);
+
+        expect(errors.length).toBe(0);
+        expect(ast).toMatchObject([
+          {
+            type: 'command',
+            name: 'row',
+            args: [
+              {
+                type: 'function',
+                subtype: 'binary-expression',
+                name: op,
+                args: [
+                  {
+                    type: 'literal',
+                    value: 1,
+                  },
+                  {
+                    type: 'literal',
+                    value: 2,
+                  },
+                ],
+              },
+            ],
+          },
+        ]);
+      }
+    });
+
+    it('logical IN', () => {
+      const query = 'FROM a | STATS a IN (1, 2, 3)';
+      const { ast, errors } = parse(query);
+      const fn = Walker.findFunction(ast, ({ name }) => name === 'in');
+
+      expect(errors.length).toBe(0);
+      expect(fn).toMatchObject({
+        type: 'function',
+        subtype: 'binary-expression',
+        name: 'in',
+        args: [expect.any(Object), expect.any(Object)],
+      });
+    });
+
+    it('logical NOT IN', () => {
+      const query = 'FROM a | STATS a NOT IN (1, 2, 3)';
+      const { ast, errors } = parse(query);
+      const fn = Walker.findFunction(ast, ({ name }) => name === 'not in');
+
+      expect(errors.length).toBe(0);
+      expect(fn).toMatchObject({
+        type: 'function',
+        subtype: 'binary-expression',
+        name: 'not in',
+        args: [expect.any(Object), expect.any(Object)],
+      });
+    });
+
+    it('regex expression', () => {
+      const query = 'FROM a | STATS a LIKE "adsf"';
+      const { ast, errors } = parse(query);
+      const fn = Walker.findFunction(ast, ({ name }) => name === 'like');
+
+      expect(errors.length).toBe(0);
+      expect(fn).toMatchObject({
+        type: 'function',
+        subtype: 'binary-expression',
+        name: 'like',
+        args: [expect.any(Object), expect.any(Object)],
+      });
+    });
+
+    it('assignment in ENRICH .. WITH clause', () => {
+      const query = 'FROM a | ENRICH b ON c WITH d = e';
+      const { ast, errors } = parse(query);
+      const fn = Walker.findFunction(ast, ({ name }) => name === '=');
+
+      expect(errors.length).toBe(0);
+      expect(fn).toMatchObject({
+        type: 'function',
+        subtype: 'binary-expression',
+        name: '=',
+        args: [expect.any(Object), expect.any(Object)],
+      });
+    });
+
+    it('assignment in STATS', () => {
+      const query = 'FROM a | STATS b = c';
+      const { ast, errors } = parse(query);
+      const fn = Walker.findFunction(ast, ({ name }) => name === '=');
+
+      expect(errors.length).toBe(0);
+      expect(fn).toMatchObject({
+        type: 'function',
+        subtype: 'binary-expression',
+        name: '=',
+        args: [expect.any(Object), expect.any(Object)],
+      });
+    });
+
+    describe('IN-expression', () => {
+      it('empty tuple', () => {
+        const query = 'FROM a | STATS a IN ( )';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length > 0).toBe(true);
+        expect(expression).toBeUndefined();
+      });
+
+      it('single tuple item', () => {
+        const query = 'FROM a | STATS a IN ("asdf")';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression?.args.length).toBe(2);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'list',
+              subtype: 'tuple',
+              values: [{ type: 'literal', valueUnquoted: 'asdf' }],
+            },
+          ],
+        });
+      });
+
+      it('multiple items in tuple', () => {
+        const query = 'FROM a | STATS a IN (1, 2, 3)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression?.args.length).toBe(2);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'list',
+              subtype: 'tuple',
+              values: [
+                { type: 'literal', value: 1 },
+                { type: 'literal', value: 2 },
+                { type: 'literal', value: 3 },
+              ],
+            },
+          ],
+        });
+      });
+
+      it('logical NOT IN', () => {
+        const query = 'FROM a | STATS a NOT /* comment */ IN (1, 2, 3)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, 'not in');
+
+        expect(errors.length).toBe(0);
+        expect(expression?.args.length).toBe(2);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'not in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'list',
+              subtype: 'tuple',
+              values: [
+                { type: 'literal', value: 1 },
+                { type: 'literal', value: 2 },
+                { type: 'literal', value: 3 },
+              ],
+            },
+          ],
+        });
+      });
+
+      it('IN subquery', () => {
+        const query = 'FROM a | WHERE a IN (FROM b | KEEP c)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression?.args.length).toBe(2);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'from' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
+      it('NOT IN subquery', () => {
+        const query = 'FROM a | WHERE a NOT IN (FROM b | KEEP c)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'not in');
+
+        expect(errors.length).toBe(0);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'not in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'from' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
+      it.each([
+        { query: 'FROM a | WHERE (agent,', columnNames: ['agent'] },
+        {
+          query: 'FROM a | WHERE (agent, bytes)',
+          columnNames: ['agent', 'bytes'],
+        },
+      ])('preserves an incomplete multi-column IN left side: $query', ({ query, columnNames }) => {
+        const { root, errors, tokens } = parse(query);
+
+        expect(errors.length).toBeGreaterThan(0);
+        expect(tokens.length).toBeGreaterThan(0);
+        expect(root.commands).toHaveLength(2);
+        expect(root.commands[1]).toMatchObject({
+          type: 'command',
+          name: 'where',
+          args: [
+            {
+              type: 'list',
+              subtype: 'tuple',
+              incomplete: true,
+              values: columnNames.map((name) => ({ type: 'column', name })),
+            },
+          ],
+        });
+      });
+
+      it('correctly parses location', () => {
+        const src = 'FROM a | STATS a /* asdf */ IN /* 1 */ (1, /* 2 */ 2, /* 3 */ 3 /* 4 */ )';
+        const { root } = parse(src);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+        const tuple = Walker.match(expression!, { type: 'list', subtype: 'tuple' });
+
+        const expressionText = src.slice(expression!.location!.min, expression!.location!.max + 1);
+        const tupleText = src.slice(tuple!.location!.min, tuple!.location!.max + 1);
+
+        expect(expressionText).toBe('a /* asdf */ IN /* 1 */ (1, /* 2 */ 2, /* 3 */ 3 /* 4 */ )');
+        expect(tupleText).toBe('(1, /* 2 */ 2, /* 3 */ 3 /* 4 */ )');
+      });
+
+      it('correctly parses subquery location', () => {
+        const src = 'FROM a | WHERE a /* left */ IN /* operator */ (FROM b | KEEP c)';
+        const { root } = parse(src);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+        const subquery = Walker.match(expression!, { type: 'parens' });
+
+        const expressionText = src.slice(expression!.location.min, expression!.location.max + 1);
+        const subqueryText = src.slice(subquery!.location.min, subquery!.location.max + 1);
+
+        expect(expressionText).toBe('a /* left */ IN /* operator */ (FROM b | KEEP c)');
+        expect(subqueryText).toBe('(FROM b | KEEP c)');
+      });
+
+      it('IN row subquery', () => {
+        const query = 'FROM a | WHERE a IN (ROW b = 1 | KEEP b)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression?.args.length).toBe(2);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'row' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
+      it('NOT IN row subquery', () => {
+        const query = 'FROM a | WHERE a NOT IN (ROW b = 1 | KEEP b)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'not in');
+
+        expect(errors.length).toBe(0);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'not in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'row' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
+      it('IN ts subquery', () => {
+        const query = 'FROM a | WHERE a IN (TS b | KEEP c)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression?.args.length).toBe(2);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'ts' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
+      it('NOT IN ts subquery', () => {
+        const query = 'FROM a | WHERE a NOT IN (TS b | KEEP c)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'not in');
+
+        expect(errors.length).toBe(0);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'not in',
+          args: [
+            { type: 'column', name: 'a' },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'ts' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+
+      it('IN multi-column subquery', () => {
+        const query = 'FROM a | WHERE (b, c) IN (FROM d | KEEP e, f)';
+        const { root, errors } = parse(query);
+        const expression = Walker.findFunction(root, ({ name }) => name === 'in');
+
+        expect(errors.length).toBe(0);
+        expect(expression).toMatchObject({
+          type: 'function',
+          subtype: 'binary-expression',
+          name: 'in',
+          args: [
+            {
+              type: 'list',
+              subtype: 'tuple',
+              values: [
+                { type: 'column', name: 'b' },
+                { type: 'column', name: 'c' },
+              ],
+            },
+            {
+              type: 'parens',
+              child: {
+                type: 'query',
+                commands: [
+                  { type: 'command', name: 'from' },
+                  { type: 'command', name: 'keep' },
+                ],
+              },
+            },
+          ],
+        });
+      });
+    });
+  });
+});
+
+describe('location', () => {
+  const getFunctionTexts = (src: string) => {
+    const query = EsqlQuery.fromSrc(src);
+    const functions = Walker.matchAll(query.ast, { type: 'function' });
+    const texts: string[] = functions.map((fn) => {
+      return [...src].slice(fn.location.min, fn.location.max + 1).join('');
+    });
+
+    return texts;
+  };
+
+  it('correctly cuts out function source texts', () => {
+    const texts = getFunctionTexts(
+      'FROM index | LIMIT 1 | STATS agg() | LIMIT 2 | STATS max(a, b, c), max2(d.e)'
+    );
+
+    expect(texts).toEqual(['agg()', 'max(a, b, c)', 'max2(d.e)']);
+  });
+
+  it('functions in binary expressions', () => {
+    const texts = getFunctionTexts('FROM index | STATS foo = agg(f1) + agg(f2), a.b = agg(f3)');
+
+    expect(texts).toEqual([
+      'foo = agg(f1) + agg(f2)',
+      'agg(f1) + agg(f2)',
+      'agg(f1)',
+      'agg(f2)',
+      'a.b = agg(f3)',
+      'agg(f3)',
+    ]);
+  });
+
+  it('with the simplest comment after function name identifier', () => {
+    const texts1 = getFunctionTexts('FROM index | STATS agg/* */(1)');
+    expect(texts1).toEqual(['agg/* */(1)']);
+
+    const texts2 = getFunctionTexts('FROM index | STATS agg/* A */(a)');
+    expect(texts2).toEqual(['agg/* A */(a)']);
+
+    const texts3 = getFunctionTexts('FROM index | STATS agg /* A */ (*)');
+    expect(texts3).toEqual(['agg /* A */ (*)']);
+  });
+
+  it('with the simplest emoji comment after function name identifier', () => {
+    const texts = getFunctionTexts('FROM index | STATS agg/* 😎 */(*)');
+    expect(texts).toEqual(['agg/* 😎 */(*)']);
+  });
+
+  it('with the simplest emoji comment after function name identifier, followed by another arg', () => {
+    const texts = getFunctionTexts('FROM index | STATS agg/* 😎 */(*), abc');
+    expect(texts).toEqual(['agg/* 😎 */(*)']);
+  });
+
+  it('simple emoji comment twice', () => {
+    const texts = getFunctionTexts('FROM index | STATS agg/* 😎 */(*), max/* 😎 */(*)');
+    expect(texts).toEqual(['agg/* 😎 */(*)', 'max/* 😎 */(*)']);
+  });
+
+  it('with comment and emoji after function name identifier', () => {
+    const texts = getFunctionTexts('FROM index | STATS agg /* haha 😅 */ (*)');
+
+    expect(texts).toEqual(['agg /* haha 😅 */ (*)']);
+  });
+
+  it('with comment inside argument list', () => {
+    const texts = getFunctionTexts('FROM index | STATS agg  ( /* haha 😅 */ )');
+
+    expect(texts).toEqual(['agg  ( /* haha 😅 */ )']);
+  });
+
+  it('with emoji and comment in argument lists', () => {
+    const texts = getFunctionTexts(
+      'FROM index | STATS agg( /* haha 😅 */ max(foo), bar, baz), test( /* asdf */ * /* asdf */)'
+    );
+
+    expect(texts).toEqual([
+      'agg( /* haha 😅 */ max(foo), bar, baz)',
+      'max(foo)',
+      'test( /* asdf */ * /* asdf */)',
+    ]);
+  });
+});

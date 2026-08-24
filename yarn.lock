@@ -960,13 +960,20 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@elastic/esql-parser@workspace:packages/esql-parser":
+"@elastic/esql-parser@workspace:^, @elastic/esql-parser@workspace:packages/esql-parser":
   version: 0.0.0-use.local
   resolution: "@elastic/esql-parser@workspace:packages/esql-parser"
   dependencies:
+    "@elastic/esql-ast": "workspace:^"
+    "@elastic/esql-definitions": "workspace:^"
+    "@elastic/esql-promql-grammar": "workspace:^"
+    "@elastic/esql-traversal": "workspace:^"
+    "@elastic/esql-types": "workspace:^"
     "@types/jest": "npm:30.0.0"
+    antlr4: "npm:4.13.2"
     jest: "npm:30.4.2"
     ts-jest: "npm:29.4.11"
+    tslib: "npm:2.8.1"
     tsup: "npm:8.5.1"
     typescript: "npm:6.0.3"
   languageName: unknown
@@ -994,6 +1001,7 @@ __metadata:
     "@elastic/esql-types": "workspace:^"
     "@types/jest": "npm:30.0.0"
     jest: "npm:30.4.2"
+    tree-dump: "npm:1.1.0"
     ts-jest: "npm:29.4.11"
     tslib: "npm:2.8.1"
     tsup: "npm:8.5.1"
@@ -1017,6 +1025,7 @@ __metadata:
     "@elastic/esql-ast": "workspace:^"
     "@elastic/esql-definitions": "workspace:^"
     "@elastic/esql-grammar": "workspace:^"
+    "@elastic/esql-parser": "workspace:^"
     "@elastic/esql-promql-grammar": "workspace:^"
     "@elastic/esql-traversal": "workspace:^"
     "@elastic/esql-types": "workspace:^"

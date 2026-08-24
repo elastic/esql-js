@@ -12,7 +12,7 @@ import type {
   ESQLProperNode,
   ESQLSingleAstItem,
 } from '@elastic/esql-types';
-import { Visitor } from '../../../../visitor';
+import { Visitor } from '@elastic/esql-traversal';
 
 export const insert = (
   command: ESQLCommand,

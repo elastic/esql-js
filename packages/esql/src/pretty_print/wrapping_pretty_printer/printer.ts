@@ -65,7 +65,7 @@ import {
 import { getPrettyPrintStats } from '../helpers';
 import { PromQLWrappingPrettyPrinter } from '../../embedded_languages/promql/pretty_print';
 import type { PromQLAstQueryExpression } from '@elastic/esql-types';
-import { singleItems, resolveItem } from '../../ast/visitor/utils';
+import { singleItems, resolveItem } from '@elastic/esql-traversal';
 import {
   BinaryExpressionGroup,
   binaryExpressionGroup,
