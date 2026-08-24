@@ -18,6 +18,7 @@ import type {
   ESQLAstIpLocationCommand,
   ESQLAstRegisteredDomainCommand,
   ESQLAstHighlightCommand,
+  ESQLAstDenseVectorCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
   ESQLAstUriPartsCommand,
@@ -393,6 +394,14 @@ export class GlobalVisitorContext<
           input as types.VisitorInput<Methods, 'visitDedupCommand'>
         );
       }
+      case 'dense_vector': {
+        if (!this.methods.visitDenseVectorCommand) break;
+        return this.visitDenseVectorCommand(
+          parent,
+          commandNode as ESQLAstDenseVectorCommand,
+          input as types.VisitorInput<Methods, 'visitDenseVectorCommand'>
+        );
+      }
     }
     return this.visitCommandGeneric(
       parent,
@@ -736,6 +745,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitDedupCommand'> {
     const context = new contexts.DedupCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitDedupCommand', context, input);
+  }
+
+  public visitDenseVectorCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstDenseVectorCommand,
+    input: types.VisitorInput<Methods, 'visitDenseVectorCommand'>
+  ): types.VisitorOutput<Methods, 'visitDenseVectorCommand'> {
+    const context = new contexts.DenseVectorCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitDenseVectorCommand', context, input);
   }
 
   // #endregion
