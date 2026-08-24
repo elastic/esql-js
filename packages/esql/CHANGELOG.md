@@ -1,5 +1,20 @@
 # @elastic/esql
 
+## 4.21.1
+
+### Patch Changes
+
+- [#230](https://github.com/elastic/esql-js/pull/230) [`e8c4118`](https://github.com/elastic/esql-js/commit/e8c4118fd7d3161212a0d56d1e9141c8cdc33f76) Thanks [@bartoval](https://github.com/bartoval)! - Update ES|QL parser handling of deeply nested query structures
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.21.1
+  - @elastic/esql-definitions@4.21.1
+  - @elastic/esql-grammar@4.21.1
+  - @elastic/esql-promql-grammar@4.21.1
+  - @elastic/pretty-printer@4.21.1
+  - @elastic/esql-traversal@4.21.1
+  - @elastic/esql-ast@4.21.1
+
 ## 4.21.0
 
 ### Patch Changes
