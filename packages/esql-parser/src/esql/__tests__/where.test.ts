@@ -5,11 +5,10 @@
  * 2.0.
  */
 
-import { parse } from '..';
-import { EsqlQuery } from '../../composer/query';
+import { parse } from '../parser';
+import { EsqlQuery } from './query';
 import type { ESQLColumn, ESQLCommand, ESQLFunction, ESQLInlineCast } from '@elastic/esql-types';
-import { Walker } from '@elastic/esql-traversal';
-import { BasicPrettyPrinter } from '../../pretty_print';
+import { Walker, printAst } from '@elastic/esql-traversal';
 
 describe('WHERE', () => {
   describe('correctly formatted', () => {
@@ -174,7 +173,19 @@ describe('WHERE', () => {
             },
           ],
         });
-        expect(BasicPrettyPrinter.print(root)).toBe(text);
+        expect('\n' + printAst(root)).toBe(`
+query 0-9
+├─ command 0-9 "from"
+│  └─ source 5-9 "index"
+│     └─ literal 5-9 ""index""
+└─ command 13-40 "where"
+   └─ function 19-40 ":"
+      ├─ function 19-30 "concat"
+      │  ├─ column 26-26 "a"
+      │  │  └─ identifier 26-26 "a"
+      │  └─ column 29-29 "b"
+      │     └─ identifier 29-29 "b"
+      └─ literal 34-40 ""query""`);
       });
     });
   });
