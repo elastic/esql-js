@@ -2560,14 +2560,7 @@ export class CstToAstConverter {
     );
   }
 
-  /**
-   * @todo Make it return a single value, not an array.
-   */
-  private visitValueExpression(ctx: cst.ValueExpressionContext) {
-    if (!ctx.getText()) {
-      return [];
-    }
-
+  private visitValueExpression(ctx: cst.ValueExpressionContext): ast.ESQLAstExpression | undefined {
     if (ctx instanceof cst.ValueExpressionDefaultContext) {
       return this.fromOperatorExpression(ctx.operatorExpression());
     }
@@ -2895,9 +2888,7 @@ export class CstToAstConverter {
   }
 
   private fromLogicalInLeft(leftCtx: cst.ValueExpressionContext): ast.ESQLAstExpression {
-    return resolveItem(
-      this.visitValueExpression(leftCtx) ?? this.fromParserRuleToUnknown(leftCtx)
-    ) as ast.ESQLAstExpression;
+    return this.visitValueExpression(leftCtx) ?? this.fromParserRuleToUnknown(leftCtx);
   }
 
   private toLogicalInFunction(
@@ -2943,9 +2934,7 @@ export class CstToAstConverter {
   private toRegexBinaryExpression(
     ctx: cst.LikeExpressionContext | cst.RlikeExpressionContext
   ): ast.ESQLBinaryExpression | undefined {
-    const left = resolveItem(this.visitValueExpression(ctx.valueExpression()) ?? []) as
-      | ast.ESQLAstExpression
-      | undefined;
+    const left = this.visitValueExpression(ctx.valueExpression());
 
     if (!left) {
       return undefined;
@@ -2975,9 +2964,7 @@ export class CstToAstConverter {
   private toRegexListExpression(
     ctx: cst.LikeListExpressionContext | cst.RlikeListExpressionContext
   ): ast.ESQLBinaryExpression | undefined {
-    const left = resolveItem(this.visitValueExpression(ctx.valueExpression()) ?? []) as
-      | ast.ESQLAstExpression
-      | undefined;
+    const left = this.visitValueExpression(ctx.valueExpression());
 
     if (!left) {
       return undefined;
@@ -3032,7 +3019,7 @@ export class CstToAstConverter {
     const arg = this.visitValueExpression(ctx.valueExpression());
 
     if (arg) {
-      fn.args.push(Array.isArray(arg) ? resolveItem(arg) : arg);
+      fn.args.push(arg);
     }
 
     return fn;
@@ -3876,15 +3863,9 @@ export class CstToAstConverter {
         continue;
       }
 
-      const resolved = resolveItem(element) as ast.ESQLAstExpression;
+      values.push(element);
 
-      if (!resolved) {
-        continue;
-      }
-
-      values.push(resolved);
-
-      if (resolved.incomplete) {
+      if (element.incomplete) {
         incomplete = true;
       }
     }
