@@ -1,5 +1,12 @@
 # @elastic/highlightjs-esql
 
+## 4.21.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-definitions@4.21.1
+
 ## 4.21.0
 
 ### Minor Changes

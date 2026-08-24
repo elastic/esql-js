@@ -1,5 +1,15 @@
 # @elastic/esql-ast
 
+## 4.21.1
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.21.1
+  - @elastic/esql-definitions@4.21.1
+  - @elastic/esql-grammar@4.21.1
+  - @elastic/esql-promql-grammar@4.21.1
+
 ## 4.21.0
 
 ### Patch Changes
