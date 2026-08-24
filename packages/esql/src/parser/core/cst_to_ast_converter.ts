@@ -883,8 +883,8 @@ export class CstToAstConverter {
       {},
       {
         location: {
-          min: firstItem([resolveItem(field)])?.location?.min ?? 0,
-          max: firstItem([resolveItem(condition)])?.location?.max ?? 0,
+          min: field.location.min,
+          max: condition.location.max,
         },
       }
     );
