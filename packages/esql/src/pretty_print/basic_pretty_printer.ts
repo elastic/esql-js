@@ -455,6 +455,7 @@ export class BasicPrettyPrinter {
 
             const shouldGroup =
               operandGroup &&
+              group !== BinaryExpressionGroup.assignment &&
               (operandGroup === BinaryExpressionGroup.unknown ||
                 operandGroup < group ||
                 // Right operand at same precedence needs parens for /, -, %

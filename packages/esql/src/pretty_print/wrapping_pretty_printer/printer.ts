@@ -687,8 +687,11 @@ export class WrappingPrettyPrinter {
     const group_of = binaryExpressionGroup(node);
     const leftGroup = binaryExpressionGroup(leftItem);
     const rightGroup = binaryExpressionGroup(rightItem);
-    const wrapLeft = leftGroup !== BinaryExpressionGroup.none && leftGroup < group_of;
+    const isAssignment = group_of === BinaryExpressionGroup.assignment;
+    const wrapLeft =
+      !isAssignment && leftGroup !== BinaryExpressionGroup.none && leftGroup < group_of;
     const wrapRight =
+      !isAssignment &&
       rightGroup !== BinaryExpressionGroup.none &&
       (rightGroup < group_of ||
         (rightGroup === group_of && (node.name === '/' || node.name === '-' || node.name === '%')));

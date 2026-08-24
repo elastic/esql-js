@@ -3392,12 +3392,7 @@ export class CstToAstConverter {
     if (qualifiedNameCtx && ctx.ASSIGN()) {
       const left = this.fromQualifiedName(qualifiedNameCtx);
       const right = this.fromBooleanExpressionToExpressionOrUnknown(ctx.booleanExpression());
-      const args = [
-        left,
-        // TODO: Remove array boxing here. This fails many autocomplete tests,
-        //       should be probably fixed in a standalone PR.
-        [right],
-      ] as ast.ESQLBinaryExpression['args'];
+      const args = [left, right] as ast.ESQLBinaryExpression['args'];
 
       const assignment = this.toFunction(
         '=',
