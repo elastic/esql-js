@@ -564,6 +564,13 @@ export class CstToAstConverter {
     if (highlightCommandCtx) {
       return this.fromHighlightCommand(highlightCommandCtx);
     }
+
+    const denseVectorCommandCtx = ctx.denseVectorCommand();
+
+    if (denseVectorCommandCtx) {
+      return this.fromDenseVectorCommand(denseVectorCommandCtx);
+    }
+
     // agent-marker: append new command dispatcher branches here
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
@@ -2229,7 +2236,7 @@ export class CstToAstConverter {
     });
   }
 
-  // --------------------------------------------------------------------- MMR
+  // ---------------------------------------------------------------------- MMR
 
   private fromMmrCommand(ctx: cst.MmrCommandContext): ast.ESQLCommand<'mmr'> {
     const args: ast.ESQLAstItem[] = [];
@@ -2403,7 +2410,7 @@ export class CstToAstConverter {
     return this.createCommand<'ts_info', ast.ESQLAstTsInfoCommand>('ts_info', ctx);
   }
 
-  // --------------------------------------------------------------- METRICS_INFO
+  // ------------------------------------------------------------- METRICS_INFO
 
   private fromMetricsInfoCommand(
     ctx: cst.MetricsInfoCommandContext
@@ -2417,7 +2424,7 @@ export class CstToAstConverter {
     return this.fromQualifiedNameAssignmentCommand('user_agent', ctx);
   }
 
-  // --------------------------------------------------------------- IP_LOCATION
+  // -------------------------------------------------------------- IP_LOCATION
 
   private fromIpLocationCommand(ctx: cst.IpLocationCommandContext): ast.ESQLAstIpLocationCommand {
     return this.fromQualifiedNameAssignmentCommand('ip_location', ctx);
@@ -2483,6 +2490,68 @@ export class CstToAstConverter {
     } else if (namedParamsCtx?.WITH()) {
       command.incomplete = true;
     }
+
+    return command;
+  }
+
+  // ------------------------------------------------------------- DENSE_VECTOR
+
+  private fromDenseVectorCommand(
+    ctx: cst.DenseVectorCommandContext
+  ): ast.ESQLAstDenseVectorCommand {
+    const command = this.createCommand<'dense_vector', ast.ESQLAstDenseVectorCommand>(
+      'dense_vector',
+      ctx
+    );
+    let incomplete = command.incomplete;
+    const args = command.args;
+    const qualifiedNamesCtx = ctx.qualifiedNames();
+    const qualifiedNameCtxs = qualifiedNamesCtx.qualifiedName_list();
+    const fields: ast.ESQLColumn[] = [];
+    const length = qualifiedNameCtxs.length;
+
+    if (!length) {
+      incomplete = true;
+    }
+
+    for (let i = 0; i < length; i++) {
+      const qualifiedNameCtx = qualifiedNameCtxs[i];
+      const field = this.fromQualifiedName(qualifiedNameCtx);
+
+      fields.push(field);
+      args.push(field);
+
+      if (qualifiedNameCtx.exception || field.incomplete) {
+        incomplete = true;
+      }
+    }
+
+    command.fields = fields;
+
+    const namedParamsCtx = ctx.commandNamedParameters();
+    const withOption = this.fromOptionalNamedParametersWithOption(namedParamsCtx);
+
+    if (
+      withOption?.incomplete ||
+      namedParamsCtx?.exception ||
+      (!withOption && namedParamsCtx?.WITH())
+    ) {
+      incomplete = true;
+    }
+
+    if (withOption) {
+      const map = withOption.args[0] as ast.ESQLMap | undefined;
+
+      args.push(withOption);
+      command.incomplete ||= withOption.incomplete;
+
+      if (map) {
+        command.namedParameters = map;
+        command.incomplete ||= map.incomplete;
+      }
+    }
+
+    command.incomplete = incomplete;
 
     return command;
   }

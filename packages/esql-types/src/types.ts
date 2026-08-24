@@ -26,7 +26,8 @@ export type ESQLAstCommand =
   | ESQLAstUserAgentCommand
   | ESQLAstIpLocationCommand
   | ESQLAstRegisteredDomainCommand
-  | ESQLAstHighlightCommand;
+  | ESQLAstHighlightCommand
+  | ESQLAstDenseVectorCommand;
 
 export type ESQLAstAllCommands = ESQLAstCommand | ESQLAstHeaderCommand;
 
@@ -201,7 +202,16 @@ export interface ESQLAstHighlightCommand extends ESQLCommand<'highlight'> {
   prefix?: ESQLStringLiteral;
   queryExpression?: ESQLAstExpression;
   highlightFields?: ESQLColumn[];
+
+  /**
+   * @todo This should be {@link ESQLMap} type.
+   */
   namedParameters?: ESQLSingleAstItem;
+}
+
+export interface ESQLAstDenseVectorCommand extends ESQLCommand<'dense_vector'> {
+  fields: ESQLColumn[];
+  namedParameters?: ESQLMap;
 }
 
 /**
