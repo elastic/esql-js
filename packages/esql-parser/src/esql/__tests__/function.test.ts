@@ -506,6 +506,32 @@ describe('function AST nodes', () => {
         });
       });
 
+      it.each([
+        { query: 'FROM a | WHERE (agent,', columnNames: ['agent'] },
+        {
+          query: 'FROM a | WHERE (agent, bytes)',
+          columnNames: ['agent', 'bytes'],
+        },
+      ])('preserves an incomplete multi-column IN left side: $query', ({ query, columnNames }) => {
+        const { root, errors, tokens } = parse(query);
+
+        expect(errors.length).toBeGreaterThan(0);
+        expect(tokens.length).toBeGreaterThan(0);
+        expect(root.commands).toHaveLength(2);
+        expect(root.commands[1]).toMatchObject({
+          type: 'command',
+          name: 'where',
+          args: [
+            {
+              type: 'list',
+              subtype: 'tuple',
+              incomplete: true,
+              values: columnNames.map((name) => ({ type: 'column', name })),
+            },
+          ],
+        });
+      });
+
       it('correctly parses location', () => {
         const src = 'FROM a | STATS a /* asdf */ IN /* 1 */ (1, /* 2 */ 2, /* 3 */ 3 /* 4 */ )';
         const { root } = parse(src);

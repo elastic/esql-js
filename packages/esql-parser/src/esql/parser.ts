@@ -32,6 +32,7 @@ import type {
 import { singleItems } from '@elastic/esql-traversal';
 import { DEFAULT_CHANNEL, SOURCE_COMMANDS } from '../constants';
 import type { EsqlParsingTarget } from './types';
+import { assertQueryNesting, QUERY_NESTING_ERROR_CODE, QueryNestingError } from './query_nesting';
 
 export interface ParseOptions {
   /**
@@ -80,6 +81,16 @@ export interface ParseResult<T extends ESQLProperNode = ESQLAstQueryExpression> 
    */
   errors: EditorError[];
 }
+
+const createUnlocatedError = (message: string, code: string): EditorError => ({
+  startLineNumber: 0,
+  endLineNumber: 0,
+  startColumn: 0,
+  endColumn: 0,
+  message,
+  severity: 'error',
+  code,
+});
 
 export class Parser {
   public static readonly create = (src: string, options?: ParseOptions) => {
@@ -371,10 +382,16 @@ export class Parser {
     parser.addErrorListener(this.errors);
   }
 
+  private assertQueryNesting(): void {
+    this.tokens.fill();
+    assertQueryNesting(this.tokens.tokens);
+  }
+
   public parseTarget<T extends ESQLProperNode>([
     rule,
     conversion,
   ]: EsqlParsingTarget): ParseResult<T> {
+    this.assertQueryNesting();
     const ctx = (this.parser[rule]! as Function).call(this.parser);
     const converter = new CstToAstConverter(this);
     const root = (converter[conversion] as Function).call(converter, ctx) as T;
@@ -415,20 +432,16 @@ export class Parser {
       return this.parseTarget<ESQLAstQueryExpression>(['statements', 'fromStatements']);
     } catch (error) {
       const root = Builder.expression.query();
+      const queryNestingError = error instanceof QueryNestingError;
 
       return {
         root,
         ast: root.commands,
         errors: [
-          {
-            startLineNumber: 0,
-            endLineNumber: 0,
-            startColumn: 0,
-            endColumn: 0,
-            message: `Invalid query [${this.src}]`,
-            severity: 'error',
-            code: 'parseError',
-          },
+          createUnlocatedError(
+            queryNestingError ? error.message : `Invalid query [${this.src}]`,
+            queryNestingError ? QUERY_NESTING_ERROR_CODE : 'parseError'
+          ),
         ],
         tokens: [],
       };
@@ -436,7 +449,16 @@ export class Parser {
   }
 
   public parseErrors(): EditorError[] {
-    this.parser.statements();
+    try {
+      this.assertQueryNesting();
+      this.parser.statements();
+    } catch (error) {
+      if (error instanceof QueryNestingError) {
+        return [createUnlocatedError(error.message, QUERY_NESTING_ERROR_CODE)];
+      }
+
+      throw error;
+    }
 
     return this.errors.getErrors();
   }

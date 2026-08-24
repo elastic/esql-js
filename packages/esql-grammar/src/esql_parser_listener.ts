@@ -103,6 +103,7 @@ import { SetFieldContext } from "./esql_parser.js";
 import { MmrCommandContext } from "./esql_parser.js";
 import { MmrQueryVectorParameterContext } from "./esql_parser.js";
 import { MmrQueryVectorExpressionContext } from "./esql_parser.js";
+import { DenseVectorCommandContext } from "./esql_parser.js";
 import { MatchExpressionContext } from "./esql_parser.js";
 import { LogicalNotContext } from "./esql_parser.js";
 import { BooleanDefaultContext } from "./esql_parser.js";
@@ -1106,6 +1107,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitMmrQueryVectorExpression?: (ctx: MmrQueryVectorExpressionContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.denseVectorCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterDenseVectorCommand?: (ctx: DenseVectorCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.denseVectorCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitDenseVectorCommand?: (ctx: DenseVectorCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by the `matchExpression`
 	 * labeled alternative in `esql_parser.booleanExpression`.

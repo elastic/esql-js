@@ -65,7 +65,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'aggregate_metric_double',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -76,7 +76,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'boolean',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -87,7 +87,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'cartesian_point',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -98,7 +98,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'cartesian_shape',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -109,7 +109,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'date',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -120,7 +120,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'date_nanos',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -131,7 +131,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'date_range',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -142,7 +142,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'dense_vector',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -153,7 +153,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'double',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -163,6 +163,33 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'double_range',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'bucket',
           type: 'double_range',
           optional: true,
         },
@@ -174,19 +201,8 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
-          type: 'exponential_histogram',
-          optional: true,
-        },
-      ],
-      variadic: false,
-      returnType: 'long',
-    },
-    {
-      params: [
-        {
-          name: 'field',
           type: 'flattened',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -197,7 +213,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'geo_point',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -208,7 +224,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'geo_shape',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -219,7 +235,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'geohash',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -230,7 +246,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'geohex',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -241,7 +257,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'geotile',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -252,7 +268,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'integer',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -263,7 +279,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'ip',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -274,7 +290,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'keyword',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -285,7 +301,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'long',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -296,6 +312,22 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'tdigest',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'bucket',
+          type: 'double_range',
           optional: true,
         },
       ],
@@ -307,7 +339,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'text',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -318,7 +350,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'unsigned_long',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,
@@ -329,7 +361,7 @@ const definition: FunctionDefinition = {
         {
           name: 'field',
           type: 'version',
-          optional: true,
+          optional: false,
         },
       ],
       variadic: false,

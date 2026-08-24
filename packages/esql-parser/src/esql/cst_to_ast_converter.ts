@@ -2882,7 +2882,14 @@ export class CstToAstConverter {
     ctx: cst.LogicalInMultiColumnSubqueryContext
   ): ast.ESQLAstExpression {
     const left = this.toTuple(ctx.valueExpression_list(), ctx.LP(), ctx.RP());
-    const right = this.fromSubquery(ctx.subquery());
+    const subquery = ctx.subquery();
+
+    if (!subquery) {
+      left.incomplete = true;
+      return left;
+    }
+
+    const right = this.fromSubquery(subquery);
 
     return this.toLogicalInFunction(ctx, left, right, ctx.stop?.stop ?? right.location.max);
   }

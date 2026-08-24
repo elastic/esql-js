@@ -26,6 +26,7 @@ const docs: DefinitionDocs = {
   ],
   params: {
     field: 'Expression that outputs values to be counted. If omitted, equivalent to `COUNT(*)` (the number of rows).',
+    bucket: 'Range of histogram values to count.',
   },
 };
 

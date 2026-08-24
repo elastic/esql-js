@@ -1,5 +1,20 @@
 # @elastic/esql
 
+## 4.21.0
+
+### Patch Changes
+
+- [#229](https://github.com/elastic/esql-js/pull/229) [`26c469b`](https://github.com/elastic/esql-js/commit/26c469b1cd0fdc32b3b687eec88355d3898efd5e) Thanks [@bartoval](https://github.com/bartoval)! - Mark the left-hand tuple of a multi-column `IN` as incomplete while its subquery is missing.
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.21.0
+  - @elastic/esql-definitions@4.21.0
+  - @elastic/esql-grammar@4.21.0
+  - @elastic/esql-promql-grammar@4.21.0
+  - @elastic/pretty-printer@4.21.0
+  - @elastic/esql-traversal@4.21.0
+  - @elastic/esql-ast@4.21.0
+
 ## 4.20.0
 
 ### Minor Changes
