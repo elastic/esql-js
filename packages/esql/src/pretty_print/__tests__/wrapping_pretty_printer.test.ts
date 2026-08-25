@@ -291,6 +291,32 @@ FROM index
     });
   });
 
+  describe('DENSE_VECTOR', () => {
+    test('single field stays on one line', () => {
+      assertReprint('FROM logs | DENSE_VECTOR my_vector');
+    });
+
+    test('multiple fields stay on one line when short', () => {
+      assertReprint('FROM logs | DENSE_VECTOR vec_a, vec_b');
+    });
+
+    test('WITH named parameters stay on one line when short', () => {
+      assertReprint('FROM logs | DENSE_VECTOR my_vector WITH {"dims": 128}');
+    });
+
+    test('wraps many fields and breaks out the WITH option', () => {
+      const { text } = reprint(
+        'FROM logs | DENSE_VECTOR aaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbb, cccccccccccccccc, dddddddddddddddd, eeeeeeeeeeeeeeee WITH {"dims": 128}'
+      );
+
+      expect(text).toBe(`FROM logs
+  | DENSE_VECTOR
+      aaaaaaaaaaaaaaaa, bbbbbbbbbbbbbbbb, cccccccccccccccc, dddddddddddddddd,
+      eeeeeeeeeeeeeeee
+        WITH {"dims": 128}`);
+    });
+  });
+
   describe('FORK', () => {
     test('basic fork with simple subqueries', () => {
       const { text } = reprint('FROM index | FORK ( KEEP a ) ( KEEP b )');
