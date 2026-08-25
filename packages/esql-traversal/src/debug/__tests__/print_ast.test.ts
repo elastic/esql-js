@@ -5,11 +5,11 @@
  * 2.0.
  */
 
-import { Parser } from '../../parser';
-import { printAst } from '@elastic/esql-traversal';
+import { printAst } from '../print_ast';
+import * as fixtures from './fixtures';
 
 test('can print a basic "FROM index" query AST', () => {
-  const { root } = Parser.parse('FROM index');
+  const root = fixtures.fromIndex();
   const text = printAst(root);
 
   expect('\n' + text).toBe(`
@@ -20,7 +20,7 @@ query 0-9
 });
 
 test('can print a basic "FROM index" with .text field contents', () => {
-  const { root } = Parser.parse('FROM index');
+  const root = fixtures.fromIndex();
   const text = printAst(root, { text: true });
 
   expect('\n' + text).toBe(`
@@ -31,7 +31,7 @@ query 0-9, text = "FROMindex"
 });
 
 test('can print a basic \'ROW 123, "foo"\' query AST', () => {
-  const { root } = Parser.parse('ROW 123, "foo"');
+  const root = fixtures.rowNumberAndString();
   const text = printAst(root);
 
   expect('\n' + text).toBe(`
@@ -42,7 +42,7 @@ query 0-13
 });
 
 test('can print only node types in "compact" mode', () => {
-  const { root } = Parser.parse('ROW 123, "foo"');
+  const root = fixtures.rowNumberAndString();
   const text = printAst(root, { compact: true });
 
   expect('\n' + text).toBe(`
@@ -53,9 +53,7 @@ query
 });
 
 test('can limit tree depth with "depth" option', () => {
-  const { root } = Parser.parse(
-    'FROM a | STATS fn = count(a * (1 + 3), {"adf": 123}) BY b | LIMIT 123'
-  );
+  const root = fixtures.fromStatsByLimit();
   const text = printAst(root, { depth: 3 });
 
   expect('\n' + text).toBe(`
@@ -74,9 +72,7 @@ query 0-5
 });
 
 test('can limit total number of nodes printed with "limit" option', () => {
-  const { root } = Parser.parse(
-    'FROM a | STATS fn = count(a * (1 + 3), {"adf": 123}) BY b | LIMIT 123'
-  );
+  const root = fixtures.fromStatsByLimit();
   const text = printAst(root, { depth: 3, limit: 5 });
 
   expect('\n' + text).toBe(`

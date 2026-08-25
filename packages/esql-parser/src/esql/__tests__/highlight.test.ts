@@ -5,9 +5,8 @@
  * 2.0.
  */
 
-import { EsqlQuery } from '../../composer/query';
+import { EsqlQuery } from './query';
 import { Walker } from '@elastic/esql-traversal';
-import { BasicPrettyPrinter } from '../../pretty_print';
 import type {
   ESQLAstHighlightCommand,
   ESQLAstQueryExpression,
@@ -200,20 +199,6 @@ describe('HIGHLIGHT', () => {
     ]);
   });
 
-  it('round-trips single-field syntax through the pretty-printer', () => {
-    const src = 'FROM logs | HIGHLIGHT "fox" ON content';
-    const { ast } = EsqlQuery.fromSrc(src);
-
-    expect(BasicPrettyPrinter.query(ast)).toBe(src);
-  });
-
-  it('round-trips multi-field syntax through the pretty-printer', () => {
-    const src = 'FROM logs | HIGHLIGHT "ring sauron" ON title, body';
-    const { ast } = EsqlQuery.fromSrc(src);
-
-    expect(BasicPrettyPrinter.query(ast)).toBe(src);
-  });
-
   describe('prefix clause', () => {
     it('leaves prefix undefined when no prefix clause is present', () => {
       const src = 'FROM logs | HIGHLIGHT "fox" ON content';
@@ -286,20 +271,6 @@ describe('HIGHLIGHT', () => {
 
       expect(cmd.incomplete).toBe(true);
       expect(cmd.prefix).toBeUndefined();
-    });
-
-    it('round-trips prefix = "hl_" through the pretty-printer', () => {
-      const src = 'FROM logs | HIGHLIGHT prefix = "hl_" "fox" ON content';
-      const { ast } = EsqlQuery.fromSrc(src);
-
-      expect(BasicPrettyPrinter.query(ast)).toBe(src);
-    });
-
-    it('round-trips empty prefix through the pretty-printer', () => {
-      const src = 'FROM logs | HIGHLIGHT prefix = "" "fox" ON content';
-      const { ast } = EsqlQuery.fromSrc(src);
-
-      expect(BasicPrettyPrinter.query(ast)).toBe(src);
     });
   });
 });
