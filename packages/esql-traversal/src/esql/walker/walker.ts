@@ -5,7 +5,6 @@
  * 2.0.
  */
 
-import { resolveItem } from '../utils';
 import { isPromqlNode, replaceProperties, templateToPredicate } from './helpers';
 import { PromqlWalker, type PromqlWalkerOptions } from '../../promql/walker';
 import type * as types from '@elastic/esql-types';
@@ -858,11 +857,11 @@ export class Walker {
     if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
-      this.walkSingleAstItem(resolveItem(node.value), node);
-      this.walkSingleAstItem(resolveItem(node.key), node);
+      this.walkSingleAstItem(node.value, node);
+      this.walkSingleAstItem(node.key, node);
     } else {
-      this.walkSingleAstItem(resolveItem(node.key), node);
-      this.walkSingleAstItem(resolveItem(node.value), node);
+      this.walkSingleAstItem(node.key, node);
+      this.walkSingleAstItem(node.value, node);
     }
   }
 

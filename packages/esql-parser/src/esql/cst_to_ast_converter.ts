@@ -19,7 +19,7 @@ import {
 import { getPosition } from '../tokens';
 import { PromQLParser } from '../promql';
 import { nonNullable, unescapeColumn } from './helpers';
-import { firstItem, lastItem, resolveItem, singleItems } from '@elastic/esql-traversal';
+import { firstItem, lastItem, singleItems } from '@elastic/esql-traversal';
 import { type ArithmeticUnaryContext } from '@elastic/esql-grammar';
 import type { Parser } from './parser';
 import type { PromQLAstQueryExpression } from '@elastic/esql-types';
@@ -1339,12 +1339,10 @@ export class CstToAstConverter {
     for (const joinPredicateCtx of joinCondition.booleanExpression_list()) {
       const expression = this.fromBooleanExpressionToExpressionOrUnknown(joinPredicateCtx);
 
-      if (expression) {
-        joinPredicates.push(expression);
+      joinPredicates.push(expression);
 
-        if (resolveItem(expression).incomplete) {
-          onOption.incomplete = true;
-        }
+      if (expression.incomplete) {
+        onOption.incomplete = true;
       }
     }
 
@@ -2832,13 +2830,7 @@ export class CstToAstConverter {
     }
 
     if (ctx instanceof cst.BooleanDefaultContext) {
-      const node = this.fromBooleanDefault(ctx);
-
-      if (Array.isArray(node)) {
-        return resolveItem(node);
-      }
-
-      return node;
+      return this.fromBooleanDefault(ctx);
     }
 
     return undefined;
