@@ -30,7 +30,7 @@ export type ESQLAstCommand =
 
 export type ESQLAstAllCommands = ESQLAstCommand | ESQLAstHeaderCommand;
 
-export type ESQLAstNode = ESQLAstCommand | ESQLAstHeaderCommand | ESQLAstExpression | ESQLAstItem;
+export type ESQLAstNode = ESQLAstCommand | ESQLAstHeaderCommand | ESQLAstExpression;
 
 /**
  * Represents an *expression* in the AST.
@@ -72,20 +72,20 @@ export type ESQLSingleAstItem =
 export type ESQLAstField = ESQLColumn | ESQLBinaryExpression | ESQLAstExpression | ESQLParam;
 
 /**
- * An array of AST nodes represents different things in different contexts.
- * For example, in command top level arguments it is treated as an "assignment expression".
+ * @deprecated The AST no longer contains array-boxed nodes, use
+ *     {@link ESQLAstExpression} (or {@link ESQLSingleAstItem}) directly.
  */
-export type ESQLAstItem = ESQLSingleAstItem | ESQLAstItem[];
+export type ESQLAstItem = ESQLSingleAstItem;
 
 export type ESQLAstNodeWithArgs = ESQLCommand | ESQLCommandOption | ESQLFunction;
 export type ESQLAstNodeWithChildren = ESQLAstNodeWithArgs | ESQLList;
 
 /**
- * *Proper* are nodes which are objects with `type` property, once we get rid
- * of the nodes which are plain arrays, all nodes will be *proper* and we can
- * remove this type.
+ * @deprecated Historically, *proper* nodes were nodes with a `type` property,
+ *     as opposed to nodes represented by plain arrays. Plain-array nodes no
+ *     longer exist, hence all nodes are now *proper* — use {@link ESQLAstNode} instead.
  */
-export type ESQLProperNode = ESQLAstExpression | ESQLAstCommand | ESQLAstHeaderCommand;
+export type ESQLProperNode = ESQLAstNode;
 
 export interface ESQLLocation {
   min: number;
@@ -127,7 +127,7 @@ export interface ESQLCommand<Name = string> extends ESQLAstBaseItem<Name> {
    */
   commandType?: string;
 
-  args: ESQLAstItem[];
+  args: ESQLAstExpression[];
 }
 
 export interface ESQLAstJoinCommand extends ESQLCommand<'join'> {
@@ -295,7 +295,7 @@ export type ESQLIdentifierOrParam = ESQLIdentifier | ESQLParamLiteral;
 
 export interface ESQLCommandOption extends ESQLAstBaseItem {
   type: 'option';
-  args: ESQLAstItem[];
+  args: ESQLAstExpression[];
 }
 
 export interface ESQLAstQueryExpression extends ESQLAstBaseItem<''> {
@@ -335,12 +335,12 @@ export interface ESQLFunction<
    */
   operator?: ESQLIdentifier | ESQLParamLiteral;
 
-  args: ESQLAstItem[];
+  args: ESQLAstExpression[];
 }
 
 export interface ESQLFunctionCallExpression extends ESQLFunction<'variadic-call'> {
   subtype: 'variadic-call';
-  args: ESQLAstItem[];
+  args: ESQLAstExpression[];
 }
 
 export interface ESQLUnaryExpression<Name extends string = string> extends ESQLFunction<
@@ -348,7 +348,7 @@ export interface ESQLUnaryExpression<Name extends string = string> extends ESQLF
   Name
 > {
   subtype: 'unary-expression';
-  args: [ESQLAstItem];
+  args: [ESQLAstExpression];
 }
 
 export interface ESQLPostfixUnaryExpression<Name extends string = string> extends ESQLFunction<
@@ -356,7 +356,7 @@ export interface ESQLPostfixUnaryExpression<Name extends string = string> extend
   Name
 > {
   subtype: 'postfix-unary-expression';
-  args: [ESQLAstItem];
+  args: [ESQLAstExpression];
 }
 
 /**
@@ -370,14 +370,14 @@ export interface ESQLOrderExpression extends ESQLAstBaseItem {
   type: 'order';
   order: '' | 'ASC' | 'DESC';
   nulls: '' | 'NULLS FIRST' | 'NULLS LAST';
-  args: [field: ESQLAstItem];
+  args: [field: ESQLAstExpression];
 }
 
 export interface ESQLBinaryExpression<
   Name extends BinaryExpressionOperator = BinaryExpressionOperator,
 > extends ESQLFunction<'binary-expression', Name> {
   subtype: 'binary-expression';
-  args: [ESQLAstItem, ESQLAstItem];
+  args: [ESQLAstExpression, ESQLAstExpression];
 }
 
 export type BinaryExpressionOperator =

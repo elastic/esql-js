@@ -753,15 +753,13 @@ export class Walker {
   }
 
   public walkExpression(
-    node: types.ESQLAstItem | types.ESQLAstExpression,
+    node: types.ESQLAstExpression | types.ESQLAstExpression[],
     parent: types.ESQLProperNode | undefined = undefined
   ): void {
     if (Array.isArray(node)) {
-      const list = node as types.ESQLAstItem[];
-      this.walkList(list, parent);
+      this.walkList(node, parent);
     } else {
-      const item = node as types.ESQLSingleAstItem;
-      this.walkSingleAstItem(item, parent);
+      this.walkSingleAstItem(node, parent);
     }
   }
 

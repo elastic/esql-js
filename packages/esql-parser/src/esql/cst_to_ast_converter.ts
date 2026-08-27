@@ -124,13 +124,6 @@ export class CstToAstConverter {
         'max',
         (args) => args.length - 1
       );
-      // in case of empty array as last arg, bump the max location by 3 chars (empty brackets)
-      if (
-        Array.isArray(fn.args[fn.args.length - 1]) &&
-        !(fn.args[fn.args.length - 1] as ast.ESQLAstItem[]).length
-      ) {
-        location.max += 3;
-      }
     }
     return location;
   }
@@ -140,24 +133,17 @@ export class CstToAstConverter {
    *     `extendLocationToArgs` is removed.
    */
   private walkFunctionStructure(
-    args: ast.ESQLAstItem[],
+    args: ast.ESQLAstExpression[],
     initialLocation: ast.ESQLLocation,
     prop: 'min' | 'max',
-    getNextItemIndex: (arg: ast.ESQLAstItem[]) => number
+    getNextItemIndex: (arg: ast.ESQLAstExpression[]) => number
   ) {
-    let nextArg: ast.ESQLAstItem | undefined = args[getNextItemIndex(args)];
+    let nextArg: ast.ESQLAstExpression | undefined = args[getNextItemIndex(args)];
     const location = { ...initialLocation };
-    while (Array.isArray(nextArg) || nextArg) {
-      if (Array.isArray(nextArg)) {
-        nextArg = nextArg[getNextItemIndex(nextArg)];
-      } else {
-        location[prop] = Math[prop](location[prop], nextArg.location[prop]);
-        if (nextArg.type === 'function') {
-          nextArg = nextArg.args[getNextItemIndex(nextArg.args)];
-        } else {
-          nextArg = undefined;
-        }
-      }
+    while (nextArg) {
+      location[prop] = Math[prop](location[prop], nextArg.location[prop]);
+      nextArg =
+        nextArg.type === 'function' ? nextArg.args[getNextItemIndex(nextArg.args)] : undefined;
     }
     return location[prop];
   }
