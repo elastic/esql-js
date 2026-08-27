@@ -96,6 +96,16 @@ export class CstToAstConverter {
     };
   }
 
+  private toUnknownMissingNode(anchor: antlr.Token): ast.ESQLUnknownItem {
+    return {
+      type: 'unknown',
+      name: 'unknown',
+      text: '',
+      location: { min: anchor.stop, max: anchor.stop },
+      incomplete: true,
+    };
+  }
+
   /**
    * Extends `fn.location` to cover all its arguments.
    *
@@ -326,7 +336,8 @@ export class CstToAstConverter {
     }
     // Handle missing value (incomplete assignment)
     if (assignToken) {
-      const expression = this.toBinaryExpression('=', ctx, [left, []]);
+      const right = this.toUnknownMissingNode(assignToken.symbol);
+      const expression = this.toBinaryExpression('=', ctx, [left, right]);
       expression.incomplete = true;
       expression.location = {
         min: left.location.min,
@@ -1258,8 +1269,9 @@ export class CstToAstConverter {
       for (const clause of clauses) {
         if (clause._enrichField) {
           const args: ast.ESQLColumn[] = [];
+          const assignCtx = clause.ASSIGN();
 
-          if (clause.ASSIGN()) {
+          if (assignCtx) {
             args.push(this.toColumn(clause._newName));
             if (textExistsAndIsValid(clause._enrichField?.getText())) {
               args.push(this.toColumn(clause._enrichField));
@@ -1273,7 +1285,14 @@ export class CstToAstConverter {
           }
           if (args.length) {
             const fn = this.toFunction('=', clause, undefined, 'binary-expression');
-            fn.args.push(args[0], args[1] ? [args[1]] : []);
+            let right: ast.ESQLAstExpression | undefined = args[1];
+
+            if (!right) {
+              right = this.toUnknownMissingNode(assignCtx!.symbol);
+              fn.incomplete = true;
+            }
+
+            fn.args.push(args[0], right);
             option.args.push(fn);
           }
         }
