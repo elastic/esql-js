@@ -53,7 +53,6 @@ import type {
   ESQLOrderExpression,
   ESQLParens,
   ESQLSource,
-  ESQLAstItem,
   ESQLAstExpression,
 } from '@elastic/esql-types';
 import type { BasicPrettyPrinterOptions } from '../basic_pretty_printer';
@@ -65,7 +64,6 @@ import {
 import { getPrettyPrintStats } from '../helpers';
 import { PromQLWrappingPrettyPrinter } from '../../embedded_languages/promql/pretty_print';
 import type { PromQLAstQueryExpression } from '@elastic/esql-types';
-import { singleItems, resolveItem } from '@elastic/esql-traversal';
 import {
   BinaryExpressionGroup,
   binaryExpressionGroup,
@@ -261,7 +259,7 @@ export class WrappingPrettyPrinter {
   protected docHeaderCommand(cmd: ESQLAstHeaderCommand): Doc {
     const lower = this.opts.lowercaseCommands;
     const name = lower ? cmd.name.toLowerCase() : cmd.name.toUpperCase();
-    const argItems = [...singleItems(cmd.args)];
+    const argItems = cmd.args;
     const argDocs = argItems.map((a) => this.docExpression(a));
     const hasLBD = argItems.some((a) => getPrettyPrintStats(a).hasLineBreakingDecorations);
     const argsDoc: Doc = argDocs.length
@@ -294,7 +292,7 @@ export class WrappingPrettyPrinter {
     const cmdName = this.formatCmdName(cmd);
 
     // Separate args from options
-    const allArgs = [...singleItems(cmd.args)];
+    const allArgs = cmd.args;
     const args = allArgs.filter((a) => a.type !== 'option');
     const opts = allArgs.filter((a) => a.type === 'option') as ESQLCommandOption[];
 
@@ -486,7 +484,7 @@ export class WrappingPrettyPrinter {
   protected docCommandOption(opt: ESQLCommandOption): Doc {
     const lower = this.opts.lowercaseOptions;
     const name = lower ? opt.name.toLowerCase() : opt.name.toUpperCase();
-    const args = [...singleItems(opt.args)];
+    const args = opt.args;
     const argDocs = args.map((a) => this.docExpression(a));
 
     if (argDocs.length === 0) return name;
@@ -574,13 +572,7 @@ export class WrappingPrettyPrinter {
 
   // -------------------------------------------------------------- Expressions
 
-  protected docExpression(node: ESQLAstItem): Doc {
-    if (Array.isArray(node)) {
-      const items = [...singleItems([node])];
-      if (items.length === 1) return this.docExpression(items[0]);
-      return items.map((item) => this.docExpression(item));
-    }
-
+  protected docExpression(node: ESQLAstExpression): Doc {
     if (isPromqlNode(node)) {
       const promqlDoc = this.docPromql(node as PromQLAstQueryExpression);
 
@@ -683,7 +675,7 @@ export class WrappingPrettyPrinter {
     }
 
     const operator = this.opts.lowercaseKeywords ? op.toLowerCase() : op.toUpperCase();
-    const [leftItem, rightItem] = node.args as [ESQLAstItem, ESQLAstItem];
+    const [leftItem, rightItem] = node.args;
     const group_of = binaryExpressionGroup(node);
     const leftGroup = binaryExpressionGroup(leftItem);
     const rightGroup = binaryExpressionGroup(rightItem);
@@ -711,8 +703,7 @@ export class WrappingPrettyPrinter {
    */
   private docSimplifyMultiplicationByOne(node: ESQLAstExpression, minusCount = 0): Doc | undefined {
     if (isBinaryExpression(node) && node.name === '*') {
-      const left = resolveItem(node.args[0]);
-      const right = resolveItem(node.args[1]);
+      const [left, right] = node.args;
 
       if (isProperNode(left) && isProperNode(right)) {
         if (!!left.formatting || !!right.formatting) return undefined;
@@ -755,7 +746,7 @@ export class WrappingPrettyPrinter {
       : this.opts.lowercaseFunctions
         ? op.toLowerCase()
         : op.toUpperCase();
-    const args = [...singleItems(node.args)];
+    const args = node.args;
 
     if (args.length === 0) return `${name}()`;
 

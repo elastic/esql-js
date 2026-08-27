@@ -19,7 +19,6 @@ import {
 import { getPosition } from '../tokens';
 import { PromQLParser } from '../promql';
 import { nonNullable, unescapeColumn } from './helpers';
-import { firstItem, lastItem, singleItems } from '@elastic/esql-traversal';
 import { type ArithmeticUnaryContext } from '@elastic/esql-grammar';
 import type { Parser } from './parser';
 import type { PromQLAstQueryExpression } from '@elastic/esql-types';
@@ -582,7 +581,7 @@ export class CstToAstConverter {
   private toOption(
     name: string,
     ctx: antlr.ParserRuleContext,
-    args: ast.ESQLAstItem[] = [],
+    args: ast.ESQLAstExpression[] = [],
     incomplete?: boolean
   ): ast.ESQLCommandOption {
     return {
@@ -591,9 +590,7 @@ export class CstToAstConverter {
       text: ctx.getText(),
       location: getPosition(ctx.start, ctx.stop),
       args,
-      incomplete:
-        incomplete ??
-        (Boolean(ctx.exception) || [...singleItems(args)].some((arg) => arg.incomplete)),
+      incomplete: incomplete ?? (Boolean(ctx.exception) || args.some((arg) => arg.incomplete)),
     };
   }
 
@@ -891,7 +888,7 @@ export class CstToAstConverter {
 
   private toByOption(
     ctx: antlr.ParserRuleContext & Pick<cst.StatsCommandContext, 'BY'>,
-    args: ast.ESQLAstItem[]
+    args: ast.ESQLAstExpression[]
   ): ast.ESQLCommandOption | undefined {
     const byCtx = ctx.BY();
 
@@ -902,7 +899,7 @@ export class CstToAstConverter {
     const option = this.toOption(byCtx.getText().toLowerCase(), ctx, args, !args.length);
     option.location.min = byCtx.symbol.start;
 
-    const lastArg = lastItem(option.args);
+    const lastArg = option.args.at(-1);
     option.location.max = lastArg?.location.max ?? byCtx.symbol.stop;
 
     return option;
@@ -918,10 +915,8 @@ export class CstToAstConverter {
     return command;
   }
 
-  private fromOrderExpressions(
-    ctx: cst.OrderExpressionContext[]
-  ): Array<ast.ESQLOrderExpression | ast.ESQLAstItem> {
-    const expressions: Array<ast.ESQLOrderExpression | ast.ESQLAstItem> = [];
+  private fromOrderExpressions(ctx: cst.OrderExpressionContext[]): ast.ESQLAstExpression[] {
+    const expressions: ast.ESQLAstExpression[] = [];
 
     for (const orderCtx of ctx) {
       expressions.push(this.fromOrderExpression(orderCtx));
@@ -930,9 +925,7 @@ export class CstToAstConverter {
     return expressions;
   }
 
-  private fromOrderExpression(
-    ctx: cst.OrderExpressionContext
-  ): ast.ESQLOrderExpression | ast.ESQLAstItem {
+  private fromOrderExpression(ctx: cst.OrderExpressionContext): ast.ESQLAstExpression {
     const arg = this.fromBooleanExpressionToExpressionOrUnknown(ctx.booleanExpression());
 
     let order: ast.ESQLOrderExpression['order'] = '';
@@ -984,7 +977,7 @@ export class CstToAstConverter {
     return command;
   }
 
-  private fromRenameClauses(clausesCtx: cst.RenameClauseContext[]): ast.ESQLAstItem[] {
+  private fromRenameClauses(clausesCtx: cst.RenameClauseContext[]): ast.ESQLAstExpression[] {
     return clausesCtx
       .map((clause) => {
         const asToken = clause.getToken(cst.EsqlParser.AS, 0);
@@ -1009,8 +1002,8 @@ export class CstToAstConverter {
               renameFunction.args.push(this.toColumn(arg));
             }
           }
-          const firstArg = firstItem(renameFunction.args);
-          const lastArg = lastItem(renameFunction.args);
+          const firstArg = renameFunction.args.at(0);
+          const lastArg = renameFunction.args.at(-1);
           const location = renameFunction.location;
           if (firstArg) location.min = firstArg.location.min;
           if (lastArg) location.max = lastArg.location.max;
@@ -1284,7 +1277,7 @@ export class CstToAstConverter {
         }
 
         const location = option.location;
-        const lastArg = lastItem(option.args);
+        const lastArg = option.args.at(-1);
 
         location.min = withCtx.symbol.start;
         location.max = lastArg?.location?.max ?? withCtx.symbol.stop;
@@ -1320,7 +1313,7 @@ export class CstToAstConverter {
     const joinTarget = this.fromJoinTarget(ctx.joinTarget());
     const joinCondition = ctx.joinCondition();
     const onOption = this.toOption('on', joinCondition);
-    const joinPredicates: ast.ESQLAstItem[] = onOption.args;
+    const joinPredicates: ast.ESQLAstExpression[] = onOption.args;
 
     for (const joinPredicateCtx of joinCondition.booleanExpression_list()) {
       const expression = this.fromBooleanExpressionToExpressionOrUnknown(joinPredicateCtx);
@@ -1625,7 +1618,7 @@ export class CstToAstConverter {
     onOption.args.push(...fields);
     onOption.location.min = onToken.symbol.start;
 
-    const lastArg = lastItem(onOption.args);
+    const lastArg = onOption.args.at(-1);
     if (lastArg) {
       onOption.location.max = lastArg.location.max;
     }
@@ -1686,7 +1679,7 @@ export class CstToAstConverter {
   private fromFuseCommand(ctx: cst.FuseCommandContext): ast.ESQLAstFuseCommand {
     const fuseTypeCtx = ctx.identifier();
 
-    const args: ast.ESQLAstItem[] = [];
+    const args: ast.ESQLAstExpression[] = [];
     let incomplete = false;
 
     const fuseType = fuseTypeCtx ? this.fromIdentifier(fuseTypeCtx) : undefined;
@@ -1725,7 +1718,7 @@ export class CstToAstConverter {
     // SCORE BY <score_column>
     const scoreCtx = configCtx.SCORE();
     if (scoreCtx && byContext) {
-      const args: ast.ESQLAstItem[] = [];
+      const args: ast.ESQLAstExpression[] = [];
 
       const scoreColumnCtx = configCtx.qualifiedName();
       if (textExistsAndIsValid(scoreColumnCtx.getText())) {
@@ -1747,7 +1740,7 @@ export class CstToAstConverter {
     // GROUP BY <group_column>
     const groupCtx = configCtx.GROUP();
     if (groupCtx && byContext) {
-      const args: ast.ESQLAstItem[] = [];
+      const args: ast.ESQLAstExpression[] = [];
       const groupColumnCtx = configCtx.qualifiedName();
 
       if (textExistsAndIsValid(groupColumnCtx.getText())) {
@@ -1761,7 +1754,7 @@ export class CstToAstConverter {
     // WITH <map_expression>
     const withCtx = configCtx.WITH();
     if (withCtx) {
-      const args: ast.ESQLAstItem[] = [];
+      const args: ast.ESQLAstExpression[] = [];
       const mapExpressionCtx = configCtx.mapExpression();
 
       const map = this.fromMapExpression(mapExpressionCtx);
@@ -2235,7 +2228,7 @@ export class CstToAstConverter {
   // --------------------------------------------------------------------- MMR
 
   private fromMmrCommand(ctx: cst.MmrCommandContext): ast.ESQLCommand<'mmr'> {
-    const args: ast.ESQLAstItem[] = [];
+    const args: ast.ESQLAstExpression[] = [];
 
     const queryVector = this.fromMmrQueryVectorParam(ctx.mmrQueryVectorParams());
     if (queryVector) args.push(queryVector);
@@ -2759,8 +2752,8 @@ export class CstToAstConverter {
 
   private fromBooleanExpressions(
     ctx: cst.BooleanExpressionContext[] | undefined
-  ): ast.ESQLAstItem[] {
-    const list: ast.ESQLAstItem[] = [];
+  ): ast.ESQLAstExpression[] {
+    const list: ast.ESQLAstExpression[] = [];
 
     if (!ctx) {
       return list;
@@ -3475,7 +3468,7 @@ export class CstToAstConverter {
     ctx: antlr.ParserRuleContext,
     customPosition?: ast.ESQLLocation,
     subtype?: Subtype,
-    args: ast.ESQLAstItem[] = [],
+    args: ast.ESQLAstExpression[] = [],
     incomplete?: boolean
   ): ast.ESQLFunction<Subtype> {
     const node: ast.ESQLFunction<Subtype> = {

@@ -11,13 +11,11 @@
 import type { SharedData } from './global_visitor_context';
 import { type GlobalVisitorContext } from './global_visitor_context';
 import { children } from '../children';
-import { firstItem, singleItems } from '../utils';
 import type {
   ESQLAstChangePointCommand,
   ESQLAstCommand,
   ESQLAstExpression,
   ESQLAstHeaderCommand,
-  ESQLAstItem,
   ESQLAstJoinCommand,
   ESQLAstMetricsInfoCommand,
   ESQLAstQueryExpression,
@@ -215,9 +213,6 @@ export class CommandVisitorContext<
 
   public *options(): Iterable<ESQLCommandOption> {
     for (const arg of this.node.args) {
-      if (!arg || Array.isArray(arg)) {
-        continue;
-      }
       if (arg.type === 'option') {
         yield arg;
       }
@@ -237,16 +232,12 @@ export class CommandVisitorContext<
     }
   }
 
-  public *args(option: '' | string = ''): Iterable<ESQLAstItem> {
+  public *args(option: '' | string = ''): Iterable<ESQLAstExpression> {
     option = option.toLowerCase();
 
     if (!option) {
       for (const arg of this.node.args) {
         if (!arg) {
-          continue;
-        }
-        if (Array.isArray(arg)) {
-          yield arg;
           continue;
         }
         if (arg.type !== 'option') {
@@ -256,7 +247,7 @@ export class CommandVisitorContext<
     }
 
     const optionNode = this.node.args.find(
-      (arg) => !Array.isArray(arg) && arg && arg.type === 'option' && arg.name === option
+      (arg) => arg && arg.type === 'option' && arg.name === option
     );
 
     if (optionNode) {
@@ -272,7 +263,7 @@ export class CommandVisitorContext<
   ): Iterable<ExpressionVisitorOutput<Methods>> {
     this.ctx.assertMethodExists('visitExpression');
 
-    for (const arg of singleItems(this.args(option))) {
+    for (const arg of this.args(option)) {
       yield this.visitExpression(
         arg,
         typeof input === 'function'
@@ -287,7 +278,7 @@ export class CommandVisitorContext<
   ): Iterable<ReturnType<NonNullable<Methods['visitSourceExpression']>>> {
     this.ctx.assertMethodExists('visitSourceExpression');
 
-    for (const arg of singleItems(this.node.args)) {
+    for (const arg of this.node.args) {
       if (arg.type === 'source') {
         const sourceContext = new SourceExpressionVisitorContext(this.ctx, arg, this);
         const result = this.ctx.methods.visitSourceExpression!(sourceContext, input);
@@ -305,10 +296,6 @@ export class CommandVisitorContext<
   public *visitSubQueries() {
     this.ctx.assertMethodExists('visitQuery');
     for (const arg of this.node.args) {
-      if (!arg || Array.isArray(arg)) {
-        continue;
-      }
-
       if (arg.type === 'query' && 'commands' in arg) {
         const result = this.visitSubQuery(arg);
         yield result;
@@ -373,7 +360,7 @@ export class FromCommandVisitorContext<
 
     let metadataOption: ESQLCommandOption | undefined;
 
-    for (const arg of singleItems(this.node.args)) {
+    for (const arg of this.node.args) {
       if (arg.type === 'option' && arg.name === 'metadata') {
         metadataOption = arg;
         break;
@@ -384,7 +371,7 @@ export class FromCommandVisitorContext<
       return;
     }
 
-    for (const arg of singleItems(metadataOption.args)) {
+    for (const arg of metadataOption.args) {
       if (arg.type === 'column') {
         const columnContext = new ColumnExpressionVisitorContext(this.ctx, arg, this);
         const result = this.ctx.methods.visitColumnExpression!(columnContext, input);
@@ -404,7 +391,7 @@ export class LimitCommandVisitorContext<
    * @returns The first numeric literal argument of the command.
    */
   public numericLiteral(): ESQLIntegerLiteral | ESQLDecimalLiteral | undefined {
-    const arg = firstItem(this.node.args);
+    const arg = this.node.args[0];
 
     if (
       arg &&
@@ -426,7 +413,7 @@ export class LimitCommandVisitorContext<
 
   public setLimit(value: number): void {
     const literalNode = Builder.expression.literal.numeric({ value, literalType: 'integer' });
-    const options = this.node.args.filter((arg) => !Array.isArray(arg) && arg.type === 'option');
+    const options = this.node.args.filter((arg) => arg.type === 'option');
 
     this.node.args = [literalNode, ...options];
   }
