@@ -711,9 +711,7 @@ export class InlineCastExpressionVisitorContext<
   public value(): ESQLAstExpression {
     this.ctx.assertMethodExists('visitExpression');
 
-    const value = firstItem([this.node.value])!;
-
-    return value;
+    return this.node.value;
   }
 
   public visitValue(
