@@ -887,7 +887,7 @@ export class WrappingPrettyPrinter {
   // --------------------------------------------------- Inline cast expression
 
   protected docInlineCast(node: ESQLInlineCast): Doc {
-    const value = node.value as ESQLAstExpression;
+    const value = node.value;
     const wrapInBrackets =
       value.type !== 'literal' &&
       value.type !== 'column' &&

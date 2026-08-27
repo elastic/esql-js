@@ -401,7 +401,7 @@ export type BinaryExpressionMatchOperator = ':';
 export type BinaryExpressionIn = 'in' | 'not in';
 export type BinaryExpressionLogical = 'and' | 'or';
 
-export interface ESQLInlineCast<ValueType = ESQLAstItem> extends ESQLAstBaseItem {
+export interface ESQLInlineCast<ValueType = ESQLAstExpression> extends ESQLAstBaseItem {
   type: 'inlineCast';
   value: ValueType;
   castType: string;
