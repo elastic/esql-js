@@ -303,7 +303,7 @@ export class CstToAstConverter {
 
     // Handle constant value
     if (constantCtx) {
-      const right = this.fromConstantToArray(constantCtx) as ast.ESQLLiteral;
+      const right = this.fromConstantStrict(constantCtx);
       const expression = this.toBinaryExpression('=', ctx, [left, right]);
 
       if (left.incomplete || right.incomplete) {
@@ -764,7 +764,7 @@ export class CstToAstConverter {
   private fromLimitCommand(ctx: cst.LimitCommandContext): ast.ESQLCommand<'limit'> {
     const command = this.createCommand('limit', ctx);
     if (ctx.constant()) {
-      const limitValue = this.fromConstantToArray(ctx.constant());
+      const limitValue = this.fromConstant(ctx.constant());
       if (limitValue != null) {
         command.args.push(limitValue);
       }
@@ -1062,7 +1062,7 @@ export class CstToAstConverter {
       options.push(option);
       // it can throw while accessing constant for incomplete commands, so try catch it
       try {
-        const optionValue = this.fromConstantToArray(optionCtx.constant());
+        const optionValue = this.fromConstant(optionCtx.constant());
         if (optionValue != null) {
           option.args.push(optionValue);
         }
@@ -1531,7 +1531,7 @@ export class CstToAstConverter {
     const command = this.createCommand('sample', ctx);
 
     if (ctx.constant()) {
-      const probability = this.fromConstantToArray(ctx.constant());
+      const probability = this.fromConstant(ctx.constant());
       if (probability != null) {
         command.args.push(probability);
       }
@@ -1574,7 +1574,7 @@ export class CstToAstConverter {
       return;
     }
 
-    const queryText = this.fromConstantToArray(ctx._queryText);
+    const queryText = this.fromConstant(ctx._queryText);
     if (!queryText) {
       return;
     }
@@ -2317,7 +2317,7 @@ export class CstToAstConverter {
 
     const limitOption = this.toOption(limitToken.getText().toLowerCase(), limitValueCtx);
 
-    limitOption.args.push(this.fromConstantToArray(limitValueCtx));
+    limitOption.args.push(this.fromConstantStrict(limitValueCtx));
     limitOption.location.min = limitToken.symbol.start;
     limitOption.location.max = limitValueCtx.stop?.stop ?? limitToken.symbol.stop;
 
@@ -3040,7 +3040,7 @@ export class CstToAstConverter {
     const constantCtx = ctx.constant();
 
     if (constantCtx) {
-      const constantExpression = this.fromConstantToArray(constantCtx);
+      const constantExpression = this.fromConstantStrict(constantCtx);
 
       return this.toBinaryExpression(':', ctx, [expression, constantExpression]);
     }
@@ -3561,7 +3561,7 @@ export class CstToAstConverter {
       const constantCtx = valueCtx.constant();
 
       if (constantCtx) {
-        value = this.fromConstantToArray(constantCtx) as ast.ESQLAstExpression;
+        value = this.fromConstant(constantCtx);
       }
 
       const mapExpressionCtx = valueCtx.mapExpression();
@@ -3591,25 +3591,13 @@ export class CstToAstConverter {
 
   // ----------------------------------------------------- constant expressions
 
-  private fromConstant(ctx: cst.ConstantContext): ast.ESQLAstExpression | undefined {
-    const node = this.fromConstantToArray(ctx);
-
-    if (Array.isArray(node)) {
-      return resolveItem(node);
-    }
-
-    return node;
-  }
-
   private fromConstantStrict(ctx: cst.ConstantContext): ast.ESQLAstExpression {
     return this.fromConstant(ctx) ?? this.fromParserRuleToUnknown(ctx);
   }
 
-  /**
-   * @todo Make return type more specific.
-   * @todo Make it not return arrays.
-   */
-  private fromConstantToArray(ctx: cst.ConstantContext): ast.ESQLAstItem {
+  private fromConstant(
+    ctx: cst.ConstantContext
+  ): ast.ESQLLiteral | ast.ESQLList | ast.ESQLUnknownItem | undefined {
     if (ctx instanceof cst.NullLiteralContext) {
       return this.toLiteral('null', ctx.NULL());
     } else if (ctx instanceof cst.QualifiedIntegerLiteralContext) {
@@ -3766,19 +3754,12 @@ export class CstToAstConverter {
     return this.toParam(ctx);
   }
 
-  private fromInputParameter(ctx: cst.InputParameterContext): ast.ESQLLiteral[] {
-    const values: ast.ESQLLiteral[] = [];
-    const children = ctx.children;
+  private fromInputParameter(ctx: cst.InputParameterContext): ast.ESQLParam | undefined {
+    for (const child of ctx.children ?? []) {
+      const param = this.toParam(child);
 
-    if (children) {
-      for (const child of children) {
-        const param = this.toParam(child);
-
-        if (param) values.push(param);
-      }
+      if (param) return param;
     }
-
-    return values;
   }
 
   private toParam(ctx: antlr.ParseTree): ast.ESQLParam | undefined {
