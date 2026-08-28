@@ -360,3 +360,72 @@ test('"visitCommand" captures DEDUP when visitDedupCommand is not registered', (
 
   expect(text).toBe('FROM | DEDUP');
 });
+
+test('can visit DENSE_VECTOR command via specific visitor', () => {
+  const ast = fixtures.fromDenseVector().commands;
+  const visitor = new Visitor()
+    .on('visitDenseVectorCommand', (ctx) => {
+      return `DENSE_VECTOR[fields = ${ctx.node.fields.length}]`;
+    })
+    .on('visitCommand', (ctx) => {
+      return ctx.name();
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].join(' | ');
+    });
+  const text = visitor.visitQuery(ast);
+
+  expect(text).toBe('FROM | DENSE_VECTOR[fields = 2] | LIMIT');
+});
+
+test('"visitCommand" captures DENSE_VECTOR when visitDenseVectorCommand is not registered', () => {
+  const ast = fixtures.fromDenseVector().commands;
+  const visitor = new Visitor()
+    .on('visitCommand', (ctx) => {
+      return ctx.name();
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].join(' | ');
+    });
+  const text = visitor.visitQuery(ast);
+
+  expect(text).toBe('FROM | DENSE_VECTOR | LIMIT');
+});
+
+test('can visit DENSE_VECTOR fields and named parameters', () => {
+  const ast = fixtures.fromDenseVector().commands;
+  const visitor = new Visitor()
+    .on('visitLiteralExpression', (ctx) => {
+      return ctx.node.value;
+    })
+    .on('visitMapExpression', (ctx) => {
+      return [...ctx.visitEntries(null)].flat();
+    })
+    .on('visitMapEntryExpression', (ctx) => {
+      return [ctx.visitKey(null), ctx.visitValue(null)];
+    })
+    .on('visitColumnExpression', (ctx) => {
+      return ctx.node.name;
+    })
+    .on('visitCommandOption', (ctx) => {
+      return [...ctx.visitArguments(null)].flat();
+    })
+    .on('visitDenseVectorCommand', (ctx) => {
+      return [...ctx.visitArgs(null), ...ctx.visitOptions()].flat();
+    })
+    .on('visitExpression', () => {
+      return null;
+    })
+    .on('visitCommand', () => {
+      return null;
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].flat();
+    });
+  const list = visitor.visitQuery(ast).flat().filter(Boolean);
+
+  expect(list).toContain('vec_a');
+  expect(list).toContain('vec_b');
+  expect(list).toContain('"dims"');
+  expect(list).toContain(128);
+});

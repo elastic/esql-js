@@ -9,6 +9,7 @@ import { Builder } from '@elastic/esql-ast';
 import type {
   ESQLAstChangePointCommand,
   ESQLAstCompletionCommand,
+  ESQLAstDenseVectorCommand,
   ESQLAstIpLocationCommand,
   ESQLAstItem,
   ESQLAstJoinCommand,
@@ -340,3 +341,22 @@ export const fromDedupLimit = (): ESQLAstQueryExpression =>
 // FROM index | DEDUP
 export const fromDedup = (): ESQLAstQueryExpression =>
   Builder.expression.query([from(), Builder.command({ name: 'dedup' })]);
+
+// FROM index | DENSE_VECTOR vec_a, vec_b WITH { "dims": 128 } | LIMIT 10
+export const fromDenseVector = (): ESQLAstQueryExpression => {
+  const fields = [expr.column('vec_a'), expr.column('vec_b')];
+  const namedParameters = expr.map({
+    entries: [expr.entry('dims', expr.literal.integer(128))],
+  });
+
+  const denseVector: ESQLAstDenseVectorCommand = {
+    ...Builder.command({
+      name: 'dense_vector',
+      args: [...fields, Builder.option({ name: 'with', args: [namedParameters] })],
+    }),
+    fields,
+    namedParameters,
+  };
+
+  return Builder.expression.query([from(), denseVector, limit(10)]);
+};

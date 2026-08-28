@@ -487,6 +487,50 @@ describe('single line query', () => {
         expect(text).toBe(src);
       });
     });
+
+    describe('DENSE_VECTOR', () => {
+      test('single field', () => {
+        assertReprint('FROM logs | DENSE_VECTOR my_vector');
+      });
+
+      test('multiple fields are comma separated', () => {
+        assertReprint('FROM logs | DENSE_VECTOR vec_a, vec_b');
+        assertReprint('FROM logs | DENSE_VECTOR vec_a, vec_b, vec_c');
+      });
+
+      test('dotted and quoted field names', () => {
+        assertReprint('FROM logs | DENSE_VECTOR nested.field');
+        assertReprint('FROM logs | DENSE_VECTOR `weird name`');
+      });
+
+      test('param as field', () => {
+        assertReprint('FROM logs | DENSE_VECTOR ?param');
+      });
+
+      test('WITH named parameters are space separated, not comma separated', () => {
+        assertReprint('FROM logs | DENSE_VECTOR my_vector WITH {"dims": 128}');
+        assertReprint('FROM logs | DENSE_VECTOR vec_a, vec_b WITH {"dims": 128}');
+      });
+
+      test('WITH multiple named parameters', () => {
+        assertReprint(
+          'FROM logs | DENSE_VECTOR vec_a, vec_b WITH {"dims": 128, "normalize": true}',
+          'FROM logs | DENSE_VECTOR vec_a, vec_b WITH {"dims": 128, "normalize": TRUE}'
+        );
+      });
+
+      test('surrounded by other commands', () => {
+        assertReprint('FROM logs | DENSE_VECTOR my_vector | LIMIT 10');
+        assertReprint('FROM logs | DENSE_VECTOR my_vector WITH {"dims": 128} | LIMIT 10');
+      });
+
+      test('removes extra whitespace', () => {
+        const src = 'FROM logs |   DENSE_VECTOR   vec_a ,   vec_b   WITH   { "dims" :  128 }';
+        const { text } = reprint(src);
+
+        expect(text).toBe('FROM logs | DENSE_VECTOR vec_a, vec_b WITH {"dims": 128}');
+      });
+    });
   });
 
   describe('expressions', () => {

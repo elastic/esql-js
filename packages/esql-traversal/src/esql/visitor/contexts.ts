@@ -23,6 +23,7 @@ import type {
   ESQLAstIpLocationCommand,
   ESQLAstRegisteredDomainCommand,
   ESQLAstHighlightCommand,
+  ESQLAstDenseVectorCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
   ESQLAstUriPartsCommand,
@@ -622,6 +623,12 @@ export class HighlightCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstHighlightCommand> {}
+
+// DENSE_VECTOR <qualifiedNames> [WITH <map>]
+export class DenseVectorCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstDenseVectorCommand> {}
 
 // Expressions -----------------------------------------------------------------
 
