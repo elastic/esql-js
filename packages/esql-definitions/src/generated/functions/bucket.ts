@@ -1785,6 +1785,378 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'exponential_histogram',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'integer',
           optional: false,
         },
@@ -2524,6 +2896,378 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double_range',
     },
   ],
   preview: false,

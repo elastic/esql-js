@@ -12,7 +12,8 @@
 import type { FunctionDefinition } from '../../definition_types';
 
 /**
- * Calculates the `geohex`, the H3 cell-id, of the supplied geo_point at the specified precision.
+ * Calculates the `geohex`, the H3 cell-id, of the supplied `geo_point` or `geo_shape` at the specified precision.
+ * For `geo_shape` inputs, all intersecting H3 cells are returned as multi-values.
  * The result is long encoded.
  * Use `TO_STRING`
  * to convert the result to a string,
@@ -65,6 +66,54 @@ const definition: FunctionDefinition = {
         {
           name: 'geometry',
           type: 'geo_point',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'bounds',
+          type: 'geo_shape',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'geohex',
+      license: 'PLATINUM',
+    },
+    {
+      params: [
+        {
+          name: 'geometry',
+          type: 'geo_shape',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'geohex',
+      license: 'PLATINUM',
+    },
+    {
+      params: [
+        {
+          name: 'geometry',
+          type: 'geo_shape',
           optional: false,
         },
         {

@@ -102,10 +102,12 @@ import mvCountDocs from './mv_count';
 import mvDedupeDocs from './mv_dedupe';
 import mvDifferenceDocs from './mv_difference';
 import mvFirstDocs from './mv_first';
+import mvGreaterDocs from './mv_greater';
 import mvInRangeDocs from './mv_in_range';
 import mvIntersectionDocs from './mv_intersection';
 import mvIntersectsDocs from './mv_intersects';
 import mvLastDocs from './mv_last';
+import mvLessDocs from './mv_less';
 import mvLikeDocs from './mv_like';
 import mvMaxDocs from './mv_max';
 import mvMedianDocs from './mv_median';
@@ -339,10 +341,12 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   mv_dedupe: mvDedupeDocs,
   mv_difference: mvDifferenceDocs,
   mv_first: mvFirstDocs,
+  mv_greater: mvGreaterDocs,
   mv_in_range: mvInRangeDocs,
   mv_intersection: mvIntersectionDocs,
   mv_intersects: mvIntersectsDocs,
   mv_last: mvLastDocs,
+  mv_less: mvLessDocs,
   mv_like: mvLikeDocs,
   mv_max: mvMaxDocs,
   mv_median: mvMedianDocs,

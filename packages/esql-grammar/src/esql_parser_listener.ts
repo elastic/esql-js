@@ -130,7 +130,6 @@ import { ParenthesizedExpressionContext } from "./esql_parser.js";
 import { FunctionContext } from "./esql_parser.js";
 import { FunctionExpressionContext } from "./esql_parser.js";
 import { FunctionNameContext } from "./esql_parser.js";
-import { FunctionParamContext } from "./esql_parser.js";
 import { LambdaContext } from "./esql_parser.js";
 import { MapExpressionContext } from "./esql_parser.js";
 import { EntryExpressionContext } from "./esql_parser.js";
@@ -1423,16 +1422,6 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitFunctionName?: (ctx: FunctionNameContext) => void;
-	/**
-	 * Enter a parse tree produced by `esql_parser.functionParam`.
-	 * @param ctx the parse tree
-	 */
-	enterFunctionParam?: (ctx: FunctionParamContext) => void;
-	/**
-	 * Exit a parse tree produced by `esql_parser.functionParam`.
-	 * @param ctx the parse tree
-	 */
-	exitFunctionParam?: (ctx: FunctionParamContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.lambda`.
 	 * @param ctx the parse tree

@@ -55,7 +55,7 @@ export default class esql_lexer extends lexer_config {
 	public static readonly DEV_EXTERNAL = 29;
 	public static readonly FORK = 30;
 	public static readonly FUSE = 31;
-	public static readonly DEV_HIGHLIGHT = 32;
+	public static readonly HIGHLIGHT = 32;
 	public static readonly INLINE = 33;
 	public static readonly INLINESTATS = 34;
 	public static readonly JOIN_LOOKUP = 35;
@@ -343,7 +343,7 @@ export default class esql_lexer extends lexer_config {
                                                              "FROM", "TS", 
                                                              "DEV_EXTERNAL", 
                                                              "FORK", "FUSE", 
-                                                             "DEV_HIGHLIGHT", 
+                                                             "HIGHLIGHT", 
                                                              "INLINE", "INLINESTATS", 
                                                              "JOIN_LOOKUP", 
                                                              "DEV_JOIN_FULL", 
@@ -475,8 +475,8 @@ export default class esql_lexer extends lexer_config {
 		"ENRICH", "DEV_EXPLAIN", "COMPLETION", "DISSECT", "EVAL", "GROK", "LIMIT", 
 		"RERANK", "ROW", "SAMPLE", "SORT", "STATS", "WHERE", "URI_PARTS", "METRICS_INFO", 
 		"REGISTERED_DOMAIN", "TS_INFO", "USER_AGENT", "TS_COLLAPSE", "IP_LOCATION", 
-		"FROM", "TS", "DEV_EXTERNAL", "FORK", "FUSE", "DEV_HIGHLIGHT", "INLINE", 
-		"INLINESTATS", "IN_EXPRESSION_INIT", "JOIN_LOOKUP", "DEV_JOIN_FULL", "DEV_JOIN_LEFT", 
+		"FROM", "TS", "DEV_EXTERNAL", "FORK", "FUSE", "HIGHLIGHT", "INLINE", "INLINESTATS", 
+		"IN_EXPRESSION_INIT", "JOIN_LOOKUP", "DEV_JOIN_FULL", "DEV_JOIN_LEFT", 
 		"DEV_JOIN_RIGHT", "DEV_LOOKUP", "MMR", "MV_EXPAND", "DROP", "KEEP", "PROMQL", 
 		"RENAME", "SET", "SHOW", "UNKNOWN_CMD", "CHANGE_POINT_PIPE", "CHANGE_POINT_RP", 
 		"CHANGE_POINT_ON", "CHANGE_POINT_AS", "CHANGE_POINT_BY", "CHANGE_POINT_DOT", 

@@ -12,7 +12,8 @@
 import type { FunctionDefinition } from '../../definition_types';
 
 /**
- * Calculates the `geotile` of the supplied geo_point at the specified precision.
+ * Calculates the `geotile` of the supplied `geo_point` or `geo_shape` at the specified precision.
+ * For `geo_shape` inputs, all intersecting geotile cells are returned as multi-values.
  * The result is long encoded.
  * Use `TO_STRING`
  * to convert the result to a string,
@@ -84,6 +85,54 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'geotile',
+    },
+    {
+      params: [
+        {
+          name: 'geometry',
+          type: 'geo_shape',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'geotile',
+      license: 'PLATINUM',
+    },
+    {
+      params: [
+        {
+          name: 'geometry',
+          type: 'geo_shape',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'bounds',
+          type: 'geo_shape',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'geotile',
+      license: 'PLATINUM',
     },
   ],
   preview: true,

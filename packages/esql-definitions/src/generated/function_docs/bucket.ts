@@ -26,7 +26,7 @@ const docs: DefinitionDocs = {
     'FROM employees\n| STATS dates = MV_SORT(VALUES(birth_date)) BY b = BUCKET(birth_date + 1 HOUR, 1 YEAR) - 1 HOUR\n| EVAL d_count = MV_COUNT(dates)',
   ],
   params: {
-    field: 'Numeric or date expression from which to derive buckets.',
+    field: 'Numeric, date or histogram expression from which to derive buckets.',
     buckets: 'Target number of buckets, or desired bucket size if `from` and `to` parameters are omitted.',
     from: 'Start of the range. Can be a number, a date or a date expressed as a string.',
     to: 'End of the range. Can be a number, a date or a date expressed as a string.',
