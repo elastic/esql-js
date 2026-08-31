@@ -24,6 +24,7 @@ const docs: DefinitionDocs = {
     from: 'Start of the range. Required with a numeric `buckets` when no `@timestamp` range is in the query filter.',
     to: 'End of the range. Required with a numeric `buckets` when no `@timestamp` range is in the query filter.',
   },
+  markdown: '\n### TBUCKET\nCreates groups of values - buckets - out of a `@timestamp` attribute.\nThe size of the buckets can be provided directly as a duration or period.\nAlternatively, the bucket size can be chosen based on a recommended count\nand a range.\n\nWhen using ES|QL in Kibana, the range can be derived automatically from the\n[`@timestamp` filter](docs-content://explore-analyze/query-filter/languages/esql-kibana.md#_standard_time_filter)\nthat Kibana adds to the query.\n\n```esql\nFROM sample_data\n| STATS count = COUNT(*) BY bucket = TBUCKET(3, "2023-10-23T12:00:00Z", "2023-10-23T14:00:00Z")\n| SORT bucket\n```\n',
 };
 
 export default docs;

@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     field: 'Multivalue expression to test. If null or empty, the function returns `false`.',
     pattern: 'Wildcard pattern. Must be a constant. `*` matches any run of characters, `?` matches a single character; escape either with `\\`.',
   },
+  markdown: '\n### MV LIKE\nReturns `true` when any value yielded by `field` matches `pattern`, using the same wildcard syntax as `LIKE`.\n`LIKE` is a single-value scalar: applied to a multivalue field it emits a warning and returns `null`, so this\nis how you match a wildcard pattern against a multivalue field. A null or empty `field` returns `false`, and\nbecause the result is never null the predicate composes under `AND`/`OR`/`NOT`.\n\n```esql\nROW names = ["Anna", "Bob", "Carl"]\n| EVAL any_starts_with_a = mv_like(names, "A*")\n```\n',
 };
 
 export default docs;

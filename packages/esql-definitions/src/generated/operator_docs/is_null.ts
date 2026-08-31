@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Value to check. It can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### IS NULL\nReturns `true` if the value is `NULL`, `false` otherwise.\n\nNote: If a field is only in some documents it will be `NULL` in the documents that did not contain it.\n\n```esql\nFROM employees\n| WHERE birth_date IS NULL\n```\n',
 };
 
 export default docs;

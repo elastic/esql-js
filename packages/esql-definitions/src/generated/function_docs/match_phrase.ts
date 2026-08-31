@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     query: 'Value to find in the provided field or expression.',
     options: '(Optional) MatchPhrase additional options as <<esql-function-named-params,function named parameters>>. See [`match_phrase`](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-match-query-phrase) for more information.',
   },
+  markdown: '\n### MATCH PHRASE\nUse `MATCH_PHRASE` to perform a [`match_phrase`](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-match-query-phrase) on the\nspecified field or expression.\nUsing `MATCH_PHRASE` is equivalent to using the `match_phrase` query in the Elasticsearch Query DSL.\n\n```esql\nFROM books\n| WHERE MATCH_PHRASE(author, "William Faulkner")\n```\n',
 };
 
 export default docs;

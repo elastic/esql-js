@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV MAX\nConverts a multivalued expression into a single valued column containing the maximum value.\n\n```esql\nROW a=[3, 5, 1]\n| EVAL max_a = MV_MAX(a)\n```\n',
 };
 
 export default docs;

@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     angle: 'An angle, in radians. If `null`, the function returns `null`.',
   },
+  markdown: '\n### SIN\nReturns the [sine](https://en.wikipedia.org/wiki/Sine_and_cosine) of an angle.\n\n```esql\nROW a=1.8\n| EVAL sin=SIN(a)\n```\n',
 };
 
 export default docs;

@@ -89,6 +89,28 @@ describe('definition sync', () => {
     }
   });
 
+  test('ES|QL function and operator docs include full markdown', () => {
+    const cases = [
+      [result!.data.functions, result!.data.functionDocs, 'functions'],
+      [result!.data.operators, result!.data.operatorDocs, 'operators'],
+    ] as const;
+
+    for (const [definitions, docs, _kind] of cases) {
+      for (const definition of definitions) {
+        const doc = docs[definition.name];
+
+        expect(doc.markdown).toBeDefined();
+        expect(typeof doc.markdown).toBe('string');
+        expect((doc.markdown as string).length).toBeGreaterThan(0);
+        expect(doc.markdown).not.toMatch(/^%/);
+      }
+
+      const withMarkdown = Object.values(docs).filter((doc) => doc.markdown !== undefined).length;
+
+      expect(withMarkdown).toBe(definitions.length);
+    }
+  });
+
   test('ES|QL param docs match the param names in the signatures', () => {
     const cases = [
       [result!.data.functions, result!.data.functionDocs],

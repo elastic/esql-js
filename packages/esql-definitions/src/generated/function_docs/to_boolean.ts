@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO BOOLEAN\nConverts an input value to a boolean value.\nA string value of `true` will be case-insensitive converted to the Boolean `true`.\nFor anything else, including the empty string, the function will return `false`.\nThe numerical value of `0` will be converted to `false`, anything else will be converted to `true`.\n\n```esql\nROW str = ["true", "TRuE", "false", "", "yes", "1"]\n| EVAL bool = TO_BOOLEAN(str)\n```\n',
 };
 
 export default docs;

@@ -17,6 +17,7 @@ const docs: DefinitionDocs = {
     lhs: 'A numeric value or dense_vector',
     rhs: 'A numeric value or dense_vector',
   },
+  markdown: '\n### MULTIPLY `*`\nMultiply two values together. For numeric fields, if either field is [multivalued](https://www.elastic.co/docs/reference/query-languages/esql/esql-multivalued-fields)\nthen the result is `null`. For dense_vector operations, both arguments should be dense_vectors. Inequal vector dimensions generate\nnull result.\n\n',
 };
 
 export default docs;

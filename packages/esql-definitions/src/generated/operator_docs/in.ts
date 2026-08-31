@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'An expression.',
     inlist: 'A list of items.',
   },
+  markdown: '\n### IN\nThe `IN` operator allows testing whether a field or expression equals an element in a list of literals, fields or expressions.\n\n```esql\nROW a = 1, b = 4, c = 3\n| WHERE c-a IN (3, b / 2, a)\n```\n',
 };
 
 export default docs;

@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     input: 'dense_vector for which to compute the magnitude',
   },
+  markdown: '\n### V MAGNITUDE\nCalculates the magnitude of a dense_vector.\n\n```esql\n from colors\n | eval magnitude = v_magnitude(rgb_vector)\n | sort magnitude desc, color asc\n```\n',
 };
 
 export default docs;

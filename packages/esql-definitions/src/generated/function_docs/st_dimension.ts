@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     geometry: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST DIMENSION\nReturns the topological dimension of the supplied geometry.\nPoints and multi-points return `0`, lines and multi-lines return `1`, polygons and multi-polygons return `2`, and geometry collections return the maximum dimension of their components.\n\n```esql\nROW wkt = [\n    "POINT(1.0 2.0)",\n    "LINESTRING (30 10, 10 30, 40 40)",\n    "POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))"]\n| MV_EXPAND wkt\n| EVAL geometry = TO_GEOSHAPE(wkt),\n       type = ST_GEOMETRYTYPE(geometry),\n       topological_dimension = ST_DIMENSION(geometry)\n| KEEP type, topological_dimension\n```\n',
 };
 
 export default docs;

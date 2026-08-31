@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     query: 'Vector value to find top nearest neighbours for.',
     options: '(Optional) kNN additional options as <<esql-function-named-params,function named parameters>>. See [knn query](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-knn-query) for more information.',
   },
+  markdown: '\n### KNN\nFinds the k nearest vectors to a query vector, as measured by a similarity metric. knn function finds nearest vectors through approximate search on indexed dense_vectors or semantic_text fields.\n\n```esql\nfrom colors metadata _score\n| where knn(rgb_vector, [0, 120, 0])\n| sort _score desc, color asc\n```\n',
 };
 
 export default docs;

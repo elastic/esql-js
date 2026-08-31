@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: '',
   },
+  markdown: '\n### ST CENTROID AGG\nCalculate the spatial centroid over a field with spatial geometry type.\nSupports `geo_point` and `cartesian_point`, as well as `geo_shape` and `cartesian_shape`.\n\n```esql\nFROM airports\n| STATS centroid=ST_CENTROID_AGG(location)\n```\n',
 };
 
 export default docs;

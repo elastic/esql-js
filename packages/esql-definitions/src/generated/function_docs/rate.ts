@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the counter field whose per-second average rate of increase is computed',
     window: 'the time window over which the rate is computed',
   },
+  markdown: '\n### RATE\nCalculates the per-second average rate of increase of a [counter](docs-content://manage-data/data-store/data-streams/time-series-data-stream-tsds.md#time-series-metric). Rate calculations account for breaks in monotonicity, such as counter resets when a service restarts, and extrapolate values within each bucketed time interval. Rate is the most appropriate aggregate function for counters. It is only allowed in a [STATS](https://www.elastic.co/docs/reference/query-languages/esql/commands/stats-by) command under a [`TS`](https://www.elastic.co/docs/reference/query-languages/esql/commands/ts) source command, to be properly applied per time series.\n\n```esql\nTS k8s\n| STATS max_rate=MAX(RATE(network.total_bytes_in)) BY time_bucket = TBUCKET(5minute)\n```\n',
 };
 
 export default docs;

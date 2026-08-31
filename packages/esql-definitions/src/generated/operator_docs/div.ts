@@ -18,6 +18,7 @@ const docs: DefinitionDocs = {
     lhs: 'A numeric value.',
     rhs: 'A numeric value.',
   },
+  markdown: '\n### DIVIDE `/`\nDivide one value by another. For numeric operands, if either field is [multivalued](https://www.elastic.co/docs/reference/query-languages/esql/esql-multivalued-fields)\nthen the result is `null`.\n\nNote: Division of two integer types will yield an integer result, rounding towards 0. "\nIf you need floating point division, [`Cast (::)`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/operators#esql-cast-operator) one of the arguments to a `DOUBLE`.\nFor dense_vector operations, both arguments should be dense_vectors. Inequal vector dimensions generate null result.\n\n',
 };
 
 export default docs;

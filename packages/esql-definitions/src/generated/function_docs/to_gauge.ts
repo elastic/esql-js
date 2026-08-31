@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO GAUGE\nConverts a counter value to its gauge (plain numeric) equivalent. The output type is determined by the input:\n`counter_long` converts to `long`, `counter_integer` to `integer`, and `counter_double` to `double`.\nNo values are modified; only the type annotation changes. If the input is already a plain numeric or `aggregate_metric_double`, the function is a no-op. This is useful when a metric field was misclassified as a counter type instead of a plain numeric (gauge) in the index mapping.\nThis function is also available as the `::gauge` cast operator.\n\n```esql\nTS k8s\n| STATS bytes_in = avg(avg_over_time(network.bytes_in::gauge)) BY cluster, time_bucket = bucket(@timestamp, 10minute)\n| EVAL bytes_in = round(bytes_in, 4)\n| KEEP bytes_in, cluster, time_bucket\n| SORT time_bucket, cluster\n| LIMIT 10;\n```\n',
 };
 
 export default docs;

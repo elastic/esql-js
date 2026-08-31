@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'The histogram value to be converted',
   },
+  markdown: '\n### TO TDIGEST\nConverts an untyped histogram to a TDigest, assuming the values are centroids.\n\n```esql\nFROM histogram_standard_index\n | WHERE instance == "hand-rolled"\n | EVAL tdigest = to_tdigest(responseTime)\n | KEEP responseTime, tdigest\n;\n```\n',
 };
 
 export default docs;

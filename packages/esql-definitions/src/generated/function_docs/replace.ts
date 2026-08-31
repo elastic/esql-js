@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     regex: 'Regular expression.',
     newString: 'Replacement string.',
   },
+  markdown: '\n### REPLACE\nThe function substitutes in the string `str` any match of the regular expression `regex`\nwith the replacement string `newStr`.\n\n```esql\nROW str = "Hello World"\n| EVAL str = REPLACE(str, "World", "Universe")\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the irate',
   },
+  markdown: '\n### IRATE\nCalculates the irate of a counter field. irate is the per-second rate of increase between the last two data points (it ignores all but the last two data points in each time period). This function is very similar to rate, but is more responsive to recent changes in the rate of increase.\n\n```esql\nTS k8s | WHERE pod == "one"\n| STATS irate_bytes_in = SUM(IRATE(network.total_bytes_in)) BY cluster, time_bucket = TBUCKET(10minute)\n```\n',
 };
 
 export default docs;

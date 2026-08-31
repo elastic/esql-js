@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     str: 'String expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### REVERSE\nReturns a new string representing the input string in reverse order.\n\n```esql\nROW message = "Some Text" | EVAL message_reversed = REVERSE(message);\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field1: 'Expression that can be null, a single value, or multiple values. If null, the function returns null.',
     field2: 'Expression that can be null, a single value, or multiple values. If null, the function returns field1.',
   },
+  markdown: '\n### MV DIFFERENCE\nReturns the values that appear in the first field, except those that appear in the second. Returns `null` if the first expression is null (nothing to remove) or the value of the first field if the second is null.\n\n```esql\nROW values = ["a", "b", "c"], element = "a"\n| EVAL result = mv_difference(values, element)\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     number: 'Expression that can be null, a single value, or multiple values.',
     p: 'It is a constant number that represents the *p* parameter in the P-Series. It impacts every element’s contribution to the weighted sum.',
   },
+  markdown: '\n### MV PSERIES WEIGHTED SUM\nConverts a multivalued expression into a single-valued column by multiplying every element on the input list by its corresponding term in P-Series and computing the sum.\n\n```esql\nROW a = [70.0, 45.0, 21.0, 21.0, 21.0]\n| EVAL sum = MV_PSERIES_WEIGHTED_SUM(a, 1.5)\n| KEEP sum\n```\n',
 };
 
 export default docs;

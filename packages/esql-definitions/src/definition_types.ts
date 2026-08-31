@@ -73,6 +73,12 @@ export interface DefinitionDocs {
    * ES|QL only: parameter descriptions by parameter name.
    */
   params?: Record<string, string>;
+  /**
+   * Full markdown documentation for this definition, sourced from the
+   * corresponding `.md` file in `elasticsearch/<lang>/<project>/docs/`.
+   * The leading generator comment line is stripped.
+   */
+  markdown?: string;
 }
 
 /** A single item from `elasticsearch/esql/<project>/definition/functions/`. */

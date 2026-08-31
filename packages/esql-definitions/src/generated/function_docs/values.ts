@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: '',
   },
+  markdown: '\n### VALUES\nReturns unique (deduplicated) values as a multivalued field. The order of the returned values isn’t guaranteed.\nIf you need the values returned in order use\n[`MV_SORT`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/mv-functions/mv_sort).\n\n```esql\nFROM employees\n| EVAL first_letter = SUBSTRING(first_name, 0, 1)\n| STATS first_name = MV_SORT(VALUES(first_name)) BY first_letter\n| SORT first_letter\n```\n',
 };
 
 export default docs;

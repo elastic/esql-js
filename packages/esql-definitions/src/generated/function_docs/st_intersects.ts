@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     geomA: 'Expression that is either a geometry (`geo_point`, `cartesian_point`, `geo_shape` or `cartesian_shape`) or a geo-grid value (`geohash`, `geotile`, `geohex`). If `null`, the function returns `null`.',
     geomB: 'Expression that is either a geometry (`geo_point`, `cartesian_point`, `geo_shape` or `cartesian_shape`) or a geo-grid value (`geohash`, `geotile`, `geohex`). If `null`, the function returns `null`. The second parameter must also have the same coordinate system as the first. This means it is not possible to combine `geo_*` and `cartesian_*` parameters.',
   },
+  markdown: '\n### ST INTERSECTS\nReturns true if two geometries intersect.\nThey intersect if they have any point in common, including their interior points\n(points along lines or within polygons).\nThis is the inverse of the [ST_DISJOINT](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/spatial-functions/st_disjoint) function.\nIn mathematical terms: ST_Intersects(A, B) ⇔ A ⋂ B ≠ ∅\n\n```esql\nFROM airports\n| WHERE ST_INTERSECTS(location, TO_GEOSHAPE("POLYGON((42 14, 43 14, 43 15, 42 15, 42 14))"))\n```\n',
 };
 
 export default docs;

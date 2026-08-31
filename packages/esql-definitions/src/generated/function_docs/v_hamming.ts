@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     left: 'First dense_vector to use to calculate the Hamming distance',
     right: 'Second dense_vector to use to calculate the Hamming distance',
   },
+  markdown: '\n### V HAMMING\nCalculates the Hamming distance between two dense vectors.\n\n```esql\nfrom colors\n| eval similarity = v_hamming(rgb_byte_vector, [0, 127, 127])\n| sort similarity desc, color asc\n```\n',
 };
 
 export default docs;

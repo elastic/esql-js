@@ -305,6 +305,33 @@ function readDefinitions(
   return items.sort((a, b) => (a.item.name as string).localeCompare(b.item.name as string));
 }
 
+/**
+ * Reads the `.md` documentation files for a keyword type from all projects
+ * under `languageDir` and returns a map of `name → markdown content` (with
+ * the leading generator comment line stripped).
+ */
+function readMarkdownDocs(languageDir: string, kind: string): Record<string, string> {
+  const result: Record<string, string> = {};
+
+  for (const project of listProjectDirs(languageDir)) {
+    const dir = join(languageDir, project, 'docs', kind);
+
+    if (!existsSync(dir)) {
+      continue;
+    }
+
+    for (const file of readdirSync(dir)
+      .filter((f) => f.endsWith('.md'))
+      .sort()) {
+      const name = file.slice(0, -'.md'.length).replace(/ /g, '_');
+      const raw = readFileSync(join(dir, file), 'utf8');
+      result[name] = raw.replace(/^[^\n]*\n/, '');
+    }
+  }
+
+  return result;
+}
+
 function readInlineCastMap(languageDir: string): InlineCastMap {
   const merged: InlineCastMap = {};
   const sources = new Map<string, string>();
@@ -597,6 +624,20 @@ export function generateAll(elasticsearchDir: string): GenerateResult {
     'operators',
     true
   );
+
+  const functionMarkdown = readMarkdownDocs(esqlDir, 'functions');
+  const operatorMarkdown = readMarkdownDocs(esqlDir, 'operators');
+
+  for (const [name, doc] of Object.entries(functionsSplit.docs)) {
+    if (functionMarkdown[name] !== undefined) {
+      doc.markdown = functionMarkdown[name];
+    }
+  }
+  for (const [name, doc] of Object.entries(operatorsSplit.docs)) {
+    if (operatorMarkdown[name] !== undefined) {
+      doc.markdown = operatorMarkdown[name];
+    }
+  }
   const settingItems = readDefinitions(esqlDir, 'settings', SETTING_SPEC, warnings);
   const inlineCasts = readInlineCastMap(esqlDir);
   const promqlFunctionsSplit = splitDocs(

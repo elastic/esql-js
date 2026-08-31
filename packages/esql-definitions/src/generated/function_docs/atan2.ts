@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     y_coordinate: 'y coordinate. If `null`, the function returns `null`.',
     x_coordinate: 'x coordinate. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ATAN2\nThe [angle](https://en.wikipedia.org/wiki/Atan2) between the positive x-axis and the ray from the\norigin to the point (x , y) in the Cartesian plane, expressed in radians.\n\n```esql\nROW y=12.9, x=.6\n| EVAL atan2=ATAN2(y, x)\n```\n',
 };
 
 export default docs;

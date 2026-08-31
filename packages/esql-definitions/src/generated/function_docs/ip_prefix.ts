@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     prefixLengthV4: 'Prefix length for IPv4 addresses.',
     prefixLengthV6: 'Prefix length for IPv6 addresses.',
   },
+  markdown: '\n### IP PREFIX\nTruncates an IP to a given prefix length.\n\n```esql\nROW ip4 = to_ip("1.2.3.4"), ip6 = TO_IP("fe80::cae2:65ff:fece:feb9")\n| EVAL ip4_prefix = IP_PREFIX(ip4, 24, 0), ip6_prefix = IP_PREFIX(ip6, 0, 112);\n```\n',
 };
 
 export default docs;

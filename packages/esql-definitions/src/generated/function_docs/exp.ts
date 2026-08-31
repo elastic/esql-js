@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### EXP\nReturns the value of e raised to the power of the given number.\n\n```esql\nROW d = 5.0\n| EVAL s = EXP(d)\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     number: '',
   },
+  markdown: '\n### STD DEV\nThe population standard deviation of a numeric field.\n\n```esql\nFROM employees\n| STATS std_dev_height = STD_DEV(height)\n```\n',
 };
 
 export default docs;

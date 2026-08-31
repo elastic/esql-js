@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ATAN\nReturns the [arctangent](https://en.wikipedia.org/wiki/Inverse_trigonometric_functions) of the input\nnumeric expression as an angle, expressed in radians.\n\n```esql\nROW a=12.9\n| EVAL atan=ATAN(a)\n```\n',
 };
 
 export default docs;

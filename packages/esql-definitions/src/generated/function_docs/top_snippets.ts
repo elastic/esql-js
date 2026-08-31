@@ -26,6 +26,7 @@ const docs: DefinitionDocs = {
     query: 'The input text containing only query terms for snippet extraction. Lucene query syntax, operators, and wildcards are not allowed.',
     options: '(Optional) `TOP_SNIPPETS` additional options as [function named parameters](https://www.elastic.co/docs/reference/query-languages/esql/esql-syntax#esql-function-named-params).',
   },
+  markdown: '\n### TOP SNIPPETS\nUse `TOP_SNIPPETS` to extract the best snippets for a given query string from a text field.\n\n```esql\nFROM books\n| EVAL snippets = TOP_SNIPPETS(description, "Tolkien")\n```\n',
 };
 
 export default docs;

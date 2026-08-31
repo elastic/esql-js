@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO GEOTILE\nConverts an input value to a `geotile` value.\nA string will only be successfully converted if it respects the\n`geotile` format, as described for the\n[geotile grid aggregation](https://www.elastic.co/docs/reference/aggregations/search-aggregations-bucket-geotilegrid-aggregation).\n\n```esql\nROW string = "4/8/5"\n| EVAL geotile = TO_GEOTILE(string)\n```\n',
 };
 
 export default docs;

@@ -16,6 +16,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'A numeric value or a date time interval.',
   },
+  markdown: '\n### NEGATE `-`\nReturns the negation of the argument.\n',
 };
 
 export default docs;

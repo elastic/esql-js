@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
   params: {
     number: '',
   },
+  markdown: '\n### SUM\nThe sum of a numeric expression.\n\n```esql\nFROM employees\n| STATS SUM(languages)\n```\n',
 };
 
 export default docs;

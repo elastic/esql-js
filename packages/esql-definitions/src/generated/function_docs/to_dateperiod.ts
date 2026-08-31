@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input is a valid constant date period expression.',
   },
+  markdown: '\n### TO DATEPERIOD\nConverts an input value into a `date_period` value.\n\n```esql\nROW x = "2024-01-01"::datetime\n| EVAL y = x + "3 DAYS"::date_period, z = x - TO_DATEPERIOD("3 days");\n```\n',
 };
 
 export default docs;

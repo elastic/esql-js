@@ -18,6 +18,7 @@ const docs: DefinitionDocs = {
     lhs: 'An expression.',
     rhs: 'An expression.',
   },
+  markdown: '\n### NOT EQUALS `!=`\nCheck if two fields are unequal. If either field is [multivalued](https://www.elastic.co/docs/reference/query-languages/esql/esql-multivalued-fields) then the result is `null`.\n\nNote: This is pushed to the underlying search index if one side of the comparison is constant and the other side is a field in the index that has both an [mapping-index](https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/mapping-index) and [doc-values](https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/doc-values).\n',
 };
 
 export default docs;

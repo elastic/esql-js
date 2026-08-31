@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO DATE NANOS\nConverts an input to a nanosecond-resolution date value (aka date_nanos).\n\nNote: The range for date nanos is 1970-01-01T00:00:00.000000000Z to 2262-04-11T23:47:16.854775807Z, attempting to convert values outside of that range will result in null with a warning.  Additionally, integers cannot be converted into date nanos, as the range of integer nanoseconds only covers about 2 seconds after epoch.\n\n```esql\nFROM date_nanos\n| WHERE MV_MIN(nanos) < TO_DATE_NANOS("2023-10-23T12:27:28.948Z")\n    AND millis > "2000-01-01"\n| SORT nanos DESC\n```\n',
 };
 
 export default docs;

@@ -31,6 +31,7 @@ const docs: DefinitionDocs = {
     from: 'Start of the range. Can be a number, a date or a date expressed as a string.',
     to: 'End of the range. Can be a number, a date or a date expressed as a string.',
   },
+  markdown: '\n### BUCKET\nCreates groups of values - buckets - out of a datetime or numeric input.\nThe size of the buckets can either be provided directly, or chosen based on a recommended count and values range.\n\n```esql\nFROM employees\n| WHERE hire_date >= "1985-01-01T00:00:00Z" AND hire_date < "1986-01-01T00:00:00Z"\n| STATS hire_date = MV_SORT(VALUES(hire_date)) BY month = BUCKET(hire_date, 20, "1985-01-01T00:00:00Z", "1986-01-01T00:00:00Z")\n```\n',
 };
 
 export default docs;

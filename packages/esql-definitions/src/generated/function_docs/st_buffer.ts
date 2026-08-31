@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     geometry: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
     distance: 'Buffer distance in the units of the input spatial reference system',
   },
+  markdown: '\n### ST BUFFER\nComputes a buffer area around the input geometry at the specified distance. The distance is in the units of the input spatial reference system. Positive distances expand the geometry, negative distances shrink it. A distance of zero will return the input geometry unchanged. Points and lines become polygons when buffered, unless a zero distance is provided.\n\n```esql\nROW wkt = "POLYGON ((0 0, 4 0, 4 4, 0 4, 0 0))"\n| EVAL buffered = ST_BUFFER(TO_GEOSHAPE(wkt), -1)\n```\n',
 };
 
 export default docs;

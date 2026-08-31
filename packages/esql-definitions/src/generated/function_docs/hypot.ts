@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     number1: 'Numeric expression. If `null`, the function returns `null`.',
     number2: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### HYPOT\nReturns the hypotenuse of two numbers. The input can be any numeric values, the return value is always a double.\nHypotenuses of infinities are null.\n\n```esql\nROW a = 3.0, b = 4.0\n| EVAL c = HYPOT(a, b)\n```\n',
 };
 
 export default docs;

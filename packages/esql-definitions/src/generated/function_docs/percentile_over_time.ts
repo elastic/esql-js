@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     percentile: 'the percentile value to compute (between 0 and 100)',
   },
+  markdown: '\n### PERCENTILE OVER TIME\nCalculates the percentile over time of a field.\n\n```esql\nTS k8s\n| STATS p95_cost=MAX(PERCENTILE_OVER_TIME(network.cost, 95)), p99_cost=MAX(PERCENTILE_OVER_TIME(network.cost, 99)) BY cluster, time_bucket = TBUCKET(1minute)\n```\n',
 };
 
 export default docs;

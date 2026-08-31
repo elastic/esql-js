@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     string1: 'Strings to concatenate.',
     string2: 'Strings to concatenate.',
   },
+  markdown: '\n### CONCAT\nConcatenates two or more strings.\n\n```esql\nFROM employees\n| KEEP first_name, last_name\n| EVAL fullname = CONCAT(first_name, " ", last_name)\n```\n',
 };
 
 export default docs;

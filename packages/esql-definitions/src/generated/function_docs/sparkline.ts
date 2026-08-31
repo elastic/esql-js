@@ -23,6 +23,7 @@ const docs: DefinitionDocs = {
     from: 'Start of the range. Can be a date or a date expressed as a string.',
     to: 'End of the range. Can be a date or a date expressed as a string.',
   },
+  markdown: '\n### SPARKLINE\nThe values representing the y-axis values of a sparkline graph for a given aggregation over a period of time.\n\n```esql\nFROM employees\n| STATS sparkline = SPARKLINE(COUNT(*), hire_date, 20, "1985-01-01T00:00:00Z", "1985-12-31T00:00:00Z")\n```\n',
 };
 
 export default docs;

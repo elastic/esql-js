@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     query: 'Boolean expression that contains full text function(s) to be scored.',
   },
+  markdown: '\n### SCORE\nScores an expression. Only full text functions will be scored. Returns scores for all the resulting docs.\n\n```esql\nFROM books METADATA _score\n| WHERE match(title, "Return") AND match(author, "Tolkien")\n| EVAL first_score = score(match(title, "Return"))\n```\n',
 };
 
 export default docs;

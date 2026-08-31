@@ -27,6 +27,7 @@ const docs: DefinitionDocs = {
     string: 'A string containing valid JSON, or the `_source` field. If `null`, the function returns `null`.',
     path: 'A path expression identifying the value to extract, using a subset of JSONPath syntax. Supports dot notation (`user.name`), bracket notation for array indices (`items[0]`), and quoted brackets for keys with special characters (`[\'user.name\']`). The `$` prefix is optional. If `null`, the function returns `null`.',
   },
+  markdown: '\n### JSON EXTRACT\nExtracts a value from a JSON string using a subset of\n[JSONPath](https://datatracker.ietf.org/doc/rfc9535) syntax.\n\n```esql\nROW log = """{"severity":"ERROR","body":"Payment processing failed"}"""\n| EVAL severity = JSON_EXTRACT(log, "severity")\n```\n',
 };
 
 export default docs;

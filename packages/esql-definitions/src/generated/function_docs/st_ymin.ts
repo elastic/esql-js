@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     point: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST YMIN\nExtracts the minimum value of the `y` coordinates from the supplied geometry.\nIf the geometry is of type `geo_point` or `geo_shape` this is equivalent to extracting the minimum `latitude` value.\n\n```esql\nFROM airport_city_boundaries\n| WHERE abbrev == "CPH"\n| EVAL envelope = ST_ENVELOPE(city_boundary)\n| EVAL xmin = ST_XMIN(envelope), xmax = ST_XMAX(envelope), ymin = ST_YMIN(envelope), ymax = ST_YMAX(envelope)\n| KEEP abbrev, airport, xmin, xmax, ymin, ymax\n```\n',
 };
 
 export default docs;

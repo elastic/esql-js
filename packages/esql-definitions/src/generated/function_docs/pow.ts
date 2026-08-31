@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     base: 'Numeric expression for the base. If `null`, the function returns `null`.',
     exponent: 'Numeric expression for the exponent. If `null`, the function returns `null`.',
   },
+  markdown: '\n### POW\nReturns the value of `base` raised to the power of `exponent`.\n\nNote: It is still possible to overflow a double result here; in that case, null will be returned.\n\n```esql\nROW base = 2.0, exponent = 2\n| EVAL result = POW(base, exponent)\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     geomA: 'Expression of type `geo_point` or `cartesian_point`. If `null`, the function returns `null`.',
     geomB: 'Expression of type `geo_point` or `cartesian_point`. If `null`, the function returns `null`. The second parameter must also have the same coordinate system as the first. This means it is not possible to combine `geo_point` and `cartesian_point` parameters.',
   },
+  markdown: '\n### ST DISTANCE\nComputes the distance between two points.\nFor cartesian geometries, this is the pythagorean distance in the same units as the original coordinates.\nFor geographic geometries, this is the circular distance along the great circle in meters.\n\n```esql\nFROM airports\n| WHERE abbrev == "CPH"\n| EVAL distance = ST_DISTANCE(location, city_location)\n| KEEP abbrev, name, location, city_location, distance\n```\n',
 };
 
 export default docs;

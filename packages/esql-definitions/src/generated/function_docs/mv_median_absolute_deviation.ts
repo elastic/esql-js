@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV MEDIAN ABSOLUTE DEVIATION\nConverts a multivalued field into a single valued field containing the median absolute deviation.\n\nIt is calculated as the median of each data point’s deviation from the median of the entire sample. That is, for a random variable `X`, the median absolute deviation is `median(|median(X) - X|)`.\n\nNote: If the field has an even number of values, the medians will be calculated as the average of the middle two values. If the value is not a floating point number, the averages are rounded towards 0.\n\n```esql\nROW values = [0, 2, 5, 6]\n| EVAL median_absolute_deviation = MV_MEDIAN_ABSOLUTE_DEVIATION(values), median = MV_MEDIAN(values)\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     first: 'First of the columns to evaluate.',
     rest: 'The rest of the columns to evaluate.',
   },
+  markdown: '\n### LEAST\nReturns the minimum value from multiple columns. This is similar to [`MV_MIN`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/mv-functions/mv_min) except it is intended to run on multiple columns at once.\n\n```esql\nROW a = 10, b = 20\n| EVAL l = LEAST(a, b)\n```\n',
 };
 
 export default docs;

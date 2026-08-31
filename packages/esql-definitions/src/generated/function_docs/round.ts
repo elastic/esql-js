@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     number: 'The numeric value to round. If `null`, the function returns `null`.',
     decimals: 'The number of decimal places to round to. Defaults to 0. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ROUND\nRounds a number to the specified number of decimal places.\nDefaults to 0, which returns the nearest integer. If the\nprecision is a negative number, rounds to the number of digits left\nof the decimal point.\n\n```esql\nFROM employees\n| KEEP first_name, last_name, height\n| EVAL height_ft = ROUND(height * 3.281, 1)\n```\n',
 };
 
 export default docs;

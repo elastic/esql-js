@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field1: '',
     field2: '',
   },
+  markdown: '\n### MV APPEND\nConcatenates values of two multi-value fields.\n\n```esql\nFROM employees\n| WHERE emp_no == 10039 OR emp_no == 10040\n| SORT emp_no\n| EVAL dates = MV_APPEND(birth_date, hire_date)\n| KEEP emp_no, birth_date, hire_date, dates\n```\n',
 };
 
 export default docs;

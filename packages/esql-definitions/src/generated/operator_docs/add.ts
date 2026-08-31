@@ -17,6 +17,7 @@ const docs: DefinitionDocs = {
     lhs: 'A numeric value, dense_vector or a date time value.',
     rhs: 'A numeric value, dense_vector or a date time value.',
   },
+  markdown: '\n### ADD `+`\nAdd two values. In case of numeric fields, if either field is [multivalued](https://www.elastic.co/docs/reference/query-languages/esql/esql-multivalued-fields) then the result is `null`.\nFor dense_vector operations, both arguments should be dense_vectors. Inequal vector dimensions generate null result.\n\n',
 };
 
 export default docs;

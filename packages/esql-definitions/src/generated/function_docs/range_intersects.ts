@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     left: 'First value (point or range).',
     right: 'Second value (point or range).',
   },
+  markdown: '\n### RANGE INTERSECTS\nReturns true if the two arguments overlap. The relation is symmetric — argument order does not matter. Supports all combinations of ranges and corresponding scalar types. When both arguments are scalar values, this is equivalent to `a == b`.\n\n```esql\nFROM employees\n| WHERE RANGE_INTERSECTS(hire_date, TO_DATE_RANGE("1985-02-01..1985-03-01"))\n| KEEP emp_no, hire_date\n| SORT emp_no\n```\n',
 };
 
 export default docs;

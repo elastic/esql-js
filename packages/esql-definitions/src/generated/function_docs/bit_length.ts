@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     string: 'String expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### BIT LENGTH\nReturns the bit length of a string.\n\nNote: All strings are in UTF-8, so a single character can use multiple bytes.\n\n```esql\nFROM airports\n| WHERE country == "India"\n| KEEP city\n| EVAL fn_length = LENGTH(city), fn_bit_length = BIT_LENGTH(city)\n```\n',
 };
 
 export default docs;

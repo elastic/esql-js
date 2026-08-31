@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'The search field',
   },
+  markdown: '\n### LATEST\nAn alias for [`LAST`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/aggregation-functions/last) where\nthe sort field (the second parameter) is implicit and is set to `@timestamp`.\n\n```esql\n        @timestamp        |  name   | number\n"2025-11-25T00:00:00.000Z | alpha   | 1"\n"2025-11-25T00:00:01.000Z | alpha   | 2"\n"2025-11-25T00:00:02.000Z | bravo   | null"\n"2025-11-25T00:00:03.000Z | alpha   | 4"\n"2025-11-25T00:00:04.000Z | bravo   | 5"\n"2025-11-25T00:00:05.000Z | charlie | [6, 7, 8]"\n"2025-11-25T00:00:06.000Z | delta   | null"\n\nFrom dataset\n| STATS last_val = LATEST(number) BY name\n```\n',
 };
 
 export default docs;

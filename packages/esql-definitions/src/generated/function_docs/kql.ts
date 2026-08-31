@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     query: 'Query string in KQL query string format.',
     options: '(Optional) KQL additional options as <<esql-function-named-params,function named parameters>>. Available in stack version 9.3.0 and later.',
   },
+  markdown: '\n### KQL\nPerforms a KQL query. Returns true if the provided KQL query string matches the row.\n\n```esql\nFROM books\n| WHERE KQL("author: Faulkner")\n```\n',
 };
 
 export default docs;

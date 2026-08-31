@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO AGGREGATE METRIC DOUBLE\nEncode a numeric to an aggregate_metric_double.\n\n```esql\nROW x = 3892095203\n| EVAL agg_metric = TO_AGGREGATE_METRIC_DOUBLE(x)\n```\n',
 };
 
 export default docs;

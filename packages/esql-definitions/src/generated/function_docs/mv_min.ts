@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV MIN\nConverts a multivalued expression into a single valued column containing the minimum value.\n\n```esql\nROW a=[2, 1]\n| EVAL min_a = MV_MIN(a)\n```\n',
 };
 
 export default docs;

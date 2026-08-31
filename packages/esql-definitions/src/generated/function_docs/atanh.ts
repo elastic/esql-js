@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Number between -1 and 1. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ATANH\nReturns the [inverse hyperbolic tangent](https://en.wikipedia.org/wiki/Inverse_trigonometric_functions) of a number.\n\n```esql\nROW a=0.5\n| EVAL atanh=ATANH(a)\n```\n',
 };
 
 export default docs;

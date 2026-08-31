@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### COSH\nReturns the [hyperbolic cosine](https://en.wikipedia.org/wiki/Hyperbolic_functions) of a number.\n\n```esql\nROW a=1.8\n| EVAL cosh=COSH(a)\n```\n',
 };
 
 export default docs;

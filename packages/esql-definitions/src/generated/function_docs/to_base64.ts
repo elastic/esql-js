@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     string: 'A string.',
   },
+  markdown: '\n### TO BASE64\nEncode a string to a base64 string.\n\n```esql\nROW a = "elastic"\n| EVAL e = TO_BASE64(a)\n```\n',
 };
 
 export default docs;

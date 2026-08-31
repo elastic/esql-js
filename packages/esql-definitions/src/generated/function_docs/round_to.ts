@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'The numeric value to round. If `null`, the function returns `null`.',
     points: 'Remaining rounding points. Must be constants.',
   },
+  markdown: '\n### ROUND TO\nRounds down to one of a list of fixed points.\n\n```esql\nFROM employees\n| STATS COUNT(*) BY birth_window=ROUND_TO(\n    birth_date,\n    "1900-01-01T00:00:00Z"::DATETIME,\n    "1950-01-01T00:00:00Z"::DATETIME,\n    "1955-01-01T00:00:00Z"::DATETIME,\n    "1960-01-01T00:00:00Z"::DATETIME,\n    "1965-01-01T00:00:00Z"::DATETIME,\n    "1970-01-01T00:00:00Z"::DATETIME,\n    "1975-01-01T00:00:00Z"::DATETIME\n)\n| SORT birth_window ASC\n```\n',
 };
 
 export default docs;

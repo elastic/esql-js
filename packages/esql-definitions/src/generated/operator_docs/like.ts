@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     str: 'A literal expression.',
     pattern: 'Pattern.',
   },
+  markdown: '\n### LIKE\nUse `LIKE` to filter data based on string patterns using wildcards. `LIKE`\nusually acts on a field placed on the left-hand side of the operator, but it can\nalso act on a constant (literal) expression. The right-hand side of the operator\nrepresents the pattern, which can be a string literal, a query parameter, or any\nconstant expression such as a call to `CONCAT` or `TO_LOWER`.\n\nThe following wildcard characters are supported:\n\n* `*` matches zero or more characters.\n* `?` matches one character.\n\n```esql\nFROM employees\n| WHERE first_name LIKE """?b*"""\n| KEEP first_name, last_name\n```\n',
 };
 
 export default docs;

@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO GEOHASH\nConverts an input value to a `geohash` value.\nA string will only be successfully converted if it respects the\n`geohash` format, as described for the\n[geohash grid aggregation](https://www.elastic.co/docs/reference/aggregations/search-aggregations-bucket-geohashgrid-aggregation).\n\n```esql\nROW string = "u3bu"\n| EVAL geohash = TO_GEOHASH(string)\n```\n',
 };
 
 export default docs;

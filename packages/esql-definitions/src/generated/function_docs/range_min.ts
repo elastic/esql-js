@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     range: 'Range expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### RANGE MIN\nReturns the minimum (start) value of a range. For a range [x, y), it returns x.\n\n```esql\nFROM decades\n| WHERE decade == 1900\n| EVAL min_bound = RANGE_MIN(date_range)\n| KEEP date_range, min_bound\n```\n',
 };
 
 export default docs;

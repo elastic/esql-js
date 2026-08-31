@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input is a valid constant time duration expression.',
   },
+  markdown: '\n### TO TIMEDURATION\nConverts an input value into a `time_duration` value.\n\n```esql\nROW x = "2024-01-01"::datetime\n| EVAL y = x + "3 hours"::time_duration, z = x - TO_TIMEDURATION("3 hours");\n```\n',
 };
 
 export default docs;

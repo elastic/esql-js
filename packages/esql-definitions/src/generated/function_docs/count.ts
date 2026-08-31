@@ -28,6 +28,7 @@ const docs: DefinitionDocs = {
     field: 'Expression that outputs values to be counted. If omitted, equivalent to `COUNT(*)` (the number of rows).',
     bucket: 'Range of histogram values to count.',
   },
+  markdown: '\n### COUNT\nReturns the total number (count) of input values.\n\n```esql\nFROM employees\n| STATS COUNT(height)\n```\n',
 };
 
 export default docs;

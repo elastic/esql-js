@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     str: 'String expression. If `null`, the function returns `null`.',
     suffix: 'String expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ENDS WITH\nReturns a boolean that indicates whether a keyword string ends with another string.\n\n```esql\nFROM employees\n| KEEP last_name\n| EVAL ln_E = ENDS_WITH(last_name, "d")\n```\n',
 };
 
 export default docs;

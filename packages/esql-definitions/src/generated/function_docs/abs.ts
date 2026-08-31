@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ABS\nReturns the absolute value.\n\n```esql\nROW number = -1.0\n| EVAL abs_number = ABS(number)\n```\n',
 };
 
 export default docs;

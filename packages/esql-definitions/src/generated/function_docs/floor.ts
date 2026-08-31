@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### FLOOR\nRound a number down to the nearest integer.\n\nNote: This is a noop for `long` (including unsigned) and `integer`.\nFor `double` this picks the closest `double` value to the integer\nsimilar to [Math.floor](https://docs.oracle.com/en/java/javase/11/docs/api/java.base/java/lang/Math.html#floor(double)).\n\n```esql\nROW a=1.8\n| EVAL a=FLOOR(a)\n```\n',
 };
 
 export default docs;

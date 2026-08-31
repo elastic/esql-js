@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### CBRT\nReturns the cube root of a number. The input can be any numeric value, the return value is always a double.\nCube roots of infinities are null.\n\n```esql\nROW d = 1000.0\n| EVAL c = CBRT(d)\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'The input to chunk. The input can be a single-valued or multi-valued field. In the case of a multi-valued argument, each value is chunked separately.',
     chunking_settings: 'Options to customize chunking behavior. Defaults to {"strategy":"sentence","max_chunk_size":300,"sentence_overlap":0}.',
   },
+  markdown: '\n### CHUNK\nUse `CHUNK` to split a text field into smaller chunks.\n\n```esql\nROW result = CHUNK("It was the best of times, it was the worst of times, it was the age of wisdom, it was the age of foolishness, it was the epoch of belief.", {"strategy": "word", "max_chunk_size": 10, "overlap": 1})\n| MV_EXPAND result\n```\n',
 };
 
 export default docs;

@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ASINH\nReturns the [inverse hyperbolic sine](https://en.wikipedia.org/wiki/Inverse_trigonometric_functions) of a number.\n\n```esql\nROW a=1.8\n| EVAL asinh=ASINH(a)\n```\n',
 };
 
 export default docs;

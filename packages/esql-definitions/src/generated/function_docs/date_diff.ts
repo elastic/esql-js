@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     startTimestamp: 'A string representing a start timestamp',
     endTimestamp: 'A string representing an end timestamp',
   },
+  markdown: '\n### DATE DIFF\nSubtracts the `startTimestamp` from the `endTimestamp` and returns the difference in multiples of `unit`.\nIf `startTimestamp` is later than the `endTimestamp`, negative values are returned.\n\n```esql\nROW date1 = TO_DATETIME("2023-12-02T11:00:00.000Z"),\n    date2 = TO_DATETIME("2023-12-02T11:00:00.001Z")\n| EVAL dd_ms = DATE_DIFF("microseconds", date1, date2)\n```\n',
 };
 
 export default docs;

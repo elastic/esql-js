@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     str: 'String expression. If `null`, the function returns `null`. The input can be a single-valued column or expression, or a multi-valued column or expression. ',
   },
+  markdown: '\n### TO UPPER\nReturns a new string representing the input string converted to upper case.\n\n```esql\nROW message = "Some Text"\n| EVAL message_upper = TO_UPPER(message)\n```\n',
 };
 
 export default docs;

@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     datePattern: 'The date format. Refer to the {javadoc14}/java.base/java/time/format/DateTimeFormatter.html[`DateTimeFormatter` documentation] for the syntax. If `null`, the function returns `null`.',
     options: '(Optional) Additional options for date parsing, specifying time zone and locale as <<esql-function-named-params,function named parameters>>.',
   },
+  markdown: '\n### DATE PARSE\nReturns a date by parsing the second argument using the format specified in the first argument.\n\n```esql\nROW date_string = "2022-05-06"\n| EVAL date = DATE_PARSE("yyyy-MM-dd", date_string)\n```\n',
 };
 
 export default docs;

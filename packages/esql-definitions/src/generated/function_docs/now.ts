@@ -17,6 +17,7 @@ const docs: DefinitionDocs = {
     'ROW current_date = NOW()',
     'FROM sample_data\n| WHERE @timestamp > NOW() - 1 hour',
   ],
+  markdown: '\n### NOW\nReturns current date and time.\n\n```esql\nROW current_date = NOW()\n```\n',
 };
 
 export default docs;

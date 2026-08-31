@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the count over time',
   },
+  markdown: '\n### COUNT OVER TIME\nCalculates the count over time value of a field.\n\n```esql\nTS k8s\n| STATS count=COUNT(COUNT_OVER_TIME(network.cost))\n  BY cluster, time_bucket = BUCKET(@timestamp,1minute)\n```\n',
 };
 
 export default docs;

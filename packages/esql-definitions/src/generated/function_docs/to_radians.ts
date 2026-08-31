@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO RADIANS\nConverts a number in [degrees](https://en.wikipedia.org/wiki/Degree_(angle)) to [radians](https://en.wikipedia.org/wiki/Radian).\n\n```esql\nROW deg = [90.0, 180.0, 270.0]\n| EVAL rad = TO_RADIANS(deg)\n```\n',
 };
 
 export default docs;

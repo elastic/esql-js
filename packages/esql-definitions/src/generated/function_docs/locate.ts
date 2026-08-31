@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     substring: 'A substring to locate in the input string',
     start: 'The start index',
   },
+  markdown: '\n### LOCATE\nReturns an integer that indicates the position of a keyword substring within another string.\nReturns `0` if the substring cannot be found.\nNote that string positions start from `1`.\n\n```esql\nROW a = "hello"\n| EVAL a_ll = LOCATE(a, "ll")\n```\n',
 };
 
 export default docs;

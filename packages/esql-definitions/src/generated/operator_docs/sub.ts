@@ -17,6 +17,7 @@ const docs: DefinitionDocs = {
     lhs: 'A numeric value, dense_vector or a date time value.',
     rhs: 'A numeric value, dense_vector or a date time value.',
   },
+  markdown: '\n### SUBTRACT `-`\nSubtract one value from another. In case of numeric fields, if either field is [multivalued](https://www.elastic.co/docs/reference/query-languages/esql/esql-multivalued-fields)\nthen the result is `null`. For dense_vector fields, both arguments should be dense_vectors. Inequal vector dimensions generate\nnull result.\n\n',
 };
 
 export default docs;

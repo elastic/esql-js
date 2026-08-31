@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Number greater than or equal to 1. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ACOSH\nReturns the [inverse hyperbolic cosine](https://en.wikipedia.org/wiki/Inverse_trigonometric_functions) of a number.\n\n```esql\nROW a=1.8\n| EVAL acosh=ACOSH(a)\n```\n',
 };
 
 export default docs;

@@ -16,6 +16,7 @@ const docs: DefinitionDocs = {
   examples: [
     'ROW ver = CONCAT(("0"::INT + 1)::STRING, ".2.3")::VERSION',
   ],
+  markdown: '\n### CAST `::`\nThe `::` operator provides a convenient alternative syntax to the TO_<type> [conversion functions](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/type-conversion-functions).\n\n```esql\nROW ver = CONCAT(("0"::INT + 1)::STRING, ".2.3")::VERSION\n```\n',
 };
 
 export default docs;

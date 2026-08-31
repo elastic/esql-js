@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
   params: {
     field: '',
   },
+  markdown: '\n### MIN\nThe minimum value of a field.\n\n```esql\nFROM employees\n| STATS MIN(languages)\n```\n',
 };
 
 export default docs;

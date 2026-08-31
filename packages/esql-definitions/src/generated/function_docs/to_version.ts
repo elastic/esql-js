@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO VERSION\nConverts an input string to a version value.\n\n```esql\nROW v = TO_VERSION("1.2.3")\n```\n',
 };
 
 export default docs;

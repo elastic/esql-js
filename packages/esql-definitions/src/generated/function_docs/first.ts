@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'The search field',
     sortField: 'The sort field',
   },
+  markdown: '\n### FIRST\nThis function calculates the earliest occurrence of the search field\n(the first parameter), where sorting order is determined by the sort\nfield (the second parameter). This sorting order is always ascending\nand null values always sort last. Both fields support null,\nsingle-valued, and multi-valued input. If the earliest sort field\nvalue appears in multiple documents, this function is allowed to\nreturn any corresponding search field value.\n\n```esql\n        @timestamp        |  name   | number\n"2025-11-25T00:00:00.000Z | alpha   | 1"\n"2025-11-25T00:00:01.000Z | alpha   | 2"\n"2025-11-25T00:00:02.000Z | bravo   | null"\n"2025-11-25T00:00:03.000Z | alpha   | 4"\n"2025-11-25T00:00:04.000Z | bravo   | 5"\n"2025-11-25T00:00:05.000Z | charlie | [6, 7, 8]"\n"2025-11-25T00:00:06.000Z | delta   | null"\n\nFrom dataset\n| STATS first_val = FIRST(number, @timestamp)\n```\n',
 };
 
 export default docs;

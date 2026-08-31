@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     precision: 'Precision threshold. Refer to <<esql-agg-count-distinct-approximate>>. The maximum supported value is 40000. Thresholds above this number will have the same effect as a threshold of 40000. The default value is 3000.',
   },
+  markdown: '\n### COUNT DISTINCT OVER TIME\nCalculates the count of distinct values over time for a field.\n\n```esql\nTS k8s\n| STATS distincts=COUNT_DISTINCT(COUNT_DISTINCT_OVER_TIME(network.cost)),\n        distincts_imprecise=COUNT_DISTINCT(COUNT_DISTINCT_OVER_TIME(network.cost, 100))\n  BY cluster, time_bucket = TBUCKET(1minute)\n```\n',
 };
 
 export default docs;

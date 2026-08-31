@@ -17,6 +17,7 @@ const docs: DefinitionDocs = {
     field: 'An expression.',
     inlist: 'A list of items.',
   },
+  markdown: '\n### NOT IN\nThe `NOT IN` operator allows testing whether a field or expression does *not* equal any element in a list of literals, fields or expressions.\n',
 };
 
 export default docs;

@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO GEOSHAPE\nConverts an input value to a `geo_shape` value.\nA string will only be successfully converted if it respects the\n[WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) format.\n\n```esql\nROW wkt = "POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))"\n| EVAL geom = TO_GEOSHAPE(wkt)\n```\n',
 };
 
 export default docs;

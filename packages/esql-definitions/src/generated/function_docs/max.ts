@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
   params: {
     field: '',
   },
+  markdown: '\n### MAX\nThe maximum value of a field.\n\n```esql\nFROM employees\n| STATS MAX(languages)\n```\n',
 };
 
 export default docs;

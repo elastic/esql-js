@@ -16,6 +16,7 @@ const docs: DefinitionDocs = {
   examples: [
     'ROW PI()',
   ],
+  markdown: '\n### PI\nReturns [Pi](https://en.wikipedia.org/wiki/Pi), the ratio of a circle’s circumference to its diameter.\n\n```esql\nROW PI()\n```\n',
 };
 
 export default docs;

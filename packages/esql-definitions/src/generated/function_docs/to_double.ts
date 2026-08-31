@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO DOUBLE\nConverts an input value to a double value. If the input parameter is of a date type,\nits value will be interpreted as milliseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time),\nconverted to double. Boolean `true` will be converted to double `1.0`, `false` to `0.0`.\n\n```esql\nROW str1 = "5.20128E11", str2 = "foo"\n| EVAL dbl = TO_DOUBLE("520128000000"), dbl1 = TO_DOUBLE(str1), dbl2 = TO_DOUBLE(str2)\n```\n',
 };
 
 export default docs;

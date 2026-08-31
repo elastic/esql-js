@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Number of spaces in result.',
   },
+  markdown: '\n### SPACE\nReturns a string made of `number` spaces.\n\n```esql\nROW message = CONCAT("Hello", SPACE(1), "World!");\n```\n',
 };
 
 export default docs;

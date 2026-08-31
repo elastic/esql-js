@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO DATETIME\nConverts an input value to a date value.\nA string will only be successfully converted if it’s respecting the format `yyyy-MM-dd\'T\'HH:mm:ss.SSS\'Z\'`.\nTo convert dates in other formats, use [`DATE_PARSE`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/date-time-functions/date_parse).\n\nNote: Note that when converting from nanosecond resolution to millisecond resolution with this function, the nanosecond date is truncated, not rounded.\n\n```esql\nROW string = ["1953-09-02T00:00:00.000Z", "1964-06-02T00:00:00.000Z", "1964-06-02 00:00:00"]\n| EVAL datetime = TO_DATETIME(string)\n```\n',
 };
 
 export default docs;

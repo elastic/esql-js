@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     range: 'Range expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### RANGE MAX\nReturns the maximum (end) value of a range. For a range [x, y), it returns y.\n\n```esql\nFROM decades\n| WHERE decade == 1900\n| EVAL max_bound = RANGE_MAX(date_range)\n| KEEP date_range, max_bound\n```\n',
 };
 
 export default docs;

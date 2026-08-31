@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     geomA: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
     geomB: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. Must share the same coordinate reference system as the first parameter. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST DIFFERENCE\nReturns the part of `geomA` that does not intersect with `geomB`. This is equivalent to subtracting `geomB` from `geomA`. Both geometries must share the same coordinate reference system.\n\n```esql\nROW a = TO_GEOSHAPE("POLYGON ((0 0, 3 0, 3 3, 0 3, 0 0))"),\n    b = TO_GEOSHAPE("POLYGON ((1 1, 4 1, 4 4, 1 4, 1 1))")\n| EVAL diff = ST_DIFFERENCE(a, b)\n| KEEP diff\n```\n',
 };
 
 export default docs;

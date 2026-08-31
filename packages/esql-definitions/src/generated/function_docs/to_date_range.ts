@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO DATE RANGE\nConverts an input value to a `date_range` value.\nStrings are parsed as a date range in the format `start..end`, where `start` and `end` are dates in ISO format. The range is half-open `[start, end)`.\n\n```esql\nROW str = "2020-01-01T00:00:00.000Z..2021-01-01T00:00:00.000Z"\n| EVAL range = TO_DATE_RANGE(str)\n```\n',
 };
 
 export default docs;

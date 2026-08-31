@@ -23,6 +23,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Expression that outputs values to calculate the median of.',
   },
+  markdown: '\n### MEDIAN\nThe value that is greater than half of all values and less than half of all values, also known as the 50% [`PERCENTILE`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/aggregation-functions/percentile).\n\nNote: Like [`PERCENTILE`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/aggregation-functions/percentile), `MEDIAN` is [usually approximate](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/aggregation-functions/percentile#esql-percentile-approximate).\n\n```esql\nFROM employees\n| STATS MEDIAN(salary), PERCENTILE(salary, 50)\n```\n',
 };
 
 export default docs;

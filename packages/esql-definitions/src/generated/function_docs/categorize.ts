@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Expression to categorize',
   },
+  markdown: '\n### CATEGORIZE\nGroups text messages into categories of similarly formatted text values.\n\n```esql\nFROM sample_data\n| STATS count=COUNT() BY category=CATEGORIZE(message)\n```\n',
 };
 
 export default docs;

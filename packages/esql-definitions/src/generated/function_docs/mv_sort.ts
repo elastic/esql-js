@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'Expression that can be null, a single value, or multiple values. If `null`, the function returns `null`.',
     order: 'Sort order. The valid options are ASC and DESC, the default is ASC.',
   },
+  markdown: '\n### MV SORT\nSorts a multivalued field in lexicographical order.\n\n```esql\nROW a = [4, 2, -3, 2]\n| EVAL sa = mv_sort(a), sd = mv_sort(a, "DESC")\n```\n',
 };
 
 export default docs;

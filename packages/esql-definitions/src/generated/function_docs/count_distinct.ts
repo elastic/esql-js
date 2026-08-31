@@ -23,6 +23,7 @@ const docs: DefinitionDocs = {
     field: 'Column or literal for which to count the number of distinct values.',
     precision: 'Precision threshold. Refer to <<esql-agg-count-distinct-approximate>>. The maximum supported value is 40000. Thresholds above this number will have the same effect as a threshold of 40000. The default value is 3000.',
   },
+  markdown: '\n### COUNT DISTINCT\nReturns the approximate number of distinct values.\n\nNote: [Counts are approximate](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/aggregation-functions/count_distinct#esql-agg-count-distinct-approximate).\n\n```esql\nFROM hosts\n| STATS COUNT_DISTINCT(ip0), COUNT_DISTINCT(ip1)\n```\n',
 };
 
 export default docs;

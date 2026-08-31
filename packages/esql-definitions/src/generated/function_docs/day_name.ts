@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     date: 'Date expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### DAY NAME\nReturns the name of the weekday for date based on the configured Locale.\n\n```esql\nROW dt = to_datetime("1953-09-02T00:00:00.000Z")\n| EVAL weekday = DAY_NAME(dt);\n```\n',
 };
 
 export default docs;

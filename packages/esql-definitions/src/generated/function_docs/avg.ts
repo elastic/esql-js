@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Expression that outputs values to average.',
   },
+  markdown: '\n### AVG\nThe average of a numeric field.\n\n```esql\nFROM employees\n| STATS AVG(height)\n```\n',
 };
 
 export default docs;

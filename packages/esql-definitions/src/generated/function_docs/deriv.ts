@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the derivative over time',
   },
+  markdown: '\n### DERIV\nCalculates the derivative over time of a numeric field using linear regression.\n\n```esql\nTS datenanos-k8s\n| WHERE pod == "three"\n| STATS max_deriv = MAX(DERIV(network.cost)) BY time_bucket = BUCKET(@timestamp,5minute), pod\n```\n',
 };
 
 export default docs;

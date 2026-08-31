@@ -24,6 +24,7 @@ const docs: DefinitionDocs = {
     field1: 'Expression that can be null, a single value, or multiple values. If null, the function returns null.',
     field2: 'Expression that can be null, a single value, or multiple values. If null, the function returns null.',
   },
+  markdown: '\n### MV INTERSECTION\nReturns the values that appear in both input fields. Returns `null` if either field is null or if no values match.\n\n```esql\nROW a = [1, 2, 3, 4, 5], b = [2, 3, 4, 5, 6]\n| EVAL finalValue = MV_INTERSECTION(a, b)\n| KEEP finalValue\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     str: 'String expression. If `null`, the function returns `null`. The input can be a single-valued column or expression, or a multi-valued column or expression. ',
   },
+  markdown: '\n### TO LOWER\nReturns a new string representing the input string converted to lower case.\n\n```esql\nROW message = "Some Text"\n| EVAL message_lower = TO_LOWER(message)\n```\n',
 };
 
 export default docs;

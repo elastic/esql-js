@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     from_unit: 'The enclosing container unit.',
     date: 'Date expression.',
   },
+  markdown: '\n### DATE UNIT COUNT\nCounts how many `to_unit` values are contained in a single `from_unit` period for `date`.\n\n```esql\nROW dt = to_datetime("2024-02-15T00:00:00.000Z")\n| EVAL days = DATE_UNIT_COUNT("day", "month", dt)\n```\n',
 };
 
 export default docs;

@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### SQRT\nReturns the square root of a number. The input can be any numeric value, the return value is always a double.\nSquare roots of negative numbers and infinities are null.\n\n```esql\nROW d = 100.0\n| EVAL s = SQRT(d)\n```\n',
 };
 
 export default docs;

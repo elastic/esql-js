@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     string: 'String expression: input string to check against. If `null`, the function returns `null`.',
     substring: 'String expression: A substring to find in the input string. If `null`, the function returns `null`.',
   },
+  markdown: '\n### CONTAINS\nReturns a boolean that indicates whether a keyword substring is within another string.\nReturns `null` if either parameter is null.\n\n```esql\nROW a = "hello"\n| EVAL has_ll = CONTAINS(a, "ll")\n```\n',
 };
 
 export default docs;

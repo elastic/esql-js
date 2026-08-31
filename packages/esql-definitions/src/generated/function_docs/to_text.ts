@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO TEXT\nConverts an input value into text.\n\n```esql\nROW a = ["this", "is", "a", "text"]\n| EVAL text_a = TO_TEXT(a)\n```\n',
 };
 
 export default docs;

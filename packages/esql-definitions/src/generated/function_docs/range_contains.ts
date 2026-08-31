@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     left: 'Container range.',
     right: 'Value to test (point or range).',
   },
+  markdown: '\n### RANGE CONTAINS\nReturns true if the first argument\n[contains](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-range-query) the second argument.\nThis is the inverse of [RANGE_WITHIN](#esql-range_within); equivalent to `RANGE_WITHIN(b, a)`.\nSupports (date_range, date) and (date_range, date_range). The first argument must be a date_range.\n\n```esql\nFROM employees\n| WHERE RANGE_CONTAINS(TO_DATE_RANGE("1985-02-01..1985-03-01"), hire_date)\n| KEEP emp_no, hire_date\n| SORT emp_no\n```\n',
 };
 
 export default docs;

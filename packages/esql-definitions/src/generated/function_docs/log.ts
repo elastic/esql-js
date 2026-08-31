@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     number: 'Numeric expression. If `null`, the function returns `null`.',
     base: 'Base of logarithm. If `null`, the function returns `null`. If not provided, this function returns the natural logarithm (base e) of a value.',
   },
+  markdown: '\n### LOG\nReturns the logarithm of a value to a base. The input can be any numeric value, the return value is always a double.\n\nLogs of zero, negative numbers, and base of one return `null` as well as a warning.\n\n```esql\nROW base = 2.0, value = 8.0\n| EVAL s = LOG(base, value)\n```\n',
 };
 
 export default docs;

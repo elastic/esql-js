@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     algorithm: 'Hash algorithm to use.',
     input: 'Input to hash.',
   },
+  markdown: '\n### HASH\nComputes the hash of the input using various algorithms such as MD5, SHA, SHA-224, SHA-256, SHA-384, SHA-512.\n\n```esql\nFROM sample_data\n| WHERE message != "Connection error"\n| EVAL md5 = hash("md5", message), sha256 = hash("sha256", message)\n| KEEP message, md5, sha256\n```\n',
 };
 
 export default docs;

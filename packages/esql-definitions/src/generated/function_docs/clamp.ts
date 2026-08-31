@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     min: 'The min value to clamp data into.',
     max: 'The max value to clamp data into.',
   },
+  markdown: '\n### CLAMP\nLimits (or clamps) the values of all samples to have a lower limit of min and an upper limit of max.\n\n```esql\nTS k8s\n| EVAL full_clamped_cost = clamp(network.cost, clamp_max(network.bytes_in, 5), network.bytes_in / 100)\n| KEEP full_clamped_cost, @timestamp\n```\n',
 };
 
 export default docs;

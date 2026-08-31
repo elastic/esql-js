@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### SIGNUM\nReturns the sign of the given number.\nIt returns `-1` for negative numbers, `0` for `0` and `1` for positive numbers.\n\n```esql\nROW d = 100.0\n| EVAL s = SIGNUM(d)\n```\n',
 };
 
 export default docs;

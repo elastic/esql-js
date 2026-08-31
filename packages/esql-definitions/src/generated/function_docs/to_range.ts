@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     from: 'Inclusive lower bound of the range (`[from, to)`). If `null`, the function returns `null`.',
     to: 'Exclusive upper bound of the range (`[from, to)`). If `null`, the function returns `null`.',
   },
+  markdown: '\n### TO RANGE\nConstructs a range from two boundary values. The first argument is the inclusive lower bound; the second is the exclusive upper bound, following the half-open `[from, to)` convention used for all range types in ES|QL. Accepts `datetime` arguments and returns a `date_range`, or accepts `double` arguments and returns a `double_range`.\n\n```esql\nROW from_dt = TO_DATETIME("2000-01-01T00:00:00.000Z"), to_dt = TO_DATETIME("2010-01-01T00:00:00.000Z")\n| EVAL r = TO_RANGE(from_dt, to_dt)\n| KEEP r\n```\n',
 };
 
 export default docs;

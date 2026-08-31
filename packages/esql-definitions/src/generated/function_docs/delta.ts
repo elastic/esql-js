@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the delta over time',
   },
+  markdown: '\n### DELTA\nCalculates the absolute change of a gauge field in a time window.\n\n```esql\nTS k8s\n| WHERE pod == "one"\n| STATS tx = SUM(DELTA(network.bytes_in)) BY cluster, time_bucket = TBUCKET(10minute)\n```\n',
 };
 
 export default docs;

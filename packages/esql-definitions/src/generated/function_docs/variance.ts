@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: '',
   },
+  markdown: '\n### VARIANCE\nThe population variance of a numeric field.\n\n```esql\nFROM employees\n| STATS var_height = VARIANCE(height)\n```\n',
 };
 
 export default docs;

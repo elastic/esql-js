@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Expression that outputs values to be checked for absence.',
   },
+  markdown: '\n### ABSENT\nReturns true if the input expression yields no non-null values within the current aggregation context. Otherwise it returns false.\n\n```esql\nFROM employees\n| WHERE emp_no == 10020\n| STATS is_absent = ABSENT(languages)\n```\n',
 };
 
 export default docs;

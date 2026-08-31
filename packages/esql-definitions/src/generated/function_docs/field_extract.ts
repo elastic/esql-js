@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'The root of a `flattened` mapping field. If `null`, the function returns `null`.',
     path: 'Literal name of the flattened sub-field to extract (e.g. `"host.name"`). Brackets and array indices are not supported. If `null`, the function returns `null`.',
   },
+  markdown: '\n### FIELD EXTRACT\nExtracts the value of a single sub-field from a [`flattened` field](https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/flattened) root as `keyword`.\n\n```esql\nFROM flattened_otel_logs\n| WHERE @timestamp == "2020-01-01T00:02:48.461Z"\n| EVAL hn = field_extract(resource.attributes, "host.name")\n| KEEP hn\n```\n',
 };
 
 export default docs;

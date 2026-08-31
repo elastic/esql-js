@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     field: 'Field or expression that the query will target.',
     query: 'Value to find in the provided field or expression.',
   },
+  markdown: '\n### MATCH OPERATOR `:`\nUse the match operator (`:`) to perform a [match query](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-match-query) on the specified field or expression.\nUsing `:` is equivalent to using the `match` query in the Elasticsearch Query DSL.\n\nThe match operator is equivalent to the [match function](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/search-functions/match).\n\nFor using the function syntax, or adding [match query parameters](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-match-query#match-field-params), you can use the\n[match function](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/search-functions/match).\n\n`:` returns true if the provided query matches the row.\n\n```esql\nFROM books\n| WHERE author:"Faulkner"\n```\n',
 };
 
 export default docs;

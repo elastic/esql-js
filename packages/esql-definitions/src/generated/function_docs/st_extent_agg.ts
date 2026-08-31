@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: '',
   },
+  markdown: '\n### ST EXTENT AGG\nCalculate the spatial extent over a field with geometry type. Returns a bounding box for all values of the field.\n\n```esql\nFROM airports\n| WHERE country == "India"\n| STATS extent = ST_EXTENT_AGG(location)\n```\n',
 };
 
 export default docs;

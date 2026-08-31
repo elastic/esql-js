@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
     options: '(Optional) Additional options.',
   },
+  markdown: '\n### TO IP\nConverts an input string to an IP value.\n\n```esql\nROW str1 = "1.1.1.1", str2 = "foo"\n| EVAL ip1 = TO_IP(str1), ip2 = TO_IP(str2)\n| WHERE CIDR_MATCH(ip1, "1.0.0.0/8")\n```\n',
 };
 
 export default docs;

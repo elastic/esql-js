@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'field to clamp.',
     min: 'The min value to clamp data into.',
   },
+  markdown: '\n### CLAMP MIN\nLimits (or clamps) all input sample values to a lower bound of min. Any value below min is set to min.\n\n```esql\nFROM k8s\n| STATS full_clamped_cost=sum(clamp(network.cost, 1, 2)), clamped_cost=sum(clamp_max(network.cost, 1)), clamped_min_cost=sum(clamp_min(network.cost, 10)) BY time_bucket = bucket(@timestamp,1minute)\n```\n',
 };
 
 export default docs;

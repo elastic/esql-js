@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     ip: 'IP address of type `ip` (both IPv4 and IPv6 are supported).',
     blockX: 'CIDR block to test the IP against.',
   },
+  markdown: '\n### CIDR MATCH\nReturns true if the provided IP is contained in one of the provided CIDR blocks.\n\n```esql\nFROM hosts\n| WHERE CIDR_MATCH(ip1, "127.0.0.2/32", "127.0.0.3/32")\n| KEEP card, host, ip0, ip1\n```\n',
 };
 
 export default docs;

@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
     base: '(Optional) Radix or base used to convert the input value.When a base is specified the input type must be `keyword` or `text`.',
   },
+  markdown: '\n### TO LONG\nConverts the input value to a long.\nIf the input parameter is of a date type, its value will be interpreted as milliseconds\nsince the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time), converted to long.\nBoolean `true` will be converted to long `1`, `false` to `0`.\n\n```esql\nROW str1 = "2147483648", str2 = "2147483648.2", str3 = "foo"\n| EVAL long1 = TO_LONG(str1), long2 = TO_LONG(str2), long3 = TO_LONG(str3)\n```\n',
 };
 
 export default docs;

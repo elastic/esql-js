@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     d: 'Numeric expression for the multiplier. If `null`, the function returns `null`.',
     scaleFactor: 'Numeric expression for the scale factor. If `null`, the function returns `null`.',
   },
+  markdown: '\n### SCALB\nReturns the result of `d * 2 ^ scaleFactor`,\nSimilar to Java\'s `scalb` function. Result is rounded as if\nperformed by a single correctly rounded floating-point multiply\nto a member of the double value set.\n\n```esql\nrow x = 3.0, y = 10 | eval z = scalb(x, y)\n```\n',
 };
 
 export default docs;

@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     scale: 'Distance from the origin where the function returns the decay value.',
     options: '(Optional) Additional options such as `decay`, `offset` and `type`.',
   },
+  markdown: '\n### DECAY\nCalculates a relevance score that decays based on the distance of a numeric, spatial or date type value from a target origin, using configurable decay functions.\n\n```esql\nFROM employees\n| EVAL decay_result = decay(salary, 0, 100000, {"offset": 5, "decay": 0.5, "type": "linear"})\n| SORT decay_result DESC\n```\n',
 };
 
 export default docs;

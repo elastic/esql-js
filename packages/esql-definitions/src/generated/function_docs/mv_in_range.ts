@@ -26,6 +26,7 @@ const docs: DefinitionDocs = {
     upper: 'Upper bound, of the same type as `field`. If null or multivalued, the function returns `false`.',
     options: '(Optional) Range boundary options.',
   },
+  markdown: '\n### MV IN RANGE\nReturns `true` if at least one value of `field` is within the range `[lower, upper]`, using the natural order of the type. A null or empty field returns `false`, as does a null bound. Both bounds are inclusive by default; set `include_lower` or `include_upper` to `false` in the optional `options` map to make either bound exclusive, covering all four interval forms. Works on any ordered type: numbers, dates, IPs, versions, and strings (compared by their UTF-8 bytes).\n\n```esql\nROW values = [1, 5, 10]\n| EVAL in_range = mv_in_range(values, 4, 6)\n```\n',
 };
 
 export default docs;

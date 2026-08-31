@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     magnitude: 'The expression providing the magnitude of the result. Must be a numeric type.',
     sign: 'The expression providing the sign of the result. Must be a numeric type.',
   },
+  markdown: '\n### COPY SIGN\nReturns a value with the magnitude of the first argument and the sign of the second argument.\nThis function is similar to Java\'s Math.copySign(double magnitude, double sign) which is\nsimilar to `copysign` from [IEEE 754](https://en.wikipedia.org/wiki/IEEE_754).\n\n```esql\nFROM employees\n| EVAL cs1 = COPY_SIGN(salary, LEAST(salary_change))\n```\n',
 };
 
 export default docs;

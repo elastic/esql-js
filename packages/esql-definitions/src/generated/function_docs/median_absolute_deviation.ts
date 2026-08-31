@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
   params: {
     number: '',
   },
+  markdown: '\n### MEDIAN ABSOLUTE DEVIATION\nReturns the median absolute deviation, a measure of variability. It is a robust statistic, meaning that it is useful for describing data that may have outliers, or may not be normally distributed. For such data it can be more descriptive than standard deviation.\n\nIt is calculated as the median of each data point’s deviation from the median of the entire sample. That is, for a random variable `X`, the median absolute deviation is `median(|median(X) - X|)`.\n\nNote: Like [`PERCENTILE`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/aggregation-functions/percentile), `MEDIAN_ABSOLUTE_DEVIATION` is [usually approximate](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/aggregation-functions/percentile#esql-percentile-approximate).\n\n```esql\nFROM employees\n| STATS MEDIAN(salary), MEDIAN_ABSOLUTE_DEVIATION(salary)\n```\n',
 };
 
 export default docs;

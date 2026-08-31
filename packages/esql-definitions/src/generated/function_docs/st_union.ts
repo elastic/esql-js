@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     geomA: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
     geomB: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. Must share the same coordinate reference system as the first parameter. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST UNION\nReturns the geometric union of two geometries. The result is a geometry that covers all points covered by either input geometry. Both geometries must share the same coordinate reference system.\n\n```esql\nROW a = TO_GEOSHAPE("POLYGON ((0 0, 2 0, 2 2, 0 2, 0 0))"),\n    b = TO_GEOSHAPE("POLYGON ((2 0, 4 0, 4 2, 2 2, 2 0))")\n| EVAL unioned = ST_UNION(a, b)\n| KEEP unioned\n```\n',
 };
 
 export default docs;

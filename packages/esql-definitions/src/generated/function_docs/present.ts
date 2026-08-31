@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Expression that outputs values to be checked for presence.',
   },
+  markdown: '\n### PRESENT\nReturns true if the input expression yields any non-null values within the current aggregation context. Otherwise it returns false.\n\n```esql\nFROM employees\n| STATS is_present = PRESENT(languages)\n```\n',
 };
 
 export default docs;

@@ -23,6 +23,7 @@ const docs: DefinitionDocs = {
     number: '',
     percentile: '',
   },
+  markdown: '\n### PERCENTILE\nReturns the value at which a certain percentage of observed values occur. For example, the 95th percentile is the value which is greater than 95% of the observed values and the 50th percentile is the `MEDIAN`.\n\n```esql\nFROM employees\n| STATS p0 = PERCENTILE(salary,  0)\n     , p50 = PERCENTILE(salary, 50)\n     , p99 = PERCENTILE(salary, 99)\n```\n',
 };
 
 export default docs;

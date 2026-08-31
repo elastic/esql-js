@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the latest value for',
     window: 'the time window over which to find the latest value',
   },
+  markdown: '\n### LAST OVER TIME\nCalculates the latest value of a field, where recency determined by the `@timestamp` field.\n\n```esql\nTS k8s\n| STATS max_cost=MAX(LAST_OVER_TIME(network.cost)) BY cluster, time_bucket = TBUCKET(1minute)\n```\n',
 };
 
 export default docs;

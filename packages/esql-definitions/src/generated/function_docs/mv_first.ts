@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV FIRST\nConverts a multivalued expression into a single valued column containing the\nfirst value. This is most useful when reading from a function that emits\nmultivalued columns in a known order like [`SPLIT`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/string-functions/split).\n\n```esql\nROW a="foo;bar;baz"\n| EVAL first_a = MV_FIRST(SPLIT(a, ";"))\n```\n',
 };
 
 export default docs;

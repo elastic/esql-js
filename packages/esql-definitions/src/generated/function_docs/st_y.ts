@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     point: 'Expression of type `geo_point` or `cartesian_point`. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST Y\nExtracts the `y` coordinate from the supplied point.\nIf the point is of type `geo_point` this is equivalent to extracting the `latitude` value.\n\n```esql\nROW point = TO_GEOPOINT("POINT(42.97109629958868 14.7552534006536)")\n| EVAL x =  ST_X(point), y = ST_Y(point)\n```\n',
 };
 
 export default docs;

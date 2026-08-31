@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     interval: 'Interval; [time span](https://www.elastic.co/docs/reference/query-languages/esql/esql-time-spans) (DATE_PERIOD or TIME_DURATION).',
     date: 'Date expression',
   },
+  markdown: '\n### DATE TRUNC\nRounds down a date to the closest interval since epoch, which starts at `0001-01-01T00:00:00Z`.\n\n```esql\nFROM employees\n| KEEP first_name, last_name, hire_date\n| EVAL year_hired = DATE_TRUNC(1 year, hire_date)\n```\n',
 };
 
 export default docs;

@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Number between -1 and 1. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ASIN\nReturns the [arcsine](https://en.wikipedia.org/wiki/Inverse_trigonometric_functions) of the input\nnumeric expression as an angle, expressed in radians.\n\n```esql\nROW a=.9\n| EVAL asin=ASIN(a)\n```\n',
 };
 
 export default docs;

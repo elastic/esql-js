@@ -16,6 +16,7 @@ const docs: DefinitionDocs = {
   examples: [
     'ROW TAU()',
   ],
+  markdown: '\n### TAU\nReturns the [ratio](https://tauday.com/tau-manifesto) of a circle’s circumference to its radius.\n\n```esql\nROW TAU()\n```\n',
 };
 
 export default docs;

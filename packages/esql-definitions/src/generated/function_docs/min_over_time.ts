@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the minimum',
   },
+  markdown: '\n### MIN OVER TIME\nCalculates the minimum over time value of a field.\n\n```esql\nTS k8s\n| STATS cost=SUM(MIN_OVER_TIME(network.cost)) BY cluster, time_bucket = TBUCKET(1minute)\n```\n',
 };
 
 export default docs;

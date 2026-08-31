@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     first: 'Expression to evaluate.',
     rest: 'Other expression to evaluate.',
   },
+  markdown: '\n### COALESCE\nReturns the first of its arguments that is not null. If all arguments are null, it returns `null`.\n\n```esql\nROW a=null, b="b"\n| EVAL COALESCE(a, b)\n```\n',
 };
 
 export default docs;

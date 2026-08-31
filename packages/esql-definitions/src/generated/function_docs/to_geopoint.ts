@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO GEOPOINT\nConverts an input value to a `geo_point` value.\nA string will only be successfully converted if it respects the\n[WKT Point](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) format.\n\n```esql\nROW wkt = "POINT(42.97109630194 14.7552534413725)"\n| EVAL pt = TO_GEOPOINT(wkt)\n```\n',
 };
 
 export default docs;

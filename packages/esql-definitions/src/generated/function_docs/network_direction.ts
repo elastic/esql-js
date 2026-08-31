@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     destination_ip: 'Destination IP address of type `ip` (both IPv4 and IPv6 are supported).',
     internal_networks: 'List of internal networks. Supports IPv4 and IPv6 addresses, ranges in CIDR notation, and named ranges.',
   },
+  markdown: '\n### NETWORK DIRECTION\nReturns the direction type (inbound, outbound, internal, external) given a source IP address, destination IP address, and a list of internal networks.\n\n```esql\nROW ip0 = "127.0.0.1"::ip, ip1 = "5.6.7.8"::ip\n| EVAL direction = NETWORK_DIRECTION(ip0, ip1, ["loopback", "private"])\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV MEDIAN\nConverts a multivalued field into a single valued field containing the [median](https://en.wikipedia.org/wiki/Median) value.\n\n```esql\nROW a=[3, 5, 1]\n| EVAL median_a = MV_MEDIAN(a)\n```\n',
 };
 
 export default docs;

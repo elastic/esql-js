@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'The histogram value to be converted',
   },
+  markdown: '\n### TO EXPONENTIAL HISTOGRAM\nConverts histogram-like values to an exponential histogram.\n\n```esql\nFROM histogram_standard_index\n | WHERE STARTS_WITH(instance, "hand-rolled")\n | EVAL converted = to_exponential_histogram(responseTime)\n | SORT instance\n | KEEP responseTime, converted\n;\n```\n',
 };
 
 export default docs;

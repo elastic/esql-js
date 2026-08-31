@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     number: 'Expression that can be null, a single value, or multiple values.',
     percentile: 'The percentile to calculate. Must be a number between 0 and 100. Numbers out of range will return a null instead.',
   },
+  markdown: '\n### MV PERCENTILE\nConverts a multivalued field into a single valued field containing the value at which a certain percentage of observed values occur.\n\n```esql\nROW values = [5, 5, 10, 12, 5000]\n| EVAL p50 = MV_PERCENTILE(values, 50), median = MV_MEDIAN(values)\n```\n',
 };
 
 export default docs;

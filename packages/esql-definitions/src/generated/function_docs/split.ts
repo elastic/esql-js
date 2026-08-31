@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     string: 'String expression. If `null`, the function returns `null`.',
     delim: 'Delimiter. Only single byte delimiters are currently supported.',
   },
+  markdown: '\n### SPLIT\nSplit a single valued string into multiple strings.\n\n```esql\nROW words="foo;bar;baz;qux;quux;corge"\n| EVAL word = SPLIT(words, ";")\n```\n',
 };
 
 export default docs;

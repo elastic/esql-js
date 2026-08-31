@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     input: 'Input to hash.',
   },
+  markdown: '\n### SHA1\nComputes the SHA1 hash of the input.\n\n```esql\nFROM sample_data\n| WHERE message != "Connection error"\n| EVAL sha1 = sha1(message)\n| KEEP message, sha1\n```\n',
 };
 
 export default docs;

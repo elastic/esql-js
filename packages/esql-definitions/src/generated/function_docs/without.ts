@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
   params: {
     dimension: '(Optional) One or more [time series dimension](docs-content://manage-data/data-store/data-streams/time-series-data-stream-tsds.md#time-series-dimension) fields to exclude from the time series grouping. Must be dimension fields of the index (not metrics, not regular fields). When called with no arguments, groups by all dimensions.',
   },
+  markdown: '\n### WITHOUT\nGroups by all time-series dimensions except the specified ones. When called with no arguments, groups by all dimensions.\n\n```esql\nTS k8s\n| STATS total_cost = sum(network.cost) BY WITHOUT(pod)\n| SORT total_cost\n```\n',
 };
 
 export default docs;

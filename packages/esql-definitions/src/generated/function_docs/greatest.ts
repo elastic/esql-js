@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     first: 'First of the columns to evaluate.',
     rest: 'The rest of the columns to evaluate.',
   },
+  markdown: '\n### GREATEST\nReturns the maximum value from multiple columns. This is similar to [`MV_MAX`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/mv-functions/mv_max)\nexcept it is intended to run on multiple columns at once.\n\nNote: When run on `keyword` or `text` fields, this returns the last string in alphabetical order. When run on `boolean` columns this will return `true` if any values are `true`.\n\n```esql\nROW a = 10, b = 20\n| EVAL g = GREATEST(a, b)\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     string: 'The string from which to return a substring.',
     length: 'The number of characters to return.',
   },
+  markdown: '\n### LEFT\nReturns the substring that extracts *length* chars from *string* starting from the left.\n\n```esql\nFROM employees\n| KEEP last_name\n| EVAL left = LEFT(last_name, 3)\n```\n',
 };
 
 export default docs;

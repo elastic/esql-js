@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV AVG\nConverts a multivalued field into a single valued field containing the average of all of the values.\n\n```esql\nROW a=[3, 5, 1, 6]\n| EVAL avg_a = MV_AVG(a)\n```\n',
 };
 
 export default docs;

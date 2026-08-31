@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     order: 'The order to calculate the top values. Either `asc` or `desc`, and defaults to `asc` if omitted.',
     outputField: 'The extra field that, if present, will be the output of the TOP call instead of `field`.',
   },
+  markdown: '\n### TOP\nCollects the top values for a field. Includes repeated values.\n\n```esql\nFROM employees\n| STATS top_salaries = TOP(salary, 3, "desc"), top_salary = MAX(salary)\n```\n',
 };
 
 export default docs;

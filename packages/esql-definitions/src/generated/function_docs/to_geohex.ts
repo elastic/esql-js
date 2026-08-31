@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO GEOHEX\nConverts an input value to a `geohex` value.\nA string will only be successfully converted if it respects the\n`geohex` format, as described for the\n[geohex grid aggregation](https://www.elastic.co/docs/reference/aggregations/search-aggregations-bucket-geohexgrid-aggregation).\n\n```esql\nROW string = "841f059ffffffff"\n| EVAL geohex = TO_GEOHEX(string)\n```\n',
 };
 
 export default docs;

@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     field: 'Multivalue expression to test. If null or empty, the function returns `false`.',
     pattern: 'Regular expression. Must be a constant. The pattern must match a value in full, as with `RLIKE`.',
   },
+  markdown: '\n### MV RLIKE\nReturns `true` when any value yielded by `field` matches `pattern`, using the same regular-expression syntax\nas `RLIKE`. The pattern must match a value in full, as with `RLIKE`. `RLIKE` is a single-value scalar:\napplied to a multivalue field it emits a warning and returns `null`, so this is how you match a regular\nexpression against a multivalue field. A null or empty `field` returns `false`, and because the result is\nnever null the predicate composes under `AND`/`OR`/`NOT`.\n\n```esql\nROW names = ["Anna", "Bob", "Carl"]\n| EVAL any_starts_with_a = mv_rlike(names, "A.*")\n```\n',
 };
 
 export default docs;

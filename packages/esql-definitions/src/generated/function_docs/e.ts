@@ -16,6 +16,7 @@ const docs: DefinitionDocs = {
   examples: [
     'ROW E()',
   ],
+  markdown: '\n### E\nReturns [Euler’s number](https://en.wikipedia.org/wiki/E_(mathematical_constant)).\n\n```esql\nROW E()\n```\n',
 };
 
 export default docs;

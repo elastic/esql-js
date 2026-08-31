@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     input: 'Input to hash.',
   },
+  markdown: '\n### MD5\nComputes the MD5 hash of the input (if the MD5 hash is available on the JVM).\n\n```esql\nFROM sample_data\n| WHERE message != "Connection error"\n| EVAL md5 = md5(message)\n| KEEP message, md5\n```\n',
 };
 
 export default docs;

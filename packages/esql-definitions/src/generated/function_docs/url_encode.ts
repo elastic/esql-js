@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     string: 'The URL to encode.',
   },
+  markdown: '\n### URL ENCODE\nURL-encodes the input. All characters are [percent-encoded](https://en.wikipedia.org/wiki/Percent-encoding) except for alphanumerics, `.`, `-`, `_`, and `~`. Spaces are encoded as `+`.\n\n```esql\nROW u = "https://example.com/?x=foo bar&y=baz" | EVAL u = URL_ENCODE(u)\n```\n',
 };
 
 export default docs;

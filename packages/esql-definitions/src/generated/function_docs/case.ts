@@ -24,6 +24,7 @@ const docs: DefinitionDocs = {
     trueValue: 'The expression or value that’s returned when the corresponding condition is the first to evaluate to `true`. Can be a column reference or any other expression. The default value is returned when no condition matches.',
     elseValue: 'The value that’s returned when no condition evaluates to `true`.',
   },
+  markdown: '\n### CASE\nAccepts pairs of conditions and values. The function returns the value that\nbelongs to the first condition that evaluates to `true`. Both the conditions\nand the returned values can be any expression, including column references.\n\nIf the number of arguments is odd, the last argument is the default value which\nis returned when no condition matches. If the number of arguments is even, and\nno condition matches, the function returns `null`.\n\n```esql\nFROM employees\n| EVAL type = CASE(\n    languages <= 1, "monolingual",\n    languages <= 2, "bilingual",\n     "polyglot")\n| KEEP emp_no, languages, type\n```\n',
 };
 
 export default docs;

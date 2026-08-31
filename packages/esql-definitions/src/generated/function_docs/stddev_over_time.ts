@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the standard deviation for',
     window: 'the time window over which to compute the standard deviation over time',
   },
+  markdown: '\n### STDDEV OVER TIME\nCalculates the population standard deviation over time of a numeric field.\n\n```esql\nTS k8s\n| STATS max_stddev_cost=MAX(STDDEV_OVER_TIME(network.cost)) BY cluster, time_bucket = TBUCKET(1minute)\n```\n',
 };
 
 export default docs;

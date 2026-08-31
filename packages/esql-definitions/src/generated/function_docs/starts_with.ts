@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     str: 'String expression. If `null`, the function returns `null`.',
     prefix: 'String expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### STARTS WITH\nReturns a boolean that indicates whether a keyword string starts with another string.\n\n```esql\nFROM employees\n| KEEP last_name\n| EVAL ln_S = STARTS_WITH(last_name, "B")\n```\n',
 };
 
 export default docs;

@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Numeric expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### LOG10\nReturns the logarithm of a value to base 10. The input can be any numeric value, the return value is always a double.\n\nLogs of 0 and negative numbers return `null` as well as a warning.\n\n```esql\nROW d = 1000.0\n| EVAL s = LOG10(d)\n```\n',
 };
 
 export default docs;

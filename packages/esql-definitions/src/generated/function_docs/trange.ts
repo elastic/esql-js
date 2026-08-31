@@ -24,6 +24,7 @@ const docs: DefinitionDocs = {
     start_time_or_offset: ' Offset from NOW for the single parameter mode. Start time for two parameter mode.  In two parameter mode, the start time value can be a date string, date, date_nanos or epoch milliseconds. ',
     end_time: 'Explicit end time that can be a date string, date, date_nanos or epoch milliseconds.',
   },
+  markdown: '\n### TRANGE\nFilters data for the given time range using the @timestamp attribute.\n\n```esql\nFROM k8s\n| WHERE TRANGE(1h)\n| KEEP @timestamp\n```\n',
 };
 
 export default docs;

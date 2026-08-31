@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO DOUBLE RANGE\nConverts an input value to a `double_range` value.\nStrings are parsed as a double range in the format `start..end`, where `start` and `end` are double-precision floating-point numbers. The range is half-open `[start, end)`.\n\n```esql\nROW str = "1.5..2.5"\n| EVAL range = TO_DOUBLE_RANGE(str)\n```\n',
 };
 
 export default docs;

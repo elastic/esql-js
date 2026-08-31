@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     field1: 'Expression that can be null, a single value, or multiple values.',
     field2: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV INTERSECTS\nChecks if any value yielded by the second multivalue expression is present in the values yielded by the first multivalue expression. Returns a boolean. Null values are treated as an empty set.\n\n```esql\nROW set = ["a", "b", "c"], element = "a"\n| EVAL set_intersects_element = mv_intersects(set, element)\n```\n',
 };
 
 export default docs;

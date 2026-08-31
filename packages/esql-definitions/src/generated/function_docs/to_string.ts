@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO STRING\nConverts an input value into a string.\n\n```esql\nROW a=10\n| EVAL j = TO_STRING(a)\n```\n',
 };
 
 export default docs;

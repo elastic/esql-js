@@ -23,6 +23,7 @@ const docs: DefinitionDocs = {
     start: 'Start position.',
     length: 'Length of the substring from the start position. Optional; if omitted, all positions after `start` are returned.',
   },
+  markdown: '\n### SUBSTRING\nReturns a substring of a string, specified by a start position and an optional length.\n\n```esql\nFROM employees\n| KEEP last_name\n| EVAL ln_sub = SUBSTRING(last_name, 1, 3)\n```\n',
 };
 
 export default docs;

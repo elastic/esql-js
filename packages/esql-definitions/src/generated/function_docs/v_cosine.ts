@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     left: 'first dense_vector to calculate cosine similarity',
     right: 'second dense_vector to calculate cosine similarity',
   },
+  markdown: '\n### V COSINE\nCalculates the cosine similarity between two dense_vectors.\n\n```esql\nfrom colors\n| where color != "black"\n| eval similarity = v_cosine(rgb_vector, [0, 255, 255])\n| sort similarity desc, color asc\n```\n',
 };
 
 export default docs;

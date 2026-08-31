@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO CARTESIANSHAPE\nConverts an input value to a `cartesian_shape` value.\nA string will only be successfully converted if it respects the\n[WKT](https://en.wikipedia.org/wiki/Well-known_text_representation_of_geometry) format.\n\n```esql\nROW wkt = ["POINT(4297.11 -1475.53)", "POLYGON ((3339584.72 1118889.97, 4452779.63 4865942.27, 2226389.81 4865942.27, 1113194.90 2273030.92, 3339584.72 1118889.97))"]\n| MV_EXPAND wkt\n| EVAL geom = TO_CARTESIANSHAPE(wkt)\n```\n',
 };
 
 export default docs;

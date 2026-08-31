@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     inference_id: 'Identifier of an existing inference endpoint that will generate the embeddings. The inference endpoint must have the `text_embedding` task type and should use the same model that was used to embed your indexed data.',
     options: '(Optional) Options for the inference request.',
   },
+  markdown: '\n### TEXT EMBEDDING\nGenerates dense vector embeddings from text input using a specified [inference endpoint](docs-content://explore-analyze/elastic-inference/inference-api.md). Use this function to generate query vectors for KNN searches against your vectorized data or others dense vector based operations.\n\n```esql\nFROM dense_vector_text METADATA _score\n| WHERE KNN(text_embedding_field, TEXT_EMBEDDING("be excellent to each other", "test_dense_inference"))\n```\n',
 };
 
 export default docs;

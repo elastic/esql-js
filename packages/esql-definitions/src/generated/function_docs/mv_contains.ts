@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     superset: 'Expression that can be null, a single value, or multiple values.',
     subset: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV CONTAINS\nChecks if all values yielded by the second multivalue expression are present in the values yielded by the first multivalue expression. Returns a boolean. Null values are treated as an empty set.\n\n```esql\nROW set = ["a", "b", "c"], element = "a"\n| EVAL set_contains_element = mv_contains(set, element)\n```\n',
 };
 
 export default docs;

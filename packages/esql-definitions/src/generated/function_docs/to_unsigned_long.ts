@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
   },
+  markdown: '\n### TO UNSIGNED LONG\nConverts an input value to an unsigned long value. If the input parameter is of a date type,\nits value will be interpreted as milliseconds since the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time), converted to unsigned long.\nBoolean `true` will be converted to unsigned long `1`, `false` to `0`.\n\n```esql\nROW str1 = "2147483648", str2 = "2147483648.2", str3 = "foo"\n| EVAL long1 = TO_UNSIGNED_LONG(str1), long2 = TO_ULONG(str2), long3 = TO_UL(str3)\n```\n',
 };
 
 export default docs;

@@ -23,6 +23,7 @@ const docs: DefinitionDocs = {
     from: 'Start of the time range that anchors the step grid. Required together with `to`.',
     to: 'End of the time range. Required together with `from`.',
   },
+  markdown: '\n### TSTEP\nCreates groups of values - buckets - out of a `@timestamp` attribute using either a fixed step width\nor a target bucket count.\nUnlike [`TBUCKET`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/grouping-functions/tbucket),\nwhich aligns buckets to calendar boundaries, TSTEP uses a fixed-width UTC grid anchored at the start\nof the query range. Each bucket is labeled by its right boundary.\nWhen a target bucket count is provided, TSTEP derives a fixed step width from the query range.\nThe derived step is rounded up so that the result uses no more than the target number of buckets.\n\nWhen using ES|QL in Kibana, the range can be derived automatically from the\n[`@timestamp` filter](docs-content://explore-analyze/query-filter/languages/esql-kibana.md#_standard_time_filter)\nthat Kibana adds to the query.\n\n```esql\nFROM sample_data\n| STATS min = MIN(@timestamp), max = MAX(@timestamp) BY bucket = TSTEP(1 hour)\n| SORT bucket\n```\n',
 };
 
 export default docs;

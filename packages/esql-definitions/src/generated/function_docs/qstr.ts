@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     query: 'Query string in Lucene query string format.',
     options: '(Optional) Additional options for Query String as <<esql-function-named-params,function named parameters>>. See <<query-dsl-query-string-query,query string query>> for more information.',
   },
+  markdown: '\n### QSTR\nPerforms a [query string query](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-query-string-query). Returns true if the provided query string matches the row.\n\n```esql\nFROM books\n| WHERE QSTR("author: Faulkner")\n```\n',
 };
 
 export default docs;

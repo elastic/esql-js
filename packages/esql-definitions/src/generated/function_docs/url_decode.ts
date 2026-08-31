@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     string: 'The URL-encoded string to decode.',
   },
+  markdown: '\n### URL DECODE\nURL-decodes the input, or returns `null` and adds a warning header to the response if the input cannot be decoded.\n\n```esql\nROW u = "https%3A%2F%2Fexample.com%2F%3Fx%3Dfoo%20bar%26y%3Dbaz"\n| EVAL u = URL_DECODE(u)\n```\n',
 };
 
 export default docs;

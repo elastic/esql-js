@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the present over time',
   },
+  markdown: '\n### PRESENT OVER TIME\nCalculates the presence of a field in the output result over time range.\n\n```esql\nTS k8s\n| WHERE cluster == "prod" AND pod == "two"\n| STATS events_received = MAX(PRESENT_OVER_TIME(events_received)) BY pod, time_bucket = TBUCKET(2 minute)\n```\n',
 };
 
 export default docs;

@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     field: 'Input value. The input can be a single- or multi-valued column or an expression.',
     base: '(Optional) Radix or base used to convert the input value.When a base is specified the input type must be `keyword` or `text`.',
   },
+  markdown: '\n### TO INTEGER\nConverts an input value to an integer value.\nIf the input parameter is of a date type, its value will be interpreted as milliseconds\nsince the [Unix epoch](https://en.wikipedia.org/wiki/Unix_time), converted to integer.\nBoolean `true` will be converted to integer `1`, `false` to `0`.\n\n```esql\nROW long = [5013792, 2147483647, 501379200000]\n| EVAL int = TO_INTEGER(long)\n```\n',
 };
 
 export default docs;

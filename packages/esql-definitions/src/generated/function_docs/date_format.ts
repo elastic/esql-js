@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     date: 'Date expression. If `null`, the function returns `null`.',
     dateFormat: 'Date format (optional).  If no format is specified, the `yyyy-MM-dd\'T\'HH:mm:ss.SSSZ` format is used. If `null`, the function returns `null`.',
   },
+  markdown: '\n### DATE FORMAT\nReturns a string representation of a date, in the provided format.\n\n```esql\nFROM employees\n| KEEP first_name, last_name, hire_date\n| EVAL hired = DATE_FORMAT("yyyy-MM-dd", hire_date)\n```\n',
 };
 
 export default docs;

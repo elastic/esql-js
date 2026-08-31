@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     geomA: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
     geomB: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. Must share the same coordinate reference system as the first parameter. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST INTERSECTION\nReturns the geometric intersection of two geometries. The result is a geometry representing the portion that both input geometries have in common. Returns an empty geometry if the inputs do not intersect. Both geometries must share the same coordinate reference system.\n\n```esql\nROW a = TO_GEOSHAPE("POLYGON ((0 0, 3 0, 3 3, 0 3, 0 0))"),\n    b = TO_GEOSHAPE("POLYGON ((1 1, 4 1, 4 4, 1 4, 1 1))")\n| EVAL intersected = ST_INTERSECTION(a, b)\n| KEEP intersected\n```\n',
 };
 
 export default docs;

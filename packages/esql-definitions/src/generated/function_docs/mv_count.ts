@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV COUNT\nConverts a multivalued expression into a single valued column containing a count of the number of values.\n\n```esql\nROW a=["foo", "zoo", "bar"]\n| EVAL count_a = MV_COUNT(a)\n```\n',
 };
 
 export default docs;

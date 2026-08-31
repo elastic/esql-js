@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     left: 'first dense_vector to calculate l1 norm similarity',
     right: 'second dense_vector to calculate l1 norm similarity',
   },
+  markdown: '\n### V L1 NORM\nCalculates the l1 norm between two dense_vectors.\n\n```esql\nfrom colors\n| eval similarity = v_l1_norm(rgb_vector, [0, 255, 255])\n| sort similarity desc, color asc\n```\n',
 };
 
 export default docs;

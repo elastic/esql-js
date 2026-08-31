@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     string2: 'Expression that can be null, a single value, or multiple values.',
     delim: 'Delimiter. Optional; if omitted, `,` is used as a default delimiter.',
   },
+  markdown: '\n### MV ZIP\nCombines the values from two multivalued fields with a delimiter that joins them together.\n\n```esql\nROW a = ["x", "y", "z"], b = ["1", "2"]\n| EVAL c = mv_zip(a, b, "-")\n| KEEP a, b, c\n```\n',
 };
 
 export default docs;

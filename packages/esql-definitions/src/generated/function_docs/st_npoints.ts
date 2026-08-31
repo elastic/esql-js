@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     geometry: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST NPOINTS\nCounts the number of points in the supplied geometry.\n\n```esql\nFROM airport_city_boundaries\n| WHERE abbrev == "CPH"\n| EVAL points = ST_NPOINTS(city_boundary)\n| KEEP abbrev, airport, points\n```\n',
 };
 
 export default docs;

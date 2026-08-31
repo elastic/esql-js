@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     left: 'first dense_vector to calculate dot product similarity',
     right: 'second dense_vector to calculate dot product similarity',
   },
+  markdown: '\n### V DOT PRODUCT\nCalculates the dot product between two dense_vectors.\n\n```esql\nfrom colors\n| eval similarity = v_dot_product(rgb_vector, [0, 255, 255])\n| sort similarity desc, color asc\n```\n',
 };
 
 export default docs;

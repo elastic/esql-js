@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     geometry: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST GEOMETRYTYPE\nReturns the geometry type of the supplied geometry, as a string.\nFor example: `ST_Point`, `ST_LineString`, `ST_Polygon`, `ST_MultiPoint`, `ST_MultiLineString`, `ST_MultiPolygon`, or `ST_GeometryCollection`.\n\n```esql\nROW wkt = [\n    "POINT(1.0 2.0)",\n    "LINESTRING (30 10, 10 30, 40 40)",\n    "POLYGON ((30 10, 40 40, 20 40, 10 20, 30 10))"]\n| MV_EXPAND wkt\n| EVAL geometry = TO_GEOSHAPE(wkt),\n       type = ST_GEOMETRYTYPE(geometry),\n       points = ST_NPOINTS(geometry)\n| KEEP type, points\n```\n',
 };
 
 export default docs;

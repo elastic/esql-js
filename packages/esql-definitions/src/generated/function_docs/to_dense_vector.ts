@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'multi-valued input of numbers or hexadecimal string to convert.',
   },
+  markdown: '\n### TO DENSE VECTOR\nConverts a multi-valued input of numbers, or a hexadecimal string, to a dense_vector.\n\n```esql\nrow ints = [1, 2, 3]\n| eval vector = to_dense_vector(ints)\n| keep vector\n```\n',
 };
 
 export default docs;

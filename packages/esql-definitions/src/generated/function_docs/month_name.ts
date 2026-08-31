@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     date: 'Date expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### MONTH NAME\nReturns the month name for the provided date based on the configured Locale.\n\n```esql\nROW dt = to_datetime("1996-03-21T00:00:00.000Z")\n| EVAL monthName = MONTH_NAME(dt);\n```\n',
 };
 
 export default docs;

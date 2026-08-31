@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     start: 'Start position. If `null`, the function returns `null`. The start argument can be negative. An index of -1 is used to specify the last value in the list.',
     end: 'End position(included). Optional; if omitted, the position at `start` is returned. The end argument can be negative. An index of -1 is used to specify the last value in the list.',
   },
+  markdown: '\n### MV SLICE\nReturns a subset of the multivalued field using the start and end index values. Indexes are 0-based.\nThis is most useful when reading from a function that emits multivalued columns\nin a known order like [`SPLIT`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/string-functions/split) or [`MV_SORT`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/mv-functions/mv_sort).\n\n```esql\nrow a = [1, 2, 2, 3]\n| eval a1 = mv_slice(a, 1), a2 = mv_slice(a, 2, 3)\n```\n',
 };
 
 export default docs;

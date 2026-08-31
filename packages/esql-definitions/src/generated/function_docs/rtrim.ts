@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     string: 'String expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### RTRIM\nRemoves trailing whitespaces from a string.\n\n```esql\nROW message = "   some text  ",  color = " red "\n| EVAL message = RTRIM(message)\n| EVAL color = RTRIM(color)\n| EVAL message = CONCAT("\'", message, "\'")\n| EVAL color = CONCAT("\'", color, "\'")\n```\n',
 };
 
 export default docs;

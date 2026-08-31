@@ -17,6 +17,7 @@ const docs: DefinitionDocs = {
     lhs: 'A numeric value.',
     rhs: 'A numeric value.',
   },
+  markdown: '\n### MODULO `%`\nDivide one number by another and return the remainder. If either field is [multivalued](https://www.elastic.co/docs/reference/query-languages/esql/esql-multivalued-fields) then the result is `null`.\n',
 };
 
 export default docs;

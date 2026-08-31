@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     str: 'A literal value.',
     pattern: 'A regular expression.',
   },
+  markdown: '\n### RLIKE\nUse `RLIKE` to filter data based on string patterns using\n[regular expressions](https://www.elastic.co/docs/reference/query-languages/query-dsl/regexp-syntax). `RLIKE` usually acts on a field placed on\nthe left-hand side of the operator, but it can also act on a constant (literal)\nexpression. The right-hand side of the operator represents the pattern, which can\nbe a string literal, a query parameter, or any constant expression such as a call\nto `CONCAT` or `TO_UPPER`.\n\n```esql\nFROM employees\n| WHERE first_name RLIKE """.leja.*"""\n| KEEP first_name, last_name\n```\n',
 };
 
 export default docs;

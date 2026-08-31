@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the idelta over time',
   },
+  markdown: '\n### IDELTA\nCalculates the idelta of a gauge. idelta is the absolute change between the last two data points (it ignores all but the last two data points in each time period). This function is very similar to delta, but is more responsive to recent changes.\n\n```esql\nTS k8s\n| STATS events = SUM(IDELTA(events_received)) by pod, time_bucket = TBUCKET(10minute)\n```\n',
 };
 
 export default docs;

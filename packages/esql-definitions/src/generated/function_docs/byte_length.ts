@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     string: 'String expression. If `null`, the function returns `null`.',
   },
+  markdown: '\n### BYTE LENGTH\nReturns the byte length of a string.\n\nNote: All strings are in UTF-8, so a single character can use multiple bytes.\n\n```esql\nFROM airports\n| WHERE country == "India"\n| KEEP city\n| EVAL fn_length = LENGTH(city), fn_byte_length = BYTE_LENGTH(city)\n```\n',
 };
 
 export default docs;

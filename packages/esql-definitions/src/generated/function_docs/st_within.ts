@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     geomA: 'Expression of type `geo_point`, `cartesian_point`, `geo_shape` or `cartesian_shape`. If `null`, the function returns `null`.',
     geomB: 'Expression of type `geo_point`, `cartesian_point`, `geo_shape` or `cartesian_shape`. If `null`, the function returns `null`. The second parameter must also have the same coordinate system as the first. This means it is not possible to combine `geo_*` and `cartesian_*` parameters.',
   },
+  markdown: '\n### ST WITHIN\nReturns whether the first geometry is within the second geometry.\nThis is the inverse of the [ST_CONTAINS](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/spatial-functions/st_contains) function.\n\n```esql\nFROM airport_city_boundaries\n| WHERE ST_WITHIN(city_boundary, TO_GEOSHAPE("POLYGON((109.1 18.15, 109.6 18.15, 109.6 18.65, 109.1 18.65, 109.1 18.15))"))\n| KEEP abbrev, airport, region, city, city_location\n```\n',
 };
 
 export default docs;

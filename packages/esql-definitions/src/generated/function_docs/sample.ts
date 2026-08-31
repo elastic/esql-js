@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     field: 'The field to collect sample values for.',
     limit: 'The maximum number of values to collect.',
   },
+  markdown: '\n### SAMPLE\nCollects sample values for a field.\n\n```esql\nFROM sample_data\n| STATS sample_messages = SAMPLE(message, 3)\n```\n',
 };
 
 export default docs;

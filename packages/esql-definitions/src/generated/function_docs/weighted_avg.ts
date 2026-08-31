@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     number: 'A numeric value.',
     weight: 'A numeric weight.',
   },
+  markdown: '\n### WEIGHTED AVG\nThe weighted average of a numeric expression.\n\n```esql\nFROM employees\n| STATS w_avg = WEIGHTED_AVG(salary, height) BY languages\n| EVAL w_avg = ROUND(w_avg)\n| KEEP w_avg, languages\n| SORT languages\n```\n',
 };
 
 export default docs;

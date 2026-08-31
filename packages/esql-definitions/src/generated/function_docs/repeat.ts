@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     string: 'String expression.',
     number: 'Number times to repeat.',
   },
+  markdown: '\n### REPEAT\nReturns a string constructed by concatenating `string` with itself the specified `number` of times.\n\n```esql\nROW a = "Hello!"\n| EVAL triple_a = REPEAT(a, 3)\n```\n',
 };
 
 export default docs;

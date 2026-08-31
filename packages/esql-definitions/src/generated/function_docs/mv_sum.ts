@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     number: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV SUM\nConverts a multivalued field into a single valued field containing the sum of all of the values.\n\n```esql\nROW a=[3, 5, 6]\n| EVAL sum_a = MV_SUM(a)\n```\n',
 };
 
 export default docs;

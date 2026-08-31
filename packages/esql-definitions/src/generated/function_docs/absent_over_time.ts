@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the absent over time',
   },
+  markdown: '\n### ABSENT OVER TIME\nCalculates the absence of a field in the output result over time range.\n\n```esql\nTS k8s\n| WHERE cluster == "prod" AND pod == "two"\n| STATS events_received = MAX(ABSENT_OVER_TIME(events_received)) BY pod, time_bucket = TBUCKET(2 minute)\n```\n',
 };
 
 export default docs;

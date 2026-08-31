@@ -19,6 +19,7 @@ const docs: DefinitionDocs = {
   params: {
     geometry: 'Expression of type `geo_point`, `geo_shape`, `cartesian_point` or `cartesian_shape`. If `null`, the function returns `null`.',
   },
+  markdown: '\n### ST ISEMPTY\nReturns true if the supplied geometry is empty.\nAn empty geometry is one that has no points, such as an empty geometry collection or an empty linestring.\n\n```esql\nROW point = TO_GEOPOINT("POINT(1.0 2.0)"),\n    empty_line = TO_GEOSHAPE("LINESTRING EMPTY"),\n    empty_polygon = TO_GEOSHAPE("POLYGON EMPTY")\n| EVAL pt_empty = ST_ISEMPTY(point),\n       line_empty = ST_ISEMPTY(empty_line),\n       polygon_empty = ST_ISEMPTY(empty_polygon)\n| KEEP pt_empty, line_empty, polygon_empty\n```\n',
 };
 
 export default docs;

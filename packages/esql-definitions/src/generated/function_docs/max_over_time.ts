@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the maximum',
   },
+  markdown: '\n### MAX OVER TIME\nCalculates the maximum over time value of a field.\n\n```esql\nTS k8s\n| STATS cost=SUM(MAX_OVER_TIME(network.cost)) BY cluster, time_bucket = TBUCKET(1minute)\n```\n',
 };
 
 export default docs;

@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
   params: {
     field: 'Expression that can be null, a single value, or multiple values.',
   },
+  markdown: '\n### MV DEDUPE\nRemove duplicate values from a multivalued field.\n\nNote: `MV_DEDUPE` may, but won’t always, sort the values in the column.\n\n```esql\nROW a=["foo", "foo", "bar", "foo"]\n| EVAL dedupe_a = MV_DEDUPE(a)\n```\n',
 };
 
 export default docs;

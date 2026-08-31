@@ -24,6 +24,7 @@ const docs: DefinitionDocs = {
     field1: 'Expression that can be null, a single value, or multiple values. Null values are treated as empty sets.',
     field2: 'Expression that can be null, a single value, or multiple values. Null values are treated as empty sets.',
   },
+  markdown: '\n### MV UNION\nReturns all unique values from the combined input fields (set union). Null values are treated as empty sets; returns `null` only if both fields are null.\n\n```esql\nROW a = [1, 2, 3, 4, 5], b = [2, 3, 4, 5, 6]\n| EVAL finalValue = MV_UNION(a, b)\n| KEEP finalValue\n```\n',
 };
 
 export default docs;

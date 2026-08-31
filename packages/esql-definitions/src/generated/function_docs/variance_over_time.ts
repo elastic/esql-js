@@ -20,6 +20,7 @@ const docs: DefinitionDocs = {
     field: 'the metric field to calculate the value for',
     window: 'the time window over which to compute the variance over time',
   },
+  markdown: '\n### VARIANCE OVER TIME\nCalculates the population variance over time of a numeric field.\n\n```esql\nTS k8s\n| STATS avg_var_cost=AVG(VARIANCE_OVER_TIME(network.cost)) BY cluster, time_bucket = TBUCKET(1minute)\n```\n',
 };
 
 export default docs;

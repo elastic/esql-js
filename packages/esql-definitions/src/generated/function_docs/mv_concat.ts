@@ -21,6 +21,7 @@ const docs: DefinitionDocs = {
     string: 'Expression that can be null, a single value, or multiple values.',
     delim: 'Delimiter.',
   },
+  markdown: '\n### MV CONCAT\nConverts a multivalued string expression into a single valued column containing the concatenation of all values separated by a delimiter.\n\n```esql\nROW a=["foo", "zoo", "bar"]\n| EVAL j = MV_CONCAT(a, ", ")\n```\n',
 };
 
 export default docs;

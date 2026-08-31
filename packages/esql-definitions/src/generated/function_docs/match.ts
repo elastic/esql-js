@@ -22,6 +22,7 @@ const docs: DefinitionDocs = {
     query: 'Value to find in the provided field or expression.',
     options: '(Optional) Match additional options as <<esql-function-named-params,function named parameters>>.',
   },
+  markdown: '\n### MATCH\nUse `MATCH` to perform a [match query](https://www.elastic.co/docs/reference/query-languages/query-dsl/query-dsl-match-query) on the specified field or expression.\nUsing `MATCH` is equivalent to using the `match` query in the Elasticsearch Query DSL.\n\n```esql\nFROM books\n| WHERE MATCH(author, "Faulkner")\n```\n',
 };
 
 export default docs;
