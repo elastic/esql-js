@@ -12,12 +12,12 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Calculates the `geotile` of the supplied geo_point at the specified precision.\nThe result is long encoded.\nUse `TO_STRING`\nto convert the result to a string,\n`TO_LONG`\nto convert it to a `long`, or\n`TO_GEOSHAPE`\nto calculate the `geo_shape` bounding geometry.\n\nThese functions are related to the `geo_grid` query\nand the `geotile_grid` aggregation.',
+  description: 'Calculates the `geotile` of the supplied `geo_point` or `geo_shape` at the specified precision.\nFor `geo_shape` inputs, all intersecting geotile cells are returned as multi-values.\nThe result is long encoded.\nUse `TO_STRING`\nto convert the result to a string,\n`TO_LONG`\nto convert it to a `long`, or\n`TO_GEOSHAPE`\nto calculate the `geo_shape` bounding geometry.\n\nThese functions are related to the `geo_grid` query\nand the `geotile_grid` aggregation.',
   examples: [
     'FROM airports\n| EVAL geotile = ST_GEOTILE(location, 2)\n| STATS\n    count = COUNT(geotile),\n    centroid = ST_CENTROID_AGG(location)\n      BY geotile\n| EVAL geotileString = TO_STRING(geotile)\n| SORT count DESC, geotileString ASC\n| KEEP count, centroid, geotileString',
   ],
   params: {
-    geometry: 'Expression of type `geo_point`. If `null`, the function returns `null`.',
+    geometry: 'Expression of type `geo_point` or `geo_shape`. If `null`, the function returns `null`. For `geo_shape` inputs all intersecting geotile cells are returned as multi-values.',
     precision: 'Expression of type `integer`. If `null`, the function returns `null`. Valid values are between [0 and 29](https://wiki.openstreetmap.org/wiki/Zoom_levels).',
     bounds: 'Optional bounds to filter the grid tiles, a `geo_shape` of type `BBOX`. Use [`ST_ENVELOPE`](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/spatial-functions/st_envelope) if the `geo_shape` is of any other type.',
   },

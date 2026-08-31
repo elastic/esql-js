@@ -1,5 +1,12 @@
 # @elastic/textmate-esql
 
+## 4.22.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-definitions@4.22.0
+
 ## 4.21.1
 
 ### Patch Changes

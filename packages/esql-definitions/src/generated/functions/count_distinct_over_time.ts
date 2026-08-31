@@ -368,6 +368,210 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'geohash',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geohash',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'integer',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geohash',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'long',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geohash',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'unsigned_long',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geohex',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geohex',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'integer',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geohex',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'long',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geohex',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'unsigned_long',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geotile',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geotile',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'integer',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geotile',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'long',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'geotile',
+          optional: false,
+        },
+        {
+          name: 'precision',
+          type: 'unsigned_long',
+          optional: true,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'integer',
           optional: false,
         },

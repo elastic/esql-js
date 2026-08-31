@@ -102,10 +102,12 @@ import mvCountDefinition from './mv_count';
 import mvDedupeDefinition from './mv_dedupe';
 import mvDifferenceDefinition from './mv_difference';
 import mvFirstDefinition from './mv_first';
+import mvGreaterDefinition from './mv_greater';
 import mvInRangeDefinition from './mv_in_range';
 import mvIntersectionDefinition from './mv_intersection';
 import mvIntersectsDefinition from './mv_intersects';
 import mvLastDefinition from './mv_last';
+import mvLessDefinition from './mv_less';
 import mvLikeDefinition from './mv_like';
 import mvMaxDefinition from './mv_max';
 import mvMedianDefinition from './mv_median';
@@ -339,10 +341,12 @@ export const functionDefinitions: FunctionDefinition[] = [
   mvDedupeDefinition,
   mvDifferenceDefinition,
   mvFirstDefinition,
+  mvGreaterDefinition,
   mvInRangeDefinition,
   mvIntersectionDefinition,
   mvIntersectsDefinition,
   mvLastDefinition,
+  mvLessDefinition,
   mvLikeDefinition,
   mvMaxDefinition,
   mvMedianDefinition,
