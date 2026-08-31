@@ -3504,13 +3504,7 @@ export class CstToAstConverter {
     const functionExpressionCtx = ctx.functionExpression();
     const functionNameCtx = functionExpressionCtx.functionName();
     const mapExpressionCtx = functionExpressionCtx.mapExpression();
-    // filtering lambda expressions from function args, as they are not supported in ESQL
-    const args = this.fromBooleanExpressions(
-      functionExpressionCtx
-        .functionParam_list()
-        .map((p) => p.booleanExpression())
-        .filter((e): e is cst.BooleanExpressionContext => e != null)
-    );
+    const args = this.fromBooleanExpressions(functionExpressionCtx.booleanExpression_list());
     const fn: ast.ESQLFunctionCallExpression = {
       type: 'function',
       subtype: 'variadic-call',
