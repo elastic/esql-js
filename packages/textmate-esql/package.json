@@ -1,6 +1,6 @@
 {
   "name": "@elastic/textmate-esql",
-  "version": "4.21.1",
+  "version": "4.22.0",
   "author": "Kibana ES|QL team",
   "description": "TextMate grammar for ES|QL syntax highlighting",
   "license": "MIT",
