@@ -1,5 +1,11 @@
 # @elastic/esql-definitions
 
+## 4.23.0
+
+### Minor Changes
+
+- [#238](https://github.com/elastic/esql-js/pull/238) [`a5f1919`](https://github.com/elastic/esql-js/commit/a5f1919a849a7cac52f1b12a777a9b5e276b6f35) Thanks [@stratoula](https://github.com/stratoula)! - Add `markdown` field to `DefinitionDocs` for ES|QL functions and operators. The field contains the full markdown documentation sourced from the corresponding `.md` file in `elasticsearch/esql/<project>/docs/`, with the leading generator comment line stripped. This allows consumers to display rich documentation without needing direct access to the Elasticsearch source repository.
+
 ## 4.22.0
 
 ## 4.21.1

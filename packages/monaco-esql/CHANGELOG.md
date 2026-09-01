@@ -1,5 +1,12 @@
 # @elastic/monaco-esql
 
+## 4.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`a5f1919`](https://github.com/elastic/esql-js/commit/a5f1919a849a7cac52f1b12a777a9b5e276b6f35)]:
+  - @elastic/esql-definitions@4.23.0
+
 ## 4.22.0
 
 ### Patch Changes

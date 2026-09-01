@@ -1,5 +1,16 @@
 # @elastic/esql-parser
 
+## 4.23.0
+
+### Patch Changes
+
+- Updated dependencies [[`a5f1919`](https://github.com/elastic/esql-js/commit/a5f1919a849a7cac52f1b12a777a9b5e276b6f35)]:
+  - @elastic/esql-definitions@4.23.0
+  - @elastic/esql-types@4.23.0
+  - @elastic/esql-promql-grammar@4.23.0
+  - @elastic/esql-traversal@4.23.0
+  - @elastic/esql-ast@4.23.0
+
 ## 4.22.0
 
 ### Minor Changes
