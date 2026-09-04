@@ -71,7 +71,7 @@ export const remove = (
           return ctx.node;
         }
 
-        if (!Array.isArray(arg) && isSubQuery(arg)) {
+        if (isSubQuery(arg)) {
           const found = remove(arg.child, node);
 
           if (found) {

@@ -23,7 +23,7 @@ import {
   binaryExpressionGroup,
   unaryExpressionGroup,
 } from '../ast/grouping';
-import { Visitor, resolveItem, type ESQLAstExpressionNode } from '@elastic/esql-traversal';
+import { Visitor, type ESQLAstExpressionNode } from '@elastic/esql-traversal';
 import {
   commandOptionsWithEqualsSeparator,
   commandsWithNoCommaArgSeparator,
@@ -32,7 +32,7 @@ import {
 import type {
   ESQLAstBaseItem,
   ESQLAstCommand,
-  ESQLAstItem,
+  ESQLAstExpression,
   ESQLAstQueryExpression,
   ESQLMap,
   ESQLProperNode,
@@ -211,9 +211,7 @@ export class BasicPrettyPrinter {
     minusCount: number = 0
   ): string | undefined {
     if (isBinaryExpression(node) && node.name === '*') {
-      let [left, right] = node.args;
-      left = resolveItem(left);
-      right = resolveItem(right);
+      const [left, right] = node.args;
 
       if (isProperNode(left) && isProperNode(right)) {
         if (!!left.formatting || !!right.formatting) {
@@ -449,12 +447,13 @@ export class BasicPrettyPrinter {
           // For assignments (=), left is the target name, right is the expression to assign.
           const [left, right] = ctx.arguments();
 
-          const formatOperand = (operand: ESQLAstItem, index: number): string => {
+          const formatOperand = (operand: ESQLAstExpression, index: number): string => {
             const operandGroup = binaryExpressionGroup(operand);
             let formatted = ctx.visitArgument(index);
 
             const shouldGroup =
               operandGroup &&
+              group !== BinaryExpressionGroup.assignment &&
               (operandGroup === BinaryExpressionGroup.unknown ||
                 operandGroup < group ||
                 // Right operand at same precedence needs parens for /, -, %
@@ -555,10 +554,6 @@ export class BasicPrettyPrinter {
       if (cmd === 'FORK') {
         const branches = node.args
           .map((branch) => {
-            if (Array.isArray(branch)) {
-              return undefined;
-            }
-
             // Check for ESQLAstQueryExpression specifically (has 'commands' property)
             if (
               branch.type === 'parens' &&
@@ -614,13 +609,8 @@ export class BasicPrettyPrinter {
     .on('visitQuery', (ctx) => {
       const opts = this.opts;
 
-      let parentNode;
-      if (ctx.parent?.node && !Array.isArray(ctx.parent.node)) {
-        parentNode = ctx.parent.node;
-      }
-
-      const useMultiLine =
-        opts.multiline && !Array.isArray(parentNode) && parentNode?.name !== 'fork';
+      const parentNode = ctx.parent?.node;
+      const useMultiLine = opts.multiline && parentNode?.name !== 'fork';
 
       const cmdSeparator = useMultiLine ? `\n${opts.pipeTab ?? '  '}| ` : ' | ';
       let text = '';

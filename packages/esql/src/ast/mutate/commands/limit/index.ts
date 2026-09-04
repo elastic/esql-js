@@ -93,7 +93,7 @@ export const set = (
   }
 
   const literal = Builder.expression.literal.numeric({ literalType: 'integer', value });
-  const options = node.args.filter((arg) => !Array.isArray(arg) && arg.type === 'option');
+  const options = node.args.filter((arg) => arg.type === 'option');
 
   node.args = [literal, ...options];
 

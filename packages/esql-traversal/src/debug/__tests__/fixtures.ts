@@ -111,78 +111,76 @@ export const fromStatsByLimit = (): ESQLAstQueryExpression =>
                     undefined,
                     { location: { min: 15, max: 16 }, text: 'fn' }
                   ),
-                  [
-                    expr.func.node(
-                      {
-                        name: 'count',
-                        subtype: 'variadic-call',
-                        operator: Builder.identifier(
-                          { name: 'count' },
-                          { location: { min: 20, max: 24 }, text: 'count' }
+                  expr.func.node(
+                    {
+                      name: 'count',
+                      subtype: 'variadic-call',
+                      operator: Builder.identifier(
+                        { name: 'count' },
+                        { location: { min: 20, max: 24 }, text: 'count' }
+                      ),
+                      args: [
+                        expr.func.node(
+                          {
+                            name: '*',
+                            subtype: 'binary-expression',
+                            args: [
+                              expr.column(
+                                {
+                                  args: [
+                                    Builder.identifier(
+                                      { name: 'a' },
+                                      { location: { min: 26, max: 26 }, text: 'a' }
+                                    ),
+                                  ],
+                                },
+                                undefined,
+                                { location: { min: 26, max: 26 }, text: 'a' }
+                              ),
+                              expr.func.node(
+                                {
+                                  name: '+',
+                                  subtype: 'binary-expression',
+                                  args: [
+                                    expr.literal.integer(1, undefined, {
+                                      location: { min: 31, max: 31 },
+                                      text: '1',
+                                    }),
+                                    expr.literal.integer(3, undefined, {
+                                      location: { min: 35, max: 35 },
+                                      text: '3',
+                                    }),
+                                  ],
+                                },
+                                { location: { min: 31, max: 35 }, text: '1+3' }
+                              ),
+                            ],
+                          },
+                          { location: { min: 26, max: 36 }, text: 'a*(1+3)' }
                         ),
-                        args: [
-                          expr.func.node(
-                            {
-                              name: '*',
-                              subtype: 'binary-expression',
-                              args: [
-                                expr.column(
-                                  {
-                                    args: [
-                                      Builder.identifier(
-                                        { name: 'a' },
-                                        { location: { min: 26, max: 26 }, text: 'a' }
-                                      ),
-                                    ],
-                                  },
-                                  undefined,
-                                  { location: { min: 26, max: 26 }, text: 'a' }
+                        expr.map(
+                          {
+                            entries: [
+                              expr.entry(
+                                expr.literal.string(
+                                  'adf',
+                                  { name: '"adf"' },
+                                  { location: { min: 40, max: 44 }, text: '"adf"' }
                                 ),
-                                expr.func.node(
-                                  {
-                                    name: '+',
-                                    subtype: 'binary-expression',
-                                    args: [
-                                      expr.literal.integer(1, undefined, {
-                                        location: { min: 31, max: 31 },
-                                        text: '1',
-                                      }),
-                                      expr.literal.integer(3, undefined, {
-                                        location: { min: 35, max: 35 },
-                                        text: '3',
-                                      }),
-                                    ],
-                                  },
-                                  { location: { min: 31, max: 35 }, text: '1+3' }
-                                ),
-                              ],
-                            },
-                            { location: { min: 26, max: 36 }, text: 'a*(1+3)' }
-                          ),
-                          expr.map(
-                            {
-                              entries: [
-                                expr.entry(
-                                  expr.literal.string(
-                                    'adf',
-                                    { name: '"adf"' },
-                                    { location: { min: 40, max: 44 }, text: '"adf"' }
-                                  ),
-                                  expr.literal.integer(123, undefined, {
-                                    location: { min: 47, max: 49 },
-                                    text: '123',
-                                  }),
-                                  { location: { min: 40, max: 49 }, text: '"adf": 123' }
-                                ),
-                              ],
-                            },
-                            { location: { min: 39, max: 50 }, text: '{"adf": 123}' }
-                          ),
-                        ],
-                      },
-                      { location: { min: 20, max: 51 }, text: 'count(a*(1+3),{"adf":123})' }
-                    ),
-                  ],
+                                expr.literal.integer(123, undefined, {
+                                  location: { min: 47, max: 49 },
+                                  text: '123',
+                                }),
+                                { location: { min: 40, max: 49 }, text: '"adf": 123' }
+                              ),
+                            ],
+                          },
+                          { location: { min: 39, max: 50 }, text: '{"adf": 123}' }
+                        ),
+                      ],
+                    },
+                    { location: { min: 20, max: 51 }, text: 'count(a*(1+3),{"adf":123})' }
+                  ),
                 ],
               },
               { location: { min: 15, max: 51 }, text: 'fn=count(a*(1+3),{"adf":123})' }
