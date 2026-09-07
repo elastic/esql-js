@@ -48,6 +48,8 @@ import hourDocs from './hour';
 import ideltaDocs from './idelta';
 import increaseDocs from './increase';
 import irateDocs from './irate';
+import labelJoinDocs from './label_join';
+import labelReplaceDocs from './label_replace';
 import lastOverTimeDocs from './last_over_time';
 import limitkDocs from './limitk';
 import lnDocs from './ln';
@@ -124,6 +126,8 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   idelta: ideltaDocs,
   increase: increaseDocs,
   irate: irateDocs,
+  label_join: labelJoinDocs,
+  label_replace: labelReplaceDocs,
   last_over_time: lastOverTimeDocs,
   limitk: limitkDocs,
   ln: lnDocs,

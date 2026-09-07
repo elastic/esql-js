@@ -48,6 +48,8 @@ import hourDefinition from './hour';
 import ideltaDefinition from './idelta';
 import increaseDefinition from './increase';
 import irateDefinition from './irate';
+import labelJoinDefinition from './label_join';
+import labelReplaceDefinition from './label_replace';
 import lastOverTimeDefinition from './last_over_time';
 import limitkDefinition from './limitk';
 import lnDefinition from './ln';
@@ -124,6 +126,8 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   ideltaDefinition,
   increaseDefinition,
   irateDefinition,
+  labelJoinDefinition,
+  labelReplaceDefinition,
   lastOverTimeDefinition,
   limitkDefinition,
   lnDefinition,
