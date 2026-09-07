@@ -57,7 +57,7 @@ const definition: FunctionDefinition = {
       returnType: 'keyword',
     },
   ],
-  preview: true,
+  preview: false,
   snapshotOnly: false,
 };
 
