@@ -1,5 +1,11 @@
 # @elastic/esql-definitions
 
+## 4.24.0
+
+### Minor Changes
+
+- [#241](https://github.com/elastic/esql-js/pull/241) [`9337d20`](https://github.com/elastic/esql-js/commit/9337d2003f730ca5569047403fc413ddd84b38cc) Thanks [@stratoula](https://github.com/stratoula)! - Update functions definitions
+
 ## 4.23.0
 
 ### Minor Changes
