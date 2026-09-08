@@ -104,11 +104,22 @@ main () {
   BRANCH_NAME="esql_grammar_sync_$(date +%s)"
   git checkout -b "$BRANCH_NAME"
 
+  # Add a changeset so the release workflow creates a version PR when this merges
+  CHANGESET_FILE=".changeset/grammar-sync-$(date +%s).md"
+  cat > "$CHANGESET_FILE" << 'CHANGESET'
+---
+"@elastic/esql": minor
+---
+
+Update ES|QL grammars and definitions to match the latest version in Elasticsearch.
+CHANGESET
+
   git add \
     packages/esql-grammar/src/ \
     packages/esql-promql-grammar/src/ \
     packages/esql-definitions/elasticsearch/ \
-    packages/esql-definitions/src/generated/
+    packages/esql-definitions/src/generated/ \
+    "$CHANGESET_FILE"
   git commit -m "feat: Update ES|QL grammars and definitions"
 
   report_main_step "Changes committed. Creating pull request."
