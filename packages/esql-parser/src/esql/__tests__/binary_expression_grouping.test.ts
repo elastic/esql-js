@@ -6,8 +6,8 @@
  */
 
 import { EsqlQuery } from './query';
-import type { ESQLAstItem, ESQLAstQueryExpression, ESQLProperNode } from '@elastic/esql-types';
-import { singleItems, Walker } from '@elastic/esql-traversal';
+import type { ESQLAstQueryExpression, ESQLProperNode } from '@elastic/esql-types';
+import { Walker } from '@elastic/esql-traversal';
 
 const removeParserFields = (tree: ESQLAstQueryExpression): void => {
   Walker.walk(tree, {
@@ -15,10 +15,6 @@ const removeParserFields = (tree: ESQLAstQueryExpression): void => {
       delete node.text;
       delete node.location;
       delete node.incomplete;
-      const args = (node as { args?: ESQLAstItem[] }).args;
-      if (Array.isArray(args)) {
-        (node as { args?: ESQLAstItem[] }).args = [...singleItems(args)];
-      }
     },
   });
 };

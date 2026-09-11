@@ -102,18 +102,16 @@ describe('STATS', () => {
                     },
                   ],
                 },
-                [
-                  {
-                    type: 'function',
-                    name: 'agg',
-                    args: [
-                      {
-                        type: 'literal',
-                        valueUnquoted: 'salary',
-                      },
-                    ],
-                  },
-                ],
+                {
+                  type: 'function',
+                  name: 'agg',
+                  args: [
+                    {
+                      type: 'literal',
+                      valueUnquoted: 'salary',
+                    },
+                  ],
+                },
               ],
             },
           ],
@@ -293,18 +291,16 @@ describe('STATS', () => {
                           },
                         ],
                       },
-                      [
-                        {
-                          type: 'function',
-                          name: 'agg',
-                          args: [
-                            {
-                              type: 'literal',
-                              valueUnquoted: 'salary',
-                            },
-                          ],
-                        },
-                      ],
+                      {
+                        type: 'function',
+                        name: 'agg',
+                        args: [
+                          {
+                            type: 'literal',
+                            valueUnquoted: 'salary',
+                          },
+                        ],
+                      },
                     ],
                   },
                   {

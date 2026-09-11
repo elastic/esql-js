@@ -42,7 +42,7 @@ import type {
   QueryCommandTag,
   QueryCommandTagParametrized,
 } from './types';
-import { Walker, replaceProperties, resolveItem } from '@elastic/esql-traversal';
+import { Walker, replaceProperties } from '@elastic/esql-traversal';
 import { printAst } from '../debug';
 
 export class ComposerQuery {
@@ -1182,8 +1182,8 @@ export class ComposerQuery {
           const left = arg.args[0];
           const right = arg.args[1];
 
-          if (isIdentifier(left) && (isProperNode(right) || Array.isArray(right))) {
-            sets.push([left.name as string, resolveItem(right)]);
+          if (isIdentifier(left) && isProperNode(right)) {
+            sets.push([left.name as string, right]);
           }
         }
       }

@@ -29,7 +29,6 @@ import type {
   ESQLProperNode,
   EditorError,
 } from '@elastic/esql-types';
-import { singleItems } from '@elastic/esql-traversal';
 import { DEFAULT_CHANNEL, SOURCE_COMMANDS } from '../constants';
 import type { EsqlParsingTarget } from './types';
 import { assertQueryNesting, QUERY_NESTING_ERROR_CODE, QueryNestingError } from './query_nesting';
@@ -268,7 +267,7 @@ export class Parser {
     }
 
     const { root, ast, errors, ...result } = Parser.parseCommand('EVAL ' + src, options);
-    const expressions = [...singleItems(root.args)];
+    const expressions = root.args;
 
     if (expressions.length !== 1) {
       throw new Error(
@@ -294,7 +293,7 @@ export class Parser {
 
   public static readonly parseMap = (src: string, options?: ParseOptions): ParseResult<ESQLMap> => {
     const { root, ast, errors, ...result } = Parser.parseCommand('ROW f(1,' + src + ')', options);
-    const expressions = [...singleItems(root.args)];
+    const expressions = root.args;
 
     if (expressions.length !== 1) {
       throw new Error(

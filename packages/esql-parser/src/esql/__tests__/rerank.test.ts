@@ -136,12 +136,10 @@ describe('RERANK', () => {
             name: '=',
             args: [
               {},
-              [
-                {
-                  type: 'function',
-                  name: 'substring',
-                },
-              ],
+              {
+                type: 'function',
+                name: 'substring',
+              },
             ],
           },
         ],

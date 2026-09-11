@@ -20,7 +20,7 @@ const binary = (name: string, args: [left: ESQLAstItem, right: ESQLAstItem]): ES
   expr.func.node({ name, subtype: 'binary-expression', args });
 
 const assign = (target: string, value: ESQLAstItem): ESQLFunction =>
-  binary('=', [expr.column(target), [value]]);
+  binary('=', [expr.column(target), value]);
 
 const from = (...indices: string[]) =>
   Builder.command({ name: 'from', args: indices.map((index) => expr.source.index(index)) });
