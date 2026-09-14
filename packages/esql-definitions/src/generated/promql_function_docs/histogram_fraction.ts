@@ -12,7 +12,7 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Returns the estimated fraction of observations of a native histogram that fall between the provided lower and upper values.',
+  description: 'Returns the estimated fraction of observations of a classic or native histogram that fall between the provided lower and upper values.',
   examples: [
     'histogram_fraction(0, 0.2, increase(http_request_duration_seconds[1h]))',
   ],

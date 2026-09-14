@@ -55,6 +55,18 @@ import type { FunctionDefinition } from '../../definition_types';
  * TS histogram_timeseries_index
  * | WHERE instance == "instance-0"
  * | STATS cnt = COUNT(responseTime::tdigest)
+ *
+ * @example
+ * TS exp_histo_sample
+ * | WHERE instance == "instance-0"
+ * | STATS count = COUNT(responseTime, bucket) BY bucket = BUCKET(responseTime, 1)
+ * | SORT RANGE_MIN(bucket)
+ *
+ * @example
+ * TS histogram_timeseries_index
+ * | WHERE instance == "instance-0"
+ * | STATS count = COUNT(responseTime::tdigest, bucket) BY bucket = BUCKET(responseTime::tdigest, 1)
+ * | SORT RANGE_MIN(bucket)
  */
 const definition: FunctionDefinition = {
   type: 'agg',

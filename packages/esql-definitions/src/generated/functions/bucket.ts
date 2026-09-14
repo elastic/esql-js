@@ -68,6 +68,12 @@ import type { FunctionDefinition } from '../../definition_types';
  * FROM employees
  * | STATS dates = MV_SORT(VALUES(birth_date)) BY b = BUCKET(birth_date + 1 HOUR, 1 YEAR) - 1 HOUR
  * | EVAL d_count = MV_COUNT(dates)
+ *
+ * @example
+ * TS exp_histo_sample
+ * | WHERE instance == "instance-0"
+ * | STATS count = COUNT(responseTime, bucket) BY bucket = BUCKET(responseTime, 1)
+ * | SORT RANGE_MIN(bucket)
  */
 const definition: FunctionDefinition = {
   type: 'grouping',

@@ -272,6 +272,17 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'tdigest',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'text',
           optional: false,
         },
