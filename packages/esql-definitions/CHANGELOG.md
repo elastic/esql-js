@@ -1,5 +1,7 @@
 # @elastic/esql-definitions
 
+## 4.25.0
+
 ## 4.24.0
 
 ### Minor Changes

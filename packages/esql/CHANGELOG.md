@@ -1,5 +1,23 @@
 # @elastic/esql
 
+## 4.25.0
+
+### Minor Changes
+
+- [#243](https://github.com/elastic/esql-js/pull/243) [`ca765df`](https://github.com/elastic/esql-js/commit/ca765dfcc2a09a6027a8301325f1d4b2a6a31ee9) Thanks [@elastic-vault-github-plugin-prod](https://github.com/apps/elastic-vault-github-plugin-prod)! - Update ES|QL grammars and definitions to match the latest version in Elasticsearch.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.25.0
+  - @elastic/esql-definitions@4.25.0
+  - @elastic/esql-grammar@4.25.0
+  - @elastic/esql-promql-grammar@4.25.0
+  - @elastic/pretty-printer@4.25.0
+  - @elastic/esql-traversal@4.25.0
+  - @elastic/esql-parser@4.25.0
+  - @elastic/esql-ast@4.25.0
+
 ## 4.24.0
 
 ### Patch Changes
