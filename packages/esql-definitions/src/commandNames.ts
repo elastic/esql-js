@@ -13,6 +13,7 @@ export const processingCommandNames = [
   'CHANGE_POINT',
   'COMPLETION',
   'DEDUP',
+  'DENSE_VECTOR',
   'DISSECT',
   'DROP',
   'ENRICH',
