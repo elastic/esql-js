@@ -2496,6 +2496,39 @@ export class CstToAstConverter {
 
   // ------------------------------------------------------------- DENSE_VECTOR
 
+  private toDenseVectorAssignment(
+    ctx:
+      | cst.DenseVectorTargetNameContext
+      | cst.DenseVectorSuffixContext
+      | cst.DenseVectorLiteralInputContext,
+    left: ast.ESQLAstExpression,
+    right: ast.ESQLAstExpression
+  ): ast.ESQLBinaryExpression {
+    const assignment = this.toFunction(
+      ctx.ASSIGN().getText(),
+      ctx,
+      undefined,
+      'binary-expression'
+    ) as ast.ESQLBinaryExpression;
+
+    assignment.args.push(left, right);
+    assignment.location = this.extendLocationToArgs(assignment);
+
+    return assignment;
+  }
+
+  private toEmptyColumn(ctx: antlr.ParserRuleContext): ast.ESQLColumn {
+    const column = Builder.expression.column({ args: [] }, undefined, {
+      text: '',
+      location: getPosition(ctx.start, ctx.stop),
+      incomplete: true,
+    });
+
+    column.name = '';
+
+    return column;
+  }
+
   private fromDenseVectorCommand(
     ctx: cst.DenseVectorCommandContext
   ): ast.ESQLAstDenseVectorCommand {
@@ -2506,23 +2539,68 @@ export class CstToAstConverter {
     let incomplete = command.incomplete;
     const args = command.args;
     const qualifiedNamesCtx = ctx.qualifiedNames();
-    const qualifiedNameCtxs = qualifiedNamesCtx.qualifiedName_list();
+    const qualifiedNameCtxs = qualifiedNamesCtx?.qualifiedName_list() ?? [];
     const fields: ast.ESQLColumn[] = [];
-    const length = qualifiedNameCtxs.length;
 
-    if (!length) {
-      incomplete = true;
-    }
-
-    for (let i = 0; i < length; i++) {
-      const qualifiedNameCtx = qualifiedNameCtxs[i];
+    for (const qualifiedNameCtx of qualifiedNameCtxs) {
       const field = this.fromQualifiedName(qualifiedNameCtx);
 
       fields.push(field);
-      args.push(field);
 
       if (qualifiedNameCtx.exception || field.incomplete) {
         incomplete = true;
+      }
+    }
+
+    const namingCtx = ctx.denseVectorNaming();
+
+    if (namingCtx instanceof cst.DenseVectorSuffixContext) {
+      const keyword = this.toColumn(namingCtx._suffixKeyword);
+      const suffix = this.toStringLiteral(namingCtx._suffix);
+
+      command.suffix = suffix;
+      args.push(this.toDenseVectorAssignment(namingCtx, keyword, suffix));
+
+      const onOption = this.toOption('on', qualifiedNamesCtx ?? namingCtx, fields);
+      const onToken = namingCtx.ON();
+
+      if (onToken) {
+        onOption.location.min = onToken.symbol.start;
+      }
+
+      onOption.incomplete ||= fields.length === 0;
+      args.push(onOption);
+      incomplete ||= onOption.incomplete;
+    } else if (namingCtx instanceof cst.DenseVectorLiteralInputContext) {
+      const literalInput = this.toStringLiteral(namingCtx._literalInput);
+
+      command.literalInput = literalInput;
+
+      if (namingCtx._targetField) {
+        const targetField = this.fromQualifiedName(namingCtx._targetField);
+
+        command.targetField = targetField;
+        args.push(this.toDenseVectorAssignment(namingCtx, targetField, literalInput));
+      } else {
+        args.push(literalInput);
+      }
+
+      args.push(...fields);
+    } else {
+      if (!fields.length) {
+        fields.push(this.toEmptyColumn(ctx));
+        incomplete = true;
+      }
+
+      if (namingCtx instanceof cst.DenseVectorTargetNameContext) {
+        const targetField = this.fromQualifiedName(namingCtx._targetField);
+
+        command.targetField = targetField;
+        incomplete ||= targetField.incomplete;
+        args.push(this.toDenseVectorAssignment(namingCtx, targetField, fields[0]));
+        args.push(...fields.slice(1));
+      } else {
+        args.push(...fields);
       }
     }
 

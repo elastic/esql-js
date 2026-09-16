@@ -101,6 +101,85 @@ describe('DENSE_VECTOR', () => {
     });
   });
 
+  describe('output naming', () => {
+    it('parses an explicit target name for a single field', () => {
+      const src = `FROM books | DENSE_VECTOR vec = description`;
+      const { ast, errors } = EsqlQuery.fromSrc(src);
+      const cmd = getDenseVector(ast);
+
+      expect(errors).toHaveLength(0);
+      expect(cmd.incomplete).toBe(false);
+      expect(cmd.targetField).toMatchObject({ type: 'column', name: 'vec' });
+      expect(cmd.fields).toHaveLength(1);
+      expect(cmd.fields[0]).toMatchObject({ type: 'column', name: 'description' });
+      expect(cmd.args[0]).toMatchObject({
+        type: 'function',
+        name: '=',
+        args: [{ name: 'vec' }, { name: 'description' }],
+      });
+    });
+
+    it('parses a suffix clause over multiple fields', () => {
+      const src = `FROM books | DENSE_VECTOR suffix = "_dv" ON title, description`;
+      const { ast, errors } = EsqlQuery.fromSrc(src);
+      const cmd = getDenseVector(ast);
+
+      expect(errors).toHaveLength(0);
+      expect(cmd.incomplete).toBe(false);
+      expect(cmd.suffix).toMatchObject({ type: 'literal', valueUnquoted: '_dv' });
+      expect(cmd.fields).toHaveLength(2);
+      expect(cmd.fields[0]).toMatchObject({ name: 'title' });
+      expect(cmd.fields[1]).toMatchObject({ name: 'description' });
+
+      const onOption = cmd.args.find(
+        (arg): arg is ESQLCommandOption =>
+          'type' in arg && arg.type === 'option' && arg.name === 'on'
+      );
+      expect(onOption).toBeDefined();
+      expect(onOption!.args).toHaveLength(2);
+    });
+
+    it('parses a suffix clause combined with WITH', () => {
+      const src = `FROM books | DENSE_VECTOR suffix = "_dv" ON title, description WITH { "inference_id": "ep" }`;
+      const { ast, errors } = EsqlQuery.fromSrc(src);
+      const cmd = getDenseVector(ast);
+
+      expect(errors).toHaveLength(0);
+      expect(cmd.suffix).toMatchObject({ valueUnquoted: '_dv' });
+      expect(cmd.fields).toHaveLength(2);
+      expect(cmd.namedParameters).toMatchObject({ type: 'map' });
+    });
+
+    it('parses a bare literal input', () => {
+      const src = `FROM books | DENSE_VECTOR "be excellent to each other"`;
+      const { ast, errors } = EsqlQuery.fromSrc(src);
+      const cmd = getDenseVector(ast);
+
+      expect(errors).toHaveLength(0);
+      expect(cmd.literalInput).toMatchObject({
+        type: 'literal',
+        valueUnquoted: 'be excellent to each other',
+      });
+      expect(cmd.fields).toHaveLength(0);
+      expect(cmd.targetField).toBeUndefined();
+    });
+
+    it('parses a named literal input', () => {
+      const src = `FROM books | DENSE_VECTOR vec = "hello"`;
+      const { ast, errors } = EsqlQuery.fromSrc(src);
+      const cmd = getDenseVector(ast);
+
+      expect(errors).toHaveLength(0);
+      expect(cmd.targetField).toMatchObject({ type: 'column', name: 'vec' });
+      expect(cmd.literalInput).toMatchObject({ type: 'literal', valueUnquoted: 'hello' });
+      expect(cmd.args[0]).toMatchObject({
+        type: 'function',
+        name: '=',
+        args: [{ name: 'vec' }, { valueUnquoted: 'hello' }],
+      });
+    });
+  });
+
   describe('incomplete flag', () => {
     it('is false for a valid single field', () => {
       const { ast } = EsqlQuery.fromSrc(`FROM logs | DENSE_VECTOR my_vector`);
@@ -126,7 +205,7 @@ describe('DENSE_VECTOR', () => {
       const { ast, errors } = EsqlQuery.fromSrc(`FROM logs | DENSE_VECTOR`);
       const cmd = getDenseVector(ast);
 
-      expect(errors.length).toBeGreaterThan(0);
+      expect(errors).toHaveLength(0);
       expect(cmd).toMatchObject({ name: 'dense_vector', incomplete: true });
 
       expect(cmd.fields).toHaveLength(1);
@@ -156,7 +235,7 @@ describe('DENSE_VECTOR', () => {
 
       expect(errors.length).toBeGreaterThan(0);
       expect(cmd.incomplete).toBe(true);
-      expect(cmd.fields).toHaveLength(2);
+      expect(cmd.fields).toHaveLength(1);
       expect(cmd.fields.every((field) => field.incomplete)).toBe(true);
     });
 
@@ -164,7 +243,7 @@ describe('DENSE_VECTOR', () => {
       const { ast, errors } = EsqlQuery.fromSrc(`FROM logs | DENSE_VECTOR WITH { "dims": 128 }`);
       const cmd = getDenseVector(ast);
 
-      expect(errors.length).toBeGreaterThan(0);
+      expect(errors).toHaveLength(0);
       expect(cmd.incomplete).toBe(true);
       expect(cmd.fields[0].incomplete).toBe(true);
 

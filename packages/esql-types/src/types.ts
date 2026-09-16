@@ -211,6 +211,9 @@ export interface ESQLAstHighlightCommand extends ESQLCommand<'highlight'> {
 
 export interface ESQLAstDenseVectorCommand extends ESQLCommand<'dense_vector'> {
   fields: ESQLColumn[];
+  targetField?: ESQLColumn;
+  suffix?: ESQLStringLiteral;
+  literalInput?: ESQLStringLiteral;
   namedParameters?: ESQLMap;
 }
 
