@@ -104,6 +104,9 @@ import { MmrCommandContext } from "./esql_parser.js";
 import { MmrQueryVectorParameterContext } from "./esql_parser.js";
 import { MmrQueryVectorExpressionContext } from "./esql_parser.js";
 import { DenseVectorCommandContext } from "./esql_parser.js";
+import { DenseVectorTargetNameContext } from "./esql_parser.js";
+import { DenseVectorSuffixContext } from "./esql_parser.js";
+import { DenseVectorLiteralInputContext } from "./esql_parser.js";
 import { MatchExpressionContext } from "./esql_parser.js";
 import { LogicalNotContext } from "./esql_parser.js";
 import { BooleanDefaultContext } from "./esql_parser.js";
@@ -1116,6 +1119,42 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitDenseVectorCommand?: (ctx: DenseVectorCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by the `denseVectorTargetName`
+	 * labeled alternative in `esql_parser.denseVectorNaming`.
+	 * @param ctx the parse tree
+	 */
+	enterDenseVectorTargetName?: (ctx: DenseVectorTargetNameContext) => void;
+	/**
+	 * Exit a parse tree produced by the `denseVectorTargetName`
+	 * labeled alternative in `esql_parser.denseVectorNaming`.
+	 * @param ctx the parse tree
+	 */
+	exitDenseVectorTargetName?: (ctx: DenseVectorTargetNameContext) => void;
+	/**
+	 * Enter a parse tree produced by the `denseVectorSuffix`
+	 * labeled alternative in `esql_parser.denseVectorNaming`.
+	 * @param ctx the parse tree
+	 */
+	enterDenseVectorSuffix?: (ctx: DenseVectorSuffixContext) => void;
+	/**
+	 * Exit a parse tree produced by the `denseVectorSuffix`
+	 * labeled alternative in `esql_parser.denseVectorNaming`.
+	 * @param ctx the parse tree
+	 */
+	exitDenseVectorSuffix?: (ctx: DenseVectorSuffixContext) => void;
+	/**
+	 * Enter a parse tree produced by the `denseVectorLiteralInput`
+	 * labeled alternative in `esql_parser.denseVectorNaming`.
+	 * @param ctx the parse tree
+	 */
+	enterDenseVectorLiteralInput?: (ctx: DenseVectorLiteralInputContext) => void;
+	/**
+	 * Exit a parse tree produced by the `denseVectorLiteralInput`
+	 * labeled alternative in `esql_parser.denseVectorNaming`.
+	 * @param ctx the parse tree
+	 */
+	exitDenseVectorLiteralInput?: (ctx: DenseVectorLiteralInputContext) => void;
 	/**
 	 * Enter a parse tree produced by the `matchExpression`
 	 * labeled alternative in `esql_parser.booleanExpression`.
