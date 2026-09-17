@@ -470,7 +470,10 @@ describe('SET instruction parsing', () => {
             type: 'function',
             subtype: 'binary-expression',
             name: '=',
-            args: [{ type: 'identifier', name: 'timezone' }, []],
+            args: [
+              { type: 'identifier', name: 'timezone' },
+              { type: 'unknown', incomplete: true },
+            ],
             incomplete: true,
           },
         ],

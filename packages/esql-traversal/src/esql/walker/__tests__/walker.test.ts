@@ -475,15 +475,16 @@ const fromWhereDeepInlineCast = () =>
             binary('+', [
               expr.literal.integer(1),
               expr.func.call('fn', [
-                unary('not', [
+                unary(
+                  'not',
                   binary('*', [
                     expr.literal.integer(-1),
                     expr.inlineCast({
                       castType: 'integer',
                       value: expr.column(['a', 'b', 'c']),
                     }),
-                  ]),
-                ]),
+                  ])
+                ),
               ]),
             ]),
           ]),

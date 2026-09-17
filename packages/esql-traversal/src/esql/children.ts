@@ -13,7 +13,6 @@ import type {
   ESQLCommand,
   ESQLProperNode,
 } from '@elastic/esql-types';
-import { singleItems } from './utils';
 import { childrenOfPromqlNode } from '../promql/children';
 
 export function* children(
@@ -25,11 +24,11 @@ export function* children(
     case 'header-command':
     case 'order':
     case 'option': {
-      yield* singleItems(node.args);
+      yield* node.args;
       break;
     }
     case 'list': {
-      yield* singleItems(node.values);
+      yield* node.values;
       break;
     }
     case 'map': {
@@ -42,11 +41,7 @@ export function* children(
       break;
     }
     case 'inlineCast': {
-      if (Array.isArray(node.value)) {
-        yield* singleItems(node.value);
-      } else {
-        yield node.value;
-      }
+      yield node.value;
       break;
     }
     case 'parens': {
@@ -65,7 +60,7 @@ export function* childrenOfAnyNode(
   }
 
   if ('args' in node && Array.isArray(node.args)) {
-    yield* singleItems(node.args);
+    yield* node.args;
     return;
   }
 
