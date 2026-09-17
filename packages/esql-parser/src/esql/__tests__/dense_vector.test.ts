@@ -149,35 +149,18 @@ describe('DENSE_VECTOR', () => {
       expect(cmd.fields).toHaveLength(2);
       expect(cmd.namedParameters).toMatchObject({ type: 'map' });
     });
+  });
 
-    it('parses a bare literal input', () => {
-      const src = `FROM books | DENSE_VECTOR "be excellent to each other"`;
-      const { ast, errors } = EsqlQuery.fromSrc(src);
-      const cmd = getDenseVector(ast);
+  it('builds no command parts when the input is a string literal', () => {
+    const src = `FROM books | DENSE_VECTOR "the quick brown fox" WITH { "inference_id": "my_text_embedding" }`;
+    const { ast } = EsqlQuery.fromSrc(src);
+    const cmd = getDenseVector(ast);
 
-      expect(errors).toHaveLength(0);
-      expect(cmd.literalInput).toMatchObject({
-        type: 'literal',
-        valueUnquoted: 'be excellent to each other',
-      });
-      expect(cmd.fields).toHaveLength(0);
-      expect(cmd.targetField).toBeUndefined();
-    });
-
-    it('parses a named literal input', () => {
-      const src = `FROM books | DENSE_VECTOR vec = "hello"`;
-      const { ast, errors } = EsqlQuery.fromSrc(src);
-      const cmd = getDenseVector(ast);
-
-      expect(errors).toHaveLength(0);
-      expect(cmd.targetField).toMatchObject({ type: 'column', name: 'vec' });
-      expect(cmd.literalInput).toMatchObject({ type: 'literal', valueUnquoted: 'hello' });
-      expect(cmd.args[0]).toMatchObject({
-        type: 'function',
-        name: '=',
-        args: [{ name: 'vec' }, { valueUnquoted: 'hello' }],
-      });
-    });
+    expect(cmd).toMatchObject({ type: 'command', name: 'dense_vector', incomplete: true });
+    expect(cmd.args).toHaveLength(0);
+    expect(cmd.fields).toHaveLength(0);
+    expect(cmd.targetField).toBeUndefined();
+    expect(cmd.namedParameters).toBeUndefined();
   });
 
   describe('incomplete flag', () => {

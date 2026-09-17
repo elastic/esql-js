@@ -39,18 +39,6 @@ describe('DENSE_VECTOR round-trips through the pretty-printer', () => {
     expect(roundTrip(src)).toBe(src);
   });
 
-  it('round-trips a literal input', () => {
-    const src = 'FROM books | DENSE_VECTOR "hello world"';
-
-    expect(roundTrip(src)).toBe(src);
-  });
-
-  it('round-trips a named literal input', () => {
-    const src = 'FROM books | DENSE_VECTOR vec = "hello world"';
-
-    expect(roundTrip(src)).toBe(src);
-  });
-
   it('round-trips a WITH clause', () => {
     const src = 'FROM books | DENSE_VECTOR description WITH {"inference_id": "my-endpoint"}';
 

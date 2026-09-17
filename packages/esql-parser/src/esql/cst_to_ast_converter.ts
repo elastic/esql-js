@@ -2572,20 +2572,10 @@ export class CstToAstConverter {
       args.push(onOption);
       incomplete ||= onOption.incomplete;
     } else if (namingCtx instanceof cst.DenseVectorLiteralInputContext) {
-      const literalInput = this.toStringLiteral(namingCtx._literalInput);
+      command.fields = [];
+      command.incomplete = true;
 
-      command.literalInput = literalInput;
-
-      if (namingCtx._targetField) {
-        const targetField = this.fromQualifiedName(namingCtx._targetField);
-
-        command.targetField = targetField;
-        args.push(this.toDenseVectorAssignment(namingCtx, targetField, literalInput));
-      } else {
-        args.push(literalInput);
-      }
-
-      args.push(...fields);
+      return command;
     } else {
       if (!fields.length) {
         fields.push(this.toEmptyColumn(ctx));
