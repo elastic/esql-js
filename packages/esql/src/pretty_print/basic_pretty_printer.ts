@@ -40,8 +40,8 @@ import type {
 
 export interface BasicPrettyPrinterOptions {
   /**
-   * Whether to break the query into multiple lines on each pipe. Defaults to
-   * `false`.
+   * Whether to break the query into multiple lines: each header command (`SET`)
+   * and each piped command on its own line. Defaults to `false`.
    */
   multiline?: boolean;
 
@@ -623,12 +623,13 @@ export class BasicPrettyPrinter {
         opts.multiline && !Array.isArray(parentNode) && parentNode?.name !== 'fork';
 
       const cmdSeparator = useMultiLine ? `\n${opts.pipeTab ?? '  '}| ` : ' | ';
+      const headerSeparator = useMultiLine ? '\n' : ' ';
       let text = '';
 
       // Print header commands first (e.g., SET instructions)
       if (!opts.skipHeader) {
         for (const headerCmd of ctx.visitHeaderCommands()) {
-          if (text) text += ' ';
+          if (text) text += headerSeparator;
           text += headerCmd;
         }
       }
@@ -640,8 +641,8 @@ export class BasicPrettyPrinter {
           // Separate main commands with pipe `|`
           text += cmdSeparator;
         } else if (text) {
-          // Separate header commands from main commands with just a space
-          text += ' ';
+          // Separate header commands from main commands with just a `headerSeparator`
+          text += headerSeparator;
         }
 
         text += cmd;

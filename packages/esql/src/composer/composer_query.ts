@@ -332,7 +332,11 @@ export class ComposerQuery {
    * const query = esql `FROM index`;
    * query.header `SET x = 10`;
    *
-   * query.print(); // "SET x = 10; FROM index"
+   * query.print();
+   * // SET x = 10;
+   * // FROM index
+   *
+   * query.print('basic'); // "SET x = 10; FROM index"
    * ```
    */
   public readonly header: QueryCommandTag = this._createCommandTag(synth.hdr);
@@ -1246,7 +1250,7 @@ export class ComposerQuery {
    * - `wrapping` (default) — readable format that wraps long lines to fit a
    *   width (80 characters by default).
    * - `basic` — single line.
-   * - `pipe-multiline` — one pipe (command) per line.
+   * - `pipe-multiline` — one pipe or header (command) per line.
    *
    * @param format The format of the printed query.
    * @param opts Options forwarded to the underlying pretty-printer.

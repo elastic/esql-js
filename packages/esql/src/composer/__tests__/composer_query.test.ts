@@ -118,6 +118,17 @@ FROM index
 from index
   | limit 10`);
     });
+
+    test('prints SET headers on their own lines before the source', () => {
+      const query = esql.ts('metrics-*');
+      query.addSetCommand('unmapped_fields', 'NULLIFY');
+      query.pipe('STATS AVG(AVG_OVER_TIME(cpu.usage)) BY TBUCKET(100)');
+
+      expect('\n' + query.print('pipe-multiline')).toBe(`
+SET unmapped_fields = "NULLIFY";
+TS metrics-*
+  | STATS AVG(AVG_OVER_TIME(cpu.usage)) BY TBUCKET(100)`);
+    });
   });
 });
 

@@ -1156,6 +1156,58 @@ describe('multiline query', () => {
     (WHERE keywordField != "" | LIMIT 100)
     (SORT doubleField ASC NULLS LAST)`);
   });
+
+  test('prints each SET header on its own line, then the source', () => {
+    const { text } = multiline(
+      'SET unmapped_fields = "NULLIFY"; FROM index | WHERE a == 1 | LIMIT 1'
+    );
+
+    expect(text).toBe(`SET unmapped_fields = "NULLIFY";
+FROM index
+  | WHERE a == 1
+  | LIMIT 1`);
+  });
+
+  test('prints multiple SET headers each on their own line', () => {
+    const { text } = multiline(
+      'SET unmapped_fields = "NULLIFY"; SET time_zone = "+05:00"; FROM index | LIMIT 1'
+    );
+
+    expect(text).toBe(`SET unmapped_fields = "NULLIFY";
+SET time_zone = "+05:00";
+FROM index
+  | LIMIT 1`);
+  });
+
+  test('prints SET then TS source', () => {
+    const { text } = multiline(
+      'SET unmapped_fields = "NULLIFY"; TS metrics-* | STATS AVG(AVG_OVER_TIME(cpu.usage)) BY TBUCKET(100)'
+    );
+
+    expect(text).toBe(`SET unmapped_fields = "NULLIFY";
+TS metrics-*
+  | STATS AVG(AVG_OVER_TIME(cpu.usage)) BY TBUCKET(100)`);
+  });
+
+  test('skipHeader still drops SET in multiline', () => {
+    const { text } = multiline(
+      'SET unmapped_fields = "NULLIFY"; SET time_zone = "+05:00"; FROM index | LIMIT 1',
+      { skipHeader: true }
+    );
+
+    expect(text).toBe(`FROM index
+  | LIMIT 1`);
+  });
+
+  test('pipeTab only affects pipes, not SET', () => {
+    const { text } = multiline('SET unmapped_fields = "NULLIFY"; FROM index | WHERE a == 1', {
+      pipeTab: '',
+    });
+
+    expect(text).toBe(`SET unmapped_fields = "NULLIFY";
+FROM index
+| WHERE a == 1`);
+  });
 });
 
 describe('single line command', () => {
