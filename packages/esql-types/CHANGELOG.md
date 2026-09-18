@@ -1,5 +1,20 @@
 # @elastic/esql-types
 
+## 4.26.0
+
+### Minor Changes
+
+- [#249](https://github.com/elastic/esql-js/pull/249) [`18334b7`](https://github.com/elastic/esql-js/commit/18334b7338f24afdb8957a094f19cd97c662720e) Thanks [@momovdg](https://github.com/momovdg)! - Add `DENSE_VECTOR` output-naming support, following the latest Elasticsearch grammar.
+
+  Two new forms now parse, and round-trip through the pretty-printer:
+
+  - `DENSE_VECTOR target = field` — an explicit output column name, exposed as `targetField`
+  - `DENSE_VECTOR suffix = "_dv" ON a, b` — a shared output-name suffix, exposed as `suffix`, with the input fields carried on an `on` option
+
+  The grammar also makes the field list optional, which previously caused the CST to AST conversion to throw on queries such as `FROM logs | DENSE_VECTOR` and discard the whole AST. Those queries now convert to an incomplete command.
+
+  That same grammar accepts a string literal where a field name is expected, as in `FROM books | DENSE_VECTOR "the quick brown fox"`. Elasticsearch rejects these queries with a `parsing_exception`, so the converter builds no command parts for them: the command is marked `incomplete` with no arguments, fields, target field or named parameters, and any trailing `WITH` clause is dropped.
+
 ## 4.25.0
 
 ## 4.24.0

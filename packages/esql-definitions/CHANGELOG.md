@@ -1,5 +1,11 @@
 # @elastic/esql-definitions
 
+## 4.26.0
+
+### Patch Changes
+
+- [#246](https://github.com/elastic/esql-js/pull/246) [`0df48e7`](https://github.com/elastic/esql-js/commit/0df48e7d0ae86ea75d0f7193cdfd91e82eb87092) Thanks [@momovdg](https://github.com/momovdg)! - Add `DENSE_VECTOR` to `processingCommandNames` so it is highlighted as a command keyword in TextMate, Monaco, Prism.js, and Highlight.js grammars
+
 ## 4.25.0
 
 ## 4.24.0
