@@ -40,7 +40,7 @@ export const settingDefinitions: SettingDefinition[] = [
     ],
     description: 'Limits the scope of a [cross-project search (CPS)](https://www.elastic.co/docs/reference/query-languages/esql/esql-cross-serverless-projects) to specific projects before query execution, based on a [Lucene query expression](docs-content://explore-analyze/cross-project-search/cross-project-search-project-routing.md) evaluated against project tags. Excluded projects are not queried, which can reduce cost and latency. ',
     serverlessOnly: true,
-    preview: true,
+    preview: false,
     snapshotOnly: false,
   },
   {
@@ -61,6 +61,16 @@ export const settingDefinitions: SettingDefinition[] = [
     description: 'Determines how unmapped fields are treated.\nFor a conceptual overview and use cases, including performance considerations, refer to\n[Unmapped fields](https://www.elastic.co/docs/reference/query-languages/esql/esql-unmapped-fields).\n\nPossible values are:\n\n- `DEFAULT` : Standard ESQL queries fail when referencing unmapped fields.\n- `NULLIFY` : Treats referenced unmapped fields as null values. Fully unmapped fields that are never mentioned do not\n  appear in the output.\n- `LOAD` : Loads referenced fully unmapped fields from the stored\n  [`_source`](https://www.elastic.co/docs/reference/elasticsearch/mapping-reference/mapping-source-field) with type `keyword`. Or nullifies them if\n  absent from `_source`. Also loads partially mapped fields from `_source` where they are unmapped.\n{applies_to}`stack: preview =9.4, ga 9.5+`\n\n[`PROMQL`](https://www.elastic.co/docs/reference/query-languages/esql/commands/promql) queries have their own specific semantics for unmapped fields.\n\nSpecial notes about the `LOAD` option:\n- [`PROMQL`](https://www.elastic.co/docs/reference/query-languages/esql/commands/promql) is not supported with `LOAD`.\n- Referencing subfields of `flattened` parents is not supported.\n- [Full-text search functions](https://www.elastic.co/docs/reference/query-languages/esql/functions-operators/search-functions) are supported,\n  although unmapped fields cannot be loaded without an explicit invocation of `to_text`.\n  {applies_to}`stack: ga 9.5+`\n  - Full-text search functions are not supported anywhere in the query. {applies_to}`stack: preview =9.4`\n- Partially unmapped non-`keyword` fields can be used in expressions. If the field is mapped to a single type and there\'s an\n  available conversion from `keyword` to that type, the implicit conversion is applied. If there\'s no available conversion\n  (for example `text`, `aggregate_metric_double`, or `dense_vector`), and an explicit one has not been provided by the user,\n  values retain the mapped type but are `null` for rows from indices where the field is unmapped.\n  {applies_to}`stack: ga 9.5+`\n  - Partially unmapped non-`keyword` fields must be referenced inside a cast or conversion function (e.g. `::TYPE` or\n    `TO_TYPE`), unless referenced in `KEEP` or `DROP`. {applies_to}`stack: preview =9.4`\n\nThe default itself is configurable. If a query does not specify a value, the\n`esql.query.settings.unmapped_fields` cluster setting supplies it. If that cluster setting is not configured\neither, the value is `DEFAULT`.\n{applies_to}`{"stack": "ga 9.6+", "serverless": "unavailable"}`\n',
     serverlessOnly: false,
     preview: false,
+    snapshotOnly: false,
+  },
+  {
+    name: 'wildcards_match_datasets',
+    type: [
+      'boolean',
+    ],
+    description: 'When enabled, a wildcard in `FROM` also matches registered datasets. Defaults to `false`, so a wildcard does not match a dataset and a dataset is reached by its exact name. Other abstractions a wildcard matches are unaffected.\n\nThe default itself is configurable. If a query does not specify a value, the `esql.query.settings.wildcards_match_datasets` cluster setting supplies it. If that cluster setting is not configured either, the value is `false`. {applies_to}`{"stack": "ga 9.6+", "serverless": "unavailable"}`',
+    serverlessOnly: false,
+    preview: true,
     snapshotOnly: false,
   },
 ];
