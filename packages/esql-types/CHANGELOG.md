@@ -1,5 +1,7 @@
 # @elastic/esql-types
 
+## 4.27.0
+
 ## 4.26.0
 
 ### Minor Changes
