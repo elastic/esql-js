@@ -207,6 +207,43 @@ describe('RERANK', () => {
       expect(rerankCmd.inferenceId).toEqual(undefined);
     });
 
+    it('should leave inferenceId unset for finished empty WITH map', () => {
+      const text = 'FROM movies | RERANK "star wars" ON title WITH {}';
+      const { ast } = EsqlQuery.fromSrc(text);
+      const rerankCmd = ast.commands[1] as ESQLAstRerankCommand;
+
+      expect(rerankCmd.inferenceId).toEqual(undefined);
+
+      const withOption = rerankCmd.args.find(
+        (arg): arg is ESQLCommandOption =>
+          'type' in arg && arg.type === 'option' && arg.name === 'with'
+      );
+      expect(withOption).toBeDefined();
+      expect(withOption!.incomplete).toBe(false);
+
+      const mapArg = withOption!.args[0] as ESQLMap;
+      expect(mapArg).toMatchObject({ type: 'map', incomplete: false, entries: [] });
+    });
+
+    it('should leave inferenceId unset when finished WITH map omits inference_id', () => {
+      const text = 'FROM movies | RERANK "star wars" ON title WITH { "timeout": "1m" }';
+      const { ast } = EsqlQuery.fromSrc(text);
+      const rerankCmd = ast.commands[1] as ESQLAstRerankCommand;
+
+      expect(rerankCmd.inferenceId).toEqual(undefined);
+    });
+
+    it('should mark inferenceId incomplete for empty inference_id value', () => {
+      const text = 'FROM movies | RERANK "star wars" ON title WITH { "inference_id": "" }';
+      const { ast } = EsqlQuery.fromSrc(text);
+      const rerankCmd = ast.commands[1] as ESQLAstRerankCommand;
+
+      expect(rerankCmd.inferenceId).toMatchObject({
+        type: 'literal',
+        incomplete: true,
+      });
+    });
+
     it('should handle missing ON clause', () => {
       const text = 'FROM movies | RERANK "star wars" WITH { "inference_id" : "reranker" }';
       const { ast, errors } = EsqlQuery.fromSrc(text);
@@ -221,10 +258,16 @@ describe('RERANK', () => {
     it('should handle incomplete WITH clause', () => {
       const text = 'FROM movies | RERANK "star wars" ON title WITH';
       const { ast, errors } = EsqlQuery.fromSrc(text);
+      const rerankCmd = ast.commands[1] as ESQLAstRerankCommand;
 
-      expect(ast.commands[1]).toMatchObject({
+      expect(rerankCmd).toMatchObject({
         type: 'command',
         name: 'rerank',
+      });
+      expect(rerankCmd.inferenceId).toMatchObject({
+        type: 'literal',
+        name: 'inferenceId',
+        incomplete: true,
       });
       expect(errors).toHaveLength(1);
     });

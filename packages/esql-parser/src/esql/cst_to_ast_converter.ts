@@ -1665,23 +1665,24 @@ export class CstToAstConverter {
     if (namedParameters) {
       command.args.push(withOption);
 
-      command.inferenceId = Builder.expression.literal.string(
-        '',
-        { name: 'inferenceId' },
-        { incomplete: true }
-      );
-
-      const inferenceIdParam = namedParameters?.entries.find(
+      const inferenceIdParam = namedParameters.entries.find(
         (param) =>
           param.key.type === 'literal' &&
           param.key.literalType === 'keyword' &&
           param.key.valueUnquoted === 'inference_id'
-      )?.value as ast.ESQLStringLiteral;
+      )?.value as ast.ESQLStringLiteral | undefined;
 
       if (inferenceIdParam) {
         command.inferenceId = inferenceIdParam;
         command.inferenceId.incomplete = inferenceIdParam.valueUnquoted?.length === 0;
+      } else if (withOption.incomplete || namedParameters.incomplete) {
+        command.inferenceId = Builder.expression.literal.string(
+          '',
+          { name: 'inferenceId' },
+          { incomplete: true }
+        );
       }
+      // else: complete map omitting inference_id → leave undefined
     }
   }
 
