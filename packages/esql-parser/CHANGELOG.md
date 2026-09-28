@@ -1,5 +1,20 @@
 # @elastic/esql-parser
 
+## 4.28.0
+
+### Minor Changes
+
+- [#253](https://github.com/elastic/esql-js/pull/253) [`b0606c1`](https://github.com/elastic/esql-js/commit/b0606c1033b12c2dc07ccccb237a6c2827d2802e) Thanks [@stratoula](https://github.com/stratoula)! - Fixes the rerank inference id incomplete flag when it is not given
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.28.0
+  - @elastic/esql-definitions@4.28.0
+  - @elastic/esql-promql-grammar@4.28.0
+  - @elastic/esql-traversal@4.28.0
+  - @elastic/esql-ast@4.28.0
+
 ## 4.27.0
 
 ### Patch Changes
