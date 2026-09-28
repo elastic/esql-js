@@ -50,6 +50,7 @@ import dateFormatDefinition from './date_format';
 import dateParseDefinition from './date_parse';
 import dateTruncDefinition from './date_trunc';
 import dateUnitCountDefinition from './date_unit_count';
+import dayDefinition from './day';
 import dayNameDefinition from './day_name';
 import decayDefinition from './decay';
 import deltaDefinition from './delta';
@@ -66,12 +67,14 @@ import floorDefinition from './floor';
 import fromBase64Definition from './from_base64';
 import greatestDefinition from './greatest';
 import hashDefinition from './hash';
+import hourDefinition from './hour';
 import hypotDefinition from './hypot';
 import ideltaDefinition from './idelta';
 import increaseDefinition from './increase';
 import ipPrefixDefinition from './ip_prefix';
 import irateDefinition from './irate';
 import jsonExtractDefinition from './json_extract';
+import jsonStringDefinition from './json_string';
 import knnDefinition from './knn';
 import kqlDefinition from './kql';
 import lastDefinition from './last';
@@ -93,6 +96,7 @@ import medianDefinition from './median';
 import medianAbsoluteDeviationDefinition from './median_absolute_deviation';
 import minDefinition from './min';
 import minOverTimeDefinition from './min_over_time';
+import monthDefinition from './month';
 import monthNameDefinition from './month_name';
 import mvAppendDefinition from './mv_append';
 import mvAvgDefinition from './mv_avg';
@@ -247,6 +251,7 @@ import varianceDefinition from './variance';
 import varianceOverTimeDefinition from './variance_over_time';
 import weightedAvgDefinition from './weighted_avg';
 import withoutDefinition from './without';
+import yearDefinition from './year';
 
 export const functionDefinitions: FunctionDefinition[] = [
   absDefinition,
@@ -289,6 +294,7 @@ export const functionDefinitions: FunctionDefinition[] = [
   dateParseDefinition,
   dateTruncDefinition,
   dateUnitCountDefinition,
+  dayDefinition,
   dayNameDefinition,
   decayDefinition,
   deltaDefinition,
@@ -305,12 +311,14 @@ export const functionDefinitions: FunctionDefinition[] = [
   fromBase64Definition,
   greatestDefinition,
   hashDefinition,
+  hourDefinition,
   hypotDefinition,
   ideltaDefinition,
   increaseDefinition,
   ipPrefixDefinition,
   irateDefinition,
   jsonExtractDefinition,
+  jsonStringDefinition,
   knnDefinition,
   kqlDefinition,
   lastDefinition,
@@ -332,6 +340,7 @@ export const functionDefinitions: FunctionDefinition[] = [
   medianAbsoluteDeviationDefinition,
   minDefinition,
   minOverTimeDefinition,
+  monthDefinition,
   monthNameDefinition,
   mvAppendDefinition,
   mvAvgDefinition,
@@ -486,4 +495,5 @@ export const functionDefinitions: FunctionDefinition[] = [
   varianceOverTimeDefinition,
   weightedAvgDefinition,
   withoutDefinition,
+  yearDefinition,
 ];

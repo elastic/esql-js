@@ -50,6 +50,7 @@ import dateFormatDocs from './date_format';
 import dateParseDocs from './date_parse';
 import dateTruncDocs from './date_trunc';
 import dateUnitCountDocs from './date_unit_count';
+import dayDocs from './day';
 import dayNameDocs from './day_name';
 import decayDocs from './decay';
 import deltaDocs from './delta';
@@ -66,12 +67,14 @@ import floorDocs from './floor';
 import fromBase64Docs from './from_base64';
 import greatestDocs from './greatest';
 import hashDocs from './hash';
+import hourDocs from './hour';
 import hypotDocs from './hypot';
 import ideltaDocs from './idelta';
 import increaseDocs from './increase';
 import ipPrefixDocs from './ip_prefix';
 import irateDocs from './irate';
 import jsonExtractDocs from './json_extract';
+import jsonStringDocs from './json_string';
 import knnDocs from './knn';
 import kqlDocs from './kql';
 import lastDocs from './last';
@@ -93,6 +96,7 @@ import medianDocs from './median';
 import medianAbsoluteDeviationDocs from './median_absolute_deviation';
 import minDocs from './min';
 import minOverTimeDocs from './min_over_time';
+import monthDocs from './month';
 import monthNameDocs from './month_name';
 import mvAppendDocs from './mv_append';
 import mvAvgDocs from './mv_avg';
@@ -247,6 +251,7 @@ import varianceDocs from './variance';
 import varianceOverTimeDocs from './variance_over_time';
 import weightedAvgDocs from './weighted_avg';
 import withoutDocs from './without';
+import yearDocs from './year';
 
 export const functionDocs: Record<string, DefinitionDocs> = {
   abs: absDocs,
@@ -289,6 +294,7 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   date_parse: dateParseDocs,
   date_trunc: dateTruncDocs,
   date_unit_count: dateUnitCountDocs,
+  day: dayDocs,
   day_name: dayNameDocs,
   decay: decayDocs,
   delta: deltaDocs,
@@ -305,12 +311,14 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   from_base64: fromBase64Docs,
   greatest: greatestDocs,
   hash: hashDocs,
+  hour: hourDocs,
   hypot: hypotDocs,
   idelta: ideltaDocs,
   increase: increaseDocs,
   ip_prefix: ipPrefixDocs,
   irate: irateDocs,
   json_extract: jsonExtractDocs,
+  json_string: jsonStringDocs,
   knn: knnDocs,
   kql: kqlDocs,
   last: lastDocs,
@@ -332,6 +340,7 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   median_absolute_deviation: medianAbsoluteDeviationDocs,
   min: minDocs,
   min_over_time: minOverTimeDocs,
+  month: monthDocs,
   month_name: monthNameDocs,
   mv_append: mvAppendDocs,
   mv_avg: mvAvgDocs,
@@ -486,4 +495,5 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   variance_over_time: varianceOverTimeDocs,
   weighted_avg: weightedAvgDocs,
   without: withoutDocs,
+  year: yearDocs,
 };

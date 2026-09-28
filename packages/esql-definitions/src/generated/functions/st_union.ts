@@ -31,11 +31,6 @@ const definition: FunctionDefinition = {
           type: 'cartesian_point',
           optional: false,
         },
-        {
-          name: 'geomB',
-          type: 'cartesian_point',
-          optional: false,
-        },
       ],
       variadic: false,
       returnType: 'cartesian_shape',
@@ -49,6 +44,33 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'geomB',
+          type: 'cartesian_point',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'cartesian_shape',
+    },
+    {
+      params: [
+        {
+          name: 'geomA',
+          type: 'cartesian_point',
+          optional: false,
+        },
+        {
+          name: 'geomB',
+          type: 'cartesian_shape',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'cartesian_shape',
+    },
+    {
+      params: [
+        {
+          name: 'geomA',
           type: 'cartesian_shape',
           optional: false,
         },
@@ -66,7 +88,7 @@ const definition: FunctionDefinition = {
         {
           name: 'geomB',
           type: 'cartesian_point',
-          optional: false,
+          optional: true,
         },
       ],
       variadic: false,
@@ -82,7 +104,7 @@ const definition: FunctionDefinition = {
         {
           name: 'geomB',
           type: 'cartesian_shape',
-          optional: false,
+          optional: true,
         },
       ],
       variadic: false,
@@ -92,11 +114,6 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'geomA',
-          type: 'geo_point',
-          optional: false,
-        },
-        {
-          name: 'geomB',
           type: 'geo_point',
           optional: false,
         },
@@ -113,6 +130,33 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'geomB',
+          type: 'geo_point',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'geo_shape',
+    },
+    {
+      params: [
+        {
+          name: 'geomA',
+          type: 'geo_point',
+          optional: false,
+        },
+        {
+          name: 'geomB',
+          type: 'geo_shape',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'geo_shape',
+    },
+    {
+      params: [
+        {
+          name: 'geomA',
           type: 'geo_shape',
           optional: false,
         },
@@ -130,7 +174,7 @@ const definition: FunctionDefinition = {
         {
           name: 'geomB',
           type: 'geo_point',
-          optional: false,
+          optional: true,
         },
       ],
       variadic: false,
@@ -146,7 +190,7 @@ const definition: FunctionDefinition = {
         {
           name: 'geomB',
           type: 'geo_shape',
-          optional: false,
+          optional: true,
         },
       ],
       variadic: false,
