@@ -778,10 +778,6 @@ export class GlobalVisitorContext<
     expressionNode: types.ESQLAstExpressionNode,
     input: types.ExpressionVisitorInput<Methods>
   ): types.ExpressionVisitorOutput<Methods> {
-    if (Array.isArray(expressionNode)) {
-      throw new Error('should not happen');
-    }
-
     switch (expressionNode.type) {
       case 'column': {
         if (!this.methods.visitColumnExpression) break;

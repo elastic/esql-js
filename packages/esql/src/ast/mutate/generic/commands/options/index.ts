@@ -7,7 +7,7 @@
 
 import { Builder } from '@elastic/esql-ast';
 import type {
-  ESQLAstItem,
+  ESQLAstExpression,
   ESQLAstQueryExpression,
   ESQLCommand,
   ESQLCommandOption,
@@ -110,7 +110,7 @@ export const remove = (ast: ESQLAstQueryExpression, option: ESQLCommandOption): 
         return false;
       }
 
-      const index = (ctx.node.args as ESQLAstItem[]).indexOf(target);
+      const index = (ctx.node.args as ESQLAstExpression[]).indexOf(target);
 
       if (index === -1) {
         return false;

@@ -34,7 +34,6 @@ import type {
   ESQLSource,
   ESQLParamLiteral,
   ESQLFunction,
-  ESQLAstItem,
   ESQLStringLiteral,
   ESQLBinaryExpression,
   ESQLUnaryExpression,
@@ -349,7 +348,7 @@ export namespace Builder {
 
       export const call = (
         nameOrOperator: string | ESQLIdentifier | ESQLParamLiteral,
-        args: ESQLAstItem[],
+        args: ESQLAstExpression[],
         template?: Omit<AstNodeTemplate<ESQLFunction>, 'subtype' | 'name' | 'operator' | 'args'>,
         fromParser?: Partial<AstNodeParserFields>
       ): ESQLFunction => {
@@ -370,7 +369,7 @@ export namespace Builder {
 
       export const unary = (
         name: string,
-        arg: ESQLAstItem,
+        arg: ESQLAstExpression,
         template?: Omit<AstNodeTemplate<ESQLFunction>, 'subtype' | 'name' | 'operator' | 'args'>,
         fromParser?: Partial<AstNodeParserFields>
       ): ESQLUnaryExpression => {
@@ -383,7 +382,7 @@ export namespace Builder {
 
       export const postfix = (
         name: string,
-        arg: ESQLAstItem,
+        arg: ESQLAstExpression,
         template?: Omit<AstNodeTemplate<ESQLFunction>, 'subtype' | 'name' | 'operator' | 'args'>,
         fromParser?: Partial<AstNodeParserFields>
       ): ESQLUnaryExpression => {
@@ -396,7 +395,7 @@ export namespace Builder {
 
       export const binary = <Name extends BinaryExpressionOperator = BinaryExpressionOperator>(
         name: Name,
-        args: [left: ESQLAstItem, right: ESQLAstItem],
+        args: [left: ESQLAstExpression, right: ESQLAstExpression],
         template?: Omit<AstNodeTemplate<ESQLBinaryExpression<Name>>, 'subtype' | 'name' | 'args'>,
         fromParser?: Partial<AstNodeParserFields>
       ): ESQLBinaryExpression<Name> => {
@@ -409,7 +408,7 @@ export namespace Builder {
     }
 
     export const where = (
-      args: [left: ESQLAstItem, right: ESQLAstItem],
+      args: [left: ESQLAstExpression, right: ESQLAstExpression],
       template?: Omit<AstNodeTemplate<ESQLFunction>, 'subtype' | 'name' | 'operator' | 'args'>,
       fromParser?: Partial<AstNodeParserFields>
     ) => Builder.expression.func.binary('where', args, template, fromParser);

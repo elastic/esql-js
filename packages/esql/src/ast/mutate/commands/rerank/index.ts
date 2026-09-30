@@ -13,7 +13,7 @@ import type {
   ESQLStringLiteral,
   ESQLParamLiteral,
   ESQLMap,
-  ESQLAstItem,
+  ESQLAstExpression,
   ESQLMapEntry,
   ESQLLiteral,
 } from '../../../../types';
@@ -44,12 +44,7 @@ export const setQuery = (cmd: ESQLAstRerankCommand, query: string | ESQLStringLi
 
   cmd.query = queryLiteral;
 
-  if (
-    firstArg &&
-    !Array.isArray(firstArg) &&
-    firstArg.type === 'function' &&
-    firstArg.name === '='
-  ) {
+  if (firstArg && firstArg.type === 'function' && firstArg.name === '=') {
     // It's an assignment, update the right side of the expression
     firstArg.args[1] = queryLiteral;
   } else {
@@ -68,8 +63,7 @@ export const setQuery = (cmd: ESQLAstRerankCommand, query: string | ESQLStringLi
  */
 export const setTargetField = (cmd: ESQLAstRerankCommand, target: string | null) => {
   const firstArg = cmd.args[0];
-  const isAssignment =
-    firstArg && !Array.isArray(firstArg) && firstArg.type === 'function' && firstArg.name === '=';
+  const isAssignment = firstArg && firstArg.type === 'function' && firstArg.name === '=';
 
   // Case 1: Set a new target field
   if (target !== null) {
@@ -117,8 +111,8 @@ export const setFields = (
     });
   }
 
-  const isOnOption = (arg: ESQLAstItem): arg is ESQLCommandOption =>
-    !!arg && !Array.isArray(arg) && arg.type === 'option' && arg.name === 'on';
+  const isOnOption = (arg: ESQLAstExpression): arg is ESQLCommandOption =>
+    !!arg && arg.type === 'option' && arg.name === 'on';
 
   const onOption = cmd.args.find(isOnOption);
 
@@ -156,14 +150,14 @@ export const setWithParameter = (
     return val;
   };
 
-  const isWithOption = (arg: ESQLAstItem): arg is ESQLCommandOption =>
-    !!arg && !Array.isArray(arg) && arg.type === 'option' && arg.name === 'with';
+  const isWithOption = (arg: ESQLAstExpression): arg is ESQLCommandOption =>
+    !!arg && arg.type === 'option' && arg.name === 'with';
 
   // Validates and retrieves the map from a WITH option
   const getWithOptionMap = (withOption: ESQLCommandOption): ESQLMap => {
     const mapArg = withOption.args[0];
 
-    if (!mapArg || typeof mapArg === 'string' || Array.isArray(mapArg) || mapArg.type !== 'map') {
+    if (!mapArg || mapArg.type !== 'map') {
       throw new Error('WITH option must contain a map');
     }
 

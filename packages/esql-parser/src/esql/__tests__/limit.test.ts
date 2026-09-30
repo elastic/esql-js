@@ -27,22 +27,20 @@ describe('LIMIT', () => {
           type: 'command',
           name: 'limit',
           args: [
-            [
-              {
-                incomplete: false,
-                name: '',
-                paramKind: '?',
-                paramType: 'named',
-                text: '?param',
-                type: 'literal',
-                literalType: 'param',
-                value: 'param',
-                location: {
-                  max: 24,
-                  min: 19,
-                },
+            {
+              incomplete: false,
+              name: '',
+              paramKind: '?',
+              paramType: 'named',
+              text: '?param',
+              type: 'literal',
+              literalType: 'param',
+              value: 'param',
+              location: {
+                max: 24,
+                min: 19,
               },
-            ],
+            },
           ],
         },
       ]);

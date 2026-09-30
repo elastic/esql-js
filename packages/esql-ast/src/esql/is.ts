@@ -132,7 +132,7 @@ export const isESQLFunction = (node: unknown): node is types.ESQLFunction =>
   (node as types.ESQLFunction).type === 'function';
 
 export const isESQLNamedParamLiteral = (
-  node: types.ESQLAstItem
+  node: types.ESQLAstExpression
 ): node is types.ESQLNamedParamLiteral =>
   isESQLAstBaseItem(node) &&
   (node as types.ESQLNamedParamLiteral).literalType === 'param' &&
