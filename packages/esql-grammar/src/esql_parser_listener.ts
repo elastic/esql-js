@@ -47,6 +47,7 @@ import { FieldNamePatternContext } from "./esql_parser.js";
 import { QualifiedNamePatternsContext } from "./esql_parser.js";
 import { IdentifierContext } from "./esql_parser.js";
 import { IdentifierPatternContext } from "./esql_parser.js";
+import { ExpressionModeIdentifierPatternContext } from "./esql_parser.js";
 import { InputParamContext } from "./esql_parser.js";
 import { InputNamedOrPositionalParamContext } from "./esql_parser.js";
 import { InputDoubleParamsContext } from "./esql_parser.js";
@@ -531,6 +532,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitIdentifierPattern?: (ctx: IdentifierPatternContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.expressionModeIdentifierPattern`.
+	 * @param ctx the parse tree
+	 */
+	enterExpressionModeIdentifierPattern?: (ctx: ExpressionModeIdentifierPatternContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.expressionModeIdentifierPattern`.
+	 * @param ctx the parse tree
+	 */
+	exitExpressionModeIdentifierPattern?: (ctx: ExpressionModeIdentifierPatternContext) => void;
 	/**
 	 * Enter a parse tree produced by the `inputParam`
 	 * labeled alternative in `esql_parser.parameter`.
