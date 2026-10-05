@@ -201,7 +201,7 @@ export interface ESQLAstRegisteredDomainCommand extends ESQLCommand<'registered_
 export interface ESQLAstHighlightCommand extends ESQLCommand<'highlight'> {
   prefix?: ESQLStringLiteral;
   queryExpression?: ESQLAstExpression;
-  highlightFields?: ESQLColumn[];
+  highlightFields?: Array<ESQLColumn | ESQLParam | ESQLIdentifier>;
 
   /**
    * @todo This should be {@link ESQLMap} type.
