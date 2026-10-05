@@ -2453,33 +2453,45 @@ export class CstToAstConverter {
       }
     }
 
+    // The query expression is optional: when omitted, HIGHLIGHT reuses the full-text
+    // search conditions from earlier WHERE commands.
     const queryExprCtx = ctx._queryExpression;
-    if (queryExprCtx && !queryExprCtx.exception) {
-      const queryExpr = this.fromBooleanExpression(queryExprCtx);
+    if (queryExprCtx) {
+      const queryExpr = queryExprCtx.exception
+        ? undefined
+        : this.fromBooleanExpression(queryExprCtx);
+
       if (queryExpr) {
         command.queryExpression = queryExpr;
         command.args.push(queryExpr);
       } else {
         command.incomplete = true;
       }
-    } else {
-      command.incomplete = true;
     }
 
+    // The ON clause is optional: when omitted, the highlighted fields are derived
+    // from the query.
     const onToken = ctx.ON();
-    if (onToken && ctx._highlightFields) {
-      const fields = ctx._highlightFields
-        .qualifiedNamePattern_list()
-        .filter((qn) => !qn.exception)
-        .map((qn) => this.fromQualifiedNamePattern(qn));
-      const onOption = this.toOption('on', ctx._highlightFields, fields);
+    if (onToken) {
+      const fieldsCtx = ctx._highlightFields;
+      const fields = fieldsCtx
+        ? fieldsCtx
+            .qualifiedNamePattern_list()
+            .filter((qn) => !qn.exception)
+            .map((qn) => this.fromQualifiedNamePattern(qn))
+        : [];
+      const onOption = this.toOption('on', fieldsCtx ?? ctx, fields);
       onOption.location.min = onToken.symbol.start;
+
+      if (!fieldsCtx) {
+        onOption.location.max = onToken.symbol.stop;
+        onOption.text = onToken.getText();
+      }
+
       onOption.incomplete ||= fields.length === 0;
       command.args.push(onOption);
       command.highlightFields = fields;
       command.incomplete ||= onOption.incomplete;
-    } else {
-      command.incomplete = true;
     }
 
     const namedParamsCtx = ctx.commandNamedParameters();
