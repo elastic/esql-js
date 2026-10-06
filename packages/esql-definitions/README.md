@@ -60,7 +60,7 @@ is "Instant vector." in one overload and "Scalar." in another).
 - `src/generated/` — TypeScript modules generated from `elasticsearch/` by
   `scripts/generate.ts`.
   ```bash
-  yarn workspace @elastic/esql-definitions generate
+  pnpm --filter @elastic/esql-definitions generate
   ```
 - `src/definition_types.ts` — hand-written TypeScript shapes of the raw JSON,
   used by the codegen script and exported from the main entry.

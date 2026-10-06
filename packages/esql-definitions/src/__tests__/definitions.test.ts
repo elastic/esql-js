@@ -22,7 +22,7 @@ describe('definition sync', () => {
     expect(result!.warnings).toEqual([]);
   });
 
-  test('checked-in src/generated/ is in sync with elasticsearch/ (run `yarn generate` to fix)', () => {
+  test('checked-in src/generated/ is in sync with elasticsearch/ (run `pnpm generate` to fix)', () => {
     for (const file of result!.files) {
       const path = join(generatedDir, file.relativePath);
 
@@ -31,7 +31,7 @@ describe('definition sync', () => {
     }
   });
 
-  test('src/generated/ contains no stale files (run `yarn generate` to fix)', () => {
+  test('src/generated/ contains no stale files (run `pnpm generate` to fix)', () => {
     const listFiles = (dir: string, prefix = ''): string[] =>
       readdirSync(dir, { withFileTypes: true }).flatMap((entry) =>
         entry.isDirectory()

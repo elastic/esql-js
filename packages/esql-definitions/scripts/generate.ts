@@ -8,7 +8,7 @@
 // Regenerates `src/generated/` from the raw ES|QL and PromQL definition JSON
 // in `elasticsearch/`
 //
-// Usage: yarn workspace @elastic/esql-definitions generate
+// Usage: pnpm --filter @elastic/esql-definitions generate
 
 import { existsSync, mkdirSync, rmSync, writeFileSync } from 'node:fs';
 import { dirname, join } from 'node:path';

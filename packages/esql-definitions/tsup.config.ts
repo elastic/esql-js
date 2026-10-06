@@ -9,7 +9,7 @@ import { existsSync } from 'node:fs';
 
 import { defineConfig } from 'tsup';
 
-// Generated from elasticsearch/ by `yarn generate`
+// Generated from elasticsearch/ by `pnpm generate`
 const generatedEntries = [
   'commands.ts',
   'settings.ts',
