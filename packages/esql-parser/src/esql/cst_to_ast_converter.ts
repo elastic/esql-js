@@ -2435,7 +2435,7 @@ export class CstToAstConverter {
     const command = this.createCommand<'highlight', ast.ESQLAstHighlightCommand>('highlight', ctx);
 
     if (ctx.ASSIGN()) {
-      if (ctx._prefix && !ctx._prefix.exception) {
+      if (ctx._prefix && !ctx._prefix.exception && textExistsAndIsValid(ctx._prefix.getText())) {
         const prefixLiteral = this.toStringLiteral(ctx._prefix);
         const keyword = this.toColumn(ctx._prefixKeyword);
         const assignment = this.toFunction(
@@ -2469,9 +2469,9 @@ export class CstToAstConverter {
     const onToken = ctx.ON();
     if (onToken && ctx._highlightFields) {
       const fields = ctx._highlightFields
-        .qualifiedName_list()
+        .qualifiedNamePattern_list()
         .filter((qn) => !qn.exception)
-        .map((qn) => this.fromQualifiedName(qn));
+        .map((qn) => this.fromQualifiedNamePattern(qn));
       const onOption = this.toOption('on', ctx._highlightFields, fields);
       onOption.location.min = onToken.symbol.start;
       onOption.incomplete ||= fields.length === 0;
@@ -3413,6 +3413,14 @@ export class CstToAstConverter {
         const node = this.fromNodeToIdentifier(ID_PATTERN);
 
         args.push(node);
+      } else if (identifierPattern.expressionModeIdentifierPattern?.()) {
+        // In EXPRESSION_MODE (e.g. after HIGHLIGHT ... ON) patterns are lexed as
+        // `identifier` and `ASTERISK` tokens instead of a single ID_PATTERN token.
+        const patternCtx = identifierPattern.expressionModeIdentifierPattern();
+
+        args.push(
+          Builder.identifier({ name: patternCtx.getText() }, this.getParserFields(patternCtx))
+        );
       } else {
         // Support single and double parameters inside identifierPattern
         const paramCtx = identifierPattern.parameter?.() || identifierPattern.doubleParameter?.();

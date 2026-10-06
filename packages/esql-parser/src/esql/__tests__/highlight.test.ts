@@ -81,6 +81,21 @@ describe('HIGHLIGHT', () => {
     ]);
   });
 
+  it('parses wildcard highlight field patterns', () => {
+    const src = 'FROM logs | HIGHLIGHT "fox" ON title*, *, a*b, body';
+    const { ast, errors } = EsqlQuery.fromSrc(src);
+    const cmd = getHighlight(ast);
+
+    expect(errors).toHaveLength(0);
+    expect(cmd.incomplete).toBe(false);
+    expect(cmd.highlightFields).toMatchObject([
+      { type: 'column', name: 'title*' },
+      { type: 'column', name: '*' },
+      { type: 'column', name: 'a*b' },
+      { type: 'column', name: 'body' },
+    ]);
+  });
+
   it('parses WITH map with pre_tags and post_tags', () => {
     const src =
       'FROM logs | HIGHLIGHT "fox" ON content WITH { "pre_tags": "<b>", "post_tags": "</b>" }';

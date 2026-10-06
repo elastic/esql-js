@@ -73,4 +73,14 @@ export const settingDefinitions: SettingDefinition[] = [
     preview: true,
     snapshotOnly: false,
   },
+  {
+    name: 'wildcards_match_views',
+    type: [
+      'boolean',
+    ],
+    description: 'When enabled, a wildcard in `FROM` also matches registered views. Defaults to `false`, so a wildcard does not match a view and a view is reached by its exact name. Other abstractions a wildcard matches are unaffected.\n\nThe default itself is configurable. If a query does not specify a value, the `esql.query.settings.wildcards_match_views` cluster setting supplies it. If that cluster setting is not configured either, the value is `false`. {applies_to}`{"stack": "ga 9.6+", "serverless": "ga"}`',
+    serverlessOnly: false,
+    preview: true,
+    snapshotOnly: false,
+  },
 ];
