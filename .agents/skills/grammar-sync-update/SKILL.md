@@ -278,9 +278,9 @@ Reference test files: `packages/esql/src/parser/__tests__/user_agent.test.ts`, `
 - [ ] `packages/esql/src/parser/core/cst_to_ast_converter.ts` — dispatcher + `fromXxxCommand()` added
 - [ ] `packages/esql/src/pretty_print/constants.ts` — updated only if needed
 - [ ] `packages/esql/src/parser/__tests__/xxx.test.ts` — tests added
-- [ ] `yarn test` passes
-- [ ] `yarn build` passes (no TypeScript errors)
-- [ ] `yarn lint` passes
+- [ ] `pnpm test` passes
+- [ ] `pnpm build` passes (no TypeScript errors)
+- [ ] `pnpm lint` passes
 
 ---
 
@@ -375,9 +375,9 @@ Cover:
 - [ ] Tests added/extended in existing test file
 - [ ] Pretty-printer tests added if new syntax affects printing
 - [ ] Walker tests added if new syntax introduces new traversable nodes
-- [ ] `yarn test` passes
-- [ ] `yarn build` passes
-- [ ] `yarn lint` passes
+- [ ] `pnpm test` passes
+- [ ] `pnpm build` passes
+- [ ] `pnpm lint` passes
 
 ---
 

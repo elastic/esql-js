@@ -1,7 +1,7 @@
 ---
 name: add-package
 description: >
-  Use this skill when adding a new package to the esql-js Yarn Workspaces monorepo — either splitting
+  Use this skill when adding a new package to the esql-js pnpm workspaces monorepo — either splitting
   an existing subsystem out of packages/esql/ (unbundling) or creating a brand-new package. Covers every
   config file the package needs (build, tests, storybook), how to wire it into the monorepo (workspace
   dependency, changeset release group, topological build), and the verification steps.
@@ -14,7 +14,7 @@ description: >
 - **Unbundling** an existing subsystem out of `packages/esql/` into its own `@elastic/<name>` package (e.g. `@elastic/pretty-printer` was extracted from `packages/esql/src/printer/`).
 - Creating a **brand-new** standalone package under `packages/`.
 
-The monorepo is Yarn Workspaces (Yarn v4 / `packageManager: yarn@4.x`) with `workspaces: ["packages/*"]`. Every package is a TypeScript library built with `tsup` (JS bundles) + `tsc` (declarations) and tested with `jest`. Match `packages/esql/` — it is the template.
+The monorepo is pnpm workspaces (`packageManager: pnpm@12.x`) with `packages: [packages/*]` in `pnpm-workspace.yaml`. Every package is a TypeScript library built with `tsup` (JS bundles) + `tsc` (declarations) and tested with `jest`. Match `packages/esql/` — it is the template.
 
 ---
 
@@ -78,7 +78,7 @@ The package entry point is `src/index.ts`. Make sure it re-exports everything co
 Notes:
 - Best to copy from another package and adapt.
 - **Version** must equal the other packages in the changeset `fixed` group (see Step 8). Changesets bumps them in lockstep, so a new member starts at the current shared version (e.g. `4.6.0`), **not** `0.0.0` or `1.0.0`.
-- **`dependencies`**: only the package's real runtime deps. Pin exact versions matching the rest of the repo (e.g. `tslib`, `tree-dump`). A dependency on another workspace package uses `"@elastic/other": "workspace:^"` — Yarn/changesets rewrites `workspace:^` to the real version range at publish time.
+- **`dependencies`**: only the package's real runtime deps. Pin exact versions matching the rest of the repo (e.g. `tslib`, `tree-dump`). A dependency on another workspace package uses `"@elastic/other": "workspace:^"` — `pnpm publish` rewrites `workspace:^` to the real version range at publish time.
 - **devDependencies**: copy the build/test toolchain versions from `packages/esql/package.json` so the whole repo stays on one toolchain.
 - Add a second `exports` subpath + a `typesVersions` block **only** if the package ships more than one entry point (esql does this for `./types`). A single-entry library does not need it.
 
@@ -202,7 +202,9 @@ Change `import … from '../../../<subsystem>'` → `import … from '@elastic/<
 }
 ```
 
-Then `yarn install` to create the workspace symlink and update `yarn.lock`.
+Then `pnpm install` to create the workspace symlink and update `pnpm-lock.yaml`.
+
+pnpm uses a strict, non-hoisted `node_modules`: a package can only import what its own `package.json` declares. Declare every runtime import in `dependencies` (otherwise `tsup` silently bundles it instead of treating it as external) and every type/test-only import — including `@types/node` and `@types/jest` — in `devDependencies`.
 
 **B — Add to the changeset release group.** `.changeset/config.json` has a `fixed` array — packages released in lockstep at the same version. Add the new package to the existing group so it versions together with `@elastic/esql`:
 
@@ -212,13 +214,13 @@ Then `yarn install` to create the workspace symlink and update `yarn.lock`.
 
 (Omit it from `fixed` only if the package is intentionally versioned independently — then it needs its own changelog cadence.)
 
-**C — Keep the root build topological.** With more than one package, `packages/esql` type-checks against the new package's emitted `lib/*.d.ts`, so the dependency must build **first**. The root `build` script must use the topological flag:
+**C — Keep the root build topological.** With more than one package, `packages/esql` type-checks against the new package's emitted `lib/*.d.ts`, so the dependency must build **first**. The root `build` script runs recursively:
 
 ```json
-"build": "yarn workspaces foreach -At run build",
+"build": "pnpm -r run build",
 ```
 
-`-A` = all workspaces, `-t` = topological (dependencies before dependents). Without `-t`, a clean checkout can build `@elastic/esql` before its new dependency and fail type-check. (`test` does not need `-t`.)
+`pnpm -r` runs workspace scripts in topological order (dependencies before dependents) by default, as long as the dependency is declared as `workspace:^`. Without that declaration, a clean checkout can build `@elastic/esql` before its new dependency and fail type-check.
 
 **D — Update [AGENTS.md](../../AGENTS.md)** (the `.claude/CLAUDE.md` symlink points here) — add a one-line entry under Overview describing the new package and what depends on it.
 
@@ -237,7 +239,7 @@ Every `.ts` / `.tsx` file (sources, configs like `tsconfig.*`/`tsup.config.ts`/`
  */
 ```
 
-Moved files already have it. New files (configs, stories) need it added. ESLint can autofix (`yarn lint:fix`). Other rules: no `any` (`@typescript-eslint/no-explicit-any: error`), no `console`. Build output (`**/lib/`) is globally ignored by ESLint.
+Moved files already have it. New files (configs, stories) need it added. ESLint can autofix (`pnpm lint:fix`). Other rules: no `any` (`@typescript-eslint/no-explicit-any: error`), no `console`. Build output (`**/lib/`) is globally ignored by ESLint.
 
 Also copy `LICENSE.txt` from `packages/esql/`, and write a `NOTICE.txt` adapted to the new package, plus an npm-facing `README.md`.
 
@@ -248,12 +250,12 @@ Also copy `LICENSE.txt` from `packages/esql/`, and write a `NOTICE.txt` adapted 
 Run from the repo root:
 
 ```bash
-yarn install                       # workspace symlink + lockfile
-rm -rf packages/*/lib && yarn build # CLEAN build proves topological order works
-yarn test                          # all packages
-yarn lint                          # license headers, no-any, etc.
-yarn format:check                  # prettier
-yarn build-storybook               # confirms any new story compiles (macOS has no `timeout`)
+pnpm install                       # workspace symlink + lockfile
+rm -rf packages/*/lib && pnpm build # CLEAN build proves topological order works
+pnpm test                          # all packages
+pnpm lint                          # license headers, no-any, etc.
+pnpm format:check                  # prettier
+pnpm build-storybook               # confirms any new story compiles (macOS has no `timeout`)
 ```
 
 Build artifacts (`**/lib/`, `storybook-static/`) are gitignored — confirm with `git status` that only source/config files are staged, and that moved files show as renames (`R`), not delete+add.
@@ -269,12 +271,12 @@ Build artifacts (`**/lib/`, `storybook-static/`) are gitignored — confirm with
 - [ ] `LICENSE.txt`, `NOTICE.txt`, `README.md`
 - [ ] Stories under `src/stories/` (optional; root Storybook picks them up automatically)
 - [ ] Cross-package imports repointed to `@elastic/<name>`; deep imports either added to the index or given an `exports` subpath
-- [ ] Consumers declare `"@elastic/<name>": "workspace:^"`; `yarn install` run
+- [ ] Consumers declare `"@elastic/<name>": "workspace:^"`; `pnpm install` run
 - [ ] `.changeset/config.json` `fixed` group updated
 - [ ] Root `build` script is `foreach -At` (topological)
 - [ ] `AGENTS.md` Overview mentions the new package
 - [ ] License header on every new `.ts`/`.tsx` file
-- [ ] Clean `yarn build`, `yarn test`, `yarn lint`, `yarn format:check`, `yarn build-storybook` all pass
+- [ ] Clean `pnpm build`, `pnpm test`, `pnpm lint`, `pnpm format:check`, `pnpm build-storybook` all pass
 
 ---
 
