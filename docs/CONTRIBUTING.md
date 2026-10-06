@@ -8,10 +8,11 @@ Thank you for your interest in contributing to `@elastic/esql`! This document pr
   ```bash
   nvm use
   ```
-- **Yarn** — this project uses Yarn v4 (Berry). Enable Corepack so Node picks the right version automatically (one-time, system-wide):
+- **pnpm** — this project uses pnpm; the exact version is pinned in the `packageManager` field of the root [`package.json`](../package.json). Install it explicitly (Corepack is no longer bundled with Node.js starting from v25), see [pnpm.io/installation](https://pnpm.io/installation):
   ```bash
-  corepack enable
+  npm install --global pnpm
   ```
+  Any recent pnpm switches itself to the pinned version when run inside this repo.
 
 ## Getting Started
 
@@ -23,15 +24,15 @@ Thank you for your interest in contributing to `@elastic/esql`! This document pr
 
 2. Install dependencies:
    ```bash
-   yarn install
+   pnpm install
    ```
 
 3. Verify everything works:
    ```bash
-   yarn build
-   yarn test
-   yarn lint
-   yarn format:check
+   pnpm build
+   pnpm test
+   pnpm lint
+   pnpm format:check
    ```
 
 ## Development Workflow
@@ -39,7 +40,7 @@ Thank you for your interest in contributing to `@elastic/esql`! This document pr
 ### Building
 
 ```bash
-yarn build
+pnpm build
 ```
 
 This runs `tsup` (bundling) followed by `tsc` (type checking / declaration emit).
@@ -47,15 +48,15 @@ This runs `tsup` (bundling) followed by `tsc` (type checking / declaration emit)
 To automatically rebuild on every file save, run:
 
 ```bash
-yarn build:watch
+pnpm build:watch
 ```
 
-This starts `tsup` in watch mode and re-runs `tsc` after each successful rebuild, so both the JS bundle and `.d.ts` declaration files stay up to date. This is especially useful when working with a linked package (`yarn link`), as the host project will pick up changes immediately.
+This starts `tsup` in watch mode and re-runs `tsc` after each successful rebuild, so both the JS bundle and `.d.ts` declaration files stay up to date. This is especially useful when working with a linked package (`pnpm link`), as the host project will pick up changes immediately.
 
 ### Testing
 
 ```bash
-yarn test
+pnpm test
 ```
 
 Tests are run using [Jest](https://jestjs.io/). Please add or update tests when making changes to ensure adequate coverage.
@@ -65,10 +66,10 @@ Tests are run using [Jest](https://jestjs.io/). Please add or update tests when 
 This project uses [ESLint](https://eslint.org/) for linting and [Prettier](https://prettier.io/) for code formatting.
 
 ```bash
-yarn lint          # Check for lint errors
-yarn lint:fix      # Auto-fix lint errors
-yarn format:check  # Check formatting
-yarn format        # Auto-format all files
+pnpm lint          # Check for lint errors
+pnpm lint:fix      # Auto-fix lint errors
+pnpm format:check  # Check formatting
+pnpm format        # Auto-format all files
 ```
 
 A [Husky](https://typicode.github.io/husky/) pre-commit hook runs `lint-staged` automatically, which applies ESLint and Prettier to staged `.ts` files and Prettier to staged `.json`/`.yml`/`.yaml` files. You don't need to run these manually before committing — the hook handles it.
@@ -108,7 +109,7 @@ These are the allowed PR-title types (validated by CI). They describe the change
 
 ### Breaking Changes
 
-For a breaking change, select a **major** bump when running `yarn changeset`, and document it in the PR body using a `BREAKING CHANGE:` footer:
+For a breaking change, select a **major** bump when running `pnpm changeset`, and document it in the PR body using a `BREAKING CHANGE:` footer:
 
 ```
 feat: redesign AST node structure
@@ -136,15 +137,15 @@ refactor(composer): simplify template tag internals
 
 3. Ensure all checks pass:
    ```bash
-   yarn lint
-   yarn format:check
-   yarn build
-   yarn test
+   pnpm lint
+   pnpm format:check
+   pnpm build
+   pnpm test
    ```
 
 4. If your change should be released, add a changeset and choose the bump level:
    ```bash
-   yarn changeset
+   pnpm changeset
    ```
    Commit the generated `.changeset/*.md` file with your PR. See [RELEASE.md](./RELEASE.md) for details. Internal-only changes (e.g. CI, tests, refactors with no published effect) don't need one.
 
@@ -170,7 +171,7 @@ The full process — adding changesets, the Version PR, prereleases, required se
 To preview the pending version bump and changelog without publishing:
 
 ```bash
-yarn changeset status
+pnpm changeset status
 ```
 
 ## Backporting

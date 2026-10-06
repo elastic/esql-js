@@ -13,7 +13,7 @@ All packages in this monorepo are released together under a **single, shared ver
 Any PR that introduces a user-visible change must include a changeset file. Run this from the repo root before opening your PR:
 
 ```bash
-yarn changeset
+pnpm changeset
 ```
 
 The interactive CLI asks:
@@ -38,11 +38,11 @@ Review this PR, then merge it when you are ready to release.
 
 ### 3. Publishing
 
-When the version PR is merged, the Changesets action runs again on `main`. This time there are no pending changesets, so instead of opening a PR it publishes every package to NPM `yarn changeset:publish`.
+When the version PR is merged, the Changesets action runs again on `main`. This time there are no pending changesets, so instead of opening a PR it publishes every package to NPM via `pnpm changeset:publish`.
 
-The `changeset:publish` script delegates to `yarn workspaces foreach --all --no-private --topological npm publish --access public --tolerate-republish`, then runs `yarn changeset tag`. The Changesets action decides whether a publish happened by scanning the publish command's stdout for `New tag: <pkg>@<version>` lines — `yarn npm publish` does not print them, so without it the action reports `published: false` and silently skips tagging and releases.
+The `changeset:publish` script delegates to `pnpm -r publish --access public --provenance --no-git-checks`, then runs `changeset tag`. `pnpm -r publish` publishes in topological order, rewrites `workspace:^` ranges to real versions, and skips any package whose version is already in the registry, so re-running a failed release is safe. The Changesets action decides whether a publish happened by scanning the publish command's stdout for `New tag: <pkg>@<version>` lines — `pnpm publish` does not print them, so without `changeset tag` the action reports `published: false` and silently skips tagging and releases.
 
-Each package declares `"publishConfig": { "provenance": true }` in its `package.json`. Changesets publishes via `yarn npm publish` under Yarn Berry, which reads that field and attaches [npm provenance](https://docs.npmjs.com/generating-provenance-statements) — linking the npm artifact to the specific GitHub Actions run that built it (verifiable via `npm audit signatures`). This requires `id-token: write` on the release job, which is already set.
+The `--provenance` flag attaches [npm provenance](https://docs.npmjs.com/generating-provenance-statements) — linking the npm artifact to the specific GitHub Actions run that built it (verifiable via `npm audit signatures`). This requires `id-token: write` on the release job, which is already set. pnpm does not read `publishConfig.provenance` from `package.json`, so the flag must stay on the command line. Provenance can only be generated on a supported CI provider, so `pnpm changeset:publish` fails when run locally — see [Local dry-run](#local-dry-run).
 
 ### 4. The GitHub Release
 
@@ -56,10 +56,10 @@ The following secrets must be configured in the repository settings:
 
 | Secret | Purpose |
 |---|---|
-| `NPM_TOKEN` | Authenticates `yarn changeset:publish` against the npm registry. Must have publish access to the `@elastic` scope. |
+| `NPM_TOKEN` | Authenticates `pnpm changeset:publish` against the npm registry. Must have publish access to the `@elastic` scope. |
 | `GITHUB_TOKEN` | Automatically provided by GitHub Actions. Used to open the version PR and create GitHub Releases. No manual setup needed. |
 
-`NPM_TOKEN` is passed to Yarn v4 via `YARN_NPM_AUTH_TOKEN` in the release workflow — Yarn v4 reads this environment variable as the npm registry auth token without any `.yarnrc.yml` changes.
+`NPM_TOKEN` is passed to the Changesets action, which writes it into `~/.npmrc` before publishing; pnpm reads the registry auth token from there.
 
 ---
 
@@ -76,13 +76,13 @@ To publish a prerelease (e.g. `1.2.3-beta.4`):
 ```bash
 # Enter prerelease mode on a dedicated branch
 git checkout -b beta
-yarn changeset pre enter beta
+pnpm changeset pre enter beta
 
 # Add changesets and merge PRs as usual.
-# Each `yarn changeset:version` run produces beta.1, beta.2, etc.
+# Each `pnpm changeset:version` run produces beta.1, beta.2, etc.
 
 # Exit prerelease mode when ready to do a stable release
-yarn changeset pre exit
+pnpm changeset pre exit
 ```
 
 While in prerelease mode, `changeset:version` produces pre-versioned bumps. Exiting prerelease mode produces the final stable version on the next version PR merge.
@@ -94,8 +94,17 @@ While in prerelease mode, `changeset:version` produces pre-versioned bumps. Exit
 To check what would be published without actually publishing:
 
 ```bash
-yarn changeset status              # lists pending changesets and projected version bump
-yarn changeset publish --dry-run   # shows what npm publish commands would run
+pnpm changeset status                                    # lists pending changesets and projected version bump
+pnpm -r publish --access public --no-git-checks --dry-run  # shows which packages would be published
+```
+
+To do a full local publish without touching npm, run a local registry such as [Verdaccio](https://verdaccio.org/) (with no uplink for `@elastic/*`, so versions already on npm don't hide yours) and point pnpm at it:
+
+```bash
+npx verdaccio                       # in another terminal, listens on http://localhost:4873
+npm adduser --registry http://localhost:4873
+pnpm build
+pnpm -r publish --access public --no-git-checks --registry http://localhost:4873
 ```
 
 To preview the GitHub Release notes without creating anything:
