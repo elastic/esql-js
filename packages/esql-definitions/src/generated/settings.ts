@@ -6,7 +6,7 @@
  */
 
 // DO NOT MODIFY THIS FILE BY HAND. IT IS GENERATED FROM `elasticsearch/` BY
-// `yarn workspace @elastic/esql-definitions generate`.
+// `pnpm --filter @elastic/esql-definitions generate`.
 
 import type { SettingDefinition } from '../definition_types';
 
