@@ -84,21 +84,22 @@ main () {
 
   report_main_step "Building ANTLR artifacts."
 
-  yarn install --immutable
+  "$REPO_DIR/.buildkite/scripts/setup_pnpm.sh"
+  pnpm install --frozen-lockfile
 
-  # Note: We run the per-language build commands directly instead of `yarn build:antlr4`
+  # Note: We run the per-language build commands directly instead of `pnpm build:antlr4`
   # to skip the `antlr4:deps` step which uses `brew` (macOS only). CI has antlr installed.
   # Each of these still runs its postbuild step (@ts-nocheck + listener rename) inline.
   # Pin the ANTLR version to avoid the broken Sonatype Central version-lookup API
   # in antlr4-tools (https://github.com/antlr/antlr4-tools/issues/18).
   export ANTLR4_TOOLS_ANTLR_VERSION="4.13.2"
 
-  yarn build:antlr4:esql
-  yarn build:antlr4:promql
+  pnpm build:antlr4:esql
+  pnpm build:antlr4:promql
 
   report_main_step "Generating ES|QL definition modules."
 
-  yarn workspace @elastic/esql-definitions generate
+  pnpm --filter @elastic/esql-definitions generate
 
   # Create branch and commit
   BRANCH_NAME="esql_grammar_sync_$(date +%s)"

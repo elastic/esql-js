@@ -26,10 +26,10 @@ synchronize_all
 echo "--- Rebuilding ANTLR TypeScript artifacts"
 cd "$REPO_DIR"
 export ANTLR4_TOOLS_ANTLR_VERSION="${ANTLR4_TOOLS_ANTLR_VERSION:-4.13.2}"
-yarn build:antlr4
+pnpm build:antlr4
 
 echo "--- Generating ES|QL definition modules"
-yarn workspace @elastic/esql-definitions generate
+pnpm --filter @elastic/esql-definitions generate
 
 echo "--- Done. Changes:"
 # git status (not diff --stat) so a first-time definitions sync shows up too
