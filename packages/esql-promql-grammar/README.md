@@ -25,11 +25,11 @@ this package. Follow-up changes to the PromQL parser logic belong in `@elastic/e
 ## Regenerate manually
 
 ```sh
-yarn workspace @elastic/esql-promql-grammar build:antlr4
+pnpm --filter @elastic/esql-promql-grammar build:antlr4
 ```
 
 Requires `antlr` CLI. Install on macOS with:
 
 ```sh
-yarn workspace @elastic/esql-promql-grammar antlr4:deps
+pnpm --filter @elastic/esql-promql-grammar antlr4:deps
 ```

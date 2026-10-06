@@ -30,11 +30,11 @@ only this package. When the sync adds new grammar rules, a follow-up PR to
 ## Regenerate manually
 
 ```sh
-yarn workspace @elastic/esql-grammar build:antlr4
+pnpm --filter @elastic/esql-grammar build:antlr4
 ```
 
 Requires `antlr` CLI. Install on macOS with:
 
 ```sh
-yarn workspace @elastic/esql-grammar antlr4:deps
+pnpm --filter @elastic/esql-grammar antlr4:deps
 ```
