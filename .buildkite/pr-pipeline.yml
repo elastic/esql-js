@@ -12,9 +12,10 @@ steps:
     key: 'check-and-build'
     agents: *agents
     command: |
-      yarn install --immutable
-      yarn lint
-      yarn format:check
-      yarn build
-      yarn typecheck
-      yarn test
+      .buildkite/scripts/setup_pnpm.sh
+      pnpm install --frozen-lockfile
+      pnpm lint
+      pnpm format:check
+      pnpm build
+      pnpm typecheck
+      pnpm test
