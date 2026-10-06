@@ -1,15 +1,26 @@
 #!/usr/bin/env bash
 # Installs the pnpm version pinned in the root package.json `packageManager`
-# field. Installed explicitly rather than via Corepack, which is no longer
-# bundled with Node.js starting from v25.
-set -euo pipefail
+# field and puts it on PATH. Installed explicitly rather than via Corepack,
+# which is no longer bundled with Node.js starting from v25.
+#
+# Must be sourced (`source .buildkite/scripts/setup_pnpm.sh`) so that the PATH
+# change reaches the calling shell. The install goes to a per-user prefix
+# because the agents' global npm prefix is not writable.
 
-REPO_DIR="$(cd "$(dirname "$0")/../.." && pwd)"
-PNPM_VERSION="$(node -p "require('$REPO_DIR/package.json').packageManager.replace(/^pnpm@/, '').split('+')[0]")"
+_setup_pnpm () {
+  local repo_dir version prefix
+  repo_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/../.." && pwd)"
+  version="$(node -p "require('$repo_dir/package.json').packageManager.replace(/^pnpm@/, '').split('+')[0]")"
+  prefix="${HOME}/.local/pnpm-${version}"
 
-if [ "$(pnpm --version 2>/dev/null || true)" != "$PNPM_VERSION" ]; then
-  echo "Installing pnpm@$PNPM_VERSION"
-  npm install --global "pnpm@$PNPM_VERSION"
-fi
+  if [ ! -x "$prefix/bin/pnpm" ]; then
+    echo "Installing pnpm@$version into $prefix"
+    npm install --global --prefix "$prefix" "pnpm@$version"
+  fi
 
-pnpm --version
+  export PATH="$prefix/bin:$PATH"
+  pnpm --version
+}
+
+_setup_pnpm
+unset -f _setup_pnpm

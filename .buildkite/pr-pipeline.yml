@@ -12,7 +12,7 @@ steps:
     key: 'check-and-build'
     agents: *agents
     command: |
-      .buildkite/scripts/setup_pnpm.sh
+      source .buildkite/scripts/setup_pnpm.sh
       pnpm install --frozen-lockfile
       pnpm lint
       pnpm format:check

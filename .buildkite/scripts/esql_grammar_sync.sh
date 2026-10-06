@@ -84,7 +84,7 @@ main () {
 
   report_main_step "Building ANTLR artifacts."
 
-  "$REPO_DIR/.buildkite/scripts/setup_pnpm.sh"
+  source "$REPO_DIR/.buildkite/scripts/setup_pnpm.sh"
   pnpm install --frozen-lockfile
 
   # Note: We run the per-language build commands directly instead of `pnpm build:antlr4`
