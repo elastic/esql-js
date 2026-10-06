@@ -10,6 +10,6 @@ Technical details, breaking changes or considerations you have made while workin
 
 - [ ] Unit tests have been added or updated.
 - [ ] The proper documentation has been added or updated.
-- [ ] A changeset has been added (`yarn changeset`) if this change should be released. See [docs/RELEASE.md](../docs/RELEASE.md).
+- [ ] A changeset has been added (`pnpm changeset`) if this change should be released. See [docs/RELEASE.md](../docs/RELEASE.md).
 - [ ] If this PR contains breaking changes, you have explained them using the `BREAKING CHANGE: change` syntax and selected a `major` bump in the changeset.
 - [ ] The PR is opened as a draft until CI is green.
