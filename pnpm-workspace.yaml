@@ -1,0 +1,8 @@
+packages:
+  - packages/*
+
+# pnpm runs a dependency's install scripts only when allowed here; any new
+# dependency with a build script fails the install until it is listed.
+allowBuilds:
+  esbuild: true # verifies/fetches the platform esbuild binary (tsup, vite)
+  unrs-resolver: true # fetches the native resolver binding if missing (jest)

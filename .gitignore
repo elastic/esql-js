@@ -1,12 +1,6 @@
 # dependencies
 node_modules/
 
-# Yarn Berry (release binary in .yarn/releases is committed on purpose)
-.yarn/cache
-.yarn/install-state.gz
-.yarn/*
-!.yarn/releases
-
 # build output
 lib/
 
@@ -15,8 +9,7 @@ lib/
 
 # logs
 npm-debug.log*
-yarn-debug.log*
-yarn-error.log*
+pnpm-debug.log*
 
 # macOS
 .DS_Store

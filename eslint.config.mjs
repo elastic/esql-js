@@ -12,7 +12,6 @@ import {
 export default defineConfig([
   globalIgnores([
     '.claude/',
-    '.yarn/',
     '**/lib/',
     'node_modules/',
     '**/parser/antlr/',

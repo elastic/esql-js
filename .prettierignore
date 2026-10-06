@@ -1,5 +1,5 @@
 *.md
-.yarn/
+pnpm-lock.yaml
 **/parser/antlr/
 packages/esql-grammar/src/esql_*.ts
 packages/esql-promql-grammar/src/promql_*.ts
