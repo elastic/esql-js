@@ -1,5 +1,22 @@
 # @elastic/esql-parser
 
+## 4.29.0
+
+### Minor Changes
+
+- [#258](https://github.com/elastic/esql-js/pull/258) [`ca9f9d0`](https://github.com/elastic/esql-js/commit/ca9f9d056a43b07ea2694ebf01bc0c0fcb5dded8) Thanks [@momovdg](https://github.com/momovdg)! - Fixes the `HIGHLIGHT` incomplete flag when the query or the `ON` clause is omitted. Both are optional: an omitted query reuses the full-text conditions from earlier `WHERE` commands, and an omitted `ON` derives the highlighted fields from the query. Forms such as `HIGHLIGHT`, `HIGHLIGHT ON title`, `HIGHLIGHT MATCH(title, "fox")` and `HIGHLIGHT WITH { ... }` are no longer reported as incomplete. A missing `ON` field list, an `ASSIGN` without a prefix string and a `WITH` without a map are still reported as incomplete.
+
+- [#256](https://github.com/elastic/esql-js/pull/256) [`41cc219`](https://github.com/elastic/esql-js/commit/41cc219723c3e700a97a4ca7a0a20cc134dfdd30) Thanks [@elastic-vault-github-plugin-prod](https://github.com/apps/elastic-vault-github-plugin-prod)! - Support wildcard field patterns in the `HIGHLIGHT ... ON` clause, following the grammar change from `qualifiedNames` to `qualifiedNamePatterns`. `ESQLAstHighlightCommand['highlightFields']` is widened from `ESQLColumn[]` to `Array<ESQLColumn | ESQLParam | ESQLIdentifier>`.
+
+### Patch Changes
+
+- Updated dependencies [[`41cc219`](https://github.com/elastic/esql-js/commit/41cc219723c3e700a97a4ca7a0a20cc134dfdd30)]:
+  - @elastic/esql-types@4.29.0
+  - @elastic/esql-definitions@4.29.0
+  - @elastic/esql-promql-grammar@4.29.0
+  - @elastic/esql-traversal@4.29.0
+  - @elastic/esql-ast@4.29.0
+
 ## 4.28.0
 
 ### Minor Changes

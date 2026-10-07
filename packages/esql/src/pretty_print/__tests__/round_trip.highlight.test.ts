@@ -23,6 +23,18 @@ describe('HIGHLIGHT round-trips through the pretty-printer', () => {
     expect(BasicPrettyPrinter.query(ast)).toBe(src);
   });
 
+  it.each([
+    'FROM books | WHERE MATCH(title, "Return") | HIGHLIGHT',
+    'FROM books | WHERE MATCH(title, "Return") | HIGHLIGHT ON title',
+    'ROW title = "Return of the King" | HIGHLIGHT MATCH(title, "king")',
+    'ROW title = "Return of the King" | HIGHLIGHT MATCH(title, "king") ON *',
+    'FROM logs | HIGHLIGHT WITH {"encoder": "html"}',
+  ])('round-trips the optional query and ON forms: %s', (src) => {
+    const { ast } = EsqlQuery.fromSrc(src);
+
+    expect(BasicPrettyPrinter.query(ast)).toBe(src);
+  });
+
   describe('prefix clause', () => {
     it('round-trips prefix = "hl_" through the pretty-printer', () => {
       const src = 'FROM logs | HIGHLIGHT prefix = "hl_" "fox" ON content';

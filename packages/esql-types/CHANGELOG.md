@@ -1,5 +1,11 @@
 # @elastic/esql-types
 
+## 4.29.0
+
+### Minor Changes
+
+- [#256](https://github.com/elastic/esql-js/pull/256) [`41cc219`](https://github.com/elastic/esql-js/commit/41cc219723c3e700a97a4ca7a0a20cc134dfdd30) Thanks [@elastic-vault-github-plugin-prod](https://github.com/apps/elastic-vault-github-plugin-prod)! - Support wildcard field patterns in the `HIGHLIGHT ... ON` clause, following the grammar change from `qualifiedNames` to `qualifiedNamePatterns`. `ESQLAstHighlightCommand['highlightFields']` is widened from `ESQLColumn[]` to `Array<ESQLColumn | ESQLParam | ESQLIdentifier>`.
+
 ## 4.28.0
 
 ## 4.27.0

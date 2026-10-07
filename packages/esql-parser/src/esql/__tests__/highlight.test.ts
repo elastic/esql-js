@@ -155,28 +155,57 @@ describe('HIGHLIGHT', () => {
     });
   });
 
-  it('marks incomplete when query text is missing', () => {
-    const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT');
+  // The query is optional: HIGHLIGHT reuses full-text conditions from earlier WHERE
+  // commands. The ON clause is optional too: fields are then derived from the query.
+  it('parses the bare form, where both query and ON are omitted', () => {
+    const src = 'FROM books | WHERE MATCH(title, "Return") | HIGHLIGHT';
+    const { ast, errors } = EsqlQuery.fromSrc(src);
     const cmd = getHighlight(ast);
 
-    expect(cmd).toMatchObject({ name: 'highlight', incomplete: true, args: [] });
+    expect(errors).toHaveLength(0);
+    expect(cmd).toMatchObject({ name: 'highlight', incomplete: false, args: [] });
     expect(cmd.queryExpression).toBeUndefined();
     expect(cmd.highlightFields).toBeUndefined();
     expect(cmd.namedParameters).toBeUndefined();
   });
 
-  it('marks incomplete when ON clause is missing', () => {
-    const { ast } = EsqlQuery.fromSrc('FROM index | HIGHLIGHT "fox"');
+  it('parses an omitted query with an explicit ON clause', () => {
+    const src = 'FROM books | WHERE MATCH(title, "Return") | HIGHLIGHT ON title';
+    const { ast, errors } = EsqlQuery.fromSrc(src);
     const cmd = getHighlight(ast);
 
+    expect(errors).toHaveLength(0);
+    expect(cmd.incomplete).toBe(false);
+    expect(cmd.queryExpression).toBeUndefined();
+    expect(cmd.highlightFields).toMatchObject([{ type: 'column', name: 'title' }]);
+    expect(getArgs(cmd)).toMatchObject([
+      { type: 'option', name: 'on', args: [{ type: 'column', name: 'title' }] },
+    ]);
+  });
+
+  it('parses a query with the ON clause omitted', () => {
+    const src = 'ROW title = "Return of the King" | HIGHLIGHT MATCH(title, "king")';
+    const { ast, errors } = EsqlQuery.fromSrc(src);
+    const cmd = getHighlight(ast);
+
+    expect(errors).toHaveLength(0);
     expect(cmd).toMatchObject({
       name: 'highlight',
-      incomplete: true,
-      queryExpression: { type: 'literal', valueUnquoted: 'fox' },
+      incomplete: false,
+      queryExpression: { type: 'function', name: 'match' },
     });
-    expect(getArgs(cmd)).toMatchObject([{ type: 'literal', valueUnquoted: 'fox' }]);
     expect(cmd.highlightFields).toBeUndefined();
     expect(cmd.namedParameters).toBeUndefined();
+  });
+
+  it('parses ON * to highlight every text and keyword column', () => {
+    const src = 'ROW title = "Return of the King" | HIGHLIGHT MATCH(title, "king") ON *';
+    const { ast, errors } = EsqlQuery.fromSrc(src);
+    const cmd = getHighlight(ast);
+
+    expect(errors).toHaveLength(0);
+    expect(cmd.incomplete).toBe(false);
+    expect(cmd.highlightFields).toMatchObject([{ type: 'column', name: '*' }]);
   });
 
   it('marks incomplete when ON fields are missing', () => {
