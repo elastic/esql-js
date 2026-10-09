@@ -1,5 +1,11 @@
 # @elastic/esql-promql-grammar
 
+## 4.30.0
+
+### Minor Changes
+
+- [#259](https://github.com/elastic/esql-js/pull/259) [`225b6f5`](https://github.com/elastic/esql-js/commit/225b6f57c804a33c022742a0318602cc60f597fc) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Switch monorepo and all packages to PNPM (from Yarn)
+
 ## 4.29.0
 
 ## 4.28.0
