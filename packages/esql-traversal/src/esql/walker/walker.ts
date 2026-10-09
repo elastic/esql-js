@@ -5,7 +5,6 @@
  * 2.0.
  */
 
-import { resolveItem } from '../utils';
 import { isPromqlNode, replaceProperties, templateToPredicate } from './helpers';
 import { PromqlWalker, type PromqlWalkerOptions } from '../../promql/walker';
 import type * as types from '@elastic/esql-types';
@@ -754,15 +753,13 @@ export class Walker {
   }
 
   public walkExpression(
-    node: types.ESQLAstItem | types.ESQLAstExpression,
+    node: types.ESQLAstExpression | types.ESQLAstExpression[],
     parent: types.ESQLProperNode | undefined = undefined
   ): void {
     if (Array.isArray(node)) {
-      const list = node as types.ESQLAstItem[];
-      this.walkList(list, parent);
+      this.walkList(node, parent);
     } else {
-      const item = node as types.ESQLSingleAstItem;
-      this.walkSingleAstItem(item, parent);
+      this.walkSingleAstItem(node, parent);
     }
   }
 
@@ -858,11 +855,11 @@ export class Walker {
     if (this.readAndResetSkippedChildren()) return;
 
     if (options.order === 'backward') {
-      this.walkSingleAstItem(resolveItem(node.value), node);
-      this.walkSingleAstItem(resolveItem(node.key), node);
+      this.walkSingleAstItem(node.value, node);
+      this.walkSingleAstItem(node.key, node);
     } else {
-      this.walkSingleAstItem(resolveItem(node.key), node);
-      this.walkSingleAstItem(resolveItem(node.value), node);
+      this.walkSingleAstItem(node.key, node);
+      this.walkSingleAstItem(node.value, node);
     }
   }
 

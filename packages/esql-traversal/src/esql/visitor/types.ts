@@ -17,7 +17,6 @@ export type ESQLAstQueryNode = ast.ESQLAstQueryExpression;
 /**
  * Represents an "expression" node in the AST.
  */
-// export type ESQLAstExpressionNode = ESQLAstItem;
 export type ESQLAstExpressionNode = ast.ESQLAstExpression;
 
 /**

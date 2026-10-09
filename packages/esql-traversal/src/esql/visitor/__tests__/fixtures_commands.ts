@@ -51,7 +51,7 @@ const statsCommand = () =>
       expr.literal.integer(1),
       expr.literal.string('str'),
       expr.list.literal({ values: [expr.literal.boolean(true)] }),
-      assign(expr.column('a'), [expr.column('b')]),
+      assign(expr.column('a'), expr.column('b')),
       Builder.option({ name: 'by', args: [expr.column('field')] }),
     ],
   });
@@ -84,16 +84,17 @@ export const fromChangePoint = (): ESQLAstQueryExpression => {
   const stats = Builder.command({
     name: 'stats',
     args: [
-      assign(expr.column('count'), [call('count', 'COUNT', [])]),
+      assign(expr.column('count'), call('count', 'COUNT', [])),
       Builder.option({
         name: 'by',
         args: [
-          assign(expr.column('@timestamp'), [
+          assign(
+            expr.column('@timestamp'),
             call('bucket', 'BUCKET', [
               expr.column('@timestamp'),
               expr.literal.timespan(1, 'MINUTE'),
-            ]),
-          ]),
+            ])
+          ),
         ],
       }),
     ],
@@ -175,10 +176,11 @@ const missingInferenceId = () =>
 export const fromRerankLimit = (): ESQLAstQueryExpression => {
   const query = expr.literal.string('star wars');
   const fields = [
-    assign(expr.column('title'), [call('x', 'X', [expr.column('title'), expr.literal.integer(2)])]),
-    assign(expr.column('description'), [
-      call('x', 'X', [expr.column('description'), expr.literal.decimal(1.5)]),
-    ]),
+    assign(expr.column('title'), call('x', 'X', [expr.column('title'), expr.literal.integer(2)])),
+    assign(
+      expr.column('description'),
+      call('x', 'X', [expr.column('description'), expr.literal.decimal(1.5)])
+    ),
   ];
 
   const rerank: ESQLAstRerankCommand = {
@@ -282,14 +284,12 @@ export const fromSubqueries = (): ESQLAstQueryExpression => {
       }),
       Builder.command({
         name: 'eval',
-        args: [
-          assign(expr.column('b'), [binary('*', [expr.column('a'), expr.literal.integer(2)])]),
-        ],
+        args: [assign(expr.column('b'), binary('*', [expr.column('a'), expr.literal.integer(2)]))],
       }),
       Builder.command({
         name: 'stats',
         args: [
-          assign(expr.column('cnt'), [call('count', 'COUNT', [expr.column('*')])]),
+          assign(expr.column('cnt'), call('count', 'COUNT', [expr.column('*')])),
           Builder.option({ name: 'by', args: [expr.column('c')] }),
         ],
       }),
@@ -323,7 +323,7 @@ export const fromSubqueries = (): ESQLAstQueryExpression => {
     Builder.command({
       name: 'stats',
       args: [
-        assign(expr.column('max'), [call('max', 'max', [expr.column('*')])]),
+        assign(expr.column('max'), call('max', 'max', [expr.column('*')])),
         Builder.option({ name: 'by', args: [expr.column('e')] }),
       ],
     }),
