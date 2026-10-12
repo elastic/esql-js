@@ -1,5 +1,7 @@
 # @elastic/esql-grammar
 
+## 4.31.0
+
 ## 4.30.0
 
 ### Minor Changes

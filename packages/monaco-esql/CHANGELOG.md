@@ -1,5 +1,12 @@
 # @elastic/monaco-esql
 
+## 4.31.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-definitions@4.31.0
+
 ## 4.30.0
 
 ### Minor Changes
