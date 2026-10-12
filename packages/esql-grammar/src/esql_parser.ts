@@ -34,7 +34,7 @@ export default class esql_parser extends parser_config {
 	public static readonly WS = 3;
 	public static readonly CHANGE_POINT = 4;
 	public static readonly DEDUP = 5;
-	public static readonly DEV_DENSE_VECTOR = 6;
+	public static readonly DENSE_VECTOR = 6;
 	public static readonly ENRICH = 7;
 	public static readonly DEV_EXPLAIN = 8;
 	public static readonly COMPLETION = 9;
@@ -431,7 +431,7 @@ export default class esql_parser extends parser_config {
 	public static readonly symbolicNames: (string | null)[] = [ null, "LINE_COMMENT", 
                                                              "MULTILINE_COMMENT", 
                                                              "WS", "CHANGE_POINT", 
-                                                             "DEDUP", "DEV_DENSE_VECTOR", 
+                                                             "DEDUP", "DENSE_VECTOR", 
                                                              "ENRICH", "DEV_EXPLAIN", 
                                                              "COMPLETION", 
                                                              "DISSECT", 
@@ -1044,25 +1044,25 @@ export default class esql_parser extends parser_config {
 				this.highlightCommand();
 				}
 				break;
-			case 39:
+			case 6:
 				this.enterOuterAlt(localctx, 30);
 				{
 				this.state = 308;
+				this.denseVectorCommand();
+				}
+				break;
+			case 39:
+				this.enterOuterAlt(localctx, 31);
+				{
+				this.state = 309;
 				this.lookupCommand();
 				}
 				break;
 			case 5:
-				this.enterOuterAlt(localctx, 31);
-				{
-				this.state = 309;
-				this.dedupCommand();
-				}
-				break;
-			case 6:
 				this.enterOuterAlt(localctx, 32);
 				{
 				this.state = 310;
-				this.denseVectorCommand();
+				this.dedupCommand();
 				}
 				break;
 			default:
@@ -4462,7 +4462,7 @@ export default class esql_parser extends parser_config {
 			this.enterOuterAlt(localctx, 1);
 			{
 			this.state = 848;
-			this.match(esql_parser.DEV_DENSE_VECTOR);
+			this.match(esql_parser.DENSE_VECTOR);
 			this.state = 850;
 			this._errHandler.sync(this);
 			switch ( this._interp.adaptivePredict(this._input, 72, this._ctx) ) {
@@ -7107,7 +7107,7 @@ export default class esql_parser extends parser_config {
 	297,312,3,136,68,0,298,312,3,138,69,0,299,312,3,158,79,0,300,312,3,144,
 	72,0,301,312,3,160,80,0,302,312,3,146,73,0,303,312,3,162,81,0,304,312,3,
 	148,74,0,305,312,3,164,82,0,306,312,3,170,85,0,307,312,3,154,77,0,308,312,
-	3,150,75,0,309,312,3,152,76,0,310,312,3,174,87,0,311,279,1,0,0,0,311,280,
+	3,174,87,0,309,312,3,150,75,0,310,312,3,152,76,0,311,279,1,0,0,0,311,280,
 	1,0,0,0,311,281,1,0,0,0,311,282,1,0,0,0,311,283,1,0,0,0,311,284,1,0,0,0,
 	311,285,1,0,0,0,311,286,1,0,0,0,311,287,1,0,0,0,311,288,1,0,0,0,311,289,
 	1,0,0,0,311,290,1,0,0,0,311,291,1,0,0,0,311,292,1,0,0,0,311,293,1,0,0,0,
@@ -7670,14 +7670,14 @@ export class ProcessingCommandContext extends ParserRuleContext {
 	public highlightCommand(): HighlightCommandContext {
 		return this.getTypedRuleContext(HighlightCommandContext, 0) as HighlightCommandContext;
 	}
+	public denseVectorCommand(): DenseVectorCommandContext {
+		return this.getTypedRuleContext(DenseVectorCommandContext, 0) as DenseVectorCommandContext;
+	}
 	public lookupCommand(): LookupCommandContext {
 		return this.getTypedRuleContext(LookupCommandContext, 0) as LookupCommandContext;
 	}
 	public dedupCommand(): DedupCommandContext {
 		return this.getTypedRuleContext(DedupCommandContext, 0) as DedupCommandContext;
-	}
-	public denseVectorCommand(): DenseVectorCommandContext {
-		return this.getTypedRuleContext(DenseVectorCommandContext, 0) as DenseVectorCommandContext;
 	}
     public get ruleIndex(): number {
     	return esql_parser.RULE_processingCommand;
@@ -10470,8 +10470,8 @@ export class DenseVectorCommandContext extends ParserRuleContext {
 		super(parent, invokingState);
     	this.parser = parser;
 	}
-	public DEV_DENSE_VECTOR(): TerminalNode {
-		return this.getToken(esql_parser.DEV_DENSE_VECTOR, 0);
+	public DENSE_VECTOR(): TerminalNode {
+		return this.getToken(esql_parser.DENSE_VECTOR, 0);
 	}
 	public commandNamedParameters(): CommandNamedParametersContext {
 		return this.getTypedRuleContext(CommandNamedParametersContext, 0) as CommandNamedParametersContext;

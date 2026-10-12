@@ -51,6 +51,7 @@ import irateDocs from './irate';
 import labelJoinDocs from './label_join';
 import labelReplaceDocs from './label_replace';
 import lastOverTimeDocs from './last_over_time';
+import limitRatioDocs from './limit_ratio';
 import limitkDocs from './limitk';
 import lnDocs from './ln';
 import log10Docs from './log10';
@@ -129,6 +130,7 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   label_join: labelJoinDocs,
   label_replace: labelReplaceDocs,
   last_over_time: lastOverTimeDocs,
+  limit_ratio: limitRatioDocs,
   limitk: limitkDocs,
   ln: lnDocs,
   log10: log10Docs,

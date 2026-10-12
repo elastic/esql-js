@@ -81,10 +81,10 @@ processingCommand
     | ipLocationCommand
     | mmrCommand
     | highlightCommand
+    | denseVectorCommand
     // in development
     | lookupCommand
     | dedupCommand
-    | denseVectorCommand
     ;
 
 whereCommand
@@ -449,7 +449,7 @@ mmrQueryVectorParams
 // The field list is optional in the grammar only so the command can report its own errors: an absent list and a
 // literal input both parse here and are rejected in the builder, where the message can name the actual problem.
 denseVectorCommand
-    : DEV_DENSE_VECTOR denseVectorNaming? qualifiedNames? commandNamedParameters
+    : DENSE_VECTOR denseVectorNaming? qualifiedNames? commandNamedParameters
     ;
 
 // `ON` closes the suffix clause instead of separating two operands, so it sits inside the optional

@@ -51,6 +51,7 @@ import irateDefinition from './irate';
 import labelJoinDefinition from './label_join';
 import labelReplaceDefinition from './label_replace';
 import lastOverTimeDefinition from './last_over_time';
+import limitRatioDefinition from './limit_ratio';
 import limitkDefinition from './limitk';
 import lnDefinition from './ln';
 import log10Definition from './log10';
@@ -129,6 +130,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   labelJoinDefinition,
   labelReplaceDefinition,
   lastOverTimeDefinition,
+  limitRatioDefinition,
   limitkDefinition,
   lnDefinition,
   log10Definition,

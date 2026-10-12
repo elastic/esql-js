@@ -29,7 +29,7 @@ export default class esql_lexer extends lexer_config {
 	public static readonly WS = 3;
 	public static readonly CHANGE_POINT = 4;
 	public static readonly DEDUP = 5;
-	public static readonly DEV_DENSE_VECTOR = 6;
+	public static readonly DENSE_VECTOR = 6;
 	public static readonly ENRICH = 7;
 	public static readonly DEV_EXPLAIN = 8;
 	public static readonly COMPLETION = 9;
@@ -325,7 +325,7 @@ export default class esql_lexer extends lexer_config {
 	public static readonly symbolicNames: (string | null)[] = [ null, "LINE_COMMENT", 
                                                              "MULTILINE_COMMENT", 
                                                              "WS", "CHANGE_POINT", 
-                                                             "DEDUP", "DEV_DENSE_VECTOR", 
+                                                             "DEDUP", "DENSE_VECTOR", 
                                                              "ENRICH", "DEV_EXPLAIN", 
                                                              "COMPLETION", 
                                                              "DISSECT", 
@@ -471,7 +471,7 @@ export default class esql_lexer extends lexer_config {
                                                 "SHOW_MODE", ];
 
 	public static readonly ruleNames: string[] = [
-		"LINE_COMMENT", "MULTILINE_COMMENT", "WS", "CHANGE_POINT", "DEDUP", "DEV_DENSE_VECTOR", 
+		"LINE_COMMENT", "MULTILINE_COMMENT", "WS", "CHANGE_POINT", "DEDUP", "DENSE_VECTOR", 
 		"ENRICH", "DEV_EXPLAIN", "COMPLETION", "DISSECT", "EVAL", "GROK", "LIMIT", 
 		"RERANK", "ROW", "SAMPLE", "SORT", "STATS", "WHERE", "URI_PARTS", "METRICS_INFO", 
 		"REGISTERED_DOMAIN", "TS_INFO", "USER_AGENT", "TS_COLLAPSE", "IP_LOCATION", 
