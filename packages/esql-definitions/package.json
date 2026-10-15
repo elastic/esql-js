@@ -44,6 +44,12 @@
       "require": "./lib/generated/inline_cast.js",
       "default": "./lib/generated/inline_cast.js"
     },
+    "./time-series-aggregates": {
+      "types": "./lib/generated/time_series_aggregates.d.ts",
+      "import": "./lib/generated/time_series_aggregates.mjs",
+      "require": "./lib/generated/time_series_aggregates.js",
+      "default": "./lib/generated/time_series_aggregates.js"
+    },
     "./promql-functions": {
       "types": "./lib/generated/promql_functions/index.d.ts",
       "import": "./lib/generated/promql_functions/index.mjs",
