@@ -1,5 +1,13 @@
 # @elastic/esql-traversal
 
+## 4.32.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.32.0
+  - @elastic/esql-ast@4.32.0
+
 ## 4.31.0
 
 ### Patch Changes
