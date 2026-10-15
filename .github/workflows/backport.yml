@@ -23,7 +23,7 @@ jobs:
           node-version-file: .nvmrc
 
       - name: Backport
-        uses: sorenlouv/backport-github-action@main
+        uses: sorenlouv/backport-github-action@f98adcdb38c8a19480f3d6abefbbace9eecaf009 # main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           auto_backport_label_prefix: 'backport:'
