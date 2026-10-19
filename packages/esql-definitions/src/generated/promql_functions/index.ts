@@ -22,6 +22,7 @@ import avgDefinition from './avg';
 import avgOverTimeDefinition from './avg_over_time';
 import bottomkDefinition from './bottomk';
 import ceilDefinition from './ceil';
+import changesDefinition from './changes';
 import clampDefinition from './clamp';
 import clampMaxDefinition from './clamp_max';
 import clampMinDefinition from './clamp_min';
@@ -73,6 +74,8 @@ import scalarDefinition from './scalar';
 import sgnDefinition from './sgn';
 import sinDefinition from './sin';
 import sinhDefinition from './sinh';
+import sortDefinition from './sort';
+import sortDescDefinition from './sort_desc';
 import sqrtDefinition from './sqrt';
 import stddevDefinition from './stddev';
 import stddevOverTimeDefinition from './stddev_over_time';
@@ -101,6 +104,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   avgOverTimeDefinition,
   bottomkDefinition,
   ceilDefinition,
+  changesDefinition,
   clampDefinition,
   clampMaxDefinition,
   clampMinDefinition,
@@ -152,6 +156,8 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   sgnDefinition,
   sinDefinition,
   sinhDefinition,
+  sortDefinition,
+  sortDescDefinition,
   sqrtDefinition,
   stddevDefinition,
   stddevOverTimeDefinition,
