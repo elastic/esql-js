@@ -34,6 +34,18 @@ export const settingDefinitions: SettingDefinition[] = [
     snapshotOnly: false,
   },
   {
+    name: 'exemplars',
+    type: [
+      'boolean',
+      'map_param',
+    ],
+    description: 'When enabled, the provided `TS ... | STATS` or `PROMQL` query is not executed. Instead, exemplars considered relevant to the query are returned based on heuristics that take the selected metrics and series into account.',
+    serverlessOnly: false,
+    preview: false,
+    snapshotOnly: true,
+    mapParams: '{name=\'limit\', values=[], description=\'Maximum number of exemplars to return. Without it the default limit of a regular query applies.\', type=[integer]}',
+  },
+  {
     name: 'project_routing',
     type: [
       'keyword',

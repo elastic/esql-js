@@ -19,6 +19,7 @@ export const processingCommandNames = [
   'ENRICH',
   'EVAL',
   'EXTERNAL',
+  'FILLNULL',
   'FORK',
   'FULL JOIN',
   'FUSE',

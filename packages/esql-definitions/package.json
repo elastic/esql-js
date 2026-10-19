@@ -1,6 +1,6 @@
 {
   "name": "@elastic/esql-definitions",
-  "version": "4.30.0",
+  "version": "4.33.0",
   "author": "Kibana ES|QL team",
   "description": "Shared definitions for the ES|QL language (commands, functions, operators).",
   "license": "Elastic-2.0",
@@ -43,6 +43,12 @@
       "import": "./lib/generated/inline_cast.mjs",
       "require": "./lib/generated/inline_cast.js",
       "default": "./lib/generated/inline_cast.js"
+    },
+    "./time-series-aggregates": {
+      "types": "./lib/generated/time_series_aggregates.d.ts",
+      "import": "./lib/generated/time_series_aggregates.mjs",
+      "require": "./lib/generated/time_series_aggregates.js",
+      "default": "./lib/generated/time_series_aggregates.js"
     },
     "./promql-functions": {
       "types": "./lib/generated/promql_functions/index.d.ts",

@@ -20,6 +20,9 @@ export const commandDefinitions: CommandDefinition[] = [
     name: 'dedup',
   },
   {
+    name: 'dense_vector',
+  },
+  {
     name: 'dissect',
   },
   {
@@ -33,6 +36,9 @@ export const commandDefinitions: CommandDefinition[] = [
   },
   {
     name: 'explain',
+  },
+  {
+    name: 'fillnull',
   },
   {
     name: 'fork',

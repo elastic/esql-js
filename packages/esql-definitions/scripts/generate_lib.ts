@@ -17,6 +17,8 @@ import type {
   PromqlFunctionDefinition,
   PromqlOperatorDefinition,
   SettingDefinition,
+  TimeSeriesAggregateConversion,
+  TimeSeriesAggregateMap,
 } from '../src/definition_types';
 
 const LICENSE_HEADER = `/*
@@ -54,6 +56,7 @@ export interface GenerateResult {
     operatorDocs: Record<string, DefinitionDocs>;
     settings: SettingDefinition[];
     inlineCasts: InlineCastMap;
+    timeSeriesAggregates: TimeSeriesAggregateMap;
     promqlFunctions: PromqlFunctionDefinition[];
     promqlFunctionDocs: Record<string, DefinitionDocs>;
     promqlOperators: PromqlOperatorDefinition[];
@@ -362,6 +365,88 @@ function readInlineCastMap(languageDir: string): InlineCastMap {
   return merged;
 }
 
+const TIME_SERIES_AGGREGATE_SPEC: ObjectSpec = {
+  keys: [
+    { src: 'function', required: true },
+    { src: 'returnType', required: true },
+  ],
+  drop: [],
+};
+
+function isRecord(value: unknown): value is Json {
+  return typeof value === 'object' && value !== null && !Array.isArray(value);
+}
+
+/**
+ * Reads `time_series_aggregates.json` from every project and returns the
+ * `types` map. The top-level `comment` is generator metadata and is dropped.
+ */
+function readTimeSeriesAggregateMap(
+  languageDir: string,
+  warnings: string[]
+): TimeSeriesAggregateMap {
+  const merged: TimeSeriesAggregateMap = {};
+  const sources = new Map<string, string>();
+
+  for (const project of listProjectDirs(languageDir)) {
+    const path = join(languageDir, project, 'definition', 'time_series_aggregates.json');
+
+    if (!existsSync(path)) {
+      continue;
+    }
+
+    const label = `${project}/definition/time_series_aggregates.json`;
+    const raw = JSON.parse(readFileSync(path, 'utf8')) as Json;
+    const knownKeys = new Set(['comment', 'types']);
+
+    for (const key of Object.keys(raw)) {
+      if (!knownKeys.has(key)) {
+        warnings.push(
+          `${label}: unknown key "${key}" ignored — update definition_types.ts and generate_lib.ts if it should be emitted`
+        );
+      }
+    }
+
+    if (!isRecord(raw.types)) {
+      throw new Error(`${label}: missing "types" object`);
+    }
+
+    for (const [fieldType, value] of Object.entries(raw.types)) {
+      const entryLabel = `${label}.types.${fieldType}`;
+
+      if (!isRecord(value)) {
+        throw new Error(`${entryLabel}: expected an object`);
+      }
+
+      const entry = sanitize(value, TIME_SERIES_AGGREGATE_SPEC, entryLabel, warnings);
+
+      if (typeof entry.function !== 'string' || typeof entry.returnType !== 'string') {
+        throw new Error(`${entryLabel}: "function" and "returnType" must be strings`);
+      }
+
+      const conversion: TimeSeriesAggregateConversion = {
+        function: entry.function,
+        returnType: entry.returnType,
+      };
+      const existing = merged[fieldType];
+
+      if (
+        existing !== undefined &&
+        (existing.function !== conversion.function || existing.returnType !== conversion.returnType)
+      ) {
+        throw new Error(
+          `${label}: conflicting value for "${fieldType}" (also in ${sources.get(fieldType)})`
+        );
+      }
+
+      merged[fieldType] = conversion;
+      sources.set(fieldType, label);
+    }
+  }
+
+  return merged;
+}
+
 interface DocsSplit {
   structure: SourcedItem[];
   docs: Record<string, DefinitionDocs>;
@@ -640,6 +725,7 @@ export function generateAll(elasticsearchDir: string): GenerateResult {
   }
   const settingItems = readDefinitions(esqlDir, 'settings', SETTING_SPEC, warnings);
   const inlineCasts = readInlineCastMap(esqlDir);
+  const timeSeriesAggregates = readTimeSeriesAggregateMap(esqlDir, warnings);
   const promqlFunctionsSplit = splitDocs(
     readDefinitions(promqlDir, 'functions', PROMQL_FUNCTION_SPEC, warnings),
     'promql functions',
@@ -689,6 +775,14 @@ export function generateAll(elasticsearchDir: string): GenerateResult {
     {
       relativePath: 'inline_cast.ts',
       content: renderSingleModule('InlineCastMap', 'inlineCasts: InlineCastMap', inlineCasts),
+    },
+    {
+      relativePath: 'time_series_aggregates.ts',
+      content: renderSingleModule(
+        'TimeSeriesAggregateMap',
+        'timeSeriesAggregates: TimeSeriesAggregateMap',
+        timeSeriesAggregates
+      ),
     },
     ...renderPerItemDirectory({
       dirName: 'functions',
@@ -755,6 +849,7 @@ export function generateAll(elasticsearchDir: string): GenerateResult {
       operatorDocs: operatorsSplit.docs,
       settings,
       inlineCasts,
+      timeSeriesAggregates,
       promqlFunctions,
       promqlFunctionDocs: promqlFunctionsSplit.docs,
       promqlOperators,

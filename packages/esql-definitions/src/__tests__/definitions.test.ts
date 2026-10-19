@@ -67,6 +67,22 @@ describe('definition sync', () => {
     }
   });
 
+  test('time series aggregate map keeps type conversions and drops the comment', () => {
+    const map = result!.data.timeSeriesAggregates;
+
+    expect(map.counter_double).toEqual({ function: 'last_over_time', returnType: 'double' });
+    expect(map.counter_integer).toEqual({ function: 'last_over_time', returnType: 'integer' });
+    expect(map.counter_long).toEqual({ function: 'last_over_time', returnType: 'long' });
+    expect(map.text).toEqual({ function: 'last_over_time', returnType: 'keyword' });
+    expect(map.double).toEqual({ function: 'last_over_time', returnType: 'double' });
+    expect(map.keyword).toEqual({ function: 'last_over_time', returnType: 'keyword' });
+    expect(map.exponential_histogram).toEqual({
+      function: 'histogram_merge_over_time',
+      returnType: 'exponential_histogram',
+    });
+    expect(map).not.toHaveProperty('comment');
+  });
+
   test('PromQL definitions are synced', () => {
     expect(result!.data.promqlFunctions.length).toBeGreaterThan(0);
     expect(result!.data.promqlOperators.length).toBeGreaterThan(0);
