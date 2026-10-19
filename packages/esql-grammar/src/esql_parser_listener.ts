@@ -95,12 +95,16 @@ import { LookupCommandContext } from "./esql_parser.js";
 import { DedupCommandContext } from "./esql_parser.js";
 import { HighlightCommandContext } from "./esql_parser.js";
 import { QualifiedNamesContext } from "./esql_parser.js";
+import { FillNullCommandContext } from "./esql_parser.js";
+import { FillNullValueContext } from "./esql_parser.js";
 import { UriPartsCommandContext } from "./esql_parser.js";
 import { RegisteredDomainCommandContext } from "./esql_parser.js";
 import { UserAgentCommandContext } from "./esql_parser.js";
 import { IpLocationCommandContext } from "./esql_parser.js";
 import { SetCommandContext } from "./esql_parser.js";
 import { SetFieldContext } from "./esql_parser.js";
+import { LetCommandContext } from "./esql_parser.js";
+import { LetBindingContext } from "./esql_parser.js";
 import { MmrCommandContext } from "./esql_parser.js";
 import { MmrQueryVectorParameterContext } from "./esql_parser.js";
 import { MmrQueryVectorExpressionContext } from "./esql_parser.js";
@@ -1027,6 +1031,26 @@ export default class esql_parserListener extends ParseTreeListener {
 	 */
 	exitQualifiedNames?: (ctx: QualifiedNamesContext) => void;
 	/**
+	 * Enter a parse tree produced by `esql_parser.fillNullCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterFillNullCommand?: (ctx: FillNullCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.fillNullCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitFillNullCommand?: (ctx: FillNullCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.fillNullValue`.
+	 * @param ctx the parse tree
+	 */
+	enterFillNullValue?: (ctx: FillNullValueContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.fillNullValue`.
+	 * @param ctx the parse tree
+	 */
+	exitFillNullValue?: (ctx: FillNullValueContext) => void;
+	/**
 	 * Enter a parse tree produced by `esql_parser.uriPartsCommand`.
 	 * @param ctx the parse tree
 	 */
@@ -1086,6 +1110,26 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitSetField?: (ctx: SetFieldContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.letCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterLetCommand?: (ctx: LetCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.letCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitLetCommand?: (ctx: LetCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.letBinding`.
+	 * @param ctx the parse tree
+	 */
+	enterLetBinding?: (ctx: LetBindingContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.letBinding`.
+	 * @param ctx the parse tree
+	 */
+	exitLetBinding?: (ctx: LetBindingContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.mmrCommand`.
 	 * @param ctx the parse tree

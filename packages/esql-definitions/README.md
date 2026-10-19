@@ -28,8 +28,21 @@ import { functionDefinitions } from '@elastic/esql-definitions/functions';
 import { operatorDefinitions } from '@elastic/esql-definitions/operators';
 import { settingDefinitions } from '@elastic/esql-definitions/settings';
 import { inlineCasts } from '@elastic/esql-definitions/inline-cast';
+import { timeSeriesAggregates } from '@elastic/esql-definitions/time-series-aggregates';
 import { promqlFunctionDefinitions } from '@elastic/esql-definitions/promql-functions';
 import { promqlOperatorDefinitions } from '@elastic/esql-definitions/promql-operators';
+```
+
+`timeSeriesAggregates` maps each field type to the implicit aggregate ES|QL
+inserts for a bare column in a time-series `STATS`, and to the type the
+outer aggregate sees. `counter_double` becomes `double`, `counter_integer`
+becomes `integer`, `counter_long` becomes `long`, and `text` becomes
+`keyword`. The other entries (`double`, `keyword`, `exponential_histogram`,
+…) keep the same type.
+
+```ts
+timeSeriesAggregates.counter_double;
+// { function: 'last_over_time', returnType: 'double' }
 ```
 
 Documentation (descriptions, examples, notes, parameter docs) is split

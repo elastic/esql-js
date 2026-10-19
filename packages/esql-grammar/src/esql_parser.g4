@@ -28,7 +28,7 @@ import Expression,
        Promql;
 
 statements
-    : setCommand* singleStatement EOF
+    : setCommand* letCommand* singleStatement EOF
     ;
 
 singleStatement
@@ -81,10 +81,11 @@ processingCommand
     | ipLocationCommand
     | mmrCommand
     | highlightCommand
+    | denseVectorCommand
     // in development
     | lookupCommand
     | dedupCommand
-    | denseVectorCommand
+    | fillNullCommand
     ;
 
 whereCommand
@@ -413,6 +414,14 @@ qualifiedNames
     : qualifiedName (COMMA qualifiedName)*
     ;
 
+fillNullCommand
+    : DEV_FILLNULL fillNullValue ON qualifiedNamePatterns
+    ;
+
+fillNullValue
+    : NULL | DEFAULT | integerValue | decimalValue | booleanValue | string | parameter
+    ;
+
 uriPartsCommand
     : URI_PARTS qualifiedName ASSIGN primaryExpression
     ;
@@ -437,6 +446,14 @@ setField
     : identifier ASSIGN ( constant | mapExpression )
     ;
 
+letCommand
+    : DEV_LET letBinding SEMICOLON
+    ;
+
+letBinding
+    : UNQUOTED_IDENTIFIER ASSIGN subquery
+    ;
+
 mmrCommand
     :  MMR (queryVector=mmrQueryVectorParams)? ON diversifyField=qualifiedName MMR_LIMIT limitValue=integerValue commandNamedParameters
     ;
@@ -449,7 +466,7 @@ mmrQueryVectorParams
 // The field list is optional in the grammar only so the command can report its own errors: an absent list and a
 // literal input both parse here and are rejected in the builder, where the message can name the actual problem.
 denseVectorCommand
-    : DEV_DENSE_VECTOR denseVectorNaming? qualifiedNames? commandNamedParameters
+    : DENSE_VECTOR denseVectorNaming? qualifiedNames? commandNamedParameters
     ;
 
 // `ON` closes the suffix clause instead of separating two operands, so it sits inside the optional
