@@ -49,6 +49,11 @@ export function* children(
       }
       break;
     }
+    case 'lambda': {
+      yield* node.params;
+      yield node.body;
+      break;
+    }
     case 'parens': {
       yield node.child;
       break;
