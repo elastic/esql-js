@@ -19,3 +19,4 @@ steps:
       pnpm build
       pnpm typecheck
       pnpm test
+      pnpm --filter highlight-esql package
