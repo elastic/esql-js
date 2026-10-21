@@ -22,6 +22,7 @@ import avgDocs from './avg';
 import avgOverTimeDocs from './avg_over_time';
 import bottomkDocs from './bottomk';
 import ceilDocs from './ceil';
+import changesDocs from './changes';
 import clampDocs from './clamp';
 import clampMaxDocs from './clamp_max';
 import clampMinDocs from './clamp_min';
@@ -73,6 +74,8 @@ import scalarDocs from './scalar';
 import sgnDocs from './sgn';
 import sinDocs from './sin';
 import sinhDocs from './sinh';
+import sortDocs from './sort';
+import sortDescDocs from './sort_desc';
 import sqrtDocs from './sqrt';
 import stddevDocs from './stddev';
 import stddevOverTimeDocs from './stddev_over_time';
@@ -101,6 +104,7 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   avg_over_time: avgOverTimeDocs,
   bottomk: bottomkDocs,
   ceil: ceilDocs,
+  changes: changesDocs,
   clamp: clampDocs,
   clamp_max: clampMaxDocs,
   clamp_min: clampMinDocs,
@@ -152,6 +156,8 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   sgn: sgnDocs,
   sin: sinDocs,
   sinh: sinhDocs,
+  sort: sortDocs,
+  sort_desc: sortDescDocs,
   sqrt: sqrtDocs,
   stddev: stddevDocs,
   stddev_over_time: stddevOverTimeDocs,

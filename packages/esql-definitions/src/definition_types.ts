@@ -120,6 +120,22 @@ export interface SettingDefinition {
 
 export type InlineCastMap = Record<string, string>;
 
+/**
+ * Implicit aggregate ES|QL applies to a bare column of this type inside a
+ * time-series `STATS`. `returnType` is the type the outer aggregate sees.
+ */
+export interface TimeSeriesAggregateConversion {
+  function: string;
+  returnType: string;
+}
+
+/**
+ * Field type → implicit time-series aggregate, from
+ * `elasticsearch/esql/<project>/definition/time_series_aggregates.json`.
+ * The file's top-level `comment` is generator metadata and is not included.
+ */
+export type TimeSeriesAggregateMap = Record<string, TimeSeriesAggregateConversion>;
+
 /** A single item from `elasticsearch/promql/<project>/definition/functions/`. */
 export interface PromqlFunctionDefinition {
   /** Function kind: 'value_transformation' | 'within_series' | ... */

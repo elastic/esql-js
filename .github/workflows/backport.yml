@@ -18,12 +18,12 @@ jobs:
         with:
           fetch-depth: 0
 
-      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+      - uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
           node-version-file: .nvmrc
 
       - name: Backport
-        uses: sorenlouv/backport-github-action@main
+        uses: sorenlouv/backport-github-action@f98adcdb38c8a19480f3d6abefbbace9eecaf009 # main
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
           auto_backport_label_prefix: 'backport:'

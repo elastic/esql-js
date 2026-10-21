@@ -45,7 +45,7 @@ const definition: FunctionDefinition = {
       returnType: 'text',
     },
   ],
-  preview: true,
+  preview: false,
   snapshotOnly: false,
 };
 

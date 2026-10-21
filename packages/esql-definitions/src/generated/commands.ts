@@ -38,6 +38,9 @@ export const commandDefinitions: CommandDefinition[] = [
     name: 'explain',
   },
   {
+    name: 'fillnull',
+  },
+  {
     name: 'fork',
   },
   {

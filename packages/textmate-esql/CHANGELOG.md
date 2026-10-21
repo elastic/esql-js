@@ -1,5 +1,19 @@
 # @elastic/textmate-esql
 
+## 4.33.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-definitions@4.33.0
+
+## 4.32.0
+
+### Patch Changes
+
+- Updated dependencies [[`ad42ac6`](https://github.com/elastic/esql-js/commit/ad42ac67fb643960f6b4d1f2ef2a03d60d5ceff8)]:
+  - @elastic/esql-definitions@4.32.0
+
 ## 4.31.0
 
 ### Patch Changes

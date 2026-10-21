@@ -14,6 +14,7 @@ const generatedEntries = [
   'commands.ts',
   'settings.ts',
   'inline_cast.ts',
+  'time_series_aggregates.ts',
   'functions/index.ts',
   'function_docs/index.ts',
   'operators/index.ts',

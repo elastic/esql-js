@@ -1,5 +1,13 @@
 # @elastic/esql-definitions
 
+## 4.33.0
+
+## 4.32.0
+
+### Minor Changes
+
+- [#267](https://github.com/elastic/esql-js/pull/267) [`ad42ac6`](https://github.com/elastic/esql-js/commit/ad42ac67fb643960f6b4d1f2ef2a03d60d5ceff8) Thanks [@stratoula](https://github.com/stratoula)! - Export time-series aggregate implicit conversions from `@elastic/esql-definitions/time-series-aggregates`, so consumers can type-check a time-series `STATS` against the converted field type.
+
 ## 4.31.0
 
 ## 4.30.0

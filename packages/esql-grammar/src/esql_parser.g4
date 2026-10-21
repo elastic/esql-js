@@ -28,7 +28,7 @@ import Expression,
        Promql;
 
 statements
-    : setCommand* singleStatement EOF
+    : setCommand* letCommand* singleStatement EOF
     ;
 
 singleStatement
@@ -85,6 +85,7 @@ processingCommand
     // in development
     | lookupCommand
     | dedupCommand
+    | fillNullCommand
     ;
 
 whereCommand
@@ -413,6 +414,14 @@ qualifiedNames
     : qualifiedName (COMMA qualifiedName)*
     ;
 
+fillNullCommand
+    : DEV_FILLNULL fillNullValue ON qualifiedNamePatterns
+    ;
+
+fillNullValue
+    : NULL | DEFAULT | integerValue | decimalValue | booleanValue | string | parameter
+    ;
+
 uriPartsCommand
     : URI_PARTS qualifiedName ASSIGN primaryExpression
     ;
@@ -435,6 +444,14 @@ setCommand
 
 setField
     : identifier ASSIGN ( constant | mapExpression )
+    ;
+
+letCommand
+    : DEV_LET letBinding SEMICOLON
+    ;
+
+letBinding
+    : UNQUOTED_IDENTIFIER ASSIGN subquery
     ;
 
 mmrCommand
