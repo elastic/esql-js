@@ -619,6 +619,12 @@ export class DedupCommandVisitorContext<
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
 
+// TS_COLLAPSE
+export class TsCollapseCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
+
 // USER_AGENT <qualifiedName> = <primaryExpression> [WITH <map>]
 export class UserAgentCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
