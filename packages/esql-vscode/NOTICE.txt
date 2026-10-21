@@ -1,0 +1,2 @@
+Highlight ES|QL (ES|QL language support for VS Code).
+Copyright 2026 Elasticsearch B.V.

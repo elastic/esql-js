@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="bg" x1="64" y1="64" x2="448" y2="448" gradientUnits="userSpaceOnUse">
+      <stop offset="0" stop-color="#173A7A"/>
+      <stop offset="1" stop-color="#0E2557"/>
+    </linearGradient>
+    <filter id="shadow" x="0" y="0" width="512" height="512" filterUnits="userSpaceOnUse">
+      <feDropShadow dx="0" dy="8" stdDeviation="10" flood-color="#08142F" flood-opacity="0.35"/>
+    </filter>
+  </defs>
+
+  <!-- Background -->
+  <rect x="34" y="34" width="444" height="444" rx="72" fill="url(#bg)"/>
+
+  <!-- Main label -->
+  <g filter="url(#shadow)" font-family="Inter, Segoe UI, Arial, sans-serif" font-weight="800" font-size="104" letter-spacing="-4">
+    <text x="92" y="236" fill="#25A7FF">E</text>
+    <text x="165" y="236" fill="#24D0B5">S</text>
+    <text x="245" y="236" fill="#FFC61A">Q</text>
+    <text x="355" y="236" fill="#9C6BFF">L</text>
+  </g>
+
+  <!-- Syntax highlight bars -->
+  <g>
+    <rect x="96" y="294" width="124" height="16" rx="8" fill="#25A7FF"/>
+    <rect x="232" y="294" width="26" height="16" rx="8" fill="#25A7FF"/>
+
+    <rect x="96" y="338" width="166" height="16" rx="8" fill="#55D88A"/>
+    <rect x="278" y="338" width="30" height="16" rx="8" fill="#55D88A"/>
+
+    <rect x="96" y="382" width="150" height="16" rx="8" fill="#FFC61A"/>
+    <rect x="258" y="382" width="28" height="16" rx="8" fill="#FFC61A"/>
+
+    <rect x="96" y="426" width="172" height="16" rx="8" fill="#9C6BFF"/>
+    <rect x="280" y="426" width="30" height="16" rx="8" fill="#9C6BFF"/>
+  </g>
+</svg>
