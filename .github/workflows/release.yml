@@ -37,6 +37,8 @@ jobs:
       contents: write
       pull-requests: write
       id-token: write
+    outputs:
+      published: ${{ steps.changesets.outputs.published }}
     steps:
       - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
         with:
@@ -85,3 +87,71 @@ jobs:
           if [[ "$version" == *-* ]]; then flags+=(--prerelease); fi
 
           gh release create "v$version" "${flags[@]}"
+
+  vscode-extension:
+    name: Publish VS Code extension
+    needs: release
+    # Ships the extension at the version just published to npm. To retry,
+    # use "Re-run failed jobs" on the same run: a new run finds npm up to date,
+    # reports nothing published, and skips this job.
+    if: ${{ !cancelled() && needs.release.outputs.published == 'true' }}
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write # attaches the .vsix to the GitHub Release
+    steps:
+      - uses: actions/checkout@df4cb1c069e1874edd31b4311f1884172cec0e10 # v6
+
+      - uses: pnpm/action-setup@ea17c68df8912ef543352723c149a84f56e3d413 # v6.1.0
+
+      - uses: actions/setup-node@48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e # v6
+        with:
+          node-version-file: .nvmrc
+          cache: pnpm
+
+      - run: pnpm install --frozen-lockfile
+      - run: pnpm --filter highlight-esql... build
+
+      - name: Package extension
+        id: package
+        working-directory: packages/esql-vscode
+        run: |
+          version=$(node -p "require('./package.json').version")
+
+          # The Marketplace and Open VSX accept only major.minor.patch versions.
+          if [[ "$version" == *-* ]]; then
+            echo "::notice::Not publishing prerelease $version of the VS Code extension."
+            exit 0
+          fi
+
+          vsix="highlight-esql-$version.vsix"
+          pnpm exec vsce package --no-dependencies --out "$vsix"
+          echo "version=$version" >> "$GITHUB_OUTPUT"
+          echo "vsix=$vsix" >> "$GITHUB_OUTPUT"
+
+      # The publishing steps run even if an earlier one fails, so one registry
+      # being down doesn't hold back the others, and each skips a version that
+      # is already published, so the job is safe to re-run.
+      - name: Publish to VS Code Marketplace
+        if: ${{ !cancelled() && steps.package.outputs.vsix }}
+        working-directory: packages/esql-vscode
+        env:
+          VSCE_PAT: ${{ secrets.VSCE_PAT }}
+          VSIX: ${{ steps.package.outputs.vsix }}
+        run: pnpm exec vsce publish --packagePath "$VSIX" --skip-duplicate
+
+      - name: Publish to Open VSX
+        if: ${{ !cancelled() && steps.package.outputs.vsix }}
+        working-directory: packages/esql-vscode
+        env:
+          OVSX_PAT: ${{ secrets.OVSX_PAT }}
+          VSIX: ${{ steps.package.outputs.vsix }}
+        run: pnpm exec ovsx publish "$VSIX" --skip-duplicate
+
+      - name: Attach to GitHub Release
+        if: ${{ !cancelled() && steps.package.outputs.vsix }}
+        working-directory: packages/esql-vscode
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          VERSION: ${{ steps.package.outputs.version }}
+          VSIX: ${{ steps.package.outputs.vsix }}
+        run: gh release upload "v$VERSION" "$VSIX" --clobber
