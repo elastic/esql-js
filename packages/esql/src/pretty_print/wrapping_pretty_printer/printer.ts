@@ -263,7 +263,7 @@ export class WrappingPrettyPrinter {
     const lower = this.opts.lowercaseCommands;
     const name = lower ? cmd.name.toLowerCase() : cmd.name.toUpperCase();
     const argItems = [...singleItems(cmd.args)];
-    const argDocs = argItems.map((a) => this.docExpression(a));
+    const argDocs = argItems.map((a) => this.docHeaderArg(a));
     const hasLBD = argItems.some((a) => getPrettyPrintStats(a).hasLineBreakingDecorations);
     const argsDoc: Doc = argDocs.length
       ? [' ', hasLBD ? this.docOnePerLineList(argDocs) : this.docFillList(argDocs)]
@@ -271,6 +271,16 @@ export class WrappingPrettyPrinter {
     const d: Doc = group([name, argsDoc, ';'], { shouldBreak: hasLBD });
 
     return decorateWithComments(cmd, d);
+  }
+
+  private docHeaderArg(arg: ESQLAstExpression): Doc {
+    if (!isBinaryExpression(arg) || arg.name !== '=') return this.docExpression(arg);
+
+    const [left, right] = arg.args;
+
+    if (!isProperNode(left) || !isProperNode(right)) return this.docExpression(arg);
+
+    return decorateWithComments(arg, [this.docExpression(left), ' = ', this.docExpression(right)]);
   }
 
   // ----------------------------------------------------------------- Commands

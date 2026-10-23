@@ -138,3 +138,4 @@ const cmd4 = Builder.command.promql(pqlSel('up'), undefined, 'health');
 - `.header`
   - `.command()` &mdash; Constructs a header command node.
   - `.command.set()` &mdash; Constructs a `SET` header command node.
+  - `.command.let()` &mdash; Constructs a `LET` header command node.

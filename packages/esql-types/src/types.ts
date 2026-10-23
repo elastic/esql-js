@@ -268,12 +268,18 @@ export type ESQLAstPromqlCommandQuery =
 export type ESQLAstPromqlQuery = PromQLAstQueryExpression;
 
 /**
- * Represents a header pseudo-command, such as SET.
+ * A `name = value;` instruction placed before the main query, stored in
+ * `ESQLAstQueryExpression.header` in source order. Discriminate by `name`:
+ *
+ * - `SET` binds a query setting: `SET name = value;`
+ * - `LET` binds a subquery to a name: `LET name = (subquery);`
  *
  * Example:
  *
  * ```
- * SET setting1 = "value1", setting2 = "value2";
+ * SET setting1 = "value1";
+ * LET name = (FROM index | LIMIT 10);
+ * FROM name
  * ```
  */
 export interface ESQLAstHeaderCommand<
@@ -304,6 +310,18 @@ export type ESQLAstSetHeaderCommand = ESQLAstHeaderCommand<
   ESQLBinaryExpression<BinaryExpressionAssignmentOperator>
 >;
 
+/**
+ * Represents a LET named subquery binding: `LET name = ( subquery );`.
+ *
+ * The single argument is a `name = ( subquery )` assignment, where the left
+ * side is an `ESQLIdentifier` and the right side is an `ESQLParens` wrapping
+ * the subquery.
+ */
+export type ESQLAstLetHeaderCommand = ESQLAstHeaderCommand<
+  'let',
+  ESQLBinaryExpression<BinaryExpressionAssignmentOperator>
+>;
+
 export type ESQLIdentifierOrParam = ESQLIdentifier | ESQLParamLiteral;
 
 export interface ESQLCommandOption extends ESQLAstBaseItem {
@@ -313,6 +331,7 @@ export interface ESQLCommandOption extends ESQLAstBaseItem {
 
 export interface ESQLAstQueryExpression extends ESQLAstBaseItem<''> {
   type: 'query';
+  /** Query prelude instructions (`SET`, `LET`), in source order. */
   header?: ESQLAstHeaderCommand[];
   commands: ESQLAstCommand[];
 }

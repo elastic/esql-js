@@ -85,6 +85,33 @@ FROM very_long_index_name_that_exceeds_line_length | WHERE field == "value"`);
 
         expect(text).toBe('SET debug = TRUE;\nFROM index');
       });
+
+      test('long SET map value breaks inside the braces', () => {
+        const { text } = reprint(
+          'SET approximation = {"rows": 1000000000, "confidence_level": 0.95, "some_other_long_key": "value"}; FROM index'
+        );
+
+        expect('\n' + text).toBe(`
+SET approximation = {
+  "rows": 1000000000, "confidence_level": 0.95, "some_other_long_key": "value"};
+FROM index`);
+      });
+    });
+
+    describe('LET', () => {
+      test('long LET subquery breaks inside the parens', () => {
+        const { text } = reprint(
+          'LET top2_clusters = (FROM k8s | STATS AVG(network.bytes_in) BY cluster | SORT `AVG(network.bytes_in)` DESC | LIMIT 2); FROM top2_clusters'
+        );
+
+        expect('\n' + text).toBe(`
+LET top2_clusters = (
+  FROM k8s
+    | STATS AVG(network.bytes_in) BY cluster
+    | SORT \`AVG(network.bytes_in)\` DESC
+    | LIMIT 2);
+FROM top2_clusters`);
+      });
     });
   });
 

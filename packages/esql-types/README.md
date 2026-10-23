@@ -62,7 +62,7 @@ ESQLAstQueryExpression          root node — holds commands[]
       ESQLList                  list literal ([1, 2, 3])
       ESQLInlineCast            inline cast (expr::type)
       ESQLParamLiteral          parameter placeholder (?, ?name, ?1)
-  ESQLAstHeaderCommand          pre-query instructions (SET key = value)
+  ESQLAstHeaderCommand          pre-query instructions (SET key = value; LET name = (subquery);)
 ```
 
 ## Notes
