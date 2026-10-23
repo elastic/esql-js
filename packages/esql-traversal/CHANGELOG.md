@@ -1,5 +1,17 @@
 # @elastic/esql-traversal
 
+## 4.34.0
+
+### Minor Changes
+
+- [#277](https://github.com/elastic/esql-js/pull/277) [`4c6302c`](https://github.com/elastic/esql-js/commit/4c6302c760927348ef2a0bffa1bb1b635b4eb77c) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Add a `lambda` AST node (`ESQLLambda`) for lambda function arguments such as `MV_FILTER(arr, v -> v > 1)`. Adds `Builder.expression.lambda`, `is.isLambda` and `Walker`, and `visitLambda` in `Visitor`.
+
+### Patch Changes
+
+- Updated dependencies [[`4c6302c`](https://github.com/elastic/esql-js/commit/4c6302c760927348ef2a0bffa1bb1b635b4eb77c)]:
+  - @elastic/esql-types@4.34.0
+  - @elastic/esql-ast@4.34.0
+
 ## 4.33.0
 
 ### Patch Changes
