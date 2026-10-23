@@ -49,6 +49,7 @@ import type {
   ESQLList,
   ESQLLiteral,
   ESQLMap,
+  ESQLLambda,
   ESQLMapEntry,
   ESQLOrderExpression,
   ESQLParens,
@@ -606,6 +607,8 @@ export class WrappingPrettyPrinter {
         return this.docMap(node);
       case 'map-entry':
         return this.docMapEntry(node as ESQLMapEntry);
+      case 'lambda':
+        return this.docLambda(node);
       case 'parens':
         return this.docParens(node);
       case 'order':
@@ -868,6 +871,15 @@ export class WrappingPrettyPrinter {
   }
 
   // -------------------------------------------------------- Parens expression
+
+  protected docLambda(node: ESQLLambda): Doc {
+    const params = node.params.map((param) => this.docExpression(param));
+    const head: Doc =
+      node.parenthesized || params.length !== 1 ? ['(', join([', '], params), ')'] : params[0];
+    const d: Doc = [head, ' -> ', this.docExpression(node.body)];
+
+    return decorateWithComments(node, d);
+  }
 
   protected docParens(node: ESQLParens): Doc {
     const childDoc = this.docExpression(node.child);

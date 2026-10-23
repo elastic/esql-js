@@ -55,6 +55,7 @@ export type ESQLSingleAstItem =
   | ESQLUnknownItem
   | ESQLMap
   | ESQLMapEntry
+  | ESQLLambda
   | PromQLAstQueryExpression;
 
 /**
@@ -478,6 +479,26 @@ export interface ESQLSource extends ESQLAstBaseItem {
 export interface ESQLParens extends ESQLAstBaseItem {
   type: 'parens';
   child: ESQLAstExpression;
+}
+
+/**
+ * Represents a lambda expression, used as a function argument.
+ *
+ * ```
+ * MV_FILTER(arr, v -> v > 1)
+ * MV_REDUCE(arr, (acc, v) -> acc + v, 0)
+ * ```
+ */
+export interface ESQLLambda extends ESQLAstBaseItem {
+  type: 'lambda';
+  params: ESQLIdentifier[];
+  body: ESQLAstExpression;
+
+  /**
+   * Whether the parameter list was wrapped in parentheses in the source,
+   * e.g. `(v) -> v`. Always true for zero or multiple parameters.
+   */
+  parenthesized?: boolean;
 }
 
 export interface ESQLForkParens extends ESQLParens {
