@@ -46,7 +46,19 @@ The `--provenance` flag attaches [npm provenance](https://docs.npmjs.com/generat
 
 ### 4. The GitHub Release
 
-The action's built-in releases are per package, so with every package sharing one version they would produce 11 releases and 11 tags per release — and no `v<version>` tag at all. `createGithubReleases` is therefore set to `false`, and the workflow's final step creates a single release with `gh release create --generate-notes`:
+The action's built-in releases are per package, so with every package sharing one version they would produce 11 releases and 11 tags per release — and no `v<version>` tag at all. `createGithubReleases` is therefore set to `false`, and the release job's last step creates a single release with `gh release create --generate-notes`.
+
+### 5. The VS Code extension
+
+The ES|QL VS Code extension (`packages/esql-vscode`, published as [`Elastic.highlight-esql`](https://marketplace.visualstudio.com/items?itemName=Elastic.highlight-esql)) shares the version of the other packages, but it is `private`, so `pnpm -r publish` skips it. Instead, whenever the release job publishes to npm, the **Publish VS Code extension** job packages the extension at that version and:
+
+- publishes it to the VS Code Marketplace,
+- publishes it to [Open VSX](https://open-vsx.org/extension/Elastic/highlight-esql), which VSCodium, Cursor, and other VS Code forks install from,
+- attaches the `.vsix` to the `v<version>` GitHub Release.
+
+Each of these skips a version that is already there, and a failure in one does not stop the others. To retry, use **Re-run failed jobs** on the same workflow run. A new manual run won't publish the extension: it finds npm up to date, reports nothing published, and skips the job.
+
+Prerelease versions are not published, because the Marketplace and Open VSX accept only `major.minor.patch` versions.
 
 ---
 
@@ -58,14 +70,21 @@ The following secrets must be configured in the repository settings:
 |---|---|
 | `NPM_TOKEN` | Authenticates `pnpm changeset:publish` against the npm registry. Must have publish access to the `@elastic` scope. |
 | `GITHUB_TOKEN` | Automatically provided by GitHub Actions. Used to open the version PR and create GitHub Releases. No manual setup needed. |
+| `VSCE_PAT` | Publishes the VS Code extension to the VS Code Marketplace. An Azure DevOps PAT of a member of the `Elastic` Marketplace publisher, with organization **All accessible organizations** and scope **Marketplace (Manage)**. |
+| `OVSX_PAT` | Publishes the VS Code extension to Open VSX. An access token of a member of the `Elastic` Open VSX namespace. |
 
 `NPM_TOKEN` is passed to the Changesets action, which writes it into `~/.npmrc` before publishing; pnpm reads the registry auth token from there.
+
+`VSCE_PAT` stops working on **December 1, 2026**, when Azure DevOps retires global PATs; Marketplace publishing does not accept organization-scoped PATs. Before then, switch the **Publish to VS Code Marketplace** step to one of:
+
+- **Trusted publishing:** `vsce publish --oidc`, with `id-token: write` on the job and a trust policy for this workflow registered on the Marketplace. It needs no secret. `vsce` already supports it, but as of October 2026 the Marketplace does not ([microsoft/vscode-vsce#1275](https://github.com/microsoft/vscode-vsce/issues/1275)).
+- **Microsoft Entra ID:** sign in with [`azure/login`](https://github.com/Azure/login) over OIDC as a managed identity that is a member of the `Elastic` publisher, then run `vsce publish --azure-credential`. See [Publishing Extensions](https://code.visualstudio.com/api/working-with-extensions/publishing-extension).
 
 ---
 
 ## Manual release trigger
 
-The release workflow can also be triggered manually from the **Actions** tab -> **Release** -> **Run workflow**. This is useful to retry a failed publish step without waiting for a new merge to `main`.
+The release workflow can also be triggered manually from the **Actions** tab -> **Release** -> **Run workflow**. This is useful to retry a failed publish step without waiting for a new merge to `main`. It does not retry the VS Code extension; see [The VS Code extension](#5-the-vs-code-extension).
 
 ---
 

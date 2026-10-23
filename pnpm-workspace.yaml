@@ -6,3 +6,4 @@ packages:
 allowBuilds:
   esbuild: true # verifies/fetches the platform esbuild binary (tsup, vite)
   unrs-resolver: true # fetches the native resolver binding if missing (jest)
+  '@vscode/vsce-sign': false # signing binary for vsce's signature commands; `vsce package` does not use it

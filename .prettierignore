@@ -6,3 +6,4 @@ packages/esql-promql-grammar/src/promql_*.ts
 packages/esql-definitions/elasticsearch/
 packages/esql-definitions/src/generated/
 packages/textmate-esql/syntaxes/
+packages/esql-vscode/syntaxes/

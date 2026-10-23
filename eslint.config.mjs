@@ -104,6 +104,14 @@ export default defineConfig([
     },
   },
   {
+    // The VS Code extension is MIT-licensed (unlike the rest of this
+    // Elastic-2.0 monorepo), so its source uses the MIT header.
+    files: ['packages/esql-vscode/src/**/*.{ts,tsx}'],
+    rules: {
+      'local-rules/require-license-header': ['error', { license: mitLicenseHeader }],
+    },
+  },
+  {
     // The elasticsearch-dsl packages are Apache-2.0-licensed (unlike the rest
     // of this Elastic-2.0 monorepo), so their published source uses the Apache
     // SPDX header.
