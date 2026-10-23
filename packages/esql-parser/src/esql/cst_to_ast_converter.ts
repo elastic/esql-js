@@ -3663,12 +3663,9 @@ export class CstToAstConverter {
     const body = bodyCtx
       ? this.fromBooleanExpressionToExpressionOrUnknown(bodyCtx)
       : this.fromParserRuleToUnknown(ctx);
-    const node = Builder.expression.lambda(
-      params,
-      body,
-      { text: '', incomplete: Boolean(ctx.exception) || !bodyCtx || body.incomplete },
-      this.getParserFields(ctx)
-    );
+    const node = Builder.expression.lambda(params, body, {}, this.getParserFields(ctx));
+
+    node.incomplete ||= Boolean(ctx.exception) || !bodyCtx || body.incomplete;
 
     if (ctx.LP()) {
       node.parenthesized = true;

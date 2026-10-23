@@ -5,12 +5,29 @@
  * 2.0.
  */
 
-import { parse } from '..';
+import { EsqlLexer } from '@elastic/esql-grammar';
+import { parse, Parser } from '..';
+import type { EsqlParsingTarget } from '../types';
 import type { ESQLFunction, ESQLLambda } from '@elastic/esql-types';
 
 const firstEvalFn = (src: string) => {
   const { ast, errors } = parse(src);
   return { fn: ast[1].args[0] as ESQLFunction, errors };
+};
+
+/**
+ * Parses `src` starting directly at the `lambda` grammar rule. Within a full
+ * query, any syntax error inside a function call makes ANTLR fail prediction
+ * for the enclosing expression, so no lambda node is produced at all; parsing
+ * the rule directly is the only way to reach a lambda with a broken body.
+ */
+const parseLambda = (src: string) => {
+  const parser = new Parser(src);
+
+  parser.lexer.pushMode(EsqlLexer.EXPRESSION_MODE);
+
+  // `fromLambda` is private, so it is not part of `EsqlParsingTarget`.
+  return parser.parseTarget<ESQLLambda>(['lambda', 'fromLambda'] as unknown as EsqlParsingTarget);
 };
 
 const types = (fn: ESQLFunction) => fn.args.map((a) => (a as { type: string }).type);
@@ -69,5 +86,38 @@ describe('lambda function arguments', () => {
 
     expect(errors.length).toBeGreaterThan(0);
     expect(plainErrors.length).toBeGreaterThan(0);
+  });
+});
+
+describe('lambda incompleteness', () => {
+  it.each(['v -> v > 1', '(acc, v) -> acc + v', '() -> 1'])(
+    'does not mark a complete lambda as incomplete: %s',
+    (src) => {
+      const { root, errors } = parseLambda(src);
+
+      expect(errors.length).toBe(0);
+      expect(root.type).toBe('lambda');
+      expect(root.incomplete).toBe(false);
+    }
+  );
+
+  it.each(['v -> ', 'v -> v +', '(acc, v) -> ', '(acc, v) -> acc +', 'v -> f(v'])(
+    'marks the lambda incomplete when its body is incomplete: %s',
+    (src) => {
+      const { root, errors } = parseLambda(src);
+
+      expect(errors.length).toBeGreaterThan(0);
+      expect(root.type).toBe('lambda');
+      expect(root.body.incomplete).toBe(true);
+      expect(root.incomplete).toBe(true);
+    }
+  );
+
+  it.each(['v', '(acc, v'])('marks the lambda incomplete when the arrow is missing: %s', (src) => {
+    const { root, errors } = parseLambda(src);
+
+    expect(errors.length).toBeGreaterThan(0);
+    expect(root.type).toBe('lambda');
+    expect(root.incomplete).toBe(true);
   });
 });
