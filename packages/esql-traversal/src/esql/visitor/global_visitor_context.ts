@@ -394,6 +394,14 @@ export class GlobalVisitorContext<
           input as types.VisitorInput<Methods, 'visitDedupCommand'>
         );
       }
+      case 'ts_collapse': {
+        if (!this.methods.visitTsCollapseCommand) break;
+        return this.visitTsCollapseCommand(
+          parent,
+          commandNode,
+          input as types.VisitorInput<Methods, 'visitTsCollapseCommand'>
+        );
+      }
       case 'dense_vector': {
         if (!this.methods.visitDenseVectorCommand) break;
         return this.visitDenseVectorCommand(
@@ -745,6 +753,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitDedupCommand'> {
     const context = new contexts.DedupCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitDedupCommand', context, input);
+  }
+
+  public visitTsCollapseCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstCommand,
+    input: types.VisitorInput<Methods, 'visitTsCollapseCommand'>
+  ): types.VisitorOutput<Methods, 'visitTsCollapseCommand'> {
+    const context = new contexts.TsCollapseCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitTsCollapseCommand', context, input);
   }
 
   public visitDenseVectorCommand(
