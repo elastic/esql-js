@@ -571,6 +571,12 @@ export class CstToAstConverter {
       return this.fromDenseVectorCommand(denseVectorCommandCtx);
     }
 
+    const fillNullCommandCtx = ctx.fillNullCommand();
+
+    if (fillNullCommandCtx) {
+      return this.fromFillNullCommand(fillNullCommandCtx);
+    }
+
     // agent-marker: append new command dispatcher branches here
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
@@ -829,9 +835,9 @@ export class CstToAstConverter {
 
   private fromQualifiedNamePatterns(
     ctx: cst.QualifiedNamePatternsContext
-  ): ast.ESQLAstExpression[] {
+  ): Array<ast.ESQLColumn | ast.ESQLParam | ast.ESQLIdentifier> {
     const itemCtxs = ctx.qualifiedNamePattern_list();
-    const result: ast.ESQLAstExpression[] = [];
+    const result: Array<ast.ESQLColumn | ast.ESQLParam | ast.ESQLIdentifier> = [];
 
     for (const itemCtx of itemCtxs) {
       const node = this.fromQualifiedNamePattern(itemCtx);
@@ -2505,6 +2511,88 @@ export class CstToAstConverter {
     }
 
     return command;
+  }
+
+  // ----------------------------------------------------------------- FILLNULL
+
+  private fromFillNullCommand(ctx: cst.FillNullCommandContext): ast.ESQLAstFillNullCommand {
+    const command = this.createCommand<'fillnull', ast.ESQLAstFillNullCommand>('fillnull', ctx);
+    const value = this.fromFillNullValue(ctx.fillNullValue());
+
+    if (value) {
+      command.value = value;
+      command.args.push(value);
+      command.incomplete ||= !!value.incomplete;
+    } else {
+      command.incomplete = true;
+    }
+
+    const fieldsCtx = ctx.qualifiedNamePatterns();
+    const fields = fieldsCtx ? this.fromQualifiedNamePatterns(fieldsCtx) : [];
+    const onToken = ctx.ON();
+
+    if (onToken) {
+      const onOption = this.toOption('on', fieldsCtx ?? ctx, fields);
+      onOption.location.min = onToken.symbol.start;
+
+      if (!fieldsCtx) {
+        onOption.location.max = onToken.symbol.stop;
+        onOption.text = onToken.getText();
+      }
+
+      onOption.incomplete ||= fields.length === 0;
+      command.args.push(onOption);
+      command.incomplete ||= onOption.incomplete;
+    } else {
+      command.incomplete = true;
+    }
+
+    command.fields = fields;
+
+    return command;
+  }
+
+  private fromFillNullValue(
+    ctx: cst.FillNullValueContext | null
+  ): ast.ESQLLiteral | ast.ESQLParam | ast.ESQLIdentifier | undefined {
+    if (!ctx || ctx.exception) {
+      return undefined;
+    }
+
+    const integerCtx = ctx.integerValue();
+
+    if (integerCtx) return this.toNumericLiteral(integerCtx, 'integer');
+
+    const decimalCtx = ctx.decimalValue();
+
+    if (decimalCtx) return this.toNumericLiteral(decimalCtx, 'double');
+
+    const booleanCtx = ctx.booleanValue();
+
+    if (booleanCtx) return this.getBooleanValue(booleanCtx);
+
+    const stringCtx = ctx.string_();
+
+    if (stringCtx) return this.toStringLiteral(stringCtx);
+
+    const paramCtx = ctx.parameter();
+
+    if (paramCtx) return this.fromParameter(paramCtx);
+
+    const nullToken = ctx.NULL();
+
+    if (nullToken) return this.toLiteral('null', nullToken);
+
+    const defaultToken = ctx.DEFAULT();
+    if (defaultToken) {
+      const node = this.toIdentifierFromTerminalNode(defaultToken);
+
+      node.verbatim = true;
+
+      return node;
+    }
+
+    return undefined;
   }
 
   // ------------------------------------------------------------- DENSE_VECTOR

@@ -10,6 +10,7 @@ import type {
   ESQLAstChangePointCommand,
   ESQLAstCompletionCommand,
   ESQLAstDenseVectorCommand,
+  ESQLAstFillNullCommand,
   ESQLAstIpLocationCommand,
   ESQLAstItem,
   ESQLAstJoinCommand,
@@ -359,4 +360,21 @@ export const fromDenseVector = (): ESQLAstQueryExpression => {
   };
 
   return Builder.expression.query([from(), denseVector, limit(10)]);
+};
+
+// FROM index | FILLNULL 0 ON x, y* | LIMIT 10
+export const fromFillNull = (): ESQLAstQueryExpression => {
+  const value = expr.literal.integer(0);
+  const fields = [expr.column('x'), expr.column('y*')];
+
+  const fillNull: ESQLAstFillNullCommand = {
+    ...Builder.command({
+      name: 'fillnull',
+      args: [value, Builder.option({ name: 'on', args: fields })],
+    }),
+    value,
+    fields,
+  };
+
+  return Builder.expression.query([from(), fillNull, limit(10)]);
 };

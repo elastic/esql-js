@@ -19,6 +19,7 @@ import type {
   ESQLAstRegisteredDomainCommand,
   ESQLAstHighlightCommand,
   ESQLAstDenseVectorCommand,
+  ESQLAstFillNullCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
   ESQLAstUriPartsCommand,
@@ -394,6 +395,14 @@ export class GlobalVisitorContext<
           input as types.VisitorInput<Methods, 'visitDedupCommand'>
         );
       }
+      case 'fillnull': {
+        if (!this.methods.visitFillNullCommand) break;
+        return this.visitFillNullCommand(
+          parent,
+          commandNode as ESQLAstFillNullCommand,
+          input as types.VisitorInput<Methods, 'visitFillNullCommand'>
+        );
+      }
       case 'dense_vector': {
         if (!this.methods.visitDenseVectorCommand) break;
         return this.visitDenseVectorCommand(
@@ -745,6 +754,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitDedupCommand'> {
     const context = new contexts.DedupCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitDedupCommand', context, input);
+  }
+
+  public visitFillNullCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLAstFillNullCommand,
+    input: types.VisitorInput<Methods, 'visitFillNullCommand'>
+  ): types.VisitorOutput<Methods, 'visitFillNullCommand'> {
+    const context = new contexts.FillNullCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitFillNullCommand', context, input);
   }
 
   public visitDenseVectorCommand(

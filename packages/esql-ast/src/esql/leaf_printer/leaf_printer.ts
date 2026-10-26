@@ -45,6 +45,11 @@ export const LeafPrinter = {
 
   identifier: (node: ESQLIdentifier) => {
     const name = node.name;
+
+    if (node.verbatim) {
+      return name;
+    }
+
     const isKeyword = quotableKeywords().has(name.toUpperCase());
     const isQuotationNeeded = !regexUnquotedIdPattern.test(name);
 
