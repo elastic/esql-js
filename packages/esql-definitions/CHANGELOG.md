@@ -1,5 +1,7 @@
 # @elastic/esql-definitions
 
+## 4.34.0
+
 ## 4.33.0
 
 ## 4.32.0
