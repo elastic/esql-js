@@ -3681,7 +3681,7 @@ export class CstToAstConverter {
     const functionExpressionCtx = ctx.functionExpression();
     const functionNameCtx = functionExpressionCtx.functionName();
     const mapExpressionCtx = functionExpressionCtx.mapExpression();
-    const args = this.fromBooleanExpressions(functionExpressionCtx.booleanExpression_list());
+    const args = this.fromFunctionArguments(functionExpressionCtx);
     const fn: ast.ESQLFunctionCallExpression = {
       type: 'function',
       subtype: 'variadic-call',
@@ -3729,6 +3729,37 @@ export class CstToAstConverter {
     }
 
     return fn;
+  }
+
+  private fromFunctionArguments(ctx: cst.FunctionExpressionContext): ast.ESQLAstItem[] {
+    const args: ast.ESQLAstItem[] = [];
+
+    for (const child of ctx.children ?? []) {
+      if (child instanceof cst.BooleanExpressionContext) {
+        args.push(this.fromBooleanExpressionToExpressionOrUnknown(child));
+      } else if (child instanceof cst.LambdaContext) {
+        args.push(this.fromLambda(child));
+      }
+    }
+
+    return args;
+  }
+
+  private fromLambda(ctx: cst.LambdaContext): ast.ESQLLambda {
+    const params = ctx.identifier_list().map((id) => this.toIdentifierFromContext(id));
+    const bodyCtx = ctx.booleanExpression();
+    const body = bodyCtx
+      ? this.fromBooleanExpressionToExpressionOrUnknown(bodyCtx)
+      : this.fromParserRuleToUnknown(ctx);
+    const node = Builder.expression.lambda(params, body, {}, this.getParserFields(ctx));
+
+    node.incomplete ||= Boolean(ctx.exception) || !bodyCtx || body.incomplete;
+
+    if (ctx.LP()) {
+      node.parenthesized = true;
+    }
+
+    return node;
   }
 
   private toFunction<Subtype extends ast.FunctionSubtype>(

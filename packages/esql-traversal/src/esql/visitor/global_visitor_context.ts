@@ -30,6 +30,7 @@ import type {
   ESQLList,
   ESQLLiteral,
   ESQLMap,
+  ESQLLambda,
   ESQLMapEntry,
   ESQLOrderExpression,
   ESQLParens,
@@ -902,6 +903,14 @@ export class GlobalVisitorContext<
           input as types.VisitorInput<Methods, 'visitQuery'>
         );
       }
+      case 'lambda': {
+        if (!this.methods.visitLambdaExpression) break;
+        return this.visitLambdaExpression(
+          parent,
+          expressionNode,
+          input as types.VisitorInput<Methods, 'visitLambdaExpression'>
+        );
+      }
       case 'parens': {
         if (this.methods.visitParensExpression) {
           const result = this.visitParensExpression(
@@ -1019,6 +1028,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitMapEntryExpression'> {
     const context = new contexts.MapEntryExpressionVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitMapEntryExpression', context, input);
+  }
+
+  public visitLambdaExpression(
+    parent: contexts.VisitorContext | null,
+    node: ESQLLambda,
+    input: types.VisitorInput<Methods, 'visitLambdaExpression'>
+  ): types.VisitorOutput<Methods, 'visitLambdaExpression'> {
+    const context = new contexts.LambdaExpressionVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitLambdaExpression', context, input);
   }
 
   public visitParensExpression(

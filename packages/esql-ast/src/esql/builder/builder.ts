@@ -43,6 +43,7 @@ import type {
   BinaryExpressionOperator,
   ESQLParamKinds,
   ESQLMap,
+  ESQLLambda,
   ESQLMapEntry,
   ESQLTimeDurationLiteral,
   ESQLDatePeriodLiteral,
@@ -263,6 +264,22 @@ export namespace Builder {
         type: 'parens',
         name: '',
         child,
+        ...Builder.parserFields(fromParser),
+      };
+    };
+
+    export const lambda = (
+      params: ESQLIdentifier[],
+      body: ESQLAstExpression,
+      template: Omit<AstNodeTemplate<ESQLLambda>, 'name' | 'params' | 'body'> = {},
+      fromParser?: Partial<AstNodeParserFields>
+    ): ESQLLambda => {
+      return {
+        ...template,
+        type: 'lambda',
+        name: '',
+        params,
+        body,
         ...Builder.parserFields(fromParser),
       };
     };

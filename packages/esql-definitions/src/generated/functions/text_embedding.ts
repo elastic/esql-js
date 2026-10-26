@@ -41,6 +41,29 @@ const definition: FunctionDefinition = {
             },
           },
         },
+      ],
+      variadic: false,
+      returnType: 'dense_vector',
+    },
+    {
+      params: [
+        {
+          name: 'text',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'inference_id',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'entity',
+            entityType: 'inference_endpoint',
+            constraints: {
+              task_type: 'text_embedding',
+            },
+          },
+        },
         {
           name: 'options',
           type: 'function_named_parameters',

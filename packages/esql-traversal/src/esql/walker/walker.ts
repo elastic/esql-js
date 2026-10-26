@@ -97,6 +97,11 @@ export interface WalkerOptions {
     parent: types.ESQLProperNode | undefined,
     walker: WalkerVisitorApi
   ) => void;
+  visitLambda?: (
+    node: types.ESQLLambda,
+    parent: types.ESQLProperNode | undefined,
+    walker: WalkerVisitorApi
+  ) => void;
   visitParens?: (
     node: types.ESQLParens,
     parent: types.ESQLProperNode | undefined,
@@ -866,6 +871,21 @@ export class Walker {
     }
   }
 
+  public walkLambda(node: types.ESQLLambda, parent: types.ESQLProperNode | undefined): void {
+    const { options } = this;
+
+    (options.visitLambda ?? options.visitAny)?.(node, parent, this);
+    if (this.readAndResetSkippedChildren()) return;
+
+    if (options.order === 'backward') {
+      this.walkSingleAstItem(node.body, node);
+      this.walkList([...node.params].reverse(), node);
+    } else {
+      this.walkList(node.params, node);
+      this.walkSingleAstItem(node.body, node);
+    }
+  }
+
   public walkParens(node: types.ESQLParens, parent: types.ESQLProperNode | undefined): void {
     const { options } = this;
     (options.visitParens ?? options.visitAny)?.(node, parent, this);
@@ -974,6 +994,10 @@ export class Walker {
       }
       case 'inlineCast': {
         this.walkInlineCast(node, parent);
+        break;
+      }
+      case 'lambda': {
+        this.walkLambda(node as types.ESQLLambda, parent);
         break;
       }
       case 'parens': {
