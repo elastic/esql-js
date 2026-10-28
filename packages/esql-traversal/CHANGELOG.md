@@ -1,5 +1,13 @@
 # @elastic/esql-traversal
 
+## 4.35.0
+
+### Patch Changes
+
+- Updated dependencies [[`e87f09c`](https://github.com/elastic/esql-js/commit/e87f09c76a9010d37bb6fa93442a727bcb4af404)]:
+  - @elastic/esql-types@4.35.0
+  - @elastic/esql-ast@4.35.0
+
 ## 4.34.0
 
 ### Minor Changes
