@@ -123,7 +123,8 @@ export type CommandVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitIpLocationCommand'> &
     VisitorInput<Methods, 'visitRegisteredDomainCommand'> &
     VisitorInput<Methods, 'visitHighlightCommand'> &
-    VisitorInput<Methods, 'visitDenseVectorCommand'> // agent-marker: append new VisitorInput entries here
+    VisitorInput<Methods, 'visitDenseVectorCommand'> &
+    VisitorInput<Methods, 'visitTsCollapseCommand'> // agent-marker: append new VisitorInput entries here
 >;
 
 /**
@@ -163,7 +164,8 @@ export type CommandVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitIpLocationCommand'>
   | VisitorOutput<Methods, 'visitRegisteredDomainCommand'>
   | VisitorOutput<Methods, 'visitHighlightCommand'>
-  | VisitorOutput<Methods, 'visitDenseVectorCommand'>; // agent-marker: append new VisitorOutput entries here
+  | VisitorOutput<Methods, 'visitDenseVectorCommand'>
+  | VisitorOutput<Methods, 'visitTsCollapseCommand'>; // agent-marker: append new VisitorOutput entries here
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export interface VisitorMethods<
@@ -231,6 +233,11 @@ export interface VisitorMethods<
     any
   >;
   visitDedupCommand?: Visitor<contexts.DedupCommandVisitorContext<Visitors, Data>, any, any>;
+  visitTsCollapseCommand?: Visitor<
+    contexts.TsCollapseCommandVisitorContext<Visitors, Data>,
+    any,
+    any
+  >;
   visitUserAgentCommand?: Visitor<
     contexts.UserAgentCommandVisitorContext<Visitors, Data>,
     any,
