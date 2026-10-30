@@ -188,7 +188,7 @@
     },
     "header-command": {
       "name": "keyword.control.header.esql",
-      "match": "(?i)\\b(?:SET)\\b"
+      "match": "(?i)\\b(?:SET|LET)\\b"
     },
     "option-keyword": {
       "name": "keyword.other.option.esql",

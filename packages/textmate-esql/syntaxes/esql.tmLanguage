@@ -296,7 +296,7 @@
 			<key>name</key>
 			<string>keyword.control.header.esql</string>
 			<key>match</key>
-			<string>(?i)\b(?:SET)\b</string>
+			<string>(?i)\b(?:SET|LET)\b</string>
 		</dict>
 		<key>option-keyword</key>
 		<dict>

@@ -12,7 +12,7 @@
 import type { PromqlFunctionDefinition } from '../../definition_types';
 
 /**
- * Returns `1` if the range vector has at least one element, and `0` otherwise.
+ * Returns `1` for every series that has at least one sample in the range.
  *
  * @example
  * present_over_time(http_requests_total[5m])

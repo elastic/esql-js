@@ -12,7 +12,7 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Returns `1` if the range vector has no elements, and `0` otherwise.',
+  description: 'Returns `1` if the range vector has no elements, and nothing otherwise.',
   examples: [
     'absent_over_time(nonexistent_metric[5m])',
   ],

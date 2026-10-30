@@ -10,6 +10,13 @@ export default class lexer_config extends Lexer {
     this._promqlDepth = 0;
   }
 
+  popMode() {
+    if (this._modeStack.length === 0) {
+      return this._mode;
+    }
+    return super.popMode();
+  }
+
   hasMetricsCommand() {
     return true;
   }

@@ -97,6 +97,9 @@ export const isSubQuery = (
 ): node is types.ESQLParens & { child: types.ESQLAstQueryExpression } =>
   isParens(node) && isQuery(node.child);
 
+export const isLambda = (node: unknown): node is types.ESQLLambda =>
+  isProperNode(node) && node.type === 'lambda';
+
 export const isMap = (node: unknown): node is types.ESQLMap =>
   isProperNode(node) && node.type === 'map';
 

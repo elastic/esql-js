@@ -39,6 +39,7 @@ import type {
   ESQLList,
   ESQLLiteral,
   ESQLMap,
+  ESQLLambda,
   ESQLMapEntry,
   ESQLOrderExpression,
   ESQLParens,
@@ -802,6 +803,42 @@ export class MapEntryExpressionVisitorContext<
     this.ctx.assertMethodExists('visitExpression');
 
     return this.visitExpression(this.value(), input);
+  }
+}
+
+export class LambdaExpressionVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends VisitorContext<Methods, Data, ESQLLambda> {
+  public params(): ESQLIdentifier[] {
+    return this.node.params;
+  }
+
+  public body(): ESQLAstExpression {
+    return this.node.body;
+  }
+
+  public *visitParams(
+    input:
+      | VisitorInput<Methods, 'visitExpression'>
+      | (() => VisitorInput<Methods, 'visitExpression'>)
+  ): Iterable<VisitorOutput<Methods, 'visitExpression'>> {
+    this.ctx.assertMethodExists('visitExpression');
+
+    for (const param of this.params()) {
+      yield this.visitExpression(
+        param,
+        typeof input === 'function' ? (input as Function)() : input
+      );
+    }
+  }
+
+  public visitBody(
+    input: VisitorInput<Methods, 'visitExpression'>
+  ): VisitorOutput<Methods, 'visitExpression'> {
+    this.ctx.assertMethodExists('visitExpression');
+
+    return this.visitExpression(this.body(), input);
   }
 }
 

@@ -29,6 +29,7 @@ import caseDefinition from './case';
 import categorizeDefinition from './categorize';
 import cbrtDefinition from './cbrt';
 import ceilDefinition from './ceil';
+import changesDefinition from './changes';
 import chunkDefinition from './chunk';
 import cidrMatchDefinition from './cidr_match';
 import clampDefinition from './clamp';
@@ -273,6 +274,7 @@ export const functionDefinitions: FunctionDefinition[] = [
   categorizeDefinition,
   cbrtDefinition,
   ceilDefinition,
+  changesDefinition,
   chunkDefinition,
   cidrMatchDefinition,
   clampDefinition,

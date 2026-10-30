@@ -49,6 +49,7 @@ import type {
   ESQLList,
   ESQLLiteral,
   ESQLMap,
+  ESQLLambda,
   ESQLMapEntry,
   ESQLOrderExpression,
   ESQLParens,
@@ -262,7 +263,7 @@ export class WrappingPrettyPrinter {
     const lower = this.opts.lowercaseCommands;
     const name = lower ? cmd.name.toLowerCase() : cmd.name.toUpperCase();
     const argItems = [...singleItems(cmd.args)];
-    const argDocs = argItems.map((a) => this.docExpression(a));
+    const argDocs = argItems.map((a) => this.docHeaderArg(a));
     const hasLBD = argItems.some((a) => getPrettyPrintStats(a).hasLineBreakingDecorations);
     const argsDoc: Doc = argDocs.length
       ? [' ', hasLBD ? this.docOnePerLineList(argDocs) : this.docFillList(argDocs)]
@@ -270,6 +271,16 @@ export class WrappingPrettyPrinter {
     const d: Doc = group([name, argsDoc, ';'], { shouldBreak: hasLBD });
 
     return decorateWithComments(cmd, d);
+  }
+
+  private docHeaderArg(arg: ESQLAstExpression): Doc {
+    if (!isBinaryExpression(arg) || arg.name !== '=') return this.docExpression(arg);
+
+    const [left, right] = arg.args;
+
+    if (!isProperNode(left) || !isProperNode(right)) return this.docExpression(arg);
+
+    return decorateWithComments(arg, [this.docExpression(left), ' = ', this.docExpression(right)]);
   }
 
   // ----------------------------------------------------------------- Commands
@@ -606,6 +617,8 @@ export class WrappingPrettyPrinter {
         return this.docMap(node);
       case 'map-entry':
         return this.docMapEntry(node as ESQLMapEntry);
+      case 'lambda':
+        return this.docLambda(node);
       case 'parens':
         return this.docParens(node);
       case 'order':
@@ -868,6 +881,15 @@ export class WrappingPrettyPrinter {
   }
 
   // -------------------------------------------------------- Parens expression
+
+  protected docLambda(node: ESQLLambda): Doc {
+    const params = node.params.map((param) => this.docExpression(param));
+    const head: Doc =
+      node.parenthesized || params.length !== 1 ? ['(', join([', '], params), ')'] : params[0];
+    const d: Doc = [head, ' -> ', this.docExpression(node.body)];
+
+    return decorateWithComments(node, d);
+  }
 
   protected docParens(node: ESQLParens): Doc {
     const childDoc = this.docExpression(node.child);

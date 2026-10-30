@@ -62,6 +62,7 @@ export type ExpressionVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitIdentifierExpression'> &
     VisitorInput<Methods, 'visitMapExpression'> &
     VisitorInput<Methods, 'visitMapEntryExpression'> &
+    VisitorInput<Methods, 'visitLambdaExpression'> &
     VisitorInput<Methods, 'visitParensExpression'> &
     VisitorInput<Methods, 'visitPromqlExpression'>
 >;
@@ -82,6 +83,7 @@ export type ExpressionVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitIdentifierExpression'>
   | VisitorOutput<Methods, 'visitMapExpression'>
   | VisitorOutput<Methods, 'visitMapEntryExpression'>
+  | VisitorOutput<Methods, 'visitLambdaExpression'>
   | VisitorOutput<Methods, 'visitParensExpression'>
   | VisitorOutput<Methods, 'visitPromqlExpression'>;
 
@@ -299,6 +301,11 @@ export interface VisitorMethods<
     any,
     any
   >;
+  visitLambdaExpression?: Visitor<
+    contexts.LambdaExpressionVisitorContext<Visitors, Data>,
+    any,
+    any
+  >;
   visitParensExpression?: Visitor<
     contexts.ParensExpressionVisitorContext<Visitors, Data>,
     any,
@@ -341,11 +348,13 @@ export type AstNodeToVisitorName<Node extends VisitorAstNode> = Node extends ESQ
                         ? 'visitMapExpression'
                         : Node extends ast.ESQLMapEntry
                           ? 'visitMapEntryExpression'
-                          : Node extends ast.ESQLParens
-                            ? 'visitParensExpression'
-                            : Node extends ast.ESQLAstPromqlQuery
-                              ? 'visitPromqlExpression'
-                              : never;
+                          : Node extends ast.ESQLLambda
+                            ? 'visitLambdaExpression'
+                            : Node extends ast.ESQLParens
+                              ? 'visitParensExpression'
+                              : Node extends ast.ESQLAstPromqlQuery
+                                ? 'visitPromqlExpression'
+                                : never;
 
 /**
  * Asserts that a type is a function.

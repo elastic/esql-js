@@ -1,5 +1,17 @@
 # @elastic/esql-types
 
+## 4.35.0
+
+### Minor Changes
+
+- [#272](https://github.com/elastic/esql-js/pull/272) [`e87f09c`](https://github.com/elastic/esql-js/commit/e87f09c76a9010d37bb6fa93442a727bcb4af404) Thanks [@bartoval](https://github.com/bartoval)! - Support the LET header command
+
+## 4.34.0
+
+### Minor Changes
+
+- [#277](https://github.com/elastic/esql-js/pull/277) [`4c6302c`](https://github.com/elastic/esql-js/commit/4c6302c760927348ef2a0bffa1bb1b635b4eb77c) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Add a `lambda` AST node (`ESQLLambda`) for lambda function arguments such as `MV_FILTER(arr, v -> v > 1)`. Adds `Builder.expression.lambda`, `is.isLambda` and `Walker`, and `visitLambda` in `Visitor`.
+
 ## 4.33.0
 
 ## 4.32.0

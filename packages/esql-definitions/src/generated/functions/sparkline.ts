@@ -44,6 +44,278 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'from',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
           type: 'text',
           optional: false,
         },
@@ -94,6 +366,414 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'aggregation',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
           type: 'long',
           optional: false,
           hint: {
@@ -118,6 +798,142 @@ const definition: FunctionDefinition = {
         {
           name: 'to',
           type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'aggregation',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'aggregation',
+          },
+        },
+        {
+          name: 'key',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'to',
+          type: 'text',
           optional: false,
         },
       ],

@@ -1,5 +1,9 @@
 # @elastic/elasticsearch-query-builder
 
+## 4.35.0
+
+## 4.34.0
+
 ## 4.33.0
 
 ## 4.32.0

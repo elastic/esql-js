@@ -385,6 +385,14 @@ export class BasicPrettyPrinter {
       return this.decorateWithComments(ctx.node, formatted);
     })
 
+    .on('visitLambdaExpression', (ctx) => {
+      const params = [...ctx.visitParams()].join(', ');
+      const body = ctx.visitBody();
+      const head = ctx.node.parenthesized || ctx.node.params.length !== 1 ? `(${params})` : params;
+
+      return this.decorateWithComments(ctx.node, `${head} -> ${body}`);
+    })
+
     .on('visitParensExpression', (ctx) => {
       const child = ctx.visitChild();
       const formatted = `(${child})`;
