@@ -1,0 +1,5 @@
+# Copied from @elastic/textmate-esql by `pnpm build`
+syntaxes/
+
+# Packaged extension
+*.vsix

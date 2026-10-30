@@ -1,0 +1,75 @@
+{
+  "name": "highlight-esql",
+  "version": "4.31.0",
+  "private": true,
+  "displayName": "Highlight ES|QL",
+  "description": "Syntax highlighting for ES|QL (Elasticsearch Query Language)",
+  "publisher": "Elastic",
+  "author": "Kibana ES|QL team",
+  "license": "MIT",
+  "icon": "icon.png",
+  "engines": {
+    "vscode": "^1.75.0"
+  },
+  "categories": [
+    "Programming Languages"
+  ],
+  "keywords": [
+    "esql",
+    "es|ql",
+    "elastic",
+    "elasticsearch",
+    "syntax"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/elastic/esql-js.git",
+    "directory": "packages/esql-vscode"
+  },
+  "files": [
+    "CHANGELOG.md",
+    "NOTICE.txt",
+    "LICENSE.txt",
+    "icon.png",
+    "language-configuration.json",
+    "syntaxes"
+  ],
+  "contributes": {
+    "languages": [
+      {
+        "id": "esql",
+        "aliases": [
+          "ES|QL",
+          "esql"
+        ],
+        "extensions": [
+          ".esql"
+        ],
+        "configuration": "./language-configuration.json"
+      }
+    ],
+    "grammars": [
+      {
+        "language": "esql",
+        "scopeName": "source.esql",
+        "path": "./syntaxes/esql.tmLanguage.json"
+      }
+    ]
+  },
+  "scripts": {
+    "build": "node scripts/copy-grammar.mjs",
+    "typecheck": "tsc --noEmit",
+    "test": "jest",
+    "package": "pnpm run build && vsce package --no-dependencies"
+  },
+  "devDependencies": {
+    "@elastic/textmate-esql": "workspace:^",
+    "@types/jest": "30.0.0",
+    "@types/node": "25.2.3",
+    "@vscode/vsce": "4.0.0",
+    "jest": "30.4.2",
+    "ovsx": "1.3.0",
+    "ts-jest": "29.4.11",
+    "typescript": "6.0.3"
+  }
+}

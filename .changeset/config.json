@@ -18,7 +18,8 @@
       "@elastic/elasticsearch-esql-dsl",
       "@elastic/esql-traversal",
       "@elastic/esql-parser",
-      "@elastic/esql-ast"
+      "@elastic/esql-ast",
+      "highlight-esql"
     ]
   ],
   "linked": [],
