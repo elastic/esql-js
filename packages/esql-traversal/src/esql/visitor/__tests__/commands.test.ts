@@ -429,3 +429,66 @@ test('can visit DENSE_VECTOR fields and named parameters', () => {
   expect(list).toContain('"dims"');
   expect(list).toContain(128);
 });
+
+test('can visit FILLNULL command via specific visitor', () => {
+  const ast = fixtures.fromFillNull().commands;
+  const visitor = new Visitor()
+    .on('visitFillNullCommand', (ctx) => {
+      return `FILLNULL[fields = ${ctx.node.fields.length}]`;
+    })
+    .on('visitCommand', (ctx) => {
+      return ctx.name();
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].join(' | ');
+    });
+  const text = visitor.visitQuery(ast);
+
+  expect(text).toBe('FROM | FILLNULL[fields = 2] | LIMIT');
+});
+
+test('"visitCommand" captures FILLNULL when visitFillNullCommand is not registered', () => {
+  const ast = fixtures.fromFillNull().commands;
+  const visitor = new Visitor()
+    .on('visitCommand', (ctx) => {
+      return ctx.name();
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].join(' | ');
+    });
+  const text = visitor.visitQuery(ast);
+
+  expect(text).toBe('FROM | FILLNULL | LIMIT');
+});
+
+test('can visit FILLNULL value and fields', () => {
+  const ast = fixtures.fromFillNull().commands;
+  const visitor = new Visitor()
+    .on('visitLiteralExpression', (ctx) => {
+      return ctx.node.value;
+    })
+    .on('visitColumnExpression', (ctx) => {
+      return ctx.node.name;
+    })
+    .on('visitCommandOption', (ctx) => {
+      return [...ctx.visitArguments(null)].flat();
+    })
+    .on('visitFillNullCommand', (ctx) => {
+      return [...ctx.visitArgs(null), ...ctx.visitOptions()].flat();
+    })
+    .on('visitExpression', () => {
+      return null;
+    })
+    .on('visitCommand', () => {
+      return null;
+    })
+    .on('visitQuery', (ctx) => {
+      return [...ctx.visitCommands()].flat();
+    });
+  const list = visitor
+    .visitQuery(ast)
+    .flat()
+    .filter((x) => x !== null && x !== undefined);
+
+  expect(list).toEqual([0, 'x', 'y*']);
+});
