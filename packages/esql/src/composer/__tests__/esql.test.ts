@@ -76,6 +76,16 @@ describe('"esql" tag query construction', () => {
     expect(query.print('basic')).toContain('SET b = "test"');
     expect(query.ast.header).toHaveLength(2);
   });
+
+  test('can construct a query with LET header instructions', () => {
+    const query = esql`SET a = 123; LET x = (FROM index | LIMIT 1); FROM x | LIMIT 10`;
+
+    expect(query).toBeInstanceOf(ComposerQuery);
+    expect(query.print('basic')).toBe(
+      'SET a = 123; LET x = (FROM index | LIMIT 1); FROM x | LIMIT 10'
+    );
+    expect(query.ast.header?.map((cmd) => cmd.name)).toEqual(['set', 'let']);
+  });
 });
 
 describe('query construction from string', () => {

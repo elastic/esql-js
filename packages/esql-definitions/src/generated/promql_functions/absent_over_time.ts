@@ -12,7 +12,7 @@
 import type { PromqlFunctionDefinition } from '../../definition_types';
 
 /**
- * Returns `1` if the range vector has no elements, and `0` otherwise.
+ * Returns `1` if the range vector has no elements, and nothing otherwise.
  *
  * @example
  * absent_over_time(nonexistent_metric[5m])

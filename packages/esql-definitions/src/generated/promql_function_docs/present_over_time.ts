@@ -12,7 +12,7 @@
 import type { DefinitionDocs } from '../../definition_types';
 
 const docs: DefinitionDocs = {
-  description: 'Returns `1` if the range vector has at least one element, and `0` otherwise.',
+  description: 'Returns `1` for every series that has at least one sample in the range.',
   examples: [
     'present_over_time(http_requests_total[5m])',
   ],

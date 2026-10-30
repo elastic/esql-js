@@ -156,12 +156,13 @@ export class CstToAstConverter {
 
   fromStatements(ctx: cst.StatementsContext): ast.ESQLAstQueryExpression | undefined {
     const setCommandCtxs = ctx.setCommand_list();
+    const letCommandCtxs = ctx.letCommand_list();
     const singleStatement = ctx.singleStatement();
 
-    let header: ast.ESQLAstSetHeaderCommand[] | undefined;
-    // Process SET instructions and create header if they exist
-    if (setCommandCtxs && setCommandCtxs.length > 0) {
-      header = this.fromSetCommands(setCommandCtxs);
+    let header: ast.ESQLAstHeaderCommand[] | undefined;
+    // Process SET and LET instructions and create header if they exist
+    if (setCommandCtxs.length > 0 || letCommandCtxs.length > 0) {
+      header = [...this.fromSetCommands(setCommandCtxs), ...this.fromLetCommands(letCommandCtxs)];
     }
 
     // Get the main query from singleStatement
@@ -347,6 +348,61 @@ export class CstToAstConverter {
 
     // Fallback: create identifier from the full context text
     return Builder.identifier({ name: ctx.getText() }, this.getParserFields(ctx));
+  }
+
+  // ---------------------------------------------------------------------- LET
+
+  private fromLetCommands(letCommandCtxs: cst.LetCommandContext[]): ast.ESQLAstLetHeaderCommand[] {
+    return letCommandCtxs.map((letCommandCtx) => this.fromLetCommand(letCommandCtx));
+  }
+
+  private fromLetCommand(ctx: cst.LetCommandContext): ast.ESQLAstLetHeaderCommand {
+    const letBindingCtx = ctx.letBinding();
+    const binding = letBindingCtx ? this.fromLetBinding(letBindingCtx) : null;
+    const args = binding ? [binding] : [];
+    const command = Builder.header.command.let(args, {}, this.getParserFields(ctx));
+
+    if (!binding || binding.incomplete) {
+      command.incomplete = true;
+    }
+
+    return command;
+  }
+
+  private fromLetBinding(ctx: cst.LetBindingContext): ast.ESQLBinaryExpression<'='> | null {
+    const nameNode = ctx.UNQUOTED_IDENTIFIER();
+    const subqueryCtx = ctx.subquery();
+    const assignToken = ctx.ASSIGN();
+
+    if (!nameNode) {
+      return null;
+    }
+
+    const left = this.toIdentifierFromTerminalNode(nameNode);
+
+    if (subqueryCtx) {
+      const right = this.fromSubquery(subqueryCtx);
+      const expression = this.toBinaryExpression('=', ctx, [left, right]);
+
+      if (right.incomplete) {
+        expression.incomplete = true;
+      }
+
+      return expression;
+    }
+
+    if (assignToken) {
+      const expression = this.toBinaryExpression('=', ctx, [left, []]);
+
+      expression.incomplete = true;
+      expression.location = {
+        min: left.location.min,
+        max: assignToken.symbol.stop,
+      };
+      return expression;
+    }
+
+    return null;
   }
 
   // ----------------------------------------------------------------- commands

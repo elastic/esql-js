@@ -25,6 +25,7 @@ export const functionNames = [
   'CATEGORIZE',
   'CBRT',
   'CEIL',
+  'CHANGES',
   'CHUNK',
   'CIDR_MATCH',
   'CLAMP',
