@@ -18,11 +18,13 @@ const docs: DefinitionDocs = {
     'FROM sample_data\n| STATS count = COUNT(*) BY bucket = TBUCKET(20, "2023-10-23T12:00:00Z", "2023-10-23T14:00:00Z")\n| SORT bucket',
     'FROM sample_data\n| STATS min = MIN(@timestamp), max = MAX(@timestamp) BY bucket = TBUCKET(1 hour)\n| SORT min',
     'FROM sample_data\n| STATS min = MIN(@timestamp), max = MAX(@timestamp) BY bucket = TBUCKET("1 hour")\n| SORT min',
+    'TS k8s\n| STATS max_cost = MAX(MAX_OVER_TIME(network.cost))\n  BY time_bucket = TBUCKET(6, "2024-05-10T00:00:00Z", "2024-05-10T00:30:00Z", {"include_empty_buckets": true})',
   ],
   params: {
     buckets: 'Target number of buckets, or desired bucket size. When a number is provided, the actual bucket size is derived from `from`/`to` or the `@timestamp` range in the query filter. When a duration or period is provided, it is used as the explicit bucket size.',
     from: 'Start of the range. Required with a numeric `buckets` when no `@timestamp` range is in the query filter.',
     to: 'End of the range. Required with a numeric `buckets` when no `@timestamp` range is in the query filter.',
+    options: '(Optional) Additional options as <<esql-function-named-params,function named parameters>>.',
   },
   markdown: '\n### TBUCKET\nCreates groups of values - buckets - out of a `@timestamp` attribute.\nThe size of the buckets can be provided directly as a duration or period.\nAlternatively, the bucket size can be chosen based on a recommended count\nand a range.\n\nWhen using ES|QL in Kibana, the range can be derived automatically from the\n[`@timestamp` filter](docs-content://explore-analyze/query-filter/languages/esql-kibana.md#_standard_time_filter)\nthat Kibana adds to the query.\n\n```esql\nFROM sample_data\n| STATS count = COUNT(*) BY bucket = TBUCKET(3, "2023-10-23T12:00:00Z", "2023-10-23T14:00:00Z")\n| SORT bucket\n```\n',
 };

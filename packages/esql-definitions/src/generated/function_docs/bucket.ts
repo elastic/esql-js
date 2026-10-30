@@ -24,6 +24,7 @@ const docs: DefinitionDocs = {
     'FROM employees\n| WHERE hire_date >= "1985-01-01T00:00:00Z" AND hire_date < "1986-01-01T00:00:00Z"\n| STATS AVG(salary) BY bucket = BUCKET(hire_date, 20, "1985-01-01T00:00:00Z", "1986-01-01T00:00:00Z")',
     'FROM employees\n| STATS s1 = b1 + 1, s2 = BUCKET(salary / 1000 + 999, 50.) + 2 BY b1 = BUCKET(salary / 100 + 99, 50.), b2 = BUCKET(salary / 1000 + 999, 50.)\n| SORT b1, b2\n| KEEP s1, b1, s2, b2',
     'FROM employees\n| STATS dates = MV_SORT(VALUES(birth_date)) BY b = BUCKET(birth_date + 1 HOUR, 1 YEAR) - 1 HOUR\n| EVAL d_count = MV_COUNT(dates)',
+    'FROM employees\n| WHERE hire_date >= "1985-01-01T00:00:00Z" AND hire_date < "1986-01-01T00:00:00Z"\n| STATS hires_per_month = COUNT(*), total_salary = SUM(salary)\n  BY month = BUCKET(hire_date, 20, "1985-01-01T00:00:00Z", "1986-01-01T00:00:00Z", {"include_empty_buckets": true})',
     'TS exp_histo_sample\n| WHERE instance == "instance-0"\n| STATS count = COUNT(responseTime, bucket) BY bucket = BUCKET(responseTime, 1)\n| SORT RANGE_MIN(bucket)',
   ],
   params: {
@@ -31,6 +32,7 @@ const docs: DefinitionDocs = {
     buckets: 'Target number of buckets, or desired bucket size if `from` and `to` parameters are omitted.',
     from: 'Start of the range. Can be a number, a date or a date expressed as a string.',
     to: 'End of the range. Can be a number, a date or a date expressed as a string.',
+    options: '(Optional) Additional options as <<esql-function-named-params,function named parameters>>.',
   },
   markdown: '\n### BUCKET\nCreates groups of values - buckets - out of a datetime or numeric input.\nThe size of the buckets can either be provided directly, or chosen based on a recommended count and values range.\n\n```esql\nFROM employees\n| WHERE hire_date >= "1985-01-01T00:00:00Z" AND hire_date < "1986-01-01T00:00:00Z"\n| STATS hire_date = MV_SORT(VALUES(hire_date)) BY month = BUCKET(hire_date, 20, "1985-01-01T00:00:00Z", "1986-01-01T00:00:00Z")\n```\n',
 };
