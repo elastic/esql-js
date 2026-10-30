@@ -49,6 +49,7 @@ import type {
   ESQLDatePeriodLiteral,
   ESQLAstHeaderCommand,
   ESQLAstSetHeaderCommand,
+  ESQLAstLetHeaderCommand,
   ESQLAstPromqlCommand,
   ESQLAstPromqlCommandQuery,
   PromQLAstQueryExpression,
@@ -781,6 +782,12 @@ export namespace Builder {
         template?: Omit<PartialFields<AstNodeTemplate<ESQLAstSetHeaderCommand>, 'args'>, 'name'>,
         fromParser?: Partial<AstNodeParserFields>
       ) => ESQLAstSetHeaderCommand;
+
+      let: (
+        args: ESQLAstLetHeaderCommand['args'],
+        template?: Omit<PartialFields<AstNodeTemplate<ESQLAstLetHeaderCommand>, 'args'>, 'name'>,
+        fromParser?: Partial<AstNodeParserFields>
+      ) => ESQLAstLetHeaderCommand;
     }
 
     export const command: HeaderCommandBuilder = Object.assign(
@@ -805,6 +812,16 @@ export namespace Builder {
             { args, ...template, name: 'set' },
             fromParser
           ) as ESQLAstSetHeaderCommand;
+        },
+        let: (
+          args: ESQLAstLetHeaderCommand['args'],
+          template?: Omit<PartialFields<AstNodeTemplate<ESQLAstLetHeaderCommand>, 'args'>, 'name'>,
+          fromParser?: Partial<AstNodeParserFields>
+        ): ESQLAstLetHeaderCommand => {
+          return Builder.header.command(
+            { args, ...template, name: 'let' },
+            fromParser
+          ) as ESQLAstLetHeaderCommand;
         },
       }
     );

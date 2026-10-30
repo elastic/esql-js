@@ -1,5 +1,11 @@
 # @elastic/esql-grammar
 
+## 4.35.0
+
+### Patch Changes
+
+- [#273](https://github.com/elastic/esql-js/pull/273) [`c2c69cc`](https://github.com/elastic/esql-js/commit/c2c69cc462544f03d175ffa424ebc950e544308f) Thanks [@bartoval](https://github.com/bartoval)! - When a `)` closes more lexer modes than were opened (e.g. `FROM a | FORK (LIMIT 1) | ()`), the lexer no longer crashes, so the editor still gets a partial AST.
+
 ## 4.34.0
 
 ## 4.33.0

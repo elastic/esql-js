@@ -5,7 +5,7 @@
  * 2.0.
  */
 
-export const headerCommandNames = ['SET'];
+export const headerCommandNames = ['SET', 'LET'];
 
 export const sourceCommandNames = ['EXPLAIN', 'FROM', 'PROMQL', 'ROW', 'SHOW', 'TS'];
 

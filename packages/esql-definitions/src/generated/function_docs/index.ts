@@ -29,6 +29,7 @@ import caseDocs from './case';
 import categorizeDocs from './categorize';
 import cbrtDocs from './cbrt';
 import ceilDocs from './ceil';
+import changesDocs from './changes';
 import chunkDocs from './chunk';
 import cidrMatchDocs from './cidr_match';
 import clampDocs from './clamp';
@@ -273,6 +274,7 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   categorize: categorizeDocs,
   cbrt: cbrtDocs,
   ceil: ceilDocs,
+  changes: changesDocs,
   chunk: chunkDocs,
   cidr_match: cidrMatchDocs,
   clamp: clampDocs,

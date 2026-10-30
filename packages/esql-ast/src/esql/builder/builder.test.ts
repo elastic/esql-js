@@ -758,6 +758,48 @@ describe('header', () => {
       });
     });
   });
+
+  describe('.command.let()', () => {
+    test('can create a LET command with a subquery binding', () => {
+      const subquery = Builder.expression.query([
+        Builder.command({
+          name: 'from',
+          args: [Builder.expression.source.node('my_index')],
+        }),
+      ]);
+      const node = Builder.header.command.let([
+        Builder.expression.func.binary('=', [
+          Builder.identifier('my_binding'),
+          Builder.expression.parens(subquery),
+        ]),
+      ]);
+
+      expect(node).toMatchObject({
+        type: 'header-command',
+        name: 'let',
+        args: [
+          {
+            type: 'function',
+            name: '=',
+            subtype: 'binary-expression',
+            args: [
+              {
+                type: 'identifier',
+                name: 'my_binding',
+              },
+              {
+                type: 'parens',
+                child: {
+                  type: 'query',
+                  commands: [{ type: 'command', name: 'from' }],
+                },
+              },
+            ],
+          },
+        ],
+      });
+    });
+  });
 });
 
 describe('Builder.command.promql', () => {
