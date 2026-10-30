@@ -1,5 +1,21 @@
 # @elastic/esql-parser
 
+## 4.36.0
+
+### Minor Changes
+
+- [#276](https://github.com/elastic/esql-js/pull/276) [`132c85d`](https://github.com/elastic/esql-js/commit/132c85d1dac47171a08a163579a066d879de7249) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Add `TS_COLLAPSE` command support
+
+### Patch Changes
+
+- Updated dependencies [[`132c85d`](https://github.com/elastic/esql-js/commit/132c85d1dac47171a08a163579a066d879de7249)]:
+  - @elastic/esql-traversal@4.36.0
+  - @elastic/esql-ast@4.36.0
+  - @elastic/esql-types@4.36.0
+  - @elastic/esql-definitions@4.36.0
+  - @elastic/esql-grammar@4.36.0
+  - @elastic/esql-promql-grammar@4.36.0
+
 ## 4.35.0
 
 ### Minor Changes
