@@ -123,6 +123,22 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'dense_vector',
+          optional: false,
+        },
+        {
+          name: 'window',
+          type: 'time_duration',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'double',
           optional: false,
         },

@@ -70,6 +70,12 @@ import type { FunctionDefinition } from '../../definition_types';
  * | EVAL d_count = MV_COUNT(dates)
  *
  * @example
+ * FROM employees
+ * | WHERE hire_date >= "1985-01-01T00:00:00Z" AND hire_date < "1986-01-01T00:00:00Z"
+ * | STATS hires_per_month = COUNT(*), total_salary = SUM(salary)
+ *   BY month = BUCKET(hire_date, 20, "1985-01-01T00:00:00Z", "1986-01-01T00:00:00Z", {"include_empty_buckets": true})
+ *
+ * @example
  * TS exp_histo_sample
  * | WHERE instance == "instance-0"
  * | STATS count = COUNT(responseTime, bucket) BY bucket = BUCKET(responseTime, 1)
@@ -158,11 +164,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'keyword',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -220,6 +308,47 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
           type: 'keyword',
           optional: false,
           hint: {
@@ -233,6 +362,47 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -298,11 +468,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'text',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -368,11 +620,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'keyword',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -422,6 +756,47 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
           type: 'long',
           optional: false,
           hint: {
@@ -443,6 +818,47 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -508,11 +924,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'text',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -578,6 +1076,47 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'keyword',
           optional: false,
           hint: {
@@ -613,7 +1152,124 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'date',
           optional: false,
           hint: {
             kind: 'constant',
@@ -653,6 +1309,12 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -718,11 +1380,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
           type: 'text',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'date',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -826,11 +1570,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'keyword',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -888,6 +1714,47 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
           type: 'keyword',
           optional: false,
           hint: {
@@ -901,6 +1768,47 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -966,11 +1874,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'text',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1036,11 +2026,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'keyword',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1090,6 +2162,47 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
           type: 'long',
           optional: false,
           hint: {
@@ -1111,6 +2224,47 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1176,11 +2330,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'text',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1246,7 +2482,124 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
           type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
           optional: false,
           hint: {
             kind: 'constant',
@@ -1286,6 +2639,12 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1351,7 +2710,124 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'date',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'keyword',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'text',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'text',
           optional: false,
           hint: {
             kind: 'constant',
@@ -1391,6 +2867,12 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1513,11 +2995,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
           type: 'integer',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1575,6 +3139,47 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
           type: 'integer',
           optional: false,
           hint: {
@@ -1588,6 +3193,47 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1653,11 +3299,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
           type: 'long',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -1723,7 +3451,124 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
           type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
           optional: false,
           hint: {
             kind: 'constant',
@@ -1763,6 +3608,12 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -2257,11 +4108,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
           type: 'integer',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -2319,6 +4252,47 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
           type: 'integer',
           optional: false,
           hint: {
@@ -2362,7 +4336,124 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
           optional: false,
           hint: {
             kind: 'constant',
@@ -2402,6 +4493,12 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -2467,7 +4564,124 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
           optional: false,
           hint: {
             kind: 'constant',
@@ -2507,6 +4721,12 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -2629,11 +4849,93 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
           type: 'integer',
           optional: false,
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -2691,6 +4993,47 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'from',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
           type: 'integer',
           optional: false,
           hint: {
@@ -2734,7 +5077,124 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
           type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
           optional: false,
           hint: {
             kind: 'constant',
@@ -2774,6 +5234,12 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
@@ -2839,7 +5305,124 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'to',
+          type: 'double',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
           type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'buckets',
+          type: 'integer',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'from',
+          type: 'long',
+          optional: false,
+          hint: {
+            kind: 'constant',
+          },
+        },
+        {
+          name: 'to',
+          type: 'long',
           optional: false,
           hint: {
             kind: 'constant',
@@ -2879,6 +5462,12 @@ const definition: FunctionDefinition = {
           hint: {
             kind: 'constant',
           },
+        },
+        {
+          name: 'options',
+          type: 'function_named_parameters',
+          optional: true,
+          mapParams: '{name=\'include_empty_buckets\', values=[true, false], description=\'When `true`, empty buckets (filled with default aggregate values) are output across the `from`..`to` range (`from` inclusive, `to` exclusive). Requires the four-argument (range) form of `BUCKET`. Defaults to `false`.\', type=[boolean]}',
         },
       ],
       variadic: false,
