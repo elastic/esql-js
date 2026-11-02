@@ -1,5 +1,12 @@
 # @elastic/prismjs-esql
 
+## 4.36.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-definitions@4.36.0
+
 ## 4.35.0
 
 ### Patch Changes
