@@ -49,6 +49,7 @@ describe('definition sync', () => {
 
     expect(source).toContain('"$ref"');
     expect(generated).not.toContain('"$ref"');
+    expect(result.data.profileSchema).not.toHaveProperty('definitions');
     expect(result.data.profileSchema).toMatchObject({
       type: 'object',
       properties: {

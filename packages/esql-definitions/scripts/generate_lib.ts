@@ -402,10 +402,14 @@ async function readProfileSchema(esqlDir: string): Promise<Json> {
     throw new Error(`${label}: invalid JSON: ${String(error)}`, { cause: error });
   }
 
-  return dereference(document, {
+  const dereferenced = await dereference(document, {
     dereference: { circular: false },
     resolve: { file: false, http: false },
   });
+  // Once every $ref is expanded, the top-level definitions only duplicate the response tree.
+  const { definitions: _definitions, ...schema } = dereferenced;
+
+  return schema;
 }
 
 /**
