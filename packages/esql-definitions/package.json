@@ -109,6 +109,12 @@
       "import": "./lib/time.mjs",
       "require": "./lib/time.js",
       "default": "./lib/time.js"
+    },
+    "./profile-schema": {
+      "types": "./lib/generated/profile_response_schema.d.ts",
+      "import": "./lib/generated/profile_response_schema.mjs",
+      "require": "./lib/generated/profile_response_schema.js",
+      "default": "./lib/generated/profile_response_schema.js"
     }
   },
   "files": [
@@ -129,7 +135,9 @@
     "test": "jest"
   },
   "devDependencies": {
+    "@apidevtools/json-schema-ref-parser": "16.0.5",
     "@types/jest": "30.0.0",
+    "@types/json-schema": "7.0.15",
     "@types/node": "25.2.3",
     "jest": "30.4.2",
     "ts-jest": "29.4.11",
