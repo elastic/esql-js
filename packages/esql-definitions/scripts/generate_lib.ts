@@ -796,7 +796,7 @@ export async function generateAll(elasticsearchDir: string): Promise<GenerateRes
       relativePath: 'profile_response_schema.ts',
       content:
         `${LICENSE_HEADER}\n\n${GENERATED_NOTICE}\n\n` +
-        `export const esqlProfileResponseSchema: Record<string, unknown> = ${tsLiteral(profileSchema, '')};\n`,
+        `export const esqlProfileResponseSchema = ${tsLiteral(profileSchema, '')} as const;\n`,
     },
     {
       relativePath: 'commands.ts',

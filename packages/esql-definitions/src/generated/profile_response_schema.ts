@@ -8,7 +8,7 @@
 // DO NOT MODIFY THIS FILE BY HAND. IT IS GENERATED FROM `elasticsearch/` BY
 // `pnpm --filter @elastic/esql-definitions generate`.
 
-export const esqlProfileResponseSchema: Record<string, unknown> = {
+export const esqlProfileResponseSchema = {
   $schema: 'http://json-schema.org/draft-07/schema#',
   $id: 'https://www.elastic.co/schema/elasticsearch/esql-profile-response.json',
   title: 'ES|QL profile response',
@@ -2067,4 +2067,4 @@ export const esqlProfileResponseSchema: Record<string, unknown> = {
     'minimumTransportVersion',
   ],
   additionalProperties: false,
-};
+} as const;
