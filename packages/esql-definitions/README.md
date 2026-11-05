@@ -33,6 +33,18 @@ import { promqlFunctionDefinitions } from '@elastic/esql-definitions/promql-func
 import { promqlOperatorDefinitions } from '@elastic/esql-definitions/promql-operators';
 ```
 
+The ES|QL profile response schema is published as a dereferenced JSON Schema
+Draft 7 document:
+
+```ts
+import { esqlProfileResponseSchema } from '@elastic/esql-definitions/profile-schema';
+```
+
+The source schema is synced from Elasticsearch with its local `$ref` pointers
+intact. Package generation expands those references so consumers can pass
+`esqlProfileResponseSchema` directly to JSON Schema validators and converters
+that do not resolve references themselves.
+
 `timeSeriesAggregates` maps each field type to the implicit aggregate ES|QL
 inserts for a bare column in a time-series `STATS`, and to the type the
 outer aggregate sees. `counter_double` becomes `double`, `counter_integer`

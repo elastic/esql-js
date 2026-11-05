@@ -27,7 +27,7 @@ if (!existsSync(elasticsearchDir)) {
   process.exit(1);
 }
 
-const { files, warnings } = generateAll(elasticsearchDir);
+const { files, warnings } = await generateAll(elasticsearchDir);
 
 for (const warning of warnings) {
   process.stderr.write(`warning: ${warning}\n`);
