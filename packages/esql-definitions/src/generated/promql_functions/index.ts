@@ -64,6 +64,7 @@ import minOverTimeDefinition from './min_over_time';
 import minuteDefinition from './minute';
 import monthDefinition from './month';
 import piDefinition from './pi';
+import predictLinearDefinition from './predict_linear';
 import presentOverTimeDefinition from './present_over_time';
 import quantileDefinition from './quantile';
 import quantileOverTimeDefinition from './quantile_over_time';
@@ -146,6 +147,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   minuteDefinition,
   monthDefinition,
   piDefinition,
+  predictLinearDefinition,
   presentOverTimeDefinition,
   quantileDefinition,
   quantileOverTimeDefinition,

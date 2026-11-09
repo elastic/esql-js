@@ -12,7 +12,9 @@
 import type { PromqlFunctionDefinition } from '../../definition_types';
 
 /**
- * Joins the values of the source labels `src_label_1` .. `src_label_N` using `separator` and stores the result in the label `dst_label`. A missing source label contributes an empty string.
+ * Joins the values of the source labels `src_label_1` .. `src_label_N` using `separator` and stores the result in the label `dst_label`. A missing source label contributes an empty string. The destination can be a new label or an existing stored label (a dimension or `__name__`).
+ *
+ * {applies_to}`stack: ga 9.7+` {applies_to}`serverless: ga` A call over a `by(...)` aggregation, directly or under `topk`, `bottomk`, `limitk`, or `limit_ratio`, is supported when the destination is a new label, such as `label_replace(sum by (job) (x), "dst", "$1", "job", "(.*)")`.
  *
  * @example
  * sum by (endpoint) (label_join(http_requests_total, "endpoint", "/", "job", "instance"))

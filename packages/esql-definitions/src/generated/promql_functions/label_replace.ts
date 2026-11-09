@@ -12,7 +12,9 @@
 import type { PromqlFunctionDefinition } from '../../definition_types';
 
 /**
- * Matches the regular expression `regex` against the value of the label `src_label`. On a match, sets the label `dst_label` to the expansion of `replacement`, substituting `$1`, `$name`, and `${name}` with the matched capture groups; on no match the input series is returned unchanged.
+ * Matches the regular expression `regex` against the value of the label `src_label`. On a match, sets the label `dst_label` to the expansion of `replacement`, substituting `$1`, `$name`, and `${name}` with the matched capture groups; on no match the input series is returned unchanged. The destination can be a new label or an existing stored label (a dimension or `__name__`). Regular expressions use the RE2 engine (RE2 syntax including `(?P<name>)`, `$1`/`$name`/`${name}` replacement expansion, no backreferences, fully anchored as `^(?s:regex)$`), matching Prometheus.
+ *
+ * {applies_to}`stack: ga 9.7+` {applies_to}`serverless: ga` A call over a `by(...)` aggregation, directly or under `topk`, `bottomk`, `limitk`, or `limit_ratio`, is supported when the destination is a new label, such as `label_replace(sum by (job) (x), "dst", "$1", "job", "(.*)")`.
  *
  * @example
  * sum by (job2) (label_replace(http_requests_total, "job2", "$1", "job", "(.*)-server"))

@@ -64,6 +64,7 @@ import minOverTimeDocs from './min_over_time';
 import minuteDocs from './minute';
 import monthDocs from './month';
 import piDocs from './pi';
+import predictLinearDocs from './predict_linear';
 import presentOverTimeDocs from './present_over_time';
 import quantileDocs from './quantile';
 import quantileOverTimeDocs from './quantile_over_time';
@@ -146,6 +147,7 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   minute: minuteDocs,
   month: monthDocs,
   pi: piDocs,
+  predict_linear: predictLinearDocs,
   present_over_time: presentOverTimeDocs,
   quantile: quantileDocs,
   quantile_over_time: quantileOverTimeDocs,

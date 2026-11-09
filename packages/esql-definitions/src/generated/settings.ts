@@ -56,6 +56,16 @@ export const settingDefinitions: SettingDefinition[] = [
     snapshotOnly: false,
   },
   {
+    name: 'time_series_reduce_per_index',
+    type: [
+      'boolean',
+    ],
+    description: 'When enabled, time-series aggregates are reduced separately in each index before results are combined. This uses less memory and can improve query performance, but results may be approximate for time buckets that overlap index rollover boundaries and for windowed aggregates whose windows reach across those boundaries. Defaults to `false`.',
+    serverlessOnly: false,
+    preview: false,
+    snapshotOnly: false,
+  },
+  {
     name: 'time_zone',
     type: [
       'keyword',
