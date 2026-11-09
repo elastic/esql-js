@@ -7,7 +7,7 @@
 
 export const headerCommandNames = ['SET', 'LET'];
 
-export const sourceCommandNames = ['EXPLAIN', 'FROM', 'PROMQL', 'ROW', 'SHOW', 'TS'];
+export const sourceCommandNames = ['DESCRIBE', 'EXPLAIN', 'FROM', 'PROMQL', 'ROW', 'SHOW', 'TS'];
 
 export const processingCommandNames = [
   'CHANGE_POINT',

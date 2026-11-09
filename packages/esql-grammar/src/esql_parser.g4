@@ -86,6 +86,7 @@ processingCommand
     | lookupCommand
     | dedupCommand
     | fillNullCommand
+    | describeCommand
     ;
 
 whereCommand
@@ -393,6 +394,10 @@ tsInfoCommand
 
 tsCollapseCommand
     : TS_COLLAPSE
+    ;
+
+describeCommand
+    : DEV_DESCRIBE
     ;
 
 //
