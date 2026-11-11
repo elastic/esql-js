@@ -1,5 +1,7 @@
 # @elastic/esql-promql-grammar
 
+## 4.39.0
+
 ## 4.38.0
 
 ## 4.37.0

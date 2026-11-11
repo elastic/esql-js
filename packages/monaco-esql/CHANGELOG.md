@@ -1,5 +1,16 @@
 # @elastic/monaco-esql
 
+## 4.39.0
+
+### Minor Changes
+
+- [#290](https://github.com/elastic/esql-js/pull/290) [`41bb33f`](https://github.com/elastic/esql-js/commit/41bb33ff672daa67ab09c644cd980effaad865fd) Thanks [@sddonne](https://github.com/sddonne)! - Adds a different token for escaped columns, so they are no longer identified as strings.
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-definitions@4.39.0
+
 ## 4.38.0
 
 ### Patch Changes
