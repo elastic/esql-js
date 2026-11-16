@@ -28,6 +28,7 @@ export const processingCommandNames = [
   'INLINE',
   'INLINESTATS',
   'INSIST',
+  'INTO',
   'IP_LOCATION',
   'JOIN',
   'KEEP',
