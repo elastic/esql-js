@@ -54,6 +54,7 @@ import dateUnitCountDocs from './date_unit_count';
 import dayDocs from './day';
 import dayNameDocs from './day_name';
 import decayDocs from './decay';
+import delayDocs from './delay';
 import deltaDocs from './delta';
 import derivDocs from './deriv';
 import eDocs from './e';
@@ -299,6 +300,7 @@ export const functionDocs: Record<string, DefinitionDocs> = {
   day: dayDocs,
   day_name: dayNameDocs,
   decay: decayDocs,
+  delay: delayDocs,
   delta: deltaDocs,
   deriv: derivDocs,
   e: eDocs,

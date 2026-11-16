@@ -30,6 +30,7 @@ import cosDocs from './cos';
 import coshDocs from './cosh';
 import countDocs from './count';
 import countOverTimeDocs from './count_over_time';
+import countValuesDocs from './count_values';
 import dayOfMonthDocs from './day_of_month';
 import dayOfWeekDocs from './day_of_week';
 import dayOfYearDocs from './day_of_year';
@@ -76,6 +77,8 @@ import sgnDocs from './sgn';
 import sinDocs from './sin';
 import sinhDocs from './sinh';
 import sortDocs from './sort';
+import sortByLabelDocs from './sort_by_label';
+import sortByLabelDescDocs from './sort_by_label_desc';
 import sortDescDocs from './sort_desc';
 import sqrtDocs from './sqrt';
 import stddevDocs from './stddev';
@@ -113,6 +116,7 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   cosh: coshDocs,
   count: countDocs,
   count_over_time: countOverTimeDocs,
+  count_values: countValuesDocs,
   day_of_month: dayOfMonthDocs,
   day_of_week: dayOfWeekDocs,
   day_of_year: dayOfYearDocs,
@@ -159,6 +163,8 @@ export const promqlFunctionDocs: Record<string, DefinitionDocs> = {
   sin: sinDocs,
   sinh: sinhDocs,
   sort: sortDocs,
+  sort_by_label: sortByLabelDocs,
+  sort_by_label_desc: sortByLabelDescDocs,
   sort_desc: sortDescDocs,
   sqrt: sqrtDocs,
   stddev: stddevDocs,

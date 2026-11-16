@@ -827,6 +827,9 @@ export const esqlProfileResponseSchema = {
                                     row_groups_kept: {
                                       type: 'integer',
                                     },
+                                    row_groups_dictionary_filter_skipped: {
+                                      type: 'integer',
+                                    },
                                     page_index_used: {
                                       type: 'boolean',
                                     },
@@ -876,6 +879,7 @@ export const esqlProfileResponseSchema = {
                                     'row_groups_in_file',
                                     'row_groups_total',
                                     'row_groups_kept',
+                                    'row_groups_dictionary_filter_skipped',
                                     'page_index_used',
                                     'rows_in_kept_row_groups',
                                     'rows_after_page_index',
