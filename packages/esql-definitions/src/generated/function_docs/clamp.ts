@@ -17,7 +17,7 @@ const docs: DefinitionDocs = {
     'TS k8s\n| EVAL full_clamped_cost = clamp(network.cost, clamp_max(network.bytes_in, 5), network.bytes_in / 100)\n| KEEP full_clamped_cost, @timestamp',
   ],
   params: {
-    field: 'Numeric expression. If `null`, the function returns `null`.',
+    field: 'Expression to clamp. If `null`, the function returns `null`.',
     min: 'The min value to clamp data into.',
     max: 'The max value to clamp data into.',
   },

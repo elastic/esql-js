@@ -26,6 +26,7 @@ import { FieldContext } from "./esql_parser.js";
 import { FromCommandContext } from "./esql_parser.js";
 import { TimeSeriesCommandContext } from "./esql_parser.js";
 import { ExternalCommandContext } from "./esql_parser.js";
+import { EqlCommandContext } from "./esql_parser.js";
 import { IndexPatternAndMetadataFieldsContext } from "./esql_parser.js";
 import { IndexPatternOrSubqueryContext } from "./esql_parser.js";
 import { SubqueryContext } from "./esql_parser.js";
@@ -94,6 +95,7 @@ import { TsCollapseCommandContext } from "./esql_parser.js";
 import { DescribeCommandContext } from "./esql_parser.js";
 import { LookupCommandContext } from "./esql_parser.js";
 import { DedupCommandContext } from "./esql_parser.js";
+import { IntoCommandContext } from "./esql_parser.js";
 import { HighlightCommandContext } from "./esql_parser.js";
 import { QualifiedNamesContext } from "./esql_parser.js";
 import { FillNullCommandContext } from "./esql_parser.js";
@@ -160,7 +162,8 @@ import { IntegerValueContext } from "./esql_parser.js";
 import { StringContext } from "./esql_parser.js";
 import { ComparisonOperatorContext } from "./esql_parser.js";
 import { JoinCommandContext } from "./esql_parser.js";
-import { JoinTargetContext } from "./esql_parser.js";
+import { SubqueryJoinTargetContext } from "./esql_parser.js";
+import { LookupJoinTargetContext } from "./esql_parser.js";
 import { JoinConditionContext } from "./esql_parser.js";
 import { PromqlCommandContext } from "./esql_parser.js";
 import { ValueNameContext } from "./esql_parser.js";
@@ -327,6 +330,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitExternalCommand?: (ctx: ExternalCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.eqlCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterEqlCommand?: (ctx: EqlCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.eqlCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitEqlCommand?: (ctx: EqlCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.indexPatternAndMetadataFields`.
 	 * @param ctx the parse tree
@@ -1021,6 +1034,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitDedupCommand?: (ctx: DedupCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.intoCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterIntoCommand?: (ctx: IntoCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.intoCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitIntoCommand?: (ctx: IntoCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.highlightCommand`.
 	 * @param ctx the parse tree
@@ -1758,15 +1781,25 @@ export default class esql_parserListener extends ParseTreeListener {
 	 */
 	exitJoinCommand?: (ctx: JoinCommandContext) => void;
 	/**
-	 * Enter a parse tree produced by `esql_parser.joinTarget`.
+	 * Enter a parse tree produced by `esql_parser.subqueryJoinTarget`.
 	 * @param ctx the parse tree
 	 */
-	enterJoinTarget?: (ctx: JoinTargetContext) => void;
+	enterSubqueryJoinTarget?: (ctx: SubqueryJoinTargetContext) => void;
 	/**
-	 * Exit a parse tree produced by `esql_parser.joinTarget`.
+	 * Exit a parse tree produced by `esql_parser.subqueryJoinTarget`.
 	 * @param ctx the parse tree
 	 */
-	exitJoinTarget?: (ctx: JoinTargetContext) => void;
+	exitSubqueryJoinTarget?: (ctx: SubqueryJoinTargetContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.lookupJoinTarget`.
+	 * @param ctx the parse tree
+	 */
+	enterLookupJoinTarget?: (ctx: LookupJoinTargetContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.lookupJoinTarget`.
+	 * @param ctx the parse tree
+	 */
+	exitLookupJoinTarget?: (ctx: LookupJoinTargetContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.joinCondition`.
 	 * @param ctx the parse tree

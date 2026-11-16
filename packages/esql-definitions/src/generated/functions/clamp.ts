@@ -69,6 +69,27 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'date_nanos',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'date_nanos',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'date_nanos',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'double',
           optional: false,
         },
@@ -95,7 +116,133 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'min',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'max',
           type: 'integer',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'double',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'integer',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'double',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'long',
           optional: false,
         },
         {
@@ -159,6 +306,69 @@ const definition: FunctionDefinition = {
         {
           name: 'min',
           type: 'double',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'double',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'integer',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'integer',
           optional: false,
         },
         {
@@ -190,6 +400,69 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'integer',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'double',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'integer',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
     },
     {
       params: [
@@ -279,6 +552,69 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'long',
           optional: false,
         },
@@ -305,7 +641,133 @@ const definition: FunctionDefinition = {
         },
         {
           name: 'min',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'max',
           type: 'integer',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'double',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'double',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'integer',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'integer',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'long',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'double',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'double',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'long',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'long',
           optional: false,
         },
         {
@@ -358,6 +820,90 @@ const definition: FunctionDefinition = {
       ],
       variadic: false,
       returnType: 'unsigned_long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'keyword',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'keyword',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'keyword',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'min',
+          type: 'text',
+          optional: false,
+        },
+        {
+          name: 'max',
+          type: 'text',
+          optional: false,
+        },
+      ],
+      variadic: false,
+      returnType: 'keyword',
     },
     {
       params: [

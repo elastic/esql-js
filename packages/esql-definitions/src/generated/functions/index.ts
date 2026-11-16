@@ -54,6 +54,7 @@ import dateUnitCountDefinition from './date_unit_count';
 import dayDefinition from './day';
 import dayNameDefinition from './day_name';
 import decayDefinition from './decay';
+import delayDefinition from './delay';
 import deltaDefinition from './delta';
 import derivDefinition from './deriv';
 import eDefinition from './e';
@@ -299,6 +300,7 @@ export const functionDefinitions: FunctionDefinition[] = [
   dayDefinition,
   dayNameDefinition,
   decayDefinition,
+  delayDefinition,
   deltaDefinition,
   derivDefinition,
   eDefinition,

@@ -49,6 +49,7 @@ sourceCommand
     // in development
     | explainCommand
     | {EsqlCapabilities.Cap.EXTERNAL_COMMAND.isEnabled()}? externalCommand
+    | {EsqlCapabilities.Cap.EQL_COMMAND.isEnabled()}? eqlCommand
     ;
 
 processingCommand
@@ -87,6 +88,7 @@ processingCommand
     | dedupCommand
     | fillNullCommand
     | describeCommand
+    | intoCommand
     ;
 
 whereCommand
@@ -121,6 +123,10 @@ externalCommand
     : DEV_EXTERNAL stringOrParameter commandNamedParameters
     ;
 
+eqlCommand
+    : DEV_EQL indexPattern (COMMA indexPattern)* stringOrParameter metadata? commandNamedParameters
+    ;
+
 indexPatternAndMetadataFields
     : indexPatternOrSubquery (COMMA indexPatternOrSubquery)* metadata?
     ;
@@ -138,6 +144,7 @@ subquerySourceCommand
     : fromCommand
     | rowCommand
     | timeSeriesCommand
+    | {EsqlCapabilities.Cap.EQL_COMMAND.isEnabled()}? eqlCommand
     ;
 
 indexPattern
@@ -409,6 +416,10 @@ lookupCommand
 
 dedupCommand
     : DEDUP
+    ;
+
+intoCommand
+    : DEV_INTO indexPattern
     ;
 
 highlightCommand
