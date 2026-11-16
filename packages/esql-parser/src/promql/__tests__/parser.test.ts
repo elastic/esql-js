@@ -132,6 +132,52 @@ describe('PromQL Parser', () => {
       expect(selector.evaluation?.offset).toBeDefined();
     });
 
+    describe('offset modifier', () => {
+      const parseOffset = (query: string) => {
+        const result = PromQLParser.parse(query);
+        const root = result.root.expression;
+        const selector = (root?.type === 'binary-expression' ? root.left : root) as PromQLSelector;
+
+        return { result, root, offset: selector.evaluation?.offset };
+      };
+
+      it.each([
+        ['foo offset 5m', false],
+        ['foo offset +5m', false],
+        ['foo offset -5m', true],
+      ])('parses the sign of `%s`', (query, negative) => {
+        const { result, offset } = parseOffset(query);
+
+        expect(result.errors).toHaveLength(0);
+        expect(offset).toMatchObject({
+          negative,
+          duration: { type: 'literal', literalType: 'time', value: '5m' },
+        });
+      });
+
+      it('parses a parenthesized duration expression', () => {
+        const { result, offset } = parseOffset('foo offset (5m - 1m)');
+
+        expect(result.errors).toHaveLength(0);
+        expect(offset?.duration).toMatchObject({ type: 'binary-expression', name: '-' });
+      });
+
+      it('binds an unparenthesized offset to its selector, not the binary operator', () => {
+        const { result, root, offset } = parseOffset('foo offset 5m > 1');
+
+        expect(result.errors).toHaveLength(0);
+        expect(root?.type).toBe('binary-expression');
+        expect(offset?.duration).toMatchObject({ type: 'literal', value: '5m' });
+      });
+
+      it('reports an incomplete offset', () => {
+        const { result, offset } = parseOffset('foo offset');
+
+        expect(result.errors.length).toBeGreaterThan(0);
+        expect(offset?.incomplete).toBe(true);
+      });
+    });
+
     it('parses numeric literals', () => {
       const result = PromQLParser.parse('42');
 

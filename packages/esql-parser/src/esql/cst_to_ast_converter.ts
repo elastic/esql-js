@@ -1381,7 +1381,7 @@ export class CstToAstConverter {
       ctx._type_?.text ?? 'lookup'
     ).toLocaleLowerCase() as ast.ESQLAstJoinCommand['commandType'];
 
-    const joinTarget = this.fromJoinTarget(ctx.joinTarget());
+    const joinTarget = this.fromJoinTarget(ctx.lookupJoinTarget());
     const joinCondition = ctx.joinCondition();
     const onOption = this.toOption('on', joinCondition);
     const joinPredicates: ast.ESQLAstItem[] = onOption.args;
@@ -1412,7 +1412,7 @@ export class CstToAstConverter {
   }
 
   private fromJoinTarget(
-    ctx: cst.JoinTargetContext
+    ctx: cst.LookupJoinTargetContext
   ): ast.ESQLSource | ast.ESQLBinaryExpression<'as'> {
     if (ctx._index) {
       const source = this.toSource(ctx._index);
