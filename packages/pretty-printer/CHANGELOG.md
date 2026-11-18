@@ -1,5 +1,7 @@
 # @elastic/pretty-printer
 
+## 4.41.0
+
 ## 4.40.0
 
 ## 4.39.0
