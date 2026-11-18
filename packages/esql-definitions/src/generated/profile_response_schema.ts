@@ -475,6 +475,18 @@ export const esqlProfileResponseSchema = {
           node_name: {
             type: 'string',
           },
+          kind: {
+            type: 'string',
+          },
+          branch: {
+            type: 'string',
+          },
+          phase: {
+            type: 'string',
+          },
+          phase_kind: {
+            type: 'string',
+          },
           start: {
             type: 'string',
           },
@@ -536,6 +548,12 @@ export const esqlProfileResponseSchema = {
                     operator: {
                       type: 'string',
                     },
+                    plan_node_id: {
+                      type: 'string',
+                    },
+                    exchange_id: {
+                      type: 'string',
+                    },
                   },
                   required: [
                     'operator',
@@ -546,6 +564,12 @@ export const esqlProfileResponseSchema = {
                   type: 'object',
                   properties: {
                     operator: {
+                      type: 'string',
+                    },
+                    plan_node_id: {
+                      type: 'string',
+                    },
+                    exchange_id: {
                       type: 'string',
                     },
                     status: {
@@ -2016,11 +2040,31 @@ export const esqlProfileResponseSchema = {
           node_name: {
             type: 'string',
           },
+          kind: {
+            type: 'string',
+          },
+          branch: {
+            type: 'string',
+          },
+          phase: {
+            type: 'string',
+          },
+          phase_kind: {
+            type: 'string',
+          },
           plan: {
             type: 'string',
           },
+          plan_json: {
+            type: 'object',
+            additionalProperties: {},
+          },
           logical_plan: {
             type: 'string',
+          },
+          logical_plan_json: {
+            type: 'object',
+            additionalProperties: {},
           },
           logical_optimization_nanos: {
             type: 'integer',
