@@ -8,4 +8,13 @@
 import { baseConfig } from '../../jest.config.base.js';
 
 /** @type {import('jest').Config} */
-export default { ...baseConfig, roots: ['<rootDir>/src'] };
+export default {
+  ...baseConfig,
+  roots: ['<rootDir>/src'],
+  // The ref parser is ESM-only, while this package's tests run as CommonJS.
+  transformIgnorePatterns: ['node_modules/(?!.*@apidevtools(?:/|\\+)json-schema-ref-parser)'],
+  moduleFileExtensions: ['ts', 'js', 'json', 'node'],
+  transform: {
+    '^.+\\.[jt]s$': ['ts-jest', { useESM: false, tsconfig: { module: 'commonjs', allowJs: true } }],
+  },
+};

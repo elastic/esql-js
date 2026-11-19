@@ -15,6 +15,7 @@ const generatedEntries = [
   'settings.ts',
   'inline_cast.ts',
   'time_series_aggregates.ts',
+  'profile_response_schema.ts',
   'functions/index.ts',
   'function_docs/index.ts',
   'operators/index.ts',

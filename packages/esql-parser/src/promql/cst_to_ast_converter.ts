@@ -698,10 +698,13 @@ export class PromQLCstToAstConverter {
     const minusToken = ctx.MINUS();
     const negative = !!minusToken;
 
+    const timeValueCtx = ctx.timeValue();
     const durationCtx = ctx.duration();
-    const duration = durationCtx
-      ? this.fromDuration(durationCtx)
-      : PromQLBuilder.unknown({ incomplete: true });
+    const duration = timeValueCtx
+      ? this.fromTimeValue(timeValueCtx)
+      : durationCtx
+        ? this.fromDuration(durationCtx)
+        : PromQLBuilder.unknown({ incomplete: true });
 
     const node = PromQLBuilder.offset(duration, negative, this.getParserFields(ctx));
 

@@ -633,6 +633,12 @@ export class CstToAstConverter {
       return this.fromFillNullCommand(fillNullCommandCtx);
     }
 
+    const tsCollapseCommandCtx = ctx.tsCollapseCommand();
+
+    if (tsCollapseCommandCtx) {
+      return this.fromTsCollapseCommand(tsCollapseCommandCtx);
+    }
+
     // agent-marker: append new command dispatcher branches here
     // throw new Error(`Unknown processing command: ${this.getSrc(ctx)}`;
   }
@@ -1381,7 +1387,7 @@ export class CstToAstConverter {
       ctx._type_?.text ?? 'lookup'
     ).toLocaleLowerCase() as ast.ESQLAstJoinCommand['commandType'];
 
-    const joinTarget = this.fromJoinTarget(ctx.joinTarget());
+    const joinTarget = this.fromJoinTarget(ctx.lookupJoinTarget());
     const joinCondition = ctx.joinCondition();
     const onOption = this.toOption('on', joinCondition);
     const joinPredicates: ast.ESQLAstItem[] = onOption.args;
@@ -1412,7 +1418,7 @@ export class CstToAstConverter {
   }
 
   private fromJoinTarget(
-    ctx: cst.JoinTargetContext
+    ctx: cst.LookupJoinTargetContext
   ): ast.ESQLSource | ast.ESQLBinaryExpression<'as'> {
     if (ctx._index) {
       const source = this.toSource(ctx._index);
@@ -2394,13 +2400,19 @@ export class CstToAstConverter {
     return limitOption;
   }
 
-  // ---------------------------------------------------------------- DEDUP
+  // -------------------------------------------------------------------- DEDUP
 
   private fromDedupCommand(ctx: cst.DedupCommandContext): ast.ESQLCommand<'dedup'> {
     return this.createCommand<'dedup'>('dedup', ctx);
   }
 
-  // --------------------------------------------------------------- URI_PARTS
+  // -------------------------------------------------------------- TS_COLLAPSE
+
+  private fromTsCollapseCommand(ctx: cst.TsCollapseCommandContext): ast.ESQLCommand<'ts_collapse'> {
+    return this.createCommand<'ts_collapse'>('ts_collapse', ctx);
+  }
+
+  // ---------------------------------------------------------------- URI_PARTS
 
   private fromUriPartsCommand(ctx: cst.UriPartsCommandContext): ast.ESQLAstUriPartsCommand {
     return this.fromQualifiedNameAssignmentCommand('uri_parts', ctx);

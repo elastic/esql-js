@@ -11,5 +11,6 @@
 export const EsqlCapabilities = {
   Cap: {
     EXTERNAL_COMMAND: { isEnabled: () => true },
+    EQL_COMMAND: { isEnabled: () => true },
   },
 };

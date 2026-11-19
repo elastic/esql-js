@@ -91,6 +91,54 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'counter_double',
+          optional: false,
+        },
+        {
+          name: 'window',
+          type: 'time_duration',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'counter_integer',
+          optional: false,
+        },
+        {
+          name: 'window',
+          type: 'time_duration',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'counter_long',
+          optional: false,
+        },
+        {
+          name: 'window',
+          type: 'time_duration',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'date',
           optional: false,
         },

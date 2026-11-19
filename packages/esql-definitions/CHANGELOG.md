@@ -1,5 +1,21 @@
 # @elastic/esql-definitions
 
+## 4.41.0
+
+## 4.40.0
+
+## 4.39.0
+
+## 4.38.0
+
+## 4.37.0
+
+### Minor Changes
+
+- [#286](https://github.com/elastic/esql-js/pull/286) [`2fc53c1`](https://github.com/elastic/esql-js/commit/2fc53c18175741c14d68b9dcdf4c6398b2209b2e) Thanks [@MattAlp](https://github.com/MattAlp)! - Publish the dereferenced ES|QL profile response JSON Schema.
+
+## 4.36.0
+
 ## 4.35.0
 
 ### Minor Changes

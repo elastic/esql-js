@@ -1,5 +1,57 @@
 # @elastic/esql-traversal
 
+## 4.41.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.41.0
+  - @elastic/esql-ast@4.41.0
+
+## 4.40.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.40.0
+  - @elastic/esql-ast@4.40.0
+
+## 4.39.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.39.0
+  - @elastic/esql-ast@4.39.0
+
+## 4.38.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.38.0
+  - @elastic/esql-ast@4.38.0
+
+## 4.37.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.37.0
+  - @elastic/esql-ast@4.37.0
+
+## 4.36.0
+
+### Minor Changes
+
+- [#276](https://github.com/elastic/esql-js/pull/276) [`132c85d`](https://github.com/elastic/esql-js/commit/132c85d1dac47171a08a163579a066d879de7249) Thanks [@vadimkibana](https://github.com/vadimkibana)! - Add `TS_COLLAPSE` command support
+
+### Patch Changes
+
+- Updated dependencies [[`132c85d`](https://github.com/elastic/esql-js/commit/132c85d1dac47171a08a163579a066d879de7249)]:
+  - @elastic/esql-ast@4.36.0
+  - @elastic/esql-types@4.36.0
+
 ## 4.35.0
 
 ### Patch Changes

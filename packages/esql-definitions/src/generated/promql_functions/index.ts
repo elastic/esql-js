@@ -30,6 +30,7 @@ import cosDefinition from './cos';
 import coshDefinition from './cosh';
 import countDefinition from './count';
 import countOverTimeDefinition from './count_over_time';
+import countValuesDefinition from './count_values';
 import dayOfMonthDefinition from './day_of_month';
 import dayOfWeekDefinition from './day_of_week';
 import dayOfYearDefinition from './day_of_year';
@@ -64,6 +65,7 @@ import minOverTimeDefinition from './min_over_time';
 import minuteDefinition from './minute';
 import monthDefinition from './month';
 import piDefinition from './pi';
+import predictLinearDefinition from './predict_linear';
 import presentOverTimeDefinition from './present_over_time';
 import quantileDefinition from './quantile';
 import quantileOverTimeDefinition from './quantile_over_time';
@@ -75,6 +77,8 @@ import sgnDefinition from './sgn';
 import sinDefinition from './sin';
 import sinhDefinition from './sinh';
 import sortDefinition from './sort';
+import sortByLabelDefinition from './sort_by_label';
+import sortByLabelDescDefinition from './sort_by_label_desc';
 import sortDescDefinition from './sort_desc';
 import sqrtDefinition from './sqrt';
 import stddevDefinition from './stddev';
@@ -112,6 +116,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   coshDefinition,
   countDefinition,
   countOverTimeDefinition,
+  countValuesDefinition,
   dayOfMonthDefinition,
   dayOfWeekDefinition,
   dayOfYearDefinition,
@@ -146,6 +151,7 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   minuteDefinition,
   monthDefinition,
   piDefinition,
+  predictLinearDefinition,
   presentOverTimeDefinition,
   quantileDefinition,
   quantileOverTimeDefinition,
@@ -157,6 +163,8 @@ export const promqlFunctionDefinitions: PromqlFunctionDefinition[] = [
   sinDefinition,
   sinhDefinition,
   sortDefinition,
+  sortByLabelDefinition,
+  sortByLabelDescDefinition,
   sortDescDefinition,
   sqrtDefinition,
   stddevDefinition,

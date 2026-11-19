@@ -236,7 +236,7 @@ export const create = (deps: CreateDependencies = {}): languages.IMonarchLanguag
         [/"/, 'string', '@string'],
 
         // Escaped column parts: nested.`escaped`.column
-        [/`/, 'string', '@column_escape_part'],
+        [/`/, 'identifier.column.escaped', '@column_escape_part'],
       ],
 
       literal: [
@@ -285,12 +285,11 @@ export const create = (deps: CreateDependencies = {}): languages.IMonarchLanguag
       ],
 
       // Backtick quoted "strings". ES|QL does not have back-tick "strings"
-      // *per se*, but column parts can have backtick-escaped parts.
+      // *per se*, but column parts can have backtick-escaped parts. They are
+      // columns, so they get a column token (not a string one).
       column_escape_part: [
-        [/[^`]+/, 'string'],
-        [/@escapes/, 'string.escape'],
-        [/\\./, 'string.escape.invalid'],
-        [/`/, 'string', '@pop'],
+        [/[^`]+/, 'identifier.column.escaped'],
+        [/`/, 'identifier.column.escaped', '@pop'],
       ],
 
       // ------------------------------------------------------------- PROMQL

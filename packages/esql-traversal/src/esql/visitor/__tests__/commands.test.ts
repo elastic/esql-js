@@ -5,6 +5,7 @@
  * 2.0.
  */
 
+import { Builder } from '@elastic/esql-ast';
 import * as fixtures from './fixtures_commands';
 import { Visitor } from '../index';
 
@@ -328,6 +329,19 @@ test('can visit FROM command with complex subqueries', () => {
   const list = visitor.visitQuery(ast).flat().filter(Boolean);
 
   expect(list).toEqual(['SUBQUERY', 'SUBQUERY']);
+});
+
+test('can visit TS_COLLAPSE command via specific visitor', () => {
+  const ast = Builder.expression.query([
+    Builder.command({ name: 'ts' }),
+    Builder.command({ name: 'ts_collapse' }),
+  ]).commands;
+  const visitor = new Visitor()
+    .on('visitTsCollapseCommand', () => 'TS_COLLAPSE')
+    .on('visitCommand', (ctx) => ctx.name())
+    .on('visitQuery', (ctx) => [...ctx.visitCommands()].join(' | '));
+
+  expect(visitor.visitQuery(ast)).toBe('TS | TS_COLLAPSE');
 });
 
 test('can visit DEDUP command via specific visitor', () => {

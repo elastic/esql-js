@@ -8,6 +8,8 @@
 import { existsSync, readFileSync, readdirSync } from 'node:fs';
 import { basename, join } from 'node:path';
 
+import { dereference } from '@apidevtools/json-schema-ref-parser';
+
 import type {
   CommandDefinition,
   DefinitionDocs,
@@ -57,6 +59,7 @@ export interface GenerateResult {
     settings: SettingDefinition[];
     inlineCasts: InlineCastMap;
     timeSeriesAggregates: TimeSeriesAggregateMap;
+    profileSchema: Json;
     promqlFunctions: PromqlFunctionDefinition[];
     promqlFunctionDocs: Record<string, DefinitionDocs>;
     promqlOperators: PromqlOperatorDefinition[];
@@ -377,6 +380,38 @@ function isRecord(value: unknown): value is Json {
   return typeof value === 'object' && value !== null && !Array.isArray(value);
 }
 
+async function readProfileSchema(esqlDir: string): Promise<Json> {
+  const matches = listProjectDirs(esqlDir)
+    .map((project) => join(esqlDir, project, 'definition', 'profile', 'esql_profile.schema.json'))
+    .filter(existsSync);
+
+  if (matches.length === 0) {
+    throw new Error(`no ES|QL profile schema found under: ${esqlDir}`);
+  }
+  if (matches.length > 1) {
+    throw new Error(`multiple ES|QL profile schemas found: ${matches.join(', ')}`);
+  }
+
+  const path = matches[0];
+  const label = path.slice(esqlDir.length + 1);
+  let document: Json;
+
+  try {
+    document = JSON.parse(readFileSync(path, 'utf8')) as Json;
+  } catch (error) {
+    throw new Error(`${label}: invalid JSON: ${String(error)}`, { cause: error });
+  }
+
+  const dereferenced = await dereference(document, {
+    dereference: { circular: false },
+    resolve: { file: false, http: false },
+  });
+  // Once every $ref is expanded, the top-level definitions only duplicate the response tree.
+  const { definitions: _definitions, ...schema } = dereferenced;
+
+  return schema;
+}
+
 /**
  * Reads `time_series_aggregates.json` from every project and returns the
  * `types` map. The top-level `comment` is generator metadata and is dropped.
@@ -686,7 +721,7 @@ function renderSingleModule(typeImport: string, declaration: string, value: unkn
   );
 }
 
-export function generateAll(elasticsearchDir: string): GenerateResult {
+export async function generateAll(elasticsearchDir: string): Promise<GenerateResult> {
   const warnings: string[] = [];
   const esqlDir = join(elasticsearchDir, 'esql');
   const promqlDir = join(elasticsearchDir, 'promql');
@@ -726,6 +761,7 @@ export function generateAll(elasticsearchDir: string): GenerateResult {
   const settingItems = readDefinitions(esqlDir, 'settings', SETTING_SPEC, warnings);
   const inlineCasts = readInlineCastMap(esqlDir);
   const timeSeriesAggregates = readTimeSeriesAggregateMap(esqlDir, warnings);
+  const profileSchema = await readProfileSchema(esqlDir);
   const promqlFunctionsSplit = splitDocs(
     readDefinitions(promqlDir, 'functions', PROMQL_FUNCTION_SPEC, warnings),
     'promql functions',
@@ -756,6 +792,12 @@ export function generateAll(elasticsearchDir: string): GenerateResult {
   ) as unknown as PromqlOperatorDefinition[];
 
   const files: GeneratedFile[] = [
+    {
+      relativePath: 'profile_response_schema.ts',
+      content:
+        `${LICENSE_HEADER}\n\n${GENERATED_NOTICE}\n\n` +
+        `export const esqlProfileResponseSchema = ${tsLiteral(profileSchema, '')} as const;\n`,
+    },
     {
       relativePath: 'commands.ts',
       content: renderSingleModule(
@@ -850,6 +892,7 @@ export function generateAll(elasticsearchDir: string): GenerateResult {
       settings,
       inlineCasts,
       timeSeriesAggregates,
+      profileSchema,
       promqlFunctions,
       promqlFunctionDocs: promqlFunctionsSplit.docs,
       promqlOperators,

@@ -26,6 +26,22 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'boolean',
+          optional: false,
+        },
+        {
+          name: 'window',
+          type: 'time_duration',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'boolean',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'counter_double',
           optional: false,
         },

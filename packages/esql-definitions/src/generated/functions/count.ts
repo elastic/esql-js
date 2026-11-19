@@ -120,6 +120,39 @@ const definition: FunctionDefinition = {
       params: [
         {
           name: 'field',
+          type: 'counter_double',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'counter_integer',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
+          type: 'counter_long',
+          optional: true,
+        },
+      ],
+      variadic: false,
+      returnType: 'long',
+    },
+    {
+      params: [
+        {
+          name: 'field',
           type: 'date',
           optional: true,
         },
