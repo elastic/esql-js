@@ -115,6 +115,11 @@ describe('LeafPrinter', () => {
   });
 
   describe('identifier()', () => {
+    test('quotes a keyword identifier unless it is verbatim', () => {
+      expect(LeafPrinter.identifier(id('default'))).toBe('`default`');
+      expect(LeafPrinter.identifier({ ...id('DEFAULT'), verbatim: true })).toBe('DEFAULT');
+    });
+
     test('prints simple identifier without quotes', () => {
       expect(LeafPrinter.identifier(id('myField'))).toBe('myField');
     });

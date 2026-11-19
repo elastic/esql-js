@@ -26,6 +26,7 @@ import type {
   ESQLAstRegisteredDomainCommand,
   ESQLAstHighlightCommand,
   ESQLAstDenseVectorCommand,
+  ESQLAstFillNullCommand,
   ESQLAstRerankCommand,
   ESQLAstTsInfoCommand,
   ESQLAstUriPartsCommand,
@@ -637,6 +638,12 @@ export class IpLocationCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstIpLocationCommand> {}
+
+// FILLNULL <value> ON <qualifiedNamePatterns>
+export class FillNullCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLAstFillNullCommand> {}
 
 // HIGHLIGHT <string> ON <qualifiedNames> [WITH <map>]
 export class HighlightCommandVisitorContext<

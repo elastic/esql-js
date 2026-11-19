@@ -124,6 +124,7 @@ export type CommandVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitRegisteredDomainCommand'> &
     VisitorInput<Methods, 'visitHighlightCommand'> &
     VisitorInput<Methods, 'visitDenseVectorCommand'> &
+    VisitorInput<Methods, 'visitFillNullCommand'> &
     VisitorInput<Methods, 'visitTsCollapseCommand'> // agent-marker: append new VisitorInput entries here
 >;
 
@@ -165,6 +166,7 @@ export type CommandVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitRegisteredDomainCommand'>
   | VisitorOutput<Methods, 'visitHighlightCommand'>
   | VisitorOutput<Methods, 'visitDenseVectorCommand'>
+  | VisitorOutput<Methods, 'visitFillNullCommand'>
   | VisitorOutput<Methods, 'visitTsCollapseCommand'>; // agent-marker: append new VisitorOutput entries here
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
@@ -253,6 +255,7 @@ export interface VisitorMethods<
     any,
     any
   >;
+  visitFillNullCommand?: Visitor<contexts.FillNullCommandVisitorContext<Visitors, Data>, any, any>;
   visitDenseVectorCommand?: Visitor<
     contexts.DenseVectorCommandVisitorContext<Visitors, Data>,
     any,

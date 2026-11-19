@@ -27,7 +27,8 @@ export type ESQLAstCommand =
   | ESQLAstIpLocationCommand
   | ESQLAstRegisteredDomainCommand
   | ESQLAstHighlightCommand
-  | ESQLAstDenseVectorCommand;
+  | ESQLAstDenseVectorCommand
+  | ESQLAstFillNullCommand;
 
 export type ESQLAstAllCommands = ESQLAstCommand | ESQLAstHeaderCommand;
 
@@ -208,6 +209,11 @@ export interface ESQLAstHighlightCommand extends ESQLCommand<'highlight'> {
    * @todo This should be {@link ESQLMap} type.
    */
   namedParameters?: ESQLSingleAstItem;
+}
+
+export interface ESQLAstFillNullCommand extends ESQLCommand<'fillnull'> {
+  value?: ESQLLiteral | ESQLParam | ESQLIdentifier;
+  fields: Array<ESQLColumn | ESQLParam | ESQLIdentifier>;
 }
 
 export interface ESQLAstDenseVectorCommand extends ESQLCommand<'dense_vector'> {
@@ -774,6 +780,12 @@ export type ESQLParam =
 
 export interface ESQLIdentifier extends ESQLAstBaseItem {
   type: 'identifier';
+
+  /**
+   * When `true`, the identifier is a bare keyword (e.g. `DEFAULT` in
+   * `FILLNULL DEFAULT ON x`) and is printed as-is.
+   */
+  verbatim?: boolean;
 }
 
 export interface EditorError {
