@@ -951,8 +951,8 @@ export default class promql_parser extends parser_config {
 				case 2:
 					{
 					this.state = 189;
-					if (!(_input.LA(1) != LP)) {
-						throw this.createFailedPredicateException("_input.LA(1) != LP", "Invalid label list after [" + _input.LT(-1).getText() + "]");
+					if (!(this._input.LA(1) !== promql_parser.LP)) {
+						throw this.createFailedPredicateException("this._input.LA(1) !== promql_parser.LP", "Invalid label list after [" + this._input.LT(-1).text + "]");
 					}
 					}
 					break;
@@ -1874,7 +1874,7 @@ export default class promql_parser extends parser_config {
 	private modifier_sempred(localctx: ModifierContext, predIndex: number): boolean {
 		switch (predIndex) {
 		case 7:
-			return _input.LA(1) != LP;
+			return this._input.LA(1) !== promql_parser.LP;
 		}
 		return true;
 	}

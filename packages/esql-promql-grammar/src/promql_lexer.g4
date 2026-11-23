@@ -18,7 +18,7 @@ lexer grammar promql_lexer;
 }
 
 options {
-  superClass=lexer_config;
+  superClass=lexer_runtime;
   caseInsensitive=true;
 }
 
@@ -74,8 +74,8 @@ AT_END  : 'end' WS_CHAR* '(' WS_CHAR* ')';
 // brackets
 LCB: '{';
 RCB: '}';
-LSB: '[' { incPromqlBracketDepth(); };
-RSB: ']' { decPromqlBracketDepth(); };
+LSB: '[' {this.incPromqlBracketDepth();};
+RSB: ']' {this.decPromqlBracketDepth();};
 LP : '(';
 RP : ')';
 
@@ -126,7 +126,7 @@ TIME_VALUE
 // subquery range from its step, as in [5m:1m].
 IDENTIFIER
     : [a-z_][a-z0-9_:.]*
-    | {isInPromqlBrackets() == false}? ':' [a-z0-9_:][a-z0-9_:.]*
+    | {!this.isInPromqlBrackets()}? ':' [a-z0-9_:][a-z0-9_:.]*
     ;
 
 NAMED_OR_POSITIONAL_DOUBLE_PARAMS

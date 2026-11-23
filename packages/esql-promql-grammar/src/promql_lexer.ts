@@ -20,9 +20,9 @@ import {
  * 2.0.
  */
 
-import lexer_config from './lexer_config.js';
+import lexer_runtime from './lexer_runtime.js';
 
-export default class promql_lexer extends lexer_config {
+export default class promql_lexer extends lexer_runtime {
 	public static readonly PLUS = 1;
 	public static readonly MINUS = 2;
 	public static readonly ASTERISK = 3;
@@ -174,14 +174,14 @@ export default class promql_lexer extends lexer_config {
 	private LSB_action(localctx: RuleContext, actionIndex: number): void {
 		switch (actionIndex) {
 		case 0:
-			 incPromqlBracketDepth(); 
+			this.incPromqlBracketDepth();
 			break;
 		}
 	}
 	private RSB_action(localctx: RuleContext, actionIndex: number): void {
 		switch (actionIndex) {
 		case 1:
-			 decPromqlBracketDepth(); 
+			this.decPromqlBracketDepth();
 			break;
 		}
 	}
@@ -196,7 +196,7 @@ export default class promql_lexer extends lexer_config {
 	private IDENTIFIER_sempred(localctx: RuleContext, predIndex: number): boolean {
 		switch (predIndex) {
 		case 0:
-			return isInPromqlBrackets() == false;
+			return !this.isInPromqlBrackets();
 		}
 		return true;
 	}
