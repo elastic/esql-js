@@ -134,8 +134,12 @@ synchronize_promql_parser_grammar () {
   echo "PromQL parser file copied and modified successfully."
 }
 
+apply_promql_typescript_patch () {
+  git -C "$REPO_DIR" apply "$REPO_DIR/.buildkite/scripts/antlr4_tools/promql-typescript.patch"
+}
+
 synchronize_promql_config () {
-  # The generated promql lexer/parser extend lexer_config/parser_config.
+  # The PromQL lexer runtime and generated parser use these base classes.
   # Keep copies in sync with packages/esql-grammar/src/.
   cp "$REPO_DIR/packages/esql-grammar/src/lexer_config.js" "$REPO_DIR/packages/esql-promql-grammar/src/lexer_config.js"
   cp "$REPO_DIR/packages/esql-grammar/src/parser_config.js" "$REPO_DIR/packages/esql-promql-grammar/src/parser_config.js"
@@ -173,6 +177,7 @@ synchronize_all () {
   synchronize_parser_grammar
   synchronize_promql_lexer_grammar
   synchronize_promql_parser_grammar
+  apply_promql_typescript_patch
   synchronize_promql_config
   synchronize_esql_definitions
 }

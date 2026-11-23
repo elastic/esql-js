@@ -1,0 +1,26 @@
+--- a/packages/esql-promql-grammar/src/promql_lexer.g4
++++ b/packages/esql-promql-grammar/src/promql_lexer.g4
+@@ -20,3 +20,3 @@
+ options {
+-  superClass=lexer_config;
++  superClass=lexer_runtime;
+   caseInsensitive=true;
+@@ -76,4 +76,4 @@
+ RCB: '}';
+-LSB: '[' { incPromqlBracketDepth(); };
+-RSB: ']' { decPromqlBracketDepth(); };
++LSB: '[' {this.incPromqlBracketDepth();};
++RSB: ']' {this.decPromqlBracketDepth();};
+ LP : '(';
+@@ -128,3 +128,3 @@
+     : [a-z_][a-z0-9_:.]*
+-    | {isInPromqlBrackets() == false}? ':' [a-z0-9_:][a-z0-9_:.]*
++    | {!this.isInPromqlBrackets()}? ':' [a-z0-9_:][a-z0-9_:.]*
+     ;
+--- a/packages/esql-promql-grammar/src/promql_parser.g4
++++ b/packages/esql-promql-grammar/src/promql_parser.g4
+@@ -80,3 +80,3 @@
+     : matching=(IGNORING | ON) modifierLabels=labelList
+-      (joining=(GROUP_LEFT | GROUP_RIGHT) (groupLabels=labelList | {_input.LA(1) != LP}?<fail={"Invalid label list after [" + _input.LT(-1).getText() + "]"}>))?
++      (joining=(GROUP_LEFT | GROUP_RIGHT) (groupLabels=labelList | {this._input.LA(1) !== promql_parser.LP}?<fail={"Invalid label list after [" + this._input.LT(-1).text + "]"}>))?
+     ;
