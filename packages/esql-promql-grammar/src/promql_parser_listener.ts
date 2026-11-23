@@ -32,6 +32,8 @@ import { LabelContext } from "./promql_parser.js";
 import { LabelValueContext } from "./promql_parser.js";
 import { LabelNameContext } from "./promql_parser.js";
 import { IdentifierContext } from "./promql_parser.js";
+import { MetricNameContext } from "./promql_parser.js";
+import { GroupingLabelContext } from "./promql_parser.js";
 import { EvaluationContext } from "./promql_parser.js";
 import { OffsetContext } from "./promql_parser.js";
 import { DurationContext } from "./promql_parser.js";
@@ -270,6 +272,26 @@ export default class promql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitIdentifier?: (ctx: IdentifierContext) => void;
+	/**
+	 * Enter a parse tree produced by `promql_parser.metricName`.
+	 * @param ctx the parse tree
+	 */
+	enterMetricName?: (ctx: MetricNameContext) => void;
+	/**
+	 * Exit a parse tree produced by `promql_parser.metricName`.
+	 * @param ctx the parse tree
+	 */
+	exitMetricName?: (ctx: MetricNameContext) => void;
+	/**
+	 * Enter a parse tree produced by `promql_parser.groupingLabel`.
+	 * @param ctx the parse tree
+	 */
+	enterGroupingLabel?: (ctx: GroupingLabelContext) => void;
+	/**
+	 * Exit a parse tree produced by `promql_parser.groupingLabel`.
+	 * @param ctx the parse tree
+	 */
+	exitGroupingLabel?: (ctx: GroupingLabelContext) => void;
 	/**
 	 * Enter a parse tree produced by `promql_parser.evaluation`.
 	 * @param ctx the parse tree

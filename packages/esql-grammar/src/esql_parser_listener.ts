@@ -69,6 +69,7 @@ import { DissectCommandOptionContext } from "./esql_parser.js";
 import { CommandNamedParametersContext } from "./esql_parser.js";
 import { GrokCommandContext } from "./esql_parser.js";
 import { MvExpandCommandContext } from "./esql_parser.js";
+import { NestedExpandCommandContext } from "./esql_parser.js";
 import { ExplainCommandContext } from "./esql_parser.js";
 import { SubqueryExpressionContext } from "./esql_parser.js";
 import { ShowInfoContext } from "./esql_parser.js";
@@ -768,6 +769,16 @@ export default class esql_parserListener extends ParseTreeListener {
 	 * @param ctx the parse tree
 	 */
 	exitMvExpandCommand?: (ctx: MvExpandCommandContext) => void;
+	/**
+	 * Enter a parse tree produced by `esql_parser.nestedExpandCommand`.
+	 * @param ctx the parse tree
+	 */
+	enterNestedExpandCommand?: (ctx: NestedExpandCommandContext) => void;
+	/**
+	 * Exit a parse tree produced by `esql_parser.nestedExpandCommand`.
+	 * @param ctx the parse tree
+	 */
+	exitNestedExpandCommand?: (ctx: NestedExpandCommandContext) => void;
 	/**
 	 * Enter a parse tree produced by `esql_parser.explainCommand`.
 	 * @param ctx the parse tree

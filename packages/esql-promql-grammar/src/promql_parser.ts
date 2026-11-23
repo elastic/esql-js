@@ -68,8 +68,8 @@ export default class promql_parser extends parser_config {
 	public static readonly STRING = 38;
 	public static readonly INTEGER_VALUE = 39;
 	public static readonly DECIMAL_VALUE = 40;
-	public static readonly HEXADECIMAL = 41;
-	public static readonly TIME_VALUE_WITH_COLON = 42;
+	public static readonly INF_OR_NAN = 41;
+	public static readonly HEXADECIMAL = 42;
 	public static readonly TIME_VALUE = 43;
 	public static readonly IDENTIFIER = 44;
 	public static readonly NAMED_OR_POSITIONAL_DOUBLE_PARAMS = 45;
@@ -95,15 +95,17 @@ export default class promql_parser extends parser_config {
 	public static readonly RULE_labelValue = 14;
 	public static readonly RULE_labelName = 15;
 	public static readonly RULE_identifier = 16;
-	public static readonly RULE_evaluation = 17;
-	public static readonly RULE_offset = 18;
-	public static readonly RULE_duration = 19;
-	public static readonly RULE_at = 20;
-	public static readonly RULE_constant = 21;
-	public static readonly RULE_number = 22;
-	public static readonly RULE_string = 23;
-	public static readonly RULE_timeValue = 24;
-	public static readonly RULE_nonReserved = 25;
+	public static readonly RULE_metricName = 17;
+	public static readonly RULE_groupingLabel = 18;
+	public static readonly RULE_evaluation = 19;
+	public static readonly RULE_offset = 20;
+	public static readonly RULE_duration = 21;
+	public static readonly RULE_at = 22;
+	public static readonly RULE_constant = 23;
+	public static readonly RULE_number = 24;
+	public static readonly RULE_string = 25;
+	public static readonly RULE_timeValue = 26;
+	public static readonly RULE_nonReserved = 27;
 	public static readonly literalNames: (string | null)[] = [ null, "'+'", 
                                                             "'-'", "'*'", 
                                                             "'/'", "'%'", 
@@ -119,8 +121,8 @@ export default class promql_parser extends parser_config {
                                                             "'group_left'", 
                                                             "'group_right'", 
                                                             "'bool'", "'offset'", 
-                                                            "'@'", "'start()'", 
-                                                            "'end()'", "'{'", 
+                                                            "'@'", null, 
+                                                            null, "'{'", 
                                                             "'}'", "'['", 
                                                             "']'", "'('", 
                                                             "')'", "':'", 
@@ -149,8 +151,8 @@ export default class promql_parser extends parser_config {
                                                              "COMMA", "STRING", 
                                                              "INTEGER_VALUE", 
                                                              "DECIMAL_VALUE", 
+                                                             "INF_OR_NAN", 
                                                              "HEXADECIMAL", 
-                                                             "TIME_VALUE_WITH_COLON", 
                                                              "TIME_VALUE", 
                                                              "IDENTIFIER", 
                                                              "NAMED_OR_POSITIONAL_DOUBLE_PARAMS", 
@@ -162,8 +164,8 @@ export default class promql_parser extends parser_config {
 		"singleStatement", "expression", "subqueryResolution", "value", "function", 
 		"functionParams", "grouping", "selector", "seriesMatcher", "modifier", 
 		"labelList", "labelListItem", "labels", "label", "labelValue", "labelName", 
-		"identifier", "evaluation", "offset", "duration", "at", "constant", "number", 
-		"string", "timeValue", "nonReserved",
+		"identifier", "metricName", "groupingLabel", "evaluation", "offset", "duration", 
+		"at", "constant", "number", "string", "timeValue", "nonReserved",
 	];
 	public get grammarFileName(): string { return "promql_parser.g4"; }
 	public get literalNames(): (string | null)[] { return promql_parser.literalNames; }
@@ -186,9 +188,9 @@ export default class promql_parser extends parser_config {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 52;
+			this.state = 56;
 			this.expression(0);
-			this.state = 53;
+			this.state = 57;
 			this.match(promql_parser.EOF);
 			}
 		}
@@ -226,7 +228,7 @@ export default class promql_parser extends parser_config {
 			let _alt: number;
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 63;
+			this.state = 67;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 1:
@@ -236,7 +238,7 @@ export default class promql_parser extends parser_config {
 				this._ctx = localctx;
 				_prevctx = localctx;
 
-				this.state = 56;
+				this.state = 60;
 				(localctx as ArithmeticUnaryContext)._operator = this._input.LT(1);
 				_la = this._input.LA(1);
 				if(!(_la===1 || _la===2)) {
@@ -246,7 +248,7 @@ export default class promql_parser extends parser_config {
 					this._errHandler.reportMatch(this);
 				    this.consume();
 				}
-				this.state = 57;
+				this.state = 61;
 				this.expression(9);
 				}
 				break;
@@ -255,11 +257,6 @@ export default class promql_parser extends parser_config {
 			case 18:
 			case 19:
 			case 20:
-			case 21:
-			case 22:
-			case 23:
-			case 24:
-			case 25:
 			case 26:
 			case 30:
 			case 38:
@@ -274,7 +271,7 @@ export default class promql_parser extends parser_config {
 				localctx = new ValueExpressionContext(this, localctx);
 				this._ctx = localctx;
 				_prevctx = localctx;
-				this.state = 58;
+				this.state = 62;
 				this.value();
 				}
 				break;
@@ -283,11 +280,11 @@ export default class promql_parser extends parser_config {
 				localctx = new ParenthesizedContext(this, localctx);
 				this._ctx = localctx;
 				_prevctx = localctx;
-				this.state = 59;
+				this.state = 63;
 				this.match(promql_parser.LP);
-				this.state = 60;
+				this.state = 64;
 				this.expression(0);
-				this.state = 61;
+				this.state = 65;
 				this.match(promql_parser.RP);
 				}
 				break;
@@ -295,7 +292,7 @@ export default class promql_parser extends parser_config {
 				throw new NoViableAltException(this);
 			}
 			this._ctx.stop = this._input.LT(-1);
-			this.state = 114;
+			this.state = 118;
 			this._errHandler.sync(this);
 			_alt = this._interp.adaptivePredict(this._input, 10, this._ctx);
 			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
@@ -305,7 +302,7 @@ export default class promql_parser extends parser_config {
 					}
 					_prevctx = localctx;
 					{
-					this.state = 112;
+					this.state = 116;
 					this._errHandler.sync(this);
 					switch ( this._interp.adaptivePredict(this._input, 9, this._ctx) ) {
 					case 1:
@@ -313,23 +310,23 @@ export default class promql_parser extends parser_config {
 						localctx = new ArithmeticBinaryContext(this, new ExpressionContext(this, _parentctx, _parentState));
 						(localctx as ArithmeticBinaryContext)._left = _prevctx;
 						this.pushNewRecursionContext(localctx, _startState, promql_parser.RULE_expression);
-						this.state = 65;
+						this.state = 69;
 						if (!(this.precpred(this._ctx, 10))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 10)");
 						}
-						this.state = 66;
+						this.state = 70;
 						(localctx as ArithmeticBinaryContext)._op = this.match(promql_parser.CARET);
-						this.state = 68;
+						this.state = 72;
 						this._errHandler.sync(this);
-						switch ( this._interp.adaptivePredict(this._input, 1, this._ctx) ) {
-						case 1:
+						_la = this._input.LA(1);
+						if (_la===21 || _la===22) {
 							{
-							this.state = 67;
+							this.state = 71;
 							this.modifier();
 							}
-							break;
 						}
-						this.state = 70;
+
+						this.state = 74;
 						(localctx as ArithmeticBinaryContext)._right = this.expression(10);
 						}
 						break;
@@ -338,11 +335,11 @@ export default class promql_parser extends parser_config {
 						localctx = new ArithmeticBinaryContext(this, new ExpressionContext(this, _parentctx, _parentState));
 						(localctx as ArithmeticBinaryContext)._left = _prevctx;
 						this.pushNewRecursionContext(localctx, _startState, promql_parser.RULE_expression);
-						this.state = 71;
+						this.state = 75;
 						if (!(this.precpred(this._ctx, 8))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 8)");
 						}
-						this.state = 72;
+						this.state = 76;
 						(localctx as ArithmeticBinaryContext)._op = this._input.LT(1);
 						_la = this._input.LA(1);
 						if(!((((_la) & ~0x1F) === 0 && ((1 << _la) & 56) !== 0))) {
@@ -352,17 +349,17 @@ export default class promql_parser extends parser_config {
 							this._errHandler.reportMatch(this);
 						    this.consume();
 						}
-						this.state = 74;
+						this.state = 78;
 						this._errHandler.sync(this);
-						switch ( this._interp.adaptivePredict(this._input, 2, this._ctx) ) {
-						case 1:
+						_la = this._input.LA(1);
+						if (_la===21 || _la===22) {
 							{
-							this.state = 73;
+							this.state = 77;
 							this.modifier();
 							}
-							break;
 						}
-						this.state = 76;
+
+						this.state = 80;
 						(localctx as ArithmeticBinaryContext)._right = this.expression(9);
 						}
 						break;
@@ -371,11 +368,11 @@ export default class promql_parser extends parser_config {
 						localctx = new ArithmeticBinaryContext(this, new ExpressionContext(this, _parentctx, _parentState));
 						(localctx as ArithmeticBinaryContext)._left = _prevctx;
 						this.pushNewRecursionContext(localctx, _startState, promql_parser.RULE_expression);
-						this.state = 77;
+						this.state = 81;
 						if (!(this.precpred(this._ctx, 7))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 7)");
 						}
-						this.state = 78;
+						this.state = 82;
 						(localctx as ArithmeticBinaryContext)._op = this._input.LT(1);
 						_la = this._input.LA(1);
 						if(!(_la===1 || _la===2)) {
@@ -385,17 +382,17 @@ export default class promql_parser extends parser_config {
 							this._errHandler.reportMatch(this);
 						    this.consume();
 						}
-						this.state = 80;
+						this.state = 84;
 						this._errHandler.sync(this);
-						switch ( this._interp.adaptivePredict(this._input, 3, this._ctx) ) {
-						case 1:
+						_la = this._input.LA(1);
+						if (_la===21 || _la===22) {
 							{
-							this.state = 79;
+							this.state = 83;
 							this.modifier();
 							}
-							break;
 						}
-						this.state = 82;
+
+						this.state = 86;
 						(localctx as ArithmeticBinaryContext)._right = this.expression(8);
 						}
 						break;
@@ -404,11 +401,11 @@ export default class promql_parser extends parser_config {
 						localctx = new ArithmeticBinaryContext(this, new ExpressionContext(this, _parentctx, _parentState));
 						(localctx as ArithmeticBinaryContext)._left = _prevctx;
 						this.pushNewRecursionContext(localctx, _startState, promql_parser.RULE_expression);
-						this.state = 83;
+						this.state = 87;
 						if (!(this.precpred(this._ctx, 6))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 6)");
 						}
-						this.state = 84;
+						this.state = 88;
 						(localctx as ArithmeticBinaryContext)._op = this._input.LT(1);
 						_la = this._input.LA(1);
 						if(!((((_la) & ~0x1F) === 0 && ((1 << _la) & 8064) !== 0))) {
@@ -418,27 +415,27 @@ export default class promql_parser extends parser_config {
 							this._errHandler.reportMatch(this);
 						    this.consume();
 						}
-						this.state = 86;
+						this.state = 90;
 						this._errHandler.sync(this);
-						switch ( this._interp.adaptivePredict(this._input, 4, this._ctx) ) {
-						case 1:
+						_la = this._input.LA(1);
+						if (_la===25) {
 							{
-							this.state = 85;
+							this.state = 89;
 							this.match(promql_parser.BOOL);
 							}
-							break;
 						}
-						this.state = 89;
+
+						this.state = 93;
 						this._errHandler.sync(this);
-						switch ( this._interp.adaptivePredict(this._input, 5, this._ctx) ) {
-						case 1:
+						_la = this._input.LA(1);
+						if (_la===21 || _la===22) {
 							{
-							this.state = 88;
+							this.state = 92;
 							this.modifier();
 							}
-							break;
 						}
-						this.state = 91;
+
+						this.state = 95;
 						(localctx as ArithmeticBinaryContext)._right = this.expression(7);
 						}
 						break;
@@ -447,11 +444,11 @@ export default class promql_parser extends parser_config {
 						localctx = new ArithmeticBinaryContext(this, new ExpressionContext(this, _parentctx, _parentState));
 						(localctx as ArithmeticBinaryContext)._left = _prevctx;
 						this.pushNewRecursionContext(localctx, _startState, promql_parser.RULE_expression);
-						this.state = 92;
+						this.state = 96;
 						if (!(this.precpred(this._ctx, 5))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 5)");
 						}
-						this.state = 93;
+						this.state = 97;
 						(localctx as ArithmeticBinaryContext)._op = this._input.LT(1);
 						_la = this._input.LA(1);
 						if(!(_la===16 || _la===18)) {
@@ -461,17 +458,17 @@ export default class promql_parser extends parser_config {
 							this._errHandler.reportMatch(this);
 						    this.consume();
 						}
-						this.state = 95;
+						this.state = 99;
 						this._errHandler.sync(this);
-						switch ( this._interp.adaptivePredict(this._input, 6, this._ctx) ) {
-						case 1:
+						_la = this._input.LA(1);
+						if (_la===21 || _la===22) {
 							{
-							this.state = 94;
+							this.state = 98;
 							this.modifier();
 							}
-							break;
 						}
-						this.state = 97;
+
+						this.state = 101;
 						(localctx as ArithmeticBinaryContext)._right = this.expression(6);
 						}
 						break;
@@ -480,23 +477,23 @@ export default class promql_parser extends parser_config {
 						localctx = new ArithmeticBinaryContext(this, new ExpressionContext(this, _parentctx, _parentState));
 						(localctx as ArithmeticBinaryContext)._left = _prevctx;
 						this.pushNewRecursionContext(localctx, _startState, promql_parser.RULE_expression);
-						this.state = 98;
+						this.state = 102;
 						if (!(this.precpred(this._ctx, 4))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 4)");
 						}
-						this.state = 99;
+						this.state = 103;
 						(localctx as ArithmeticBinaryContext)._op = this.match(promql_parser.OR);
-						this.state = 101;
+						this.state = 105;
 						this._errHandler.sync(this);
-						switch ( this._interp.adaptivePredict(this._input, 7, this._ctx) ) {
-						case 1:
+						_la = this._input.LA(1);
+						if (_la===21 || _la===22) {
 							{
-							this.state = 100;
+							this.state = 104;
 							this.modifier();
 							}
-							break;
 						}
-						this.state = 103;
+
+						this.state = 107;
 						(localctx as ArithmeticBinaryContext)._right = this.expression(5);
 						}
 						break;
@@ -504,24 +501,24 @@ export default class promql_parser extends parser_config {
 						{
 						localctx = new SubqueryContext(this, new ExpressionContext(this, _parentctx, _parentState));
 						this.pushNewRecursionContext(localctx, _startState, promql_parser.RULE_expression);
-						this.state = 104;
+						this.state = 108;
 						if (!(this.precpred(this._ctx, 1))) {
 							throw this.createFailedPredicateException("this.precpred(this._ctx, 1)");
 						}
-						this.state = 105;
+						this.state = 109;
 						this.match(promql_parser.LSB);
-						this.state = 106;
-						(localctx as SubqueryContext)._range = this.duration();
-						this.state = 107;
-						this.subqueryResolution();
-						this.state = 108;
-						this.match(promql_parser.RSB);
 						this.state = 110;
+						(localctx as SubqueryContext)._range = this.duration();
+						this.state = 111;
+						this.subqueryResolution();
+						this.state = 112;
+						this.match(promql_parser.RSB);
+						this.state = 114;
 						this._errHandler.sync(this);
 						switch ( this._interp.adaptivePredict(this._input, 8, this._ctx) ) {
 						case 1:
 							{
-							this.state = 109;
+							this.state = 113;
 							this.evaluation();
 							}
 							break;
@@ -531,7 +528,7 @@ export default class promql_parser extends parser_config {
 					}
 					}
 				}
-				this.state = 116;
+				this.state = 120;
 				this._errHandler.sync(this);
 				_alt = this._interp.adaptivePredict(this._input, 10, this._ctx);
 			}
@@ -557,82 +554,20 @@ export default class promql_parser extends parser_config {
 		this.enterRule(localctx, 4, promql_parser.RULE_subqueryResolution);
 		let _la: number;
 		try {
-			this.state = 131;
+			this.enterOuterAlt(localctx, 1);
+			{
+			this.state = 121;
+			this.match(promql_parser.COLON);
+			this.state = 123;
 			this._errHandler.sync(this);
-			switch ( this._interp.adaptivePredict(this._input, 12, this._ctx) ) {
-			case 1:
-				this.enterOuterAlt(localctx, 1);
+			_la = this._input.LA(1);
+			if ((((_la) & ~0x1F) === 0 && ((1 << _la) & 1142882310) !== 0) || ((((_la - 34)) & ~0x1F) === 0 && ((1 << (_la - 34)) & 6129) !== 0)) {
 				{
-				this.state = 117;
-				this.match(promql_parser.COLON);
-				this.state = 119;
-				this._errHandler.sync(this);
-				_la = this._input.LA(1);
-				if ((((_la) & ~0x1F) === 0 && ((1 << _la) & 1207894022) !== 0) || ((((_la - 34)) & ~0x1F) === 0 && ((1 << (_la - 34)) & 6129) !== 0)) {
-					{
-					this.state = 118;
-					localctx._resolution = this.duration();
-					}
-				}
-
-				}
-				break;
-			case 2:
-				this.enterOuterAlt(localctx, 2);
-				{
-				this.state = 121;
-				this.match(promql_parser.TIME_VALUE_WITH_COLON);
 				this.state = 122;
-				localctx._op = this.match(promql_parser.CARET);
-				this.state = 123;
-				this.expression(0);
+				localctx._resolution = this.duration();
 				}
-				break;
-			case 3:
-				this.enterOuterAlt(localctx, 3);
-				{
-				this.state = 124;
-				this.match(promql_parser.TIME_VALUE_WITH_COLON);
-				this.state = 125;
-				localctx._op = this._input.LT(1);
-				_la = this._input.LA(1);
-				if(!(_la===3 || _la===4)) {
-				    localctx._op = this._errHandler.recoverInline(this);
-				}
-				else {
-					this._errHandler.reportMatch(this);
-				    this.consume();
-				}
-				this.state = 126;
-				this.expression(0);
-				}
-				break;
-			case 4:
-				this.enterOuterAlt(localctx, 4);
-				{
-				this.state = 127;
-				this.match(promql_parser.TIME_VALUE_WITH_COLON);
-				this.state = 128;
-				localctx._op = this._input.LT(1);
-				_la = this._input.LA(1);
-				if(!(_la===1 || _la===2)) {
-				    localctx._op = this._errHandler.recoverInline(this);
-				}
-				else {
-					this._errHandler.reportMatch(this);
-				    this.consume();
-				}
-				this.state = 129;
-				this.expression(0);
-				}
-				break;
-			case 5:
-				this.enterOuterAlt(localctx, 5);
-				{
-				this.state = 130;
-				this.match(promql_parser.TIME_VALUE_WITH_COLON);
-				}
-				break;
+			}
+
 			}
 		}
 		catch (re) {
@@ -654,27 +589,27 @@ export default class promql_parser extends parser_config {
 		let localctx: ValueContext = new ValueContext(this, this._ctx, this.state);
 		this.enterRule(localctx, 6, promql_parser.RULE_value);
 		try {
-			this.state = 136;
+			this.state = 128;
 			this._errHandler.sync(this);
-			switch ( this._interp.adaptivePredict(this._input, 13, this._ctx) ) {
+			switch ( this._interp.adaptivePredict(this._input, 12, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 133;
+				this.state = 125;
 				this.function_();
 				}
 				break;
 			case 2:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 134;
+				this.state = 126;
 				this.selector();
 				}
 				break;
 			case 3:
 				this.enterOuterAlt(localctx, 3);
 				{
-				this.state = 135;
+				this.state = 127;
 				this.constant();
 				}
 				break;
@@ -700,57 +635,57 @@ export default class promql_parser extends parser_config {
 		this.enterRule(localctx, 8, promql_parser.RULE_function);
 		let _la: number;
 		try {
-			this.state = 156;
+			this.state = 148;
 			this._errHandler.sync(this);
-			switch ( this._interp.adaptivePredict(this._input, 15, this._ctx) ) {
+			switch ( this._interp.adaptivePredict(this._input, 14, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 138;
+				this.state = 130;
 				this.match(promql_parser.IDENTIFIER);
-				this.state = 139;
+				this.state = 131;
 				this.match(promql_parser.LP);
-				this.state = 141;
+				this.state = 133;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
-				if ((((_la) & ~0x1F) === 0 && ((1 << _la) & 1207894022) !== 0) || ((((_la - 34)) & ~0x1F) === 0 && ((1 << (_la - 34)) & 6129) !== 0)) {
+				if ((((_la) & ~0x1F) === 0 && ((1 << _la) & 1142882310) !== 0) || ((((_la - 34)) & ~0x1F) === 0 && ((1 << (_la - 34)) & 6129) !== 0)) {
 					{
-					this.state = 140;
+					this.state = 132;
 					this.functionParams();
 					}
 				}
 
-				this.state = 143;
+				this.state = 135;
 				this.match(promql_parser.RP);
 				}
 				break;
 			case 2:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 144;
+				this.state = 136;
 				this.match(promql_parser.IDENTIFIER);
-				this.state = 145;
+				this.state = 137;
 				this.match(promql_parser.LP);
-				this.state = 146;
+				this.state = 138;
 				this.functionParams();
-				this.state = 147;
+				this.state = 139;
 				this.match(promql_parser.RP);
-				this.state = 148;
+				this.state = 140;
 				this.grouping();
 				}
 				break;
 			case 3:
 				this.enterOuterAlt(localctx, 3);
 				{
-				this.state = 150;
+				this.state = 142;
 				this.match(promql_parser.IDENTIFIER);
-				this.state = 151;
+				this.state = 143;
 				this.grouping();
-				this.state = 152;
+				this.state = 144;
 				this.match(promql_parser.LP);
-				this.state = 153;
+				this.state = 145;
 				this.functionParams();
-				this.state = 154;
+				this.state = 146;
 				this.match(promql_parser.RP);
 				}
 				break;
@@ -778,21 +713,21 @@ export default class promql_parser extends parser_config {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 158;
+			this.state = 150;
 			this.expression(0);
-			this.state = 163;
+			this.state = 155;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			while (_la===37) {
 				{
 				{
-				this.state = 159;
+				this.state = 151;
 				this.match(promql_parser.COMMA);
-				this.state = 160;
+				this.state = 152;
 				this.expression(0);
 				}
 				}
-				this.state = 165;
+				this.state = 157;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
 			}
@@ -820,7 +755,7 @@ export default class promql_parser extends parser_config {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 166;
+			this.state = 158;
 			_la = this._input.LA(1);
 			if(!(_la===19 || _la===20)) {
 			this._errHandler.recoverInline(this);
@@ -829,7 +764,7 @@ export default class promql_parser extends parser_config {
 				this._errHandler.reportMatch(this);
 			    this.consume();
 			}
-			this.state = 167;
+			this.state = 159;
 			this.labelList();
 			}
 		}
@@ -854,28 +789,28 @@ export default class promql_parser extends parser_config {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 169;
+			this.state = 161;
 			this.seriesMatcher();
-			this.state = 174;
+			this.state = 166;
 			this._errHandler.sync(this);
-			switch ( this._interp.adaptivePredict(this._input, 17, this._ctx) ) {
+			switch ( this._interp.adaptivePredict(this._input, 16, this._ctx) ) {
 			case 1:
 				{
-				this.state = 170;
+				this.state = 162;
 				this.match(promql_parser.LSB);
-				this.state = 171;
+				this.state = 163;
 				this.duration();
-				this.state = 172;
+				this.state = 164;
 				this.match(promql_parser.RSB);
 				}
 				break;
 			}
-			this.state = 177;
+			this.state = 169;
 			this._errHandler.sync(this);
-			switch ( this._interp.adaptivePredict(this._input, 18, this._ctx) ) {
+			switch ( this._interp.adaptivePredict(this._input, 17, this._ctx) ) {
 			case 1:
 				{
-				this.state = 176;
+				this.state = 168;
 				this.evaluation();
 				}
 				break;
@@ -902,7 +837,7 @@ export default class promql_parser extends parser_config {
 		this.enterRule(localctx, 16, promql_parser.RULE_seriesMatcher);
 		let _la: number;
 		try {
-			this.state = 191;
+			this.state = 183;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 16:
@@ -910,35 +845,30 @@ export default class promql_parser extends parser_config {
 			case 18:
 			case 19:
 			case 20:
-			case 21:
-			case 22:
-			case 23:
-			case 24:
-			case 25:
 			case 26:
 			case 44:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 179;
-				this.identifier();
-				this.state = 185;
+				this.state = 171;
+				this.metricName();
+				this.state = 177;
 				this._errHandler.sync(this);
-				switch ( this._interp.adaptivePredict(this._input, 20, this._ctx) ) {
+				switch ( this._interp.adaptivePredict(this._input, 19, this._ctx) ) {
 				case 1:
 					{
-					this.state = 180;
+					this.state = 172;
 					this.match(promql_parser.LCB);
-					this.state = 182;
+					this.state = 174;
 					this._errHandler.sync(this);
 					_la = this._input.LA(1);
-					if (((((_la - 16)) & ~0x1F) === 0 && ((1 << (_la - 16)) & 331352063) !== 0)) {
+					if (((((_la - 16)) & ~0x1F) === 0 && ((1 << (_la - 16)) & 306186239) !== 0)) {
 						{
-						this.state = 181;
+						this.state = 173;
 						this.labels();
 						}
 					}
 
-					this.state = 184;
+					this.state = 176;
 					this.match(promql_parser.RCB);
 					}
 					break;
@@ -948,11 +878,11 @@ export default class promql_parser extends parser_config {
 			case 30:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 187;
+				this.state = 179;
 				this.match(promql_parser.LCB);
-				this.state = 188;
+				this.state = 180;
 				this.labels();
-				this.state = 189;
+				this.state = 181;
 				this.match(promql_parser.RCB);
 				}
 				break;
@@ -982,7 +912,7 @@ export default class promql_parser extends parser_config {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 193;
+			this.state = 185;
 			localctx._matching = this._input.LT(1);
 			_la = this._input.LA(1);
 			if(!(_la===21 || _la===22)) {
@@ -992,14 +922,14 @@ export default class promql_parser extends parser_config {
 				this._errHandler.reportMatch(this);
 			    this.consume();
 			}
-			this.state = 194;
+			this.state = 186;
 			localctx._modifierLabels = this.labelList();
-			this.state = 199;
+			this.state = 192;
 			this._errHandler.sync(this);
-			switch ( this._interp.adaptivePredict(this._input, 23, this._ctx) ) {
-			case 1:
+			_la = this._input.LA(1);
+			if (_la===23 || _la===24) {
 				{
-				this.state = 195;
+				this.state = 187;
 				localctx._joining = this._input.LT(1);
 				_la = this._input.LA(1);
 				if(!(_la===23 || _la===24)) {
@@ -1009,19 +939,27 @@ export default class promql_parser extends parser_config {
 					this._errHandler.reportMatch(this);
 				    this.consume();
 				}
-				this.state = 197;
+				this.state = 190;
 				this._errHandler.sync(this);
-				switch ( this._interp.adaptivePredict(this._input, 22, this._ctx) ) {
+				switch ( this._interp.adaptivePredict(this._input, 21, this._ctx) ) {
 				case 1:
 					{
-					this.state = 196;
+					this.state = 188;
 					localctx._groupLabels = this.labelList();
+					}
+					break;
+				case 2:
+					{
+					this.state = 189;
+					if (!(this._input.LA(1) !== promql_parser.LP)) {
+						throw this.createFailedPredicateException("this._input.LA(1) !== promql_parser.LP", "Invalid label list after [" + this._input.LT(-1).text + "]");
+					}
 					}
 					break;
 				}
 				}
-				break;
 			}
+
 			}
 		}
 		catch (re) {
@@ -1044,18 +982,36 @@ export default class promql_parser extends parser_config {
 		this.enterRule(localctx, 20, promql_parser.RULE_labelList);
 		let _la: number;
 		try {
+			let _alt: number;
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 201;
+			this.state = 194;
 			this.match(promql_parser.LP);
-			this.state = 208;
+			this.state = 206;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			while (((((_la - 16)) & ~0x1F) === 0 && ((1 << (_la - 16)) & 868222975) !== 0)) {
+			if (((((_la - 16)) & ~0x1F) === 0 && ((1 << (_la - 16)) & 809502703) !== 0)) {
 				{
-				{
-				this.state = 202;
+				this.state = 195;
 				this.labelListItem();
+				this.state = 200;
+				this._errHandler.sync(this);
+				_alt = this._interp.adaptivePredict(this._input, 23, this._ctx);
+				while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
+					if (_alt === 1) {
+						{
+						{
+						this.state = 196;
+						this.match(promql_parser.COMMA);
+						this.state = 197;
+						this.labelListItem();
+						}
+						}
+					}
+					this.state = 202;
+					this._errHandler.sync(this);
+					_alt = this._interp.adaptivePredict(this._input, 23, this._ctx);
+				}
 				this.state = 204;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
@@ -1067,12 +1023,9 @@ export default class promql_parser extends parser_config {
 				}
 
 				}
-				}
-				this.state = 210;
-				this._errHandler.sync(this);
-				_la = this._input.LA(1);
 			}
-			this.state = 211;
+
+			this.state = 208;
 			this.match(promql_parser.RP);
 			}
 		}
@@ -1095,35 +1048,37 @@ export default class promql_parser extends parser_config {
 		let localctx: LabelListItemContext = new LabelListItemContext(this, this._ctx, this.state);
 		this.enterRule(localctx, 22, promql_parser.RULE_labelListItem);
 		try {
-			this.state = 215;
+			this.state = 213;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 16:
 			case 17:
 			case 18:
 			case 19:
-			case 20:
 			case 21:
 			case 22:
 			case 23:
 			case 24:
 			case 25:
 			case 26:
-			case 38:
-			case 39:
-			case 40:
-			case 41:
 			case 44:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 213;
-				this.labelName();
+				this.state = 210;
+				this.groupingLabel();
+				}
+				break;
+			case 38:
+				this.enterOuterAlt(localctx, 2);
+				{
+				this.state = 211;
+				this.match(promql_parser.STRING);
 				}
 				break;
 			case 45:
-				this.enterOuterAlt(localctx, 2);
+				this.enterOuterAlt(localctx, 3);
 				{
-				this.state = 214;
+				this.state = 212;
 				this.match(promql_parser.NAMED_OR_POSITIONAL_DOUBLE_PARAMS);
 				}
 				break;
@@ -1151,34 +1106,39 @@ export default class promql_parser extends parser_config {
 		this.enterRule(localctx, 24, promql_parser.RULE_labels);
 		let _la: number;
 		try {
+			let _alt: number;
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 217;
+			this.state = 215;
 			this.label();
+			this.state = 220;
+			this._errHandler.sync(this);
+			_alt = this._interp.adaptivePredict(this._input, 27, this._ctx);
+			while (_alt !== 2 && _alt !== ATN.INVALID_ALT_NUMBER) {
+				if (_alt === 1) {
+					{
+					{
+					this.state = 216;
+					this.match(promql_parser.COMMA);
+					this.state = 217;
+					this.label();
+					}
+					}
+				}
+				this.state = 222;
+				this._errHandler.sync(this);
+				_alt = this._interp.adaptivePredict(this._input, 27, this._ctx);
+			}
 			this.state = 224;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
-			while (_la===37) {
+			if (_la===37) {
 				{
-				{
-				this.state = 218;
+				this.state = 223;
 				this.match(promql_parser.COMMA);
-				this.state = 220;
-				this._errHandler.sync(this);
-				_la = this._input.LA(1);
-				if (((((_la - 16)) & ~0x1F) === 0 && ((1 << (_la - 16)) & 331352063) !== 0)) {
-					{
-					this.state = 219;
-					this.label();
-					}
 				}
-
-				}
-				}
-				this.state = 226;
-				this._errHandler.sync(this);
-				_la = this._input.LA(1);
 			}
+
 			}
 		}
 		catch (re) {
@@ -1203,14 +1163,14 @@ export default class promql_parser extends parser_config {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 227;
+			this.state = 226;
 			this.labelName();
-			this.state = 230;
+			this.state = 229;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if ((((_la) & ~0x1F) === 0 && ((1 << _la) & 57600) !== 0)) {
 				{
-				this.state = 228;
+				this.state = 227;
 				localctx._kind = this._input.LT(1);
 				_la = this._input.LA(1);
 				if(!((((_la) & ~0x1F) === 0 && ((1 << _la) & 57600) !== 0))) {
@@ -1220,7 +1180,7 @@ export default class promql_parser extends parser_config {
 					this._errHandler.reportMatch(this);
 				    this.consume();
 				}
-				this.state = 229;
+				this.state = 228;
 				this.labelValue();
 				}
 			}
@@ -1249,7 +1209,7 @@ export default class promql_parser extends parser_config {
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 232;
+			this.state = 231;
 			_la = this._input.LA(1);
 			if(!(_la===38 || _la===46)) {
 			this._errHandler.recoverInline(this);
@@ -1279,7 +1239,7 @@ export default class promql_parser extends parser_config {
 		let localctx: LabelNameContext = new LabelNameContext(this, this._ctx, this.state);
 		this.enterRule(localctx, 30, promql_parser.RULE_labelName);
 		try {
-			this.state = 237;
+			this.state = 236;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 16:
@@ -1296,24 +1256,22 @@ export default class promql_parser extends parser_config {
 			case 44:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 234;
+				this.state = 233;
 				this.identifier();
 				}
 				break;
 			case 38:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 235;
+				this.state = 234;
 				this.match(promql_parser.STRING);
 				}
 				break;
-			case 39:
-			case 40:
 			case 41:
 				this.enterOuterAlt(localctx, 3);
 				{
-				this.state = 236;
-				this.number_();
+				this.state = 235;
+				this.match(promql_parser.INF_OR_NAN);
 				}
 				break;
 			default:
@@ -1339,13 +1297,13 @@ export default class promql_parser extends parser_config {
 		let localctx: IdentifierContext = new IdentifierContext(this, this._ctx, this.state);
 		this.enterRule(localctx, 32, promql_parser.RULE_identifier);
 		try {
-			this.state = 241;
+			this.state = 240;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 44:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 239;
+				this.state = 238;
 				this.match(promql_parser.IDENTIFIER);
 				}
 				break;
@@ -1362,7 +1320,7 @@ export default class promql_parser extends parser_config {
 			case 26:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 240;
+				this.state = 239;
 				this.nonReserved();
 				}
 				break;
@@ -1385,24 +1343,90 @@ export default class promql_parser extends parser_config {
 		return localctx;
 	}
 	// @RuleVersion(0)
+	public metricName(): MetricNameContext {
+		let localctx: MetricNameContext = new MetricNameContext(this, this._ctx, this.state);
+		this.enterRule(localctx, 34, promql_parser.RULE_metricName);
+		let _la: number;
+		try {
+			this.enterOuterAlt(localctx, 1);
+			{
+			this.state = 242;
+			_la = this._input.LA(1);
+			if(!(((((_la - 16)) & ~0x1F) === 0 && ((1 << (_la - 16)) & 268436511) !== 0))) {
+			this._errHandler.recoverInline(this);
+			}
+			else {
+				this._errHandler.reportMatch(this);
+			    this.consume();
+			}
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.exitRule();
+		}
+		return localctx;
+	}
+	// @RuleVersion(0)
+	public groupingLabel(): GroupingLabelContext {
+		let localctx: GroupingLabelContext = new GroupingLabelContext(this, this._ctx, this.state);
+		this.enterRule(localctx, 36, promql_parser.RULE_groupingLabel);
+		let _la: number;
+		try {
+			this.enterOuterAlt(localctx, 1);
+			{
+			this.state = 244;
+			_la = this._input.LA(1);
+			if(!(((((_la - 16)) & ~0x1F) === 0 && ((1 << (_la - 16)) & 268437487) !== 0))) {
+			this._errHandler.recoverInline(this);
+			}
+			else {
+				this._errHandler.reportMatch(this);
+			    this.consume();
+			}
+			}
+		}
+		catch (re) {
+			if (re instanceof RecognitionException) {
+				localctx.exception = re;
+				this._errHandler.reportError(this, re);
+				this._errHandler.recover(this, re);
+			} else {
+				throw re;
+			}
+		}
+		finally {
+			this.exitRule();
+		}
+		return localctx;
+	}
+	// @RuleVersion(0)
 	public evaluation(): EvaluationContext {
 		let localctx: EvaluationContext = new EvaluationContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 34, promql_parser.RULE_evaluation);
+		this.enterRule(localctx, 38, promql_parser.RULE_evaluation);
 		try {
-			this.state = 251;
+			this.state = 254;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 26:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 243;
+				this.state = 246;
 				this.offset();
-				this.state = 245;
+				this.state = 248;
 				this._errHandler.sync(this);
 				switch ( this._interp.adaptivePredict(this._input, 32, this._ctx) ) {
 				case 1:
 					{
-					this.state = 244;
+					this.state = 247;
 					this.at();
 					}
 					break;
@@ -1412,14 +1436,14 @@ export default class promql_parser extends parser_config {
 			case 27:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 247;
+				this.state = 250;
 				this.at();
-				this.state = 249;
+				this.state = 252;
 				this._errHandler.sync(this);
 				switch ( this._interp.adaptivePredict(this._input, 33, this._ctx) ) {
 				case 1:
 					{
-					this.state = 248;
+					this.state = 251;
 					this.offset();
 					}
 					break;
@@ -1447,19 +1471,19 @@ export default class promql_parser extends parser_config {
 	// @RuleVersion(0)
 	public offset(): OffsetContext {
 		let localctx: OffsetContext = new OffsetContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 36, promql_parser.RULE_offset);
+		this.enterRule(localctx, 40, promql_parser.RULE_offset);
 		let _la: number;
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 253;
+			this.state = 256;
 			this.match(promql_parser.OFFSET);
-			this.state = 255;
+			this.state = 258;
 			this._errHandler.sync(this);
 			_la = this._input.LA(1);
 			if (_la===1 || _la===2) {
 				{
-				this.state = 254;
+				this.state = 257;
 				_la = this._input.LA(1);
 				if(!(_la===1 || _la===2)) {
 				this._errHandler.recoverInline(this);
@@ -1471,7 +1495,7 @@ export default class promql_parser extends parser_config {
 				}
 			}
 
-			this.state = 262;
+			this.state = 265;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 39:
@@ -1481,17 +1505,17 @@ export default class promql_parser extends parser_config {
 			case 43:
 			case 46:
 				{
-				this.state = 257;
+				this.state = 260;
 				this.timeValue();
 				}
 				break;
 			case 34:
 				{
-				this.state = 258;
+				this.state = 261;
 				this.match(promql_parser.LP);
-				this.state = 259;
+				this.state = 262;
 				this.duration();
-				this.state = 260;
+				this.state = 263;
 				this.match(promql_parser.RP);
 				}
 				break;
@@ -1517,11 +1541,11 @@ export default class promql_parser extends parser_config {
 	// @RuleVersion(0)
 	public duration(): DurationContext {
 		let localctx: DurationContext = new DurationContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 38, promql_parser.RULE_duration);
+		this.enterRule(localctx, 42, promql_parser.RULE_duration);
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 264;
+			this.state = 267;
 			this.expression(0);
 			}
 		}
@@ -1542,37 +1566,44 @@ export default class promql_parser extends parser_config {
 	// @RuleVersion(0)
 	public at(): AtContext {
 		let localctx: AtContext = new AtContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 40, promql_parser.RULE_at);
+		this.enterRule(localctx, 44, promql_parser.RULE_at);
 		let _la: number;
 		try {
-			this.state = 273;
+			this.state = 276;
 			this._errHandler.sync(this);
 			switch ( this._interp.adaptivePredict(this._input, 38, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 266;
+				this.state = 269;
 				this.match(promql_parser.AT);
-				this.state = 268;
+				this.state = 271;
 				this._errHandler.sync(this);
 				_la = this._input.LA(1);
-				if (_la===2) {
+				if (_la===1 || _la===2) {
 					{
-					this.state = 267;
-					this.match(promql_parser.MINUS);
+					this.state = 270;
+					_la = this._input.LA(1);
+					if(!(_la===1 || _la===2)) {
+					this._errHandler.recoverInline(this);
+					}
+					else {
+						this._errHandler.reportMatch(this);
+					    this.consume();
+					}
 					}
 				}
 
-				this.state = 270;
+				this.state = 273;
 				this.timeValue();
 				}
 				break;
 			case 2:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 271;
+				this.state = 274;
 				this.match(promql_parser.AT);
-				this.state = 272;
+				this.state = 275;
 				_la = this._input.LA(1);
 				if(!(_la===28 || _la===29)) {
 				this._errHandler.recoverInline(this);
@@ -1602,29 +1633,29 @@ export default class promql_parser extends parser_config {
 	// @RuleVersion(0)
 	public constant(): ConstantContext {
 		let localctx: ConstantContext = new ConstantContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 42, promql_parser.RULE_constant);
+		this.enterRule(localctx, 46, promql_parser.RULE_constant);
 		try {
-			this.state = 278;
+			this.state = 281;
 			this._errHandler.sync(this);
 			switch ( this._interp.adaptivePredict(this._input, 39, this._ctx) ) {
 			case 1:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 275;
+				this.state = 278;
 				this.number_();
 				}
 				break;
 			case 2:
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 276;
+				this.state = 279;
 				this.string_();
 				}
 				break;
 			case 3:
 				this.enterOuterAlt(localctx, 3);
 				{
-				this.state = 277;
+				this.state = 280;
 				this.timeValue();
 				}
 				break;
@@ -1647,32 +1678,41 @@ export default class promql_parser extends parser_config {
 	// @RuleVersion(0)
 	public number_(): NumberContext {
 		let localctx: NumberContext = new NumberContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 44, promql_parser.RULE_number);
+		this.enterRule(localctx, 48, promql_parser.RULE_number);
+		let _la: number;
 		try {
-			this.state = 283;
+			this.state = 286;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
 			case 40:
+			case 41:
 				localctx = new DecimalLiteralContext(this, localctx);
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 280;
-				this.match(promql_parser.DECIMAL_VALUE);
+				this.state = 283;
+				_la = this._input.LA(1);
+				if(!(_la===40 || _la===41)) {
+				this._errHandler.recoverInline(this);
+				}
+				else {
+					this._errHandler.reportMatch(this);
+				    this.consume();
+				}
 				}
 				break;
 			case 39:
 				localctx = new IntegerLiteralContext(this, localctx);
 				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 281;
+				this.state = 284;
 				this.match(promql_parser.INTEGER_VALUE);
 				}
 				break;
-			case 41:
+			case 42:
 				localctx = new HexLiteralContext(this, localctx);
 				this.enterOuterAlt(localctx, 3);
 				{
-				this.state = 282;
+				this.state = 285;
 				this.match(promql_parser.HEXADECIMAL);
 				}
 				break;
@@ -1697,11 +1737,11 @@ export default class promql_parser extends parser_config {
 	// @RuleVersion(0)
 	public string_(): StringContext {
 		let localctx: StringContext = new StringContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 46, promql_parser.RULE_string);
+		this.enterRule(localctx, 50, promql_parser.RULE_string);
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 285;
+			this.state = 288;
 			this.match(promql_parser.STRING);
 			}
 		}
@@ -1722,38 +1762,32 @@ export default class promql_parser extends parser_config {
 	// @RuleVersion(0)
 	public timeValue(): TimeValueContext {
 		let localctx: TimeValueContext = new TimeValueContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 48, promql_parser.RULE_timeValue);
+		this.enterRule(localctx, 52, promql_parser.RULE_timeValue);
 		try {
-			this.state = 291;
+			this.state = 293;
 			this._errHandler.sync(this);
 			switch (this._input.LA(1)) {
-			case 42:
+			case 43:
 				this.enterOuterAlt(localctx, 1);
 				{
-				this.state = 287;
-				this.match(promql_parser.TIME_VALUE_WITH_COLON);
-				}
-				break;
-			case 43:
-				this.enterOuterAlt(localctx, 2);
-				{
-				this.state = 288;
+				this.state = 290;
 				this.match(promql_parser.TIME_VALUE);
 				}
 				break;
 			case 39:
 			case 40:
 			case 41:
-				this.enterOuterAlt(localctx, 3);
+			case 42:
+				this.enterOuterAlt(localctx, 2);
 				{
-				this.state = 289;
+				this.state = 291;
 				this.number_();
 				}
 				break;
 			case 46:
-				this.enterOuterAlt(localctx, 4);
+				this.enterOuterAlt(localctx, 3);
 				{
-				this.state = 290;
+				this.state = 292;
 				this.match(promql_parser.NAMED_OR_POSITIONAL_PARAM);
 				}
 				break;
@@ -1778,12 +1812,12 @@ export default class promql_parser extends parser_config {
 	// @RuleVersion(0)
 	public nonReserved(): NonReservedContext {
 		let localctx: NonReservedContext = new NonReservedContext(this, this._ctx, this.state);
-		this.enterRule(localctx, 50, promql_parser.RULE_nonReserved);
+		this.enterRule(localctx, 54, promql_parser.RULE_nonReserved);
 		let _la: number;
 		try {
 			this.enterOuterAlt(localctx, 1);
 			{
-			this.state = 293;
+			this.state = 295;
 			_la = this._input.LA(1);
 			if(!((((_la) & ~0x1F) === 0 && ((1 << _la) & 134152192) !== 0))) {
 			this._errHandler.recoverInline(this);
@@ -1813,6 +1847,8 @@ export default class promql_parser extends parser_config {
 		switch (ruleIndex) {
 		case 1:
 			return this.expression_sempred(localctx as ExpressionContext, predIndex);
+		case 9:
+			return this.modifier_sempred(localctx as ModifierContext, predIndex);
 		}
 		return true;
 	}
@@ -1835,107 +1871,114 @@ export default class promql_parser extends parser_config {
 		}
 		return true;
 	}
+	private modifier_sempred(localctx: ModifierContext, predIndex: number): boolean {
+		switch (predIndex) {
+		case 7:
+			return this._input.LA(1) !== promql_parser.LP;
+		}
+		return true;
+	}
 
-	public static readonly _serializedATN: number[] = [4,1,49,296,2,0,7,0,2,
+	public static readonly _serializedATN: number[] = [4,1,49,298,2,0,7,0,2,
 	1,7,1,2,2,7,2,2,3,7,3,2,4,7,4,2,5,7,5,2,6,7,6,2,7,7,7,2,8,7,8,2,9,7,9,2,
 	10,7,10,2,11,7,11,2,12,7,12,2,13,7,13,2,14,7,14,2,15,7,15,2,16,7,16,2,17,
 	7,17,2,18,7,18,2,19,7,19,2,20,7,20,2,21,7,21,2,22,7,22,2,23,7,23,2,24,7,
-	24,2,25,7,25,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,64,8,1,1,1,
-	1,1,1,1,3,1,69,8,1,1,1,1,1,1,1,1,1,3,1,75,8,1,1,1,1,1,1,1,1,1,3,1,81,8,
-	1,1,1,1,1,1,1,1,1,3,1,87,8,1,1,1,3,1,90,8,1,1,1,1,1,1,1,1,1,3,1,96,8,1,
-	1,1,1,1,1,1,1,1,3,1,102,8,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,3,1,111,8,1,5,1,
-	113,8,1,10,1,12,1,116,9,1,1,2,1,2,3,2,120,8,2,1,2,1,2,1,2,1,2,1,2,1,2,1,
-	2,1,2,1,2,1,2,3,2,132,8,2,1,3,1,3,1,3,3,3,137,8,3,1,4,1,4,1,4,3,4,142,8,
-	4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,3,4,157,8,4,1,5,1,
-	5,1,5,5,5,162,8,5,10,5,12,5,165,9,5,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,7,3,7,
-	175,8,7,1,7,3,7,178,8,7,1,8,1,8,1,8,3,8,183,8,8,1,8,3,8,186,8,8,1,8,1,8,
-	1,8,1,8,3,8,192,8,8,1,9,1,9,1,9,1,9,3,9,198,8,9,3,9,200,8,9,1,10,1,10,1,
-	10,3,10,205,8,10,5,10,207,8,10,10,10,12,10,210,9,10,1,10,1,10,1,11,1,11,
-	3,11,216,8,11,1,12,1,12,1,12,3,12,221,8,12,5,12,223,8,12,10,12,12,12,226,
-	9,12,1,13,1,13,1,13,3,13,231,8,13,1,14,1,14,1,15,1,15,1,15,3,15,238,8,15,
-	1,16,1,16,3,16,242,8,16,1,17,1,17,3,17,246,8,17,1,17,1,17,3,17,250,8,17,
-	3,17,252,8,17,1,18,1,18,3,18,256,8,18,1,18,1,18,1,18,1,18,1,18,3,18,263,
-	8,18,1,19,1,19,1,20,1,20,3,20,269,8,20,1,20,1,20,1,20,3,20,274,8,20,1,21,
-	1,21,1,21,3,21,279,8,21,1,22,1,22,1,22,3,22,284,8,22,1,23,1,23,1,24,1,24,
-	1,24,1,24,3,24,292,8,24,1,25,1,25,1,25,0,1,2,26,0,2,4,6,8,10,12,14,16,18,
-	20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,0,12,1,0,1,2,1,0,3,5,1,
-	0,7,12,2,0,16,16,18,18,1,0,3,4,1,0,19,20,1,0,21,22,1,0,23,24,2,0,8,8,13,
-	15,2,0,38,38,46,46,1,0,28,29,1,0,16,26,327,0,52,1,0,0,0,2,63,1,0,0,0,4,
-	131,1,0,0,0,6,136,1,0,0,0,8,156,1,0,0,0,10,158,1,0,0,0,12,166,1,0,0,0,14,
-	169,1,0,0,0,16,191,1,0,0,0,18,193,1,0,0,0,20,201,1,0,0,0,22,215,1,0,0,0,
-	24,217,1,0,0,0,26,227,1,0,0,0,28,232,1,0,0,0,30,237,1,0,0,0,32,241,1,0,
-	0,0,34,251,1,0,0,0,36,253,1,0,0,0,38,264,1,0,0,0,40,273,1,0,0,0,42,278,
-	1,0,0,0,44,283,1,0,0,0,46,285,1,0,0,0,48,291,1,0,0,0,50,293,1,0,0,0,52,
-	53,3,2,1,0,53,54,5,0,0,1,54,1,1,0,0,0,55,56,6,1,-1,0,56,57,7,0,0,0,57,64,
-	3,2,1,9,58,64,3,6,3,0,59,60,5,34,0,0,60,61,3,2,1,0,61,62,5,35,0,0,62,64,
-	1,0,0,0,63,55,1,0,0,0,63,58,1,0,0,0,63,59,1,0,0,0,64,114,1,0,0,0,65,66,
-	10,10,0,0,66,68,5,6,0,0,67,69,3,18,9,0,68,67,1,0,0,0,68,69,1,0,0,0,69,70,
-	1,0,0,0,70,113,3,2,1,10,71,72,10,8,0,0,72,74,7,1,0,0,73,75,3,18,9,0,74,
-	73,1,0,0,0,74,75,1,0,0,0,75,76,1,0,0,0,76,113,3,2,1,9,77,78,10,7,0,0,78,
-	80,7,0,0,0,79,81,3,18,9,0,80,79,1,0,0,0,80,81,1,0,0,0,81,82,1,0,0,0,82,
-	113,3,2,1,8,83,84,10,6,0,0,84,86,7,2,0,0,85,87,5,25,0,0,86,85,1,0,0,0,86,
-	87,1,0,0,0,87,89,1,0,0,0,88,90,3,18,9,0,89,88,1,0,0,0,89,90,1,0,0,0,90,
-	91,1,0,0,0,91,113,3,2,1,7,92,93,10,5,0,0,93,95,7,3,0,0,94,96,3,18,9,0,95,
-	94,1,0,0,0,95,96,1,0,0,0,96,97,1,0,0,0,97,113,3,2,1,6,98,99,10,4,0,0,99,
-	101,5,17,0,0,100,102,3,18,9,0,101,100,1,0,0,0,101,102,1,0,0,0,102,103,1,
-	0,0,0,103,113,3,2,1,5,104,105,10,1,0,0,105,106,5,32,0,0,106,107,3,38,19,
-	0,107,108,3,4,2,0,108,110,5,33,0,0,109,111,3,34,17,0,110,109,1,0,0,0,110,
-	111,1,0,0,0,111,113,1,0,0,0,112,65,1,0,0,0,112,71,1,0,0,0,112,77,1,0,0,
-	0,112,83,1,0,0,0,112,92,1,0,0,0,112,98,1,0,0,0,112,104,1,0,0,0,113,116,
-	1,0,0,0,114,112,1,0,0,0,114,115,1,0,0,0,115,3,1,0,0,0,116,114,1,0,0,0,117,
-	119,5,36,0,0,118,120,3,38,19,0,119,118,1,0,0,0,119,120,1,0,0,0,120,132,
-	1,0,0,0,121,122,5,42,0,0,122,123,5,6,0,0,123,132,3,2,1,0,124,125,5,42,0,
-	0,125,126,7,4,0,0,126,132,3,2,1,0,127,128,5,42,0,0,128,129,7,0,0,0,129,
-	132,3,2,1,0,130,132,5,42,0,0,131,117,1,0,0,0,131,121,1,0,0,0,131,124,1,
-	0,0,0,131,127,1,0,0,0,131,130,1,0,0,0,132,5,1,0,0,0,133,137,3,8,4,0,134,
-	137,3,14,7,0,135,137,3,42,21,0,136,133,1,0,0,0,136,134,1,0,0,0,136,135,
-	1,0,0,0,137,7,1,0,0,0,138,139,5,44,0,0,139,141,5,34,0,0,140,142,3,10,5,
-	0,141,140,1,0,0,0,141,142,1,0,0,0,142,143,1,0,0,0,143,157,5,35,0,0,144,
-	145,5,44,0,0,145,146,5,34,0,0,146,147,3,10,5,0,147,148,5,35,0,0,148,149,
-	3,12,6,0,149,157,1,0,0,0,150,151,5,44,0,0,151,152,3,12,6,0,152,153,5,34,
-	0,0,153,154,3,10,5,0,154,155,5,35,0,0,155,157,1,0,0,0,156,138,1,0,0,0,156,
-	144,1,0,0,0,156,150,1,0,0,0,157,9,1,0,0,0,158,163,3,2,1,0,159,160,5,37,
-	0,0,160,162,3,2,1,0,161,159,1,0,0,0,162,165,1,0,0,0,163,161,1,0,0,0,163,
-	164,1,0,0,0,164,11,1,0,0,0,165,163,1,0,0,0,166,167,7,5,0,0,167,168,3,20,
-	10,0,168,13,1,0,0,0,169,174,3,16,8,0,170,171,5,32,0,0,171,172,3,38,19,0,
-	172,173,5,33,0,0,173,175,1,0,0,0,174,170,1,0,0,0,174,175,1,0,0,0,175,177,
-	1,0,0,0,176,178,3,34,17,0,177,176,1,0,0,0,177,178,1,0,0,0,178,15,1,0,0,
-	0,179,185,3,32,16,0,180,182,5,30,0,0,181,183,3,24,12,0,182,181,1,0,0,0,
-	182,183,1,0,0,0,183,184,1,0,0,0,184,186,5,31,0,0,185,180,1,0,0,0,185,186,
-	1,0,0,0,186,192,1,0,0,0,187,188,5,30,0,0,188,189,3,24,12,0,189,190,5,31,
-	0,0,190,192,1,0,0,0,191,179,1,0,0,0,191,187,1,0,0,0,192,17,1,0,0,0,193,
-	194,7,6,0,0,194,199,3,20,10,0,195,197,7,7,0,0,196,198,3,20,10,0,197,196,
-	1,0,0,0,197,198,1,0,0,0,198,200,1,0,0,0,199,195,1,0,0,0,199,200,1,0,0,0,
-	200,19,1,0,0,0,201,208,5,34,0,0,202,204,3,22,11,0,203,205,5,37,0,0,204,
-	203,1,0,0,0,204,205,1,0,0,0,205,207,1,0,0,0,206,202,1,0,0,0,207,210,1,0,
-	0,0,208,206,1,0,0,0,208,209,1,0,0,0,209,211,1,0,0,0,210,208,1,0,0,0,211,
-	212,5,35,0,0,212,21,1,0,0,0,213,216,3,30,15,0,214,216,5,45,0,0,215,213,
-	1,0,0,0,215,214,1,0,0,0,216,23,1,0,0,0,217,224,3,26,13,0,218,220,5,37,0,
-	0,219,221,3,26,13,0,220,219,1,0,0,0,220,221,1,0,0,0,221,223,1,0,0,0,222,
-	218,1,0,0,0,223,226,1,0,0,0,224,222,1,0,0,0,224,225,1,0,0,0,225,25,1,0,
-	0,0,226,224,1,0,0,0,227,230,3,30,15,0,228,229,7,8,0,0,229,231,3,28,14,0,
-	230,228,1,0,0,0,230,231,1,0,0,0,231,27,1,0,0,0,232,233,7,9,0,0,233,29,1,
-	0,0,0,234,238,3,32,16,0,235,238,5,38,0,0,236,238,3,44,22,0,237,234,1,0,
-	0,0,237,235,1,0,0,0,237,236,1,0,0,0,238,31,1,0,0,0,239,242,5,44,0,0,240,
-	242,3,50,25,0,241,239,1,0,0,0,241,240,1,0,0,0,242,33,1,0,0,0,243,245,3,
-	36,18,0,244,246,3,40,20,0,245,244,1,0,0,0,245,246,1,0,0,0,246,252,1,0,0,
-	0,247,249,3,40,20,0,248,250,3,36,18,0,249,248,1,0,0,0,249,250,1,0,0,0,250,
-	252,1,0,0,0,251,243,1,0,0,0,251,247,1,0,0,0,252,35,1,0,0,0,253,255,5,26,
-	0,0,254,256,7,0,0,0,255,254,1,0,0,0,255,256,1,0,0,0,256,262,1,0,0,0,257,
-	263,3,48,24,0,258,259,5,34,0,0,259,260,3,38,19,0,260,261,5,35,0,0,261,263,
-	1,0,0,0,262,257,1,0,0,0,262,258,1,0,0,0,263,37,1,0,0,0,264,265,3,2,1,0,
-	265,39,1,0,0,0,266,268,5,27,0,0,267,269,5,2,0,0,268,267,1,0,0,0,268,269,
-	1,0,0,0,269,270,1,0,0,0,270,274,3,48,24,0,271,272,5,27,0,0,272,274,7,10,
-	0,0,273,266,1,0,0,0,273,271,1,0,0,0,274,41,1,0,0,0,275,279,3,44,22,0,276,
-	279,3,46,23,0,277,279,3,48,24,0,278,275,1,0,0,0,278,276,1,0,0,0,278,277,
-	1,0,0,0,279,43,1,0,0,0,280,284,5,40,0,0,281,284,5,39,0,0,282,284,5,41,0,
-	0,283,280,1,0,0,0,283,281,1,0,0,0,283,282,1,0,0,0,284,45,1,0,0,0,285,286,
-	5,38,0,0,286,47,1,0,0,0,287,292,5,42,0,0,288,292,5,43,0,0,289,292,3,44,
-	22,0,290,292,5,46,0,0,291,287,1,0,0,0,291,288,1,0,0,0,291,289,1,0,0,0,291,
-	290,1,0,0,0,292,49,1,0,0,0,293,294,7,11,0,0,294,51,1,0,0,0,42,63,68,74,
-	80,86,89,95,101,110,112,114,119,131,136,141,156,163,174,177,182,185,191,
-	197,199,204,208,215,220,224,230,237,241,245,249,251,255,262,268,273,278,
-	283,291];
+	24,2,25,7,25,2,26,7,26,2,27,7,27,1,0,1,0,1,0,1,1,1,1,1,1,1,1,1,1,1,1,1,
+	1,1,1,3,1,68,8,1,1,1,1,1,1,1,3,1,73,8,1,1,1,1,1,1,1,1,1,3,1,79,8,1,1,1,
+	1,1,1,1,1,1,3,1,85,8,1,1,1,1,1,1,1,1,1,3,1,91,8,1,1,1,3,1,94,8,1,1,1,1,
+	1,1,1,1,1,3,1,100,8,1,1,1,1,1,1,1,1,1,3,1,106,8,1,1,1,1,1,1,1,1,1,1,1,1,
+	1,1,1,3,1,115,8,1,5,1,117,8,1,10,1,12,1,120,9,1,1,2,1,2,3,2,124,8,2,1,3,
+	1,3,1,3,3,3,129,8,3,1,4,1,4,1,4,3,4,134,8,4,1,4,1,4,1,4,1,4,1,4,1,4,1,4,
+	1,4,1,4,1,4,1,4,1,4,1,4,3,4,149,8,4,1,5,1,5,1,5,5,5,154,8,5,10,5,12,5,157,
+	9,5,1,6,1,6,1,6,1,7,1,7,1,7,1,7,1,7,3,7,167,8,7,1,7,3,7,170,8,7,1,8,1,8,
+	1,8,3,8,175,8,8,1,8,3,8,178,8,8,1,8,1,8,1,8,1,8,3,8,184,8,8,1,9,1,9,1,9,
+	1,9,1,9,3,9,191,8,9,3,9,193,8,9,1,10,1,10,1,10,1,10,5,10,199,8,10,10,10,
+	12,10,202,9,10,1,10,3,10,205,8,10,3,10,207,8,10,1,10,1,10,1,11,1,11,1,11,
+	3,11,214,8,11,1,12,1,12,1,12,5,12,219,8,12,10,12,12,12,222,9,12,1,12,3,
+	12,225,8,12,1,13,1,13,1,13,3,13,230,8,13,1,14,1,14,1,15,1,15,1,15,3,15,
+	237,8,15,1,16,1,16,3,16,241,8,16,1,17,1,17,1,18,1,18,1,19,1,19,3,19,249,
+	8,19,1,19,1,19,3,19,253,8,19,3,19,255,8,19,1,20,1,20,3,20,259,8,20,1,20,
+	1,20,1,20,1,20,1,20,3,20,266,8,20,1,21,1,21,1,22,1,22,3,22,272,8,22,1,22,
+	1,22,1,22,3,22,277,8,22,1,23,1,23,1,23,3,23,282,8,23,1,24,1,24,1,24,3,24,
+	287,8,24,1,25,1,25,1,26,1,26,1,26,3,26,294,8,26,1,27,1,27,1,27,0,1,2,28,
+	0,2,4,6,8,10,12,14,16,18,20,22,24,26,28,30,32,34,36,38,40,42,44,46,48,50,
+	52,54,0,14,1,0,1,2,1,0,3,5,1,0,7,12,2,0,16,16,18,18,1,0,19,20,1,0,21,22,
+	1,0,23,24,2,0,8,8,13,15,2,0,38,38,46,46,3,0,16,20,26,26,44,44,3,0,16,19,
+	21,26,44,44,1,0,28,29,1,0,40,41,1,0,16,26,324,0,56,1,0,0,0,2,67,1,0,0,0,
+	4,121,1,0,0,0,6,128,1,0,0,0,8,148,1,0,0,0,10,150,1,0,0,0,12,158,1,0,0,0,
+	14,161,1,0,0,0,16,183,1,0,0,0,18,185,1,0,0,0,20,194,1,0,0,0,22,213,1,0,
+	0,0,24,215,1,0,0,0,26,226,1,0,0,0,28,231,1,0,0,0,30,236,1,0,0,0,32,240,
+	1,0,0,0,34,242,1,0,0,0,36,244,1,0,0,0,38,254,1,0,0,0,40,256,1,0,0,0,42,
+	267,1,0,0,0,44,276,1,0,0,0,46,281,1,0,0,0,48,286,1,0,0,0,50,288,1,0,0,0,
+	52,293,1,0,0,0,54,295,1,0,0,0,56,57,3,2,1,0,57,58,5,0,0,1,58,1,1,0,0,0,
+	59,60,6,1,-1,0,60,61,7,0,0,0,61,68,3,2,1,9,62,68,3,6,3,0,63,64,5,34,0,0,
+	64,65,3,2,1,0,65,66,5,35,0,0,66,68,1,0,0,0,67,59,1,0,0,0,67,62,1,0,0,0,
+	67,63,1,0,0,0,68,118,1,0,0,0,69,70,10,10,0,0,70,72,5,6,0,0,71,73,3,18,9,
+	0,72,71,1,0,0,0,72,73,1,0,0,0,73,74,1,0,0,0,74,117,3,2,1,10,75,76,10,8,
+	0,0,76,78,7,1,0,0,77,79,3,18,9,0,78,77,1,0,0,0,78,79,1,0,0,0,79,80,1,0,
+	0,0,80,117,3,2,1,9,81,82,10,7,0,0,82,84,7,0,0,0,83,85,3,18,9,0,84,83,1,
+	0,0,0,84,85,1,0,0,0,85,86,1,0,0,0,86,117,3,2,1,8,87,88,10,6,0,0,88,90,7,
+	2,0,0,89,91,5,25,0,0,90,89,1,0,0,0,90,91,1,0,0,0,91,93,1,0,0,0,92,94,3,
+	18,9,0,93,92,1,0,0,0,93,94,1,0,0,0,94,95,1,0,0,0,95,117,3,2,1,7,96,97,10,
+	5,0,0,97,99,7,3,0,0,98,100,3,18,9,0,99,98,1,0,0,0,99,100,1,0,0,0,100,101,
+	1,0,0,0,101,117,3,2,1,6,102,103,10,4,0,0,103,105,5,17,0,0,104,106,3,18,
+	9,0,105,104,1,0,0,0,105,106,1,0,0,0,106,107,1,0,0,0,107,117,3,2,1,5,108,
+	109,10,1,0,0,109,110,5,32,0,0,110,111,3,42,21,0,111,112,3,4,2,0,112,114,
+	5,33,0,0,113,115,3,38,19,0,114,113,1,0,0,0,114,115,1,0,0,0,115,117,1,0,
+	0,0,116,69,1,0,0,0,116,75,1,0,0,0,116,81,1,0,0,0,116,87,1,0,0,0,116,96,
+	1,0,0,0,116,102,1,0,0,0,116,108,1,0,0,0,117,120,1,0,0,0,118,116,1,0,0,0,
+	118,119,1,0,0,0,119,3,1,0,0,0,120,118,1,0,0,0,121,123,5,36,0,0,122,124,
+	3,42,21,0,123,122,1,0,0,0,123,124,1,0,0,0,124,5,1,0,0,0,125,129,3,8,4,0,
+	126,129,3,14,7,0,127,129,3,46,23,0,128,125,1,0,0,0,128,126,1,0,0,0,128,
+	127,1,0,0,0,129,7,1,0,0,0,130,131,5,44,0,0,131,133,5,34,0,0,132,134,3,10,
+	5,0,133,132,1,0,0,0,133,134,1,0,0,0,134,135,1,0,0,0,135,149,5,35,0,0,136,
+	137,5,44,0,0,137,138,5,34,0,0,138,139,3,10,5,0,139,140,5,35,0,0,140,141,
+	3,12,6,0,141,149,1,0,0,0,142,143,5,44,0,0,143,144,3,12,6,0,144,145,5,34,
+	0,0,145,146,3,10,5,0,146,147,5,35,0,0,147,149,1,0,0,0,148,130,1,0,0,0,148,
+	136,1,0,0,0,148,142,1,0,0,0,149,9,1,0,0,0,150,155,3,2,1,0,151,152,5,37,
+	0,0,152,154,3,2,1,0,153,151,1,0,0,0,154,157,1,0,0,0,155,153,1,0,0,0,155,
+	156,1,0,0,0,156,11,1,0,0,0,157,155,1,0,0,0,158,159,7,4,0,0,159,160,3,20,
+	10,0,160,13,1,0,0,0,161,166,3,16,8,0,162,163,5,32,0,0,163,164,3,42,21,0,
+	164,165,5,33,0,0,165,167,1,0,0,0,166,162,1,0,0,0,166,167,1,0,0,0,167,169,
+	1,0,0,0,168,170,3,38,19,0,169,168,1,0,0,0,169,170,1,0,0,0,170,15,1,0,0,
+	0,171,177,3,34,17,0,172,174,5,30,0,0,173,175,3,24,12,0,174,173,1,0,0,0,
+	174,175,1,0,0,0,175,176,1,0,0,0,176,178,5,31,0,0,177,172,1,0,0,0,177,178,
+	1,0,0,0,178,184,1,0,0,0,179,180,5,30,0,0,180,181,3,24,12,0,181,182,5,31,
+	0,0,182,184,1,0,0,0,183,171,1,0,0,0,183,179,1,0,0,0,184,17,1,0,0,0,185,
+	186,7,5,0,0,186,192,3,20,10,0,187,190,7,6,0,0,188,191,3,20,10,0,189,191,
+	4,9,7,0,190,188,1,0,0,0,190,189,1,0,0,0,191,193,1,0,0,0,192,187,1,0,0,0,
+	192,193,1,0,0,0,193,19,1,0,0,0,194,206,5,34,0,0,195,200,3,22,11,0,196,197,
+	5,37,0,0,197,199,3,22,11,0,198,196,1,0,0,0,199,202,1,0,0,0,200,198,1,0,
+	0,0,200,201,1,0,0,0,201,204,1,0,0,0,202,200,1,0,0,0,203,205,5,37,0,0,204,
+	203,1,0,0,0,204,205,1,0,0,0,205,207,1,0,0,0,206,195,1,0,0,0,206,207,1,0,
+	0,0,207,208,1,0,0,0,208,209,5,35,0,0,209,21,1,0,0,0,210,214,3,36,18,0,211,
+	214,5,38,0,0,212,214,5,45,0,0,213,210,1,0,0,0,213,211,1,0,0,0,213,212,1,
+	0,0,0,214,23,1,0,0,0,215,220,3,26,13,0,216,217,5,37,0,0,217,219,3,26,13,
+	0,218,216,1,0,0,0,219,222,1,0,0,0,220,218,1,0,0,0,220,221,1,0,0,0,221,224,
+	1,0,0,0,222,220,1,0,0,0,223,225,5,37,0,0,224,223,1,0,0,0,224,225,1,0,0,
+	0,225,25,1,0,0,0,226,229,3,30,15,0,227,228,7,7,0,0,228,230,3,28,14,0,229,
+	227,1,0,0,0,229,230,1,0,0,0,230,27,1,0,0,0,231,232,7,8,0,0,232,29,1,0,0,
+	0,233,237,3,32,16,0,234,237,5,38,0,0,235,237,5,41,0,0,236,233,1,0,0,0,236,
+	234,1,0,0,0,236,235,1,0,0,0,237,31,1,0,0,0,238,241,5,44,0,0,239,241,3,54,
+	27,0,240,238,1,0,0,0,240,239,1,0,0,0,241,33,1,0,0,0,242,243,7,9,0,0,243,
+	35,1,0,0,0,244,245,7,10,0,0,245,37,1,0,0,0,246,248,3,40,20,0,247,249,3,
+	44,22,0,248,247,1,0,0,0,248,249,1,0,0,0,249,255,1,0,0,0,250,252,3,44,22,
+	0,251,253,3,40,20,0,252,251,1,0,0,0,252,253,1,0,0,0,253,255,1,0,0,0,254,
+	246,1,0,0,0,254,250,1,0,0,0,255,39,1,0,0,0,256,258,5,26,0,0,257,259,7,0,
+	0,0,258,257,1,0,0,0,258,259,1,0,0,0,259,265,1,0,0,0,260,266,3,52,26,0,261,
+	262,5,34,0,0,262,263,3,42,21,0,263,264,5,35,0,0,264,266,1,0,0,0,265,260,
+	1,0,0,0,265,261,1,0,0,0,266,41,1,0,0,0,267,268,3,2,1,0,268,43,1,0,0,0,269,
+	271,5,27,0,0,270,272,7,0,0,0,271,270,1,0,0,0,271,272,1,0,0,0,272,273,1,
+	0,0,0,273,277,3,52,26,0,274,275,5,27,0,0,275,277,7,11,0,0,276,269,1,0,0,
+	0,276,274,1,0,0,0,277,45,1,0,0,0,278,282,3,48,24,0,279,282,3,50,25,0,280,
+	282,3,52,26,0,281,278,1,0,0,0,281,279,1,0,0,0,281,280,1,0,0,0,282,47,1,
+	0,0,0,283,287,7,12,0,0,284,287,5,39,0,0,285,287,5,42,0,0,286,283,1,0,0,
+	0,286,284,1,0,0,0,286,285,1,0,0,0,287,49,1,0,0,0,288,289,5,38,0,0,289,51,
+	1,0,0,0,290,294,5,43,0,0,291,294,3,48,24,0,292,294,5,46,0,0,293,290,1,0,
+	0,0,293,291,1,0,0,0,293,292,1,0,0,0,294,53,1,0,0,0,295,296,7,13,0,0,296,
+	55,1,0,0,0,42,67,72,78,84,90,93,99,105,114,116,118,123,128,133,148,155,
+	166,169,174,177,183,190,192,200,204,206,213,220,224,229,236,240,248,252,
+	254,258,265,271,276,281,286,293];
 
 	private static __ATN: ATN;
 	public static get _ATN(): ATN {
@@ -2175,7 +2218,6 @@ export class ArithmeticUnaryContext extends ExpressionContext {
 
 export class SubqueryResolutionContext extends ParserRuleContext {
 	public _resolution!: DurationContext;
-	public _op!: Token;
 	constructor(parser?: promql_parser, parent?: ParserRuleContext, invokingState?: number) {
 		super(parent, invokingState);
     	this.parser = parser;
@@ -2185,27 +2227,6 @@ export class SubqueryResolutionContext extends ParserRuleContext {
 	}
 	public duration(): DurationContext {
 		return this.getTypedRuleContext(DurationContext, 0) as DurationContext;
-	}
-	public TIME_VALUE_WITH_COLON(): TerminalNode {
-		return this.getToken(promql_parser.TIME_VALUE_WITH_COLON, 0);
-	}
-	public expression(): ExpressionContext {
-		return this.getTypedRuleContext(ExpressionContext, 0) as ExpressionContext;
-	}
-	public CARET(): TerminalNode {
-		return this.getToken(promql_parser.CARET, 0);
-	}
-	public ASTERISK(): TerminalNode {
-		return this.getToken(promql_parser.ASTERISK, 0);
-	}
-	public SLASH(): TerminalNode {
-		return this.getToken(promql_parser.SLASH, 0);
-	}
-	public MINUS(): TerminalNode {
-		return this.getToken(promql_parser.MINUS, 0);
-	}
-	public PLUS(): TerminalNode {
-		return this.getToken(promql_parser.PLUS, 0);
 	}
     public get ruleIndex(): number {
     	return promql_parser.RULE_subqueryResolution;
@@ -2393,8 +2414,8 @@ export class SeriesMatcherContext extends ParserRuleContext {
 		super(parent, invokingState);
     	this.parser = parser;
 	}
-	public identifier(): IdentifierContext {
-		return this.getTypedRuleContext(IdentifierContext, 0) as IdentifierContext;
+	public metricName(): MetricNameContext {
+		return this.getTypedRuleContext(MetricNameContext, 0) as MetricNameContext;
 	}
 	public LCB(): TerminalNode {
 		return this.getToken(promql_parser.LCB, 0);
@@ -2508,8 +2529,11 @@ export class LabelListItemContext extends ParserRuleContext {
 		super(parent, invokingState);
     	this.parser = parser;
 	}
-	public labelName(): LabelNameContext {
-		return this.getTypedRuleContext(LabelNameContext, 0) as LabelNameContext;
+	public groupingLabel(): GroupingLabelContext {
+		return this.getTypedRuleContext(GroupingLabelContext, 0) as GroupingLabelContext;
+	}
+	public STRING(): TerminalNode {
+		return this.getToken(promql_parser.STRING, 0);
 	}
 	public NAMED_OR_POSITIONAL_DOUBLE_PARAMS(): TerminalNode {
 		return this.getToken(promql_parser.NAMED_OR_POSITIONAL_DOUBLE_PARAMS, 0);
@@ -2641,8 +2665,8 @@ export class LabelNameContext extends ParserRuleContext {
 	public STRING(): TerminalNode {
 		return this.getToken(promql_parser.STRING, 0);
 	}
-	public number_(): NumberContext {
-		return this.getTypedRuleContext(NumberContext, 0) as NumberContext;
+	public INF_OR_NAN(): TerminalNode {
+		return this.getToken(promql_parser.INF_OR_NAN, 0);
 	}
     public get ruleIndex(): number {
     	return promql_parser.RULE_labelName;
@@ -2682,6 +2706,102 @@ export class IdentifierContext extends ParserRuleContext {
 	public exitRule(listener: promql_parserListener): void {
 	    if(listener.exitIdentifier) {
 	 		listener.exitIdentifier(this);
+		}
+	}
+}
+
+
+export class MetricNameContext extends ParserRuleContext {
+	constructor(parser?: promql_parser, parent?: ParserRuleContext, invokingState?: number) {
+		super(parent, invokingState);
+    	this.parser = parser;
+	}
+	public IDENTIFIER(): TerminalNode {
+		return this.getToken(promql_parser.IDENTIFIER, 0);
+	}
+	public AND(): TerminalNode {
+		return this.getToken(promql_parser.AND, 0);
+	}
+	public BY(): TerminalNode {
+		return this.getToken(promql_parser.BY, 0);
+	}
+	public OFFSET(): TerminalNode {
+		return this.getToken(promql_parser.OFFSET, 0);
+	}
+	public OR(): TerminalNode {
+		return this.getToken(promql_parser.OR, 0);
+	}
+	public UNLESS(): TerminalNode {
+		return this.getToken(promql_parser.UNLESS, 0);
+	}
+	public WITHOUT(): TerminalNode {
+		return this.getToken(promql_parser.WITHOUT, 0);
+	}
+    public get ruleIndex(): number {
+    	return promql_parser.RULE_metricName;
+	}
+	public enterRule(listener: promql_parserListener): void {
+	    if(listener.enterMetricName) {
+	 		listener.enterMetricName(this);
+		}
+	}
+	public exitRule(listener: promql_parserListener): void {
+	    if(listener.exitMetricName) {
+	 		listener.exitMetricName(this);
+		}
+	}
+}
+
+
+export class GroupingLabelContext extends ParserRuleContext {
+	constructor(parser?: promql_parser, parent?: ParserRuleContext, invokingState?: number) {
+		super(parent, invokingState);
+    	this.parser = parser;
+	}
+	public IDENTIFIER(): TerminalNode {
+		return this.getToken(promql_parser.IDENTIFIER, 0);
+	}
+	public AND(): TerminalNode {
+		return this.getToken(promql_parser.AND, 0);
+	}
+	public BOOL(): TerminalNode {
+		return this.getToken(promql_parser.BOOL, 0);
+	}
+	public BY(): TerminalNode {
+		return this.getToken(promql_parser.BY, 0);
+	}
+	public GROUP_LEFT(): TerminalNode {
+		return this.getToken(promql_parser.GROUP_LEFT, 0);
+	}
+	public GROUP_RIGHT(): TerminalNode {
+		return this.getToken(promql_parser.GROUP_RIGHT, 0);
+	}
+	public IGNORING(): TerminalNode {
+		return this.getToken(promql_parser.IGNORING, 0);
+	}
+	public OFFSET(): TerminalNode {
+		return this.getToken(promql_parser.OFFSET, 0);
+	}
+	public ON(): TerminalNode {
+		return this.getToken(promql_parser.ON, 0);
+	}
+	public OR(): TerminalNode {
+		return this.getToken(promql_parser.OR, 0);
+	}
+	public UNLESS(): TerminalNode {
+		return this.getToken(promql_parser.UNLESS, 0);
+	}
+    public get ruleIndex(): number {
+    	return promql_parser.RULE_groupingLabel;
+	}
+	public enterRule(listener: promql_parserListener): void {
+	    if(listener.enterGroupingLabel) {
+	 		listener.enterGroupingLabel(this);
+		}
+	}
+	public exitRule(listener: promql_parserListener): void {
+	    if(listener.exitGroupingLabel) {
+	 		listener.exitGroupingLabel(this);
 		}
 	}
 }
@@ -2791,6 +2911,9 @@ export class AtContext extends ParserRuleContext {
 	public timeValue(): TimeValueContext {
 		return this.getTypedRuleContext(TimeValueContext, 0) as TimeValueContext;
 	}
+	public PLUS(): TerminalNode {
+		return this.getToken(promql_parser.PLUS, 0);
+	}
 	public MINUS(): TerminalNode {
 		return this.getToken(promql_parser.MINUS, 0);
 	}
@@ -2865,6 +2988,9 @@ export class DecimalLiteralContext extends NumberContext {
 	}
 	public DECIMAL_VALUE(): TerminalNode {
 		return this.getToken(promql_parser.DECIMAL_VALUE, 0);
+	}
+	public INF_OR_NAN(): TerminalNode {
+		return this.getToken(promql_parser.INF_OR_NAN, 0);
 	}
 	public enterRule(listener: promql_parserListener): void {
 	    if(listener.enterDecimalLiteral) {
@@ -2945,9 +3071,6 @@ export class TimeValueContext extends ParserRuleContext {
 	constructor(parser?: promql_parser, parent?: ParserRuleContext, invokingState?: number) {
 		super(parent, invokingState);
     	this.parser = parser;
-	}
-	public TIME_VALUE_WITH_COLON(): TerminalNode {
-		return this.getToken(promql_parser.TIME_VALUE_WITH_COLON, 0);
 	}
 	public TIME_VALUE(): TerminalNode {
 		return this.getToken(promql_parser.TIME_VALUE, 0);

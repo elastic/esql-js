@@ -626,6 +626,9 @@ export const commandDefinitions: CommandDefinition[] = [
     name: 'mv_expand',
   },
   {
+    name: 'nested_expand',
+  },
+  {
     name: 'registered_domain',
     output: {
       vary_by: 'none',

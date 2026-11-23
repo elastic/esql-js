@@ -39,6 +39,9 @@ main () {
   report_main_step "Synchronizing PromQL parser grammar..."
   synchronize_promql_parser_grammar
 
+  report_main_step "Applying TypeScript adaptations to PromQL grammars..."
+  apply_promql_typescript_patch
+
   report_main_step "Syncing PromQL config files..."
   synchronize_promql_config
 

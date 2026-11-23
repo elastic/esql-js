@@ -1084,6 +1084,89 @@ export const esqlProfileResponseSchema = {
                         {
                           type: 'object',
                           properties: {
+                            pages_received: {
+                              type: 'integer',
+                            },
+                            rows_received: {
+                              type: 'integer',
+                            },
+                            documents: {
+                              type: 'integer',
+                            },
+                            pages_emitted: {
+                              type: 'integer',
+                            },
+                            plan_nanos: {
+                              type: 'integer',
+                            },
+                            plan_time: {
+                              type: 'string',
+                            },
+                            gather_nanos: {
+                              type: 'integer',
+                            },
+                            gather_time: {
+                              type: 'string',
+                            },
+                            nodes: {
+                              type: 'array',
+                              items: {
+                                type: 'object',
+                                properties: {
+                                  node: {
+                                    type: 'string',
+                                  },
+                                  shards: {
+                                    type: 'integer',
+                                  },
+                                  documents: {
+                                    type: 'integer',
+                                  },
+                                  request_nanos: {
+                                    type: 'integer',
+                                  },
+                                  request_time: {
+                                    type: 'string',
+                                  },
+                                  took_nanos: {
+                                    type: 'integer',
+                                  },
+                                  took_time: {
+                                    type: 'string',
+                                  },
+                                  setup_nanos: {
+                                    type: 'integer',
+                                  },
+                                  setup_time: {
+                                    type: 'string',
+                                  },
+                                },
+                                required: [
+                                  'node',
+                                  'shards',
+                                  'documents',
+                                  'request_nanos',
+                                  'took_nanos',
+                                  'setup_nanos',
+                                ],
+                                additionalProperties: false,
+                              },
+                            },
+                          },
+                          required: [
+                            'pages_received',
+                            'rows_received',
+                            'documents',
+                            'pages_emitted',
+                            'plan_nanos',
+                            'gather_nanos',
+                            'nodes',
+                          ],
+                          additionalProperties: false,
+                        },
+                        {
+                          type: 'object',
+                          properties: {
                             pages_emitted: {
                               type: 'integer',
                             },

@@ -518,6 +518,10 @@ describe('parsed PromQL BasicPrettyPrinter', () => {
     test('subquery with offset', () => {
       assertReprint('rate(http_requests_total[5m])[30m:1m] offset 1h');
     });
+
+    test('subquery with a colon-prefixed metric and a spaced evaluation modifier', () => {
+      assertReprint(':9{NaN="label"}[30m:1m] @ start ( )', ':9{NaN="label"}[30m:1m] @ start()');
+    });
   });
 
   describe('complex queries', () => {

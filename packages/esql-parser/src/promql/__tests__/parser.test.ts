@@ -44,6 +44,22 @@ describe('PromQL Parser', () => {
       expect(selector.labelMap?.args[1].labelName.name).toBe('status');
     });
 
+    it('parses keyword metrics and special-number label names as identifiers', () => {
+      const result = PromQLParser.parse('by{Inf="positive", NaN="invalid",}');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.root.expression).toMatchObject({
+        type: 'selector',
+        metric: { type: 'identifier', name: 'by' },
+        labelMap: {
+          args: [
+            { labelName: { type: 'identifier', name: 'Inf' } },
+            { labelName: { type: 'identifier', name: 'NaN' } },
+          ],
+        },
+      });
+    });
+
     it('parses a range vector selector', () => {
       const result = PromQLParser.parse('http_requests_total[5m]');
 
@@ -77,6 +93,29 @@ describe('PromQL Parser', () => {
       expect(func.grouping?.name).toBe('by');
       expect(func.grouping?.args).toHaveLength(1);
     });
+
+    it('parses keyword, quoted and parameterized grouping labels', () => {
+      const result = PromQLParser.parse('sum by (BOOL, "job-name", ??labels,) (up)');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.root.expression).toMatchObject({
+        type: 'function',
+        grouping: {
+          args: [
+            { type: 'identifier', name: 'BOOL' },
+            { literalType: 'string', valueUnquoted: 'job-name' },
+            { literalType: 'param', value: 'labels', paramKind: '??' },
+          ],
+        },
+      });
+    });
+
+    it.each(['sum by (job instance) (up)', 'up{job="api",,instance="host"}'])(
+      'reports malformed label separators in %s',
+      (query) => {
+        expect(PromQLParser.parseErrors(query).length).toBeGreaterThan(0);
+      }
+    );
 
     it('parses a binary expression', () => {
       const result = PromQLParser.parse('http_requests_total / http_requests_failed');
@@ -200,6 +239,37 @@ describe('PromQL Parser', () => {
       expect(literal.value).toBe(3.14);
     });
 
+    it.each([
+      ['1_000', 'integer', 1000],
+      ['1.2_5e1_0', 'decimal', 12_500_000_000],
+      ['0x_ff_ff', 'hexadecimal', 65535],
+      ['Inf', 'decimal', Infinity],
+      ['NaN', 'decimal', NaN],
+    ])('parses %s as a %s literal', (query, literalType, value) => {
+      const result = PromQLParser.parse(query);
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.root.expression).toMatchObject({
+        type: 'literal',
+        literalType,
+        value,
+        text: query,
+      });
+    });
+
+    it.each([
+      ['up @ +1_000', { literalType: 'time', value: '1_000' }],
+      ['up @ start ( )', 'start()'],
+      ['up @ end( )', 'end()'],
+    ])('parses evaluation modifier in %s', (query, value) => {
+      const result = PromQLParser.parse(query);
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.root.expression).toMatchObject({
+        evaluation: { at: { negative: false, value } },
+      });
+    });
+
     it('parses string literals', () => {
       const result = PromQLParser.parse('"hello world"');
 
@@ -244,6 +314,21 @@ describe('PromQL Parser', () => {
       expect(binary.modifier?.groupModifier).toBeDefined();
       expect(binary.modifier?.groupModifier?.name).toBe('group_left');
     });
+
+    it('parses a group modifier without a label list', () => {
+      const result = PromQLParser.parse('up * on(job) group_left job_info');
+
+      expect(result.errors).toHaveLength(0);
+      expect(result.root.expression).toMatchObject({
+        modifier: { groupModifier: { name: 'group_left', labels: [] } },
+      });
+    });
+
+    it('reports an invalid label list after a group modifier', () => {
+      expect(
+        PromQLParser.parseErrors('up * on(job) group_left (job_info + 1)').length
+      ).toBeGreaterThan(0);
+    });
   });
 
   describe('subquery', () => {
@@ -265,20 +350,24 @@ describe('PromQL Parser', () => {
     });
 
     it('parses a subquery with arithmetic resolution', () => {
-      const result = PromQLParser.parse('http_requests_total[5m][30m:5m*2]');
+      const result = PromQLParser.parse(':9[5m][30m:5m*2+1m]');
 
       expect(result.errors).toHaveLength(0);
       expect(result.root.expression?.type).toBe('subquery');
 
       const subquery = result.root.expression as PromQLSubquery;
       const resolution = subquery.resolution as PromQLBinaryExpression;
-      const left = resolution.left as PromQLLiteral;
+      const left = resolution.left as PromQLBinaryExpression;
       const right = resolution.right as PromQLLiteral;
 
       expect(resolution.type).toBe('binary-expression');
-      expect(resolution.name).toBe('*');
-      expect(left.value).toBe('5m');
-      expect(right.value).toBe(2);
+      expect(resolution.name).toBe('+');
+      expect(left).toMatchObject({
+        name: '*',
+        left: { value: '5m', location: { min: 11, max: 12 } },
+        right: { value: 2 },
+      });
+      expect(right.value).toBe('1m');
     });
   });
 
