@@ -1,5 +1,17 @@
 # @elastic/esql-parser
 
+## 4.43.0
+
+### Patch Changes
+
+- Updated dependencies []:
+  - @elastic/esql-types@4.43.0
+  - @elastic/esql-definitions@4.43.0
+  - @elastic/esql-grammar@4.43.0
+  - @elastic/esql-promql-grammar@4.43.0
+  - @elastic/esql-traversal@4.43.0
+  - @elastic/esql-ast@4.43.0
+
 ## 4.42.0
 
 ### Minor Changes
