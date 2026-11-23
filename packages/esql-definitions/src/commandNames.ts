@@ -39,6 +39,7 @@ export const processingCommandNames = [
   'METRICS_INFO',
   'MMR',
   'MV_EXPAND',
+  'NESTED_EXPAND',
   'REGISTERED_DOMAIN',
   'RENAME',
   'RERANK',

@@ -13,8 +13,6 @@ import type { AstNodeParserFields, ESQLParamKinds } from '@elastic/esql-types';
 import type * as ast from '@elastic/esql-types';
 import type { PromQLParser } from './parser';
 
-// TODO: Handle `SubqueryResolutionContext`, `NonReservedContext`
-
 /**
  * Transforms an ANTLR PromQL Concrete Syntax Tree (CST) into a
  * Kibana Abstract Syntax Tree (AST).
@@ -266,10 +264,14 @@ export class PromQLCstToAstConverter {
   }
 
   private fromLabelListItem(ctx: cst.LabelListItemContext): ast.PromQLLabelListItem | undefined {
-    const labelNameCtx = ctx.labelName();
+    const groupingLabelCtx = ctx.groupingLabel();
+    if (groupingLabelCtx) {
+      return this.fromIdentifier(groupingLabelCtx);
+    }
 
-    if (labelNameCtx) {
-      return this.fromLabelName(labelNameCtx);
+    const stringToken = ctx.STRING();
+    if (stringToken) {
+      return this.fromStringToken(stringToken.symbol);
     }
 
     const doubleParamToken = ctx.NAMED_OR_POSITIONAL_DOUBLE_PARAMS();
@@ -333,8 +335,8 @@ export class PromQLCstToAstConverter {
     metric: ast.PromQLIdentifier | undefined;
     labelMap: ast.PromQLLabelMap | undefined;
   } {
-    const identCtx = ctx.identifier();
-    const metric = identCtx ? this.fromIdentifier(identCtx) : undefined;
+    const metricCtx = ctx.metricName();
+    const metric = metricCtx ? this.fromIdentifier(metricCtx) : undefined;
 
     const labelsCtx = ctx.labels();
     let labelMap: ast.PromQLLabelMap | undefined;
@@ -443,9 +445,8 @@ export class PromQLCstToAstConverter {
       return this.fromStringToken(stringToken.symbol);
     }
 
-    const numberCtx = ctx.number_();
-    if (numberCtx) {
-      return this.fromNumber(numberCtx);
+    if (ctx.INF_OR_NAN()) {
+      return this.fromIdentifier(ctx);
     }
 
     return undefined;
@@ -595,52 +596,8 @@ export class PromQLCstToAstConverter {
       return this.fromParserRuleToUnknown(ctx);
     }
 
-    // Resolution from subqueryResolution
-    const resolutionCtx = ctx.subqueryResolution();
-    let resolution: ast.PromQLAstExpression | undefined;
-
-    if (resolutionCtx) {
-      // Check for duration first (COLON duration?)
-      const resDurationCtx = resolutionCtx._resolution;
-      if (resDurationCtx) {
-        resolution = this.fromDuration(resDurationCtx);
-      } else {
-        // Check for TIME_VALUE_WITH_COLON (e.g., ":5m", ":5m*2", ":5m^2")
-        const timeValueWithColon = resolutionCtx.TIME_VALUE_WITH_COLON();
-        if (timeValueWithColon) {
-          // TIME_VALUE_WITH_COLON includes the leading colon, e.g., ":5m"
-          // We need to strip the colon to get the time value
-          const text = timeValueWithColon.getText();
-          const timeValue = text.startsWith(':') ? text.slice(1) : text;
-          resolution = PromQLBuilder.expression.literal.time(
-            timeValue,
-            this.createParserFieldsFromToken(timeValueWithColon.symbol, timeValue)
-          );
-
-          const opToken = resolutionCtx._op;
-          const rightCtx = resolutionCtx.expression();
-
-          if (opToken && rightCtx) {
-            const operator = this.toBinaryOperator(opToken.text ?? '');
-            const right =
-              this.fromExpression(rightCtx) ??
-              PromQLBuilder.unknown(this.getParserFields(rightCtx));
-
-            resolution = PromQLBuilder.expression.binary(
-              operator,
-              resolution,
-              right,
-              {},
-              this.getParserFields(resolutionCtx)
-            );
-
-            if (right.incomplete) {
-              resolution.incomplete = true;
-            }
-          }
-        }
-      }
-    }
+    const resolutionCtx = ctx.subqueryResolution()?._resolution;
+    const resolution = resolutionCtx ? this.fromDuration(resolutionCtx) : undefined;
 
     const evaluationCtx = ctx.evaluation();
     const evaluation = evaluationCtx ? this.fromEvaluation(evaluationCtx) : undefined;
@@ -780,8 +737,8 @@ export class PromQLCstToAstConverter {
   // ------------------------------------------------------------------- number
 
   private fromNumber(ctx: cst.NumberContext): ast.PromQLNumericLiteral {
-    const text = ctx.getText();
     const parserFields = this.getParserFields(ctx);
+    const text = parserFields.text.replaceAll('_', '');
 
     // Integer
     if (ctx instanceof cst.IntegerLiteralContext) {
@@ -806,7 +763,7 @@ export class PromQLCstToAstConverter {
     // Hexadecimal
     if (ctx instanceof cst.HexLiteralContext) {
       const value = parseInt(text, 16);
-      return PromQLBuilder.expression.literal.hexadecimal(value, text, parserFields);
+      return PromQLBuilder.expression.literal.hexadecimal(value, parserFields.text, parserFields);
     }
 
     // Fallback
@@ -895,11 +852,6 @@ export class PromQLCstToAstConverter {
     const text = ctx.getText();
     const parserFields = this.getParserFields(ctx);
 
-    const timeWithColonToken = ctx.TIME_VALUE_WITH_COLON();
-    if (timeWithColonToken) {
-      return PromQLBuilder.expression.literal.time(text, parserFields);
-    }
-
     const timeToken = ctx.TIME_VALUE();
     if (timeToken) {
       return PromQLBuilder.expression.literal.time(text, parserFields);
@@ -916,21 +868,13 @@ export class PromQLCstToAstConverter {
 
   // --------------------------------------------------------------- identifier
 
-  private fromIdentifier(ctx: cst.IdentifierContext): ast.PromQLIdentifier {
-    const identToken = ctx.IDENTIFIER();
-    if (identToken) {
-      return PromQLBuilder.identifier(
-        identToken.getText(),
-        this.createParserFieldsFromToken(identToken.symbol)
-      );
-    }
-
-    // Non-reserved keywords can be used as identifiers
-    const nonReservedCtx = ctx.nonReserved();
-    if (nonReservedCtx) {
-      return PromQLBuilder.identifier(nonReservedCtx.getText(), this.getParserFields(ctx));
-    }
-
+  private fromIdentifier(
+    ctx:
+      | cst.IdentifierContext
+      | cst.MetricNameContext
+      | cst.GroupingLabelContext
+      | cst.LabelNameContext
+  ): ast.PromQLIdentifier {
     return PromQLBuilder.identifier(ctx.getText(), this.getParserFields(ctx));
   }
 }
