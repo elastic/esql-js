@@ -1,5 +1,16 @@
 # @elastic/textmate-esql
 
+## 4.44.0
+
+### Minor Changes
+
+- [#302](https://github.com/elastic/esql-js/pull/302) [`d66fcc9`](https://github.com/elastic/esql-js/commit/d66fcc94ae3d6f0097d34968e3cfafea038556a7) Thanks [@momovdg](https://github.com/momovdg)! - Support the `DESCRIBE` processing command in ES|QL parsing, traversal, formatting, and syntax highlighting.
+
+### Patch Changes
+
+- Updated dependencies [[`d66fcc9`](https://github.com/elastic/esql-js/commit/d66fcc94ae3d6f0097d34968e3cfafea038556a7)]:
+  - @elastic/esql-definitions@4.44.0
+
 ## 4.43.0
 
 ### Patch Changes

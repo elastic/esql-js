@@ -1,5 +1,15 @@
 # @elastic/esql-ast
 
+## 4.44.0
+
+### Patch Changes
+
+- Updated dependencies [[`d66fcc9`](https://github.com/elastic/esql-js/commit/d66fcc94ae3d6f0097d34968e3cfafea038556a7)]:
+  - @elastic/esql-definitions@4.44.0
+  - @elastic/esql-types@4.44.0
+  - @elastic/esql-grammar@4.44.0
+  - @elastic/esql-promql-grammar@4.44.0
+
 ## 4.43.0
 
 ### Patch Changes

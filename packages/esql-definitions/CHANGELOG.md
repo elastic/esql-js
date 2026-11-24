@@ -1,5 +1,11 @@
 # @elastic/esql-definitions
 
+## 4.44.0
+
+### Minor Changes
+
+- [#302](https://github.com/elastic/esql-js/pull/302) [`d66fcc9`](https://github.com/elastic/esql-js/commit/d66fcc94ae3d6f0097d34968e3cfafea038556a7) Thanks [@momovdg](https://github.com/momovdg)! - Support the `DESCRIBE` processing command in ES|QL parsing, traversal, formatting, and syntax highlighting.
+
 ## 4.43.0
 
 ## 4.42.0
