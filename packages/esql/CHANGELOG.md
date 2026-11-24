@@ -1,5 +1,14 @@
 # @elastic/esql
 
+## 4.9.2
+
+### Patch Changes
+
+- [#300](https://github.com/elastic/esql-js/pull/300) [`2547c8c`](https://github.com/elastic/esql-js/commit/2547c8c28c4f6ffb8290d9565990b7cafbbeb7c0) Thanks [@stratoula](https://github.com/stratoula)! - Update ES|QL parser handling of deeply nested query structures
+
+- Updated dependencies []:
+  - @elastic/pretty-printer@4.9.2
+
 ## 4.9.1
 
 ### Patch Changes
