@@ -375,6 +375,23 @@ test('"visitCommand" captures DEDUP when visitDedupCommand is not registered', (
   expect(text).toBe('FROM | DEDUP');
 });
 
+test('can visit DESCRIBE via specific and generic visitors', () => {
+  const ast = Builder.expression.query([
+    Builder.command({ name: 'from' }),
+    Builder.command({ name: 'describe' }),
+  ]).commands;
+  const genericVisitor = new Visitor()
+    .on('visitCommand', (ctx) => ctx.name())
+    .on('visitQuery', (ctx) => [...ctx.visitCommands()].join(' | '));
+  const specificVisitor = new Visitor()
+    .on('visitDescribeCommand', (ctx, prefix: string) => prefix + ctx.node.name)
+    .on('visitCommand', (ctx, prefix: string) => prefix + ctx.name())
+    .on('visitQuery', (ctx) => [...ctx.visitCommands('visit:')].join(' | '));
+
+  expect(genericVisitor.visitQuery(ast)).toBe('FROM | DESCRIBE');
+  expect(specificVisitor.visitQuery(ast)).toBe('visit:FROM | visit:describe');
+});
+
 test('can visit DENSE_VECTOR command via specific visitor', () => {
   const ast = fixtures.fromDenseVector().commands;
   const visitor = new Visitor()

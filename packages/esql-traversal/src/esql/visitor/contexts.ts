@@ -31,6 +31,7 @@ import type {
   ESQLAstTsInfoCommand,
   ESQLAstUriPartsCommand,
   ESQLColumn,
+  ESQLCommand,
   ESQLCommandOption,
   ESQLDecimalLiteral,
   ESQLFunction,
@@ -49,6 +50,7 @@ import type {
 } from '@elastic/esql-types';
 import type {
   CommandVisitorInput,
+  CommandVisitorOutput,
   ESQLAstExpressionNode,
   ESQLAstQueryNode,
   ExpressionVisitorOutput,
@@ -153,7 +155,7 @@ export class VisitorContext<
   public visitCommand(
     commandNode: ESQLAstCommand,
     input: CommandVisitorInput<Methods>
-  ): ExpressionVisitorOutput<Methods> {
+  ): CommandVisitorOutput<Methods> {
     return this.ctx.visitCommand(this, commandNode, input);
   }
 
@@ -620,6 +622,11 @@ export class DedupCommandVisitorContext<
   Methods extends VisitorMethods = VisitorMethods,
   Data extends SharedData = SharedData,
 > extends CommandVisitorContext<Methods, Data, ESQLAstCommand> {}
+
+export class DescribeCommandVisitorContext<
+  Methods extends VisitorMethods = VisitorMethods,
+  Data extends SharedData = SharedData,
+> extends CommandVisitorContext<Methods, Data, ESQLCommand<'describe'>> {}
 
 // TS_COLLAPSE
 export class TsCollapseCommandVisitorContext<

@@ -24,6 +24,7 @@ import type {
   ESQLAstTsInfoCommand,
   ESQLAstUriPartsCommand,
   ESQLColumn,
+  ESQLCommand,
   ESQLFunction,
   ESQLIdentifier,
   ESQLInlineCast,
@@ -396,6 +397,14 @@ export class GlobalVisitorContext<
           input as types.VisitorInput<Methods, 'visitDedupCommand'>
         );
       }
+      case 'describe': {
+        if (!this.methods.visitDescribeCommand) break;
+        return this.visitDescribeCommand(
+          parent,
+          commandNode as ESQLCommand<'describe'>,
+          input as types.VisitorInput<Methods, 'visitDescribeCommand'>
+        );
+      }
       case 'fillnull': {
         if (!this.methods.visitFillNullCommand) break;
         return this.visitFillNullCommand(
@@ -763,6 +772,15 @@ export class GlobalVisitorContext<
   ): types.VisitorOutput<Methods, 'visitDedupCommand'> {
     const context = new contexts.DedupCommandVisitorContext(this, node, parent);
     return this.visitWithSpecificContext('visitDedupCommand', context, input);
+  }
+
+  public visitDescribeCommand(
+    parent: contexts.VisitorContext | null,
+    node: ESQLCommand<'describe'>,
+    input: types.VisitorInput<Methods, 'visitDescribeCommand'>
+  ): types.VisitorOutput<Methods, 'visitDescribeCommand'> {
+    const context = new contexts.DescribeCommandVisitorContext(this, node, parent);
+    return this.visitWithSpecificContext('visitDescribeCommand', context, input);
   }
 
   public visitFillNullCommand(

@@ -119,6 +119,7 @@ export type CommandVisitorInput<Methods extends VisitorMethods> = AnyToVoid<
     VisitorInput<Methods, 'visitTsInfoCommand'> &
     VisitorInput<Methods, 'visitMetricsInfoCommand'> &
     VisitorInput<Methods, 'visitDedupCommand'> &
+    VisitorInput<Methods, 'visitDescribeCommand'> &
     VisitorInput<Methods, 'visitUserAgentCommand'> &
     VisitorInput<Methods, 'visitIpLocationCommand'> &
     VisitorInput<Methods, 'visitRegisteredDomainCommand'> &
@@ -161,6 +162,7 @@ export type CommandVisitorOutput<Methods extends VisitorMethods> =
   | VisitorOutput<Methods, 'visitTsInfoCommand'>
   | VisitorOutput<Methods, 'visitMetricsInfoCommand'>
   | VisitorOutput<Methods, 'visitDedupCommand'>
+  | VisitorOutput<Methods, 'visitDescribeCommand'>
   | VisitorOutput<Methods, 'visitUserAgentCommand'>
   | VisitorOutput<Methods, 'visitIpLocationCommand'>
   | VisitorOutput<Methods, 'visitRegisteredDomainCommand'>
@@ -235,6 +237,10 @@ export interface VisitorMethods<
     any
   >;
   visitDedupCommand?: Visitor<contexts.DedupCommandVisitorContext<Visitors, Data>, any, any>;
+  visitDescribeCommand?(
+    ctx: contexts.DescribeCommandVisitorContext<Visitors, Data>,
+    input: unknown
+  ): unknown;
   visitTsCollapseCommand?: Visitor<
     contexts.TsCollapseCommandVisitorContext<Visitors, Data>,
     any,
