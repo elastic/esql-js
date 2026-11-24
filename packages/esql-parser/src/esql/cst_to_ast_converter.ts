@@ -615,6 +615,12 @@ export class CstToAstConverter {
       return this.fromDedupCommand(dedupCommandCtx);
     }
 
+    const describeCommandCtx = ctx.describeCommand();
+
+    if (describeCommandCtx) {
+      return this.fromDescribeCommand(describeCommandCtx);
+    }
+
     const highlightCommandCtx = ctx.highlightCommand();
 
     if (highlightCommandCtx) {
@@ -2404,6 +2410,12 @@ export class CstToAstConverter {
 
   private fromDedupCommand(ctx: cst.DedupCommandContext): ast.ESQLCommand<'dedup'> {
     return this.createCommand<'dedup'>('dedup', ctx);
+  }
+
+  // ----------------------------------------------------------------- DESCRIBE
+
+  private fromDescribeCommand(ctx: cst.DescribeCommandContext): ast.ESQLCommand<'describe'> {
+    return this.createCommand('describe', ctx);
   }
 
   // -------------------------------------------------------------- TS_COLLAPSE
