@@ -131,6 +131,28 @@ export const findPunctuationToken = (
   );
 };
 
+/**
+ * Returns the 1-based, line-relative column span (end exclusive) of a syntax
+ * error reported by an ANTLR error listener.
+ *
+ * @param offendingSymbol The offending token, `null` for lexer errors.
+ * @param column The 0-based, line-relative column ANTLR reports for the error.
+ */
+export const getErrorColumns = (
+  offendingSymbol: Pick<Token, 'start' | 'stop'> | null | undefined,
+  column: number
+): { startColumn: number; endColumn: number } => {
+  const startColumn = column + 1;
+
+  if (!offendingSymbol || offendingSymbol.start < 0) {
+    return { startColumn, endColumn: startColumn + 1 };
+  }
+
+  const length = Math.max(offendingSymbol.stop - offendingSymbol.start + 1, 0);
+
+  return { startColumn, endColumn: startColumn + length };
+};
+
 export const getPosition = (
   start: Pick<Token, 'start' | 'stop'> | null,
   stop?: Pick<Token, 'stop'> | undefined
