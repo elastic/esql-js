@@ -28,5 +28,8 @@ export const METADATA_FIELDS = [
 
   // Other
   '_tsid',
+
+  // Gated
   '_slice',
+  '_tier',
 ];
