@@ -104,6 +104,12 @@
       "require": "./lib/keywords.js",
       "default": "./lib/keywords.js"
     },
+    "./metadata": {
+      "types": "./lib/metadata.d.ts",
+      "import": "./lib/metadata.mjs",
+      "require": "./lib/metadata.js",
+      "default": "./lib/metadata.js"
+    },
     "./time": {
       "types": "./lib/time.d.ts",
       "import": "./lib/time.mjs",
