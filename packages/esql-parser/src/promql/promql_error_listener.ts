@@ -6,7 +6,7 @@
  */
 
 import * as antlr4 from 'antlr4';
-import { getPosition } from '../tokens';
+import { getErrorColumns } from '../tokens';
 import type { EditorError } from '@elastic/esql-types';
 
 /**
@@ -25,9 +25,10 @@ export class PromQLErrorListener extends antlr4.ErrorListener<unknown> {
   ): void {
     const textMessage = `SyntaxError: ${message}`;
 
-    const tokenPosition = getPosition(offendingSymbol as antlr4.Token);
-    const startColumn = offendingSymbol && tokenPosition ? tokenPosition.min + 1 : column + 1;
-    const endColumn = offendingSymbol && tokenPosition ? tokenPosition.max + 1 : column + 2;
+    const { startColumn, endColumn } = getErrorColumns(
+      offendingSymbol as antlr4.Token | null,
+      column
+    );
 
     this.errors.push({
       startLineNumber: line,

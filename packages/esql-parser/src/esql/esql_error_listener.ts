@@ -6,7 +6,7 @@
  */
 
 import * as antlr4 from 'antlr4';
-import { getPosition } from '../tokens';
+import { getErrorColumns } from '../tokens';
 import {
   TOKEN_RECOGNITION_ERROR_PREFIX,
   isUnquotedIdentifierError,
@@ -45,9 +45,10 @@ export class ESQLErrorListener extends antlr4.ErrorListener<unknown> {
       return;
     }
 
-    const tokenPosition = getPosition(offendingSymbol as antlr4.Token);
-    let startColumn = offendingSymbol && tokenPosition ? tokenPosition.min + 1 : column + 1;
-    let endColumn = offendingSymbol && tokenPosition ? tokenPosition.max + 1 : column + 2;
+    let { startColumn, endColumn } = getErrorColumns(
+      offendingSymbol as antlr4.Token | null,
+      column
+    );
 
     const unquotedIdentifierError = isUnquotedIdentifierError(recognizer, offendingSymbol, message);
     if (unquotedIdentifierError) {
