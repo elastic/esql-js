@@ -34,6 +34,7 @@ export default defineConfig({
     'src/commandNames.ts',
     'src/functionNames.ts',
     'src/keywords.ts',
+    'src/metadata.ts',
     'src/time.ts',
     ...generatedEntries,
   ],

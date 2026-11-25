@@ -19,6 +19,13 @@ import { commandsNames, functionNames } from '@elastic/esql-definitions';
 import type { FunctionDefinition } from '@elastic/esql-definitions';
 ```
 
+`METADATA_FIELDS` lists the metadata fields accepted by the `METADATA` option
+of source commands (`FROM index METADATA _id, _index`):
+
+```ts
+import { METADATA_FIELDS } from '@elastic/esql-definitions';
+```
+
 The full definition metadata (synced from the `elasticsearch` repo) is exposed
 via subpath exports:
 

@@ -8,5 +8,6 @@
 export * from './commandNames';
 export * from './functionNames';
 export * from './keywords';
+export * from './metadata';
 export * from './time';
 export type * from './definition_types';
